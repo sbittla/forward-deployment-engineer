@@ -5,7 +5,8 @@
   "title": "Prompt-injection defences for agents",
   "requirements": [
     "R14",
-    "R11"
+    "R11",
+    "R41"
   ],
   "language": "python"
 }

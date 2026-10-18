@@ -5,7 +5,8 @@
   "title": "Time-boxed POC: invoice extraction",
   "requirements": [
     "R21",
-    "R08"
+    "R08",
+    "R38"
   ],
   "language": "python"
 }

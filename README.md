@@ -1,6 +1,6 @@
 # Forward Deployed Engineer: exercises & capstones
 
-80 hands-on exercises and 5 capstone engagements for engineers preparing for Forward Deployed
+94 hands-on exercises and 6 capstone engagements for engineers preparing for Forward Deployed
 Engineer (FDE) roles: building, integrating and running AI systems inside customers' environments, and owning the
 customer outcome. Every exercise ships with a starter, tests and a reference solution, and runs **offline**: a
 deterministic fake model stands in for the LLM, so no API key is needed.
@@ -154,6 +154,24 @@ Requirements: Python 3.11+, Node 23.6+ (for the TypeScript exercises; native typ
 | ex79 | [LangGraph-style state graph with checkpoints and interrupts](exercises/m13-enterprise-stack/ex79-graph-orchestration/README.md) |
 | ex80 | [SQLite to Postgres portability and pgvector](exercises/m13-enterprise-stack/ex80-postgres-pgvector/README.md) |
 
+### M14 · Field leadership
+| # | Exercise |
+|---|---|
+| ex81 | [Statement of work and delivery plan with critical path](exercises/m14-field-leadership/ex81-sow-delivery-plan/README.md) |
+| ex82 | [Adoption funnel, change management and pre/post KPI impact](exercises/m14-field-leadership/ex82-adoption-change/README.md) |
+| ex83 | [Security and procurement questionnaire responder with regulatory triage](exercises/m14-field-leadership/ex83-security-questionnaire/README.md) |
+| ex84 | [Workshop, code-with session and knowledge-transfer readiness](exercises/m14-field-leadership/ex84-workshop-builder/README.md) |
+| ex85 | [Claude Agent Skills and subagents: package, route, delegate](exercises/m14-field-leadership/ex85-agent-skills-subagents/README.md) |
+| ex86 | [One tool-calling interface over Claude, OpenAI and Gemini formats](exercises/m14-field-leadership/ex86-multi-provider-adapter/README.md) |
+| ex87 | [Review and fix an AI-agent-written pull request; write agent instructions](exercises/m14-field-leadership/ex87-review-ai-code/README.md) |
+| ex88 | [Document AI: layout-aware extraction from OCR output and PDF/vision requests](exercises/m14-field-leadership/ex88-document-ai/README.md) |
+| ex89 | [Permission-aware RAG: OIDC token validation, ACL filtering, on-behalf-of](exercises/m14-field-leadership/ex89-permission-aware-rag/README.md) |
+| ex90 | [Architecture decision records and partner design-review gate](exercises/m14-field-leadership/ex90-adr-design-review/README.md) |
+| ex91 | [React copilot UI component and hook without a build step](exercises/m14-field-leadership/ex91-react-copilot-ui/README.md) |
+| ex92 | [Ontology modelling: objects, links and governed actions](exercises/m14-field-leadership/ex92-ontology-modeling/README.md) |
+| ex93 | [AI red-team harness and security assessment report](exercises/m14-field-leadership/ex93-red-team-harness/README.md) |
+| ex94 | [Blameless postmortem and customer incident communications](exercises/m14-field-leadership/ex94-postmortem-comms/README.md) |
+
 ## Capstones
 | # | Engagement |
 |---|---|
@@ -162,6 +180,7 @@ Requirements: Python 3.11+, Node 23.6+ (for the TypeScript exercises; native typ
 | C3 | [Lakehouse ETL + NL-to-SQL analyst (financial services)](capstones/c3-insights-analyst/README.md) |
 | C4 | [Pilot to production hardening in a constrained customer environment](capstones/c4-pilot-to-production/README.md) |
 | C5 | [Embedded field engagement: healthcare intake from call transcripts](capstones/c5-field-engagement/README.md) |
+| C6 | [Deployment Lead: partner-delivered multi-workstream engagement](capstones/c6-deployment-lead/README.md) |
 
 ## Using a real model
 Exercises accept any client with `complete(messages, system=..., tools=..., **kw)`. `fde_kit.AnthropicLLM` wraps the

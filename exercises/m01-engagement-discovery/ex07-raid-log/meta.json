@@ -5,7 +5,8 @@
   "title": "RAID log: risks, assumptions, issues, decisions",
   "requirements": [
     "R20",
-    "R30"
+    "R30",
+    "R33"
   ],
   "language": "python"
 }

@@ -5,7 +5,8 @@
   "title": "Log forensics: root-cause an incident",
   "requirements": [
     "R29",
-    "R15"
+    "R15",
+    "R44"
   ],
   "language": "python"
 }

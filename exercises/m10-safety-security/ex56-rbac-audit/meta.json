@@ -4,7 +4,8 @@
   "slug": "rbac-audit",
   "title": "RBAC and audit log for multi-tenant AI",
   "requirements": [
-    "R17"
+    "R17",
+    "R39"
   ],
   "language": "python"
 }

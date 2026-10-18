@@ -5,7 +5,8 @@
   "title": "API reference and quickstart generator",
   "requirements": [
     "R24",
-    "R01"
+    "R01",
+    "R35"
   ],
   "language": "python"
 }

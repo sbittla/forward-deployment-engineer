@@ -5,7 +5,8 @@
   "title": "OAuth2 client-credentials token cache",
   "requirements": [
     "R05",
-    "R17"
+    "R17",
+    "R39"
   ],
   "language": "python"
 }

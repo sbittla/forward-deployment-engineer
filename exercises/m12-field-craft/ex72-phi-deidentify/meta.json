@@ -5,7 +5,8 @@
   "title": "Regulated data: de-identification and retention",
   "requirements": [
     "R25",
-    "R17"
+    "R17",
+    "R43"
   ],
   "language": "python"
 }

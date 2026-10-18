@@ -6,7 +6,8 @@
   "requirements": [
     "R35",
     "R24",
-    "R19"
+    "R19",
+    "R34"
   ],
   "language": "python"
 }
