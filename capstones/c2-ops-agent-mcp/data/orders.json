@@ -1,0 +1,13 @@
+{
+  "today": "2026-10-16",
+  "orders": [
+    {"order_id": "A100", "customer_email": "ana@example.com", "status": "delivered", "delivered_on": "2026-10-11", "total": 45.00, "items": ["Ceramic mug set"]},
+    {"order_id": "A101", "customer_email": "ana@example.com", "status": "delivered", "delivered_on": "2026-10-02", "total": 300.00, "items": ["Espresso machine"]},
+    {"order_id": "A102", "customer_email": "ana@example.com", "status": "delivered", "delivered_on": "2026-08-30", "total": 80.00, "items": ["Desk lamp"]},
+    {"order_id": "A103", "customer_email": "ana@example.com", "status": "shipped", "delivered_on": null, "total": 25.00, "items": ["Phone case"]},
+    {"order_id": "B200", "customer_email": "bob@example.com", "status": "delivered", "delivered_on": "2026-10-10", "total": 120.00, "items": ["Running shoes"]}
+  ],
+  "refunds": [
+    {"order_id": "A101", "amount": 200.00, "reason": "partial: missing milk frother", "approved_by": "supervisor:kim"}
+  ]
+}
