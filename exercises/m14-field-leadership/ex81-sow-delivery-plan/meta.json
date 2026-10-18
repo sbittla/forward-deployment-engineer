@@ -1,0 +1,12 @@
+{
+  "id": "ex81",
+  "module": "m14-field-leadership",
+  "slug": "sow-delivery-plan",
+  "title": "Statement of work and delivery plan with critical path",
+  "requirements": [
+    "R33",
+    "R30",
+    "R18"
+  ],
+  "language": "python"
+}

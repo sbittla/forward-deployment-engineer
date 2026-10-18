@@ -1,0 +1,12 @@
+{
+  "id": "ex88",
+  "module": "m14-field-leadership",
+  "slug": "document-ai",
+  "title": "Document AI: layout-aware extraction from OCR output and PDF/vision requests",
+  "requirements": [
+    "R38",
+    "R08",
+    "R14"
+  ],
+  "language": "python"
+}

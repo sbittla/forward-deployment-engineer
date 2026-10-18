@@ -1,0 +1,12 @@
+{
+  "id": "ex92",
+  "module": "m14-field-leadership",
+  "slug": "ontology-modeling",
+  "title": "Ontology modelling: objects, links and governed actions",
+  "requirements": [
+    "R42",
+    "R03",
+    "R31"
+  ],
+  "language": "python"
+}

@@ -1,0 +1,15 @@
+{
+  "id": "ex86",
+  "module": "m14-field-leadership",
+  "slug": "multi-provider-adapter",
+  "title": "One tool-calling interface over Claude, OpenAI and Gemini formats",
+  "requirements": [
+    "R36",
+    "R08",
+    "R05"
+  ],
+  "language": "python",
+  "tools": [
+    "Multi-provider"
+  ]
+}

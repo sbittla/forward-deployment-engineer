@@ -1,0 +1,34 @@
+# ex83 · Security and procurement questionnaire responder with regulatory triage
+
+**Module:** m14 · **Covers:** R43 Regulatory frameworks, R17 Security & compliance, R33 Delivery (procurement gates) ·
+**Time:** 60 min
+
+## Scenario
+Anthropic's Staff FDE posting: "anticipate security and procurement gates". The pilot is done, and now a 180-question
+vendor security questionnaire (CAIQ/SIG-style) stands between you and production. Answers must be consistent with
+how the system actually works. One contradiction ("we retain no data" vs a 30-day log retention) can stall a deal
+for a month. You'll answer from a single source of system facts, flag what needs a human, and triage which
+regulations apply.
+
+## Your task
+`facts` describes the deployed system: `{"data_retention_days", "encryption_at_rest", "encryption_in_transit",
+"subprocessors": [...], "data_residency", "trains_on_customer_data": bool, "sso": bool, "pen_test_date",
+"incident_notification_hours", "processes_personal_data": bool, "processes_health_data": bool}`.
+
+1. `answer(question, facts) -> Answer(text, source_fact, confidence)` — rule table `RULES` maps keyword groups to
+   facts (retention, encryption, subprocessor, residency/location, training, SSO, penetration test, breach/incident).
+   A keyword matches when a word in the question **starts with** it (stems: `retain` matches `retained`).
+   Confidence = matched keywords / keywords in the best rule (2 dp). No rule with ≥ 1 keyword match → text
+   `"NEEDS SECURITY TEAM REVIEW"`, `source_fact=None`, confidence 0.0.
+2. `answer_all(questions, facts, min_confidence=0.5)` → `(answers, review_queue)`: answers below `min_confidence`
+   go to the review queue (by question index) instead of being auto-answered.
+3. `contradictions(claims: dict[str, str], facts) -> list[str]` — free-text claims from sales collateral checked
+   against facts: claims saying "no data retention"/"zero retention" while `data_retention_days > 0`; "never train"
+   while `trains_on_customer_data`; "EU only" while residency isn't EU; return the claim keys, sorted.
+4. `regulatory_triage(use_case: dict) -> dict`:
+   - `gdpr_dpia_required`: personal data and (large scale, or special category/health data, or systematic monitoring)
+   - `hipaa_baa_required`: health data processed for a US covered entity
+   - `eu_ai_act_tier`: `"prohibited"` if social scoring; `"high"` if domain in `HIGH_RISK_DOMAINS`; `"limited"` if it
+     interacts with people (chatbot) or generates content; else `"minimal"`
+   - `obligations`: sorted list built from the above (`"DPIA"`, `"BAA"`, `"EU AI Act conformity assessment"` for high,
+     `"AI transparency notice"` for limited or high).

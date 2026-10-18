@@ -1,0 +1,12 @@
+{
+  "id": "ex93",
+  "module": "m14-field-leadership",
+  "slug": "red-team-harness",
+  "title": "AI red-team harness and security assessment report",
+  "requirements": [
+    "R41",
+    "R14",
+    "R13"
+  ],
+  "language": "python"
+}

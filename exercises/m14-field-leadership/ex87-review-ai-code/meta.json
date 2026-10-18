@@ -1,0 +1,15 @@
+{
+  "id": "ex87",
+  "module": "m14-field-leadership",
+  "slug": "review-ai-code",
+  "title": "Review and fix an AI-agent-written pull request; write agent instructions",
+  "requirements": [
+    "R37",
+    "R29",
+    "R17"
+  ],
+  "language": "python",
+  "tools": [
+    "AI coding tools"
+  ]
+}

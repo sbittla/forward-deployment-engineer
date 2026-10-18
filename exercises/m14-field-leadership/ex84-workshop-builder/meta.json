@@ -1,0 +1,12 @@
+{
+  "id": "ex84",
+  "module": "m14-field-leadership",
+  "slug": "workshop-builder",
+  "title": "Workshop, code-with session and knowledge-transfer readiness",
+  "requirements": [
+    "R35",
+    "R24",
+    "R19"
+  ],
+  "language": "python"
+}

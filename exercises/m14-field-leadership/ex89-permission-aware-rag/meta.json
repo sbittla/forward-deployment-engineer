@@ -1,0 +1,12 @@
+{
+  "id": "ex89",
+  "module": "m14-field-leadership",
+  "slug": "permission-aware-rag",
+  "title": "Permission-aware RAG: OIDC token validation, ACL filtering, on-behalf-of",
+  "requirements": [
+    "R39",
+    "R10",
+    "R17"
+  ],
+  "language": "python"
+}
