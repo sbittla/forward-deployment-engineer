@@ -1,3 +1,4 @@
+import pytest
 import itertools
 import threading
 import time
@@ -48,3 +49,13 @@ def test_stage_breakdown(impl):
     out = impl.stage_breakdown(traces)
     assert out[0] == ("llm", round(4000 / 4250, 3))
     assert [s for s, _ in out] == ["llm", "retrieve", "post"]
+
+
+def test_invalid_capacity_inputs(impl):
+    with pytest.raises(ValueError):
+        impl.max_rps(4, 0)
+    with pytest.raises(ValueError):
+        impl.max_rps(0, 0.5)
+    with pytest.raises(ValueError):
+        impl.littles_law_concurrency(-1, 0.5)
+    assert impl.littles_law_concurrency(0, 1.0) == 0 and impl.stage_breakdown([]) == []

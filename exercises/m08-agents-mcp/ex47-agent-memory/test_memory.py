@@ -44,3 +44,9 @@ def test_pins(impl):
     m.pin("policy", "P-78")
     addendum, _ = m.context()
     assert addendum == "Pinned facts:\n- customer: Ana\n- policy: P-78"
+
+
+def test_empty_memory_context(impl):
+    from fde_kit.llm import FakeLLM
+    mem = impl.ConversationMemory(FakeLLM([]))
+    assert mem.context() == ("", []) and mem.summaries_made == 0

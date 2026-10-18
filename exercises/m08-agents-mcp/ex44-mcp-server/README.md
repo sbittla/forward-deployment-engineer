@@ -51,3 +51,30 @@ this server process into legacy mode. After that, requests **without** `_meta` a
 ## Field notes
 When a customer's MCP integration "just stopped working" after a client upgrade, check the era first: a legacy-only
 server facing a modern client fails silently or with an obscure error. Dual-era servers buy you a migration window.
+
+## Prompt kit
+**Learn (tutor prompt)**
+```text
+I'm preparing for a Forward Deployed Engineer role and working on the exercise "Build an MCP server (spec
+2026-07-28, dual-era)". Before I write code, teach me the Model Context Protocol: JSON-RPC 2.0 framing over stdio,
+the 2026-07-28 changes (per-request _meta protocol version, server/discover, -32022 UnsupportedProtocolVersionError,
+resultType, ttlMs), and how dual-era servers keep legacy initialize clients working. Use short Python examples that
+are not the exercise solution. Then ask me three questions to check my understanding, one at a time, and tell me
+what to re-read if I get one wrong.
+```
+**Build (coding-agent spec)**
+```text
+Implement exercises/m08-agents-mcp/ex44-mcp-server/starter.py so that test_mcp_server.py passes. README.md in that
+folder is the spec: follow its names, formats, ordering and error messages exactly. Public API: `MCPServer`.
+Constraints: Python 3.11+, the standard library and the repo's fde_kit package only (pyyaml is allowed where the
+README uses YAML). Do not modify the tests or fde_kit. When you're done, run `pytest
+exercises/m08-agents-mcp/ex44-mcp-server` and show me the output. If the README and the tests disagree, stop and
+tell me instead of guessing.
+```
+**Review**
+```text
+Review my solution to "Build an MCP server (spec 2026-07-28, dual-era)" as a senior forward deployed engineer would
+before it ships to a customer. Specifically: Does a modern request with an unsupported version always return -32022
+with supported and requested? Can a legacy initialize change behaviour for modern requests? Are notifications ever
+answered? Rank findings by customer impact, quote the line for each, and say which ones a test should catch.
+```

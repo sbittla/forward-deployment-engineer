@@ -2,6 +2,11 @@
 
 **Module:** m11 · **Covers:** R15 Observability, R27 Cost & latency · **Time:** 50 min
 
+## Learning objectives
+- Trace requests as span trees with timing, tokens and cost.
+- Summarise latency percentiles and spend by model.
+- Find the critical path that explains a slow answer.
+
 ## Scenario
 "Why was that answer slow?" Without traces you can't tell whether retrieval, the model, or a tool call was the
 culprit. Implement a minimal OpenTelemetry-style tracer so every request is a tree of timed spans with token and
@@ -22,3 +27,28 @@ cost attributes. (In production you'd use the OpenTelemetry SDK and an exporter;
    (nearest-rank on `(end-start)*1000`, rounded to 1 dp), `input_tokens`, `output_tokens`, `cost_usd` (6 dp).
 4. `critical_path(spans, trace_id) -> list[str]` — from the root, repeatedly follow the longest-duration child;
    return the span names.
+
+## Prompt kit
+**Learn (tutor prompt)**
+```text
+I'm preparing for a Forward Deployed Engineer role and working on the exercise "Tracing and metrics for LLM calls".
+Before I write code, teach me distributed tracing concepts (traces, spans, parent ids, attributes, status) and how
+OpenTelemetry applies to LLM calls. Use short Python examples that are not the exercise solution. Then ask me three
+questions to check my understanding, one at a time, and tell me what to re-read if I get one wrong.
+```
+**Build (coding-agent spec)**
+```text
+Implement exercises/m11-deploy-operate/ex60-llm-tracing/starter.py so that test_tracing.py passes. README.md in that
+folder is the spec: follow its names, formats, ordering and error messages exactly. Public API: `Span`, `Tracer`,
+`traced`, `summarize`, `critical_path`. Constraints: Python 3.11+, the standard library and the repo's fde_kit
+package only (pyyaml is allowed where the README uses YAML). Do not modify the tests or fde_kit. When you're done,
+run `pytest exercises/m11-deploy-operate/ex60-llm-tracing` and show me the output. If the README and the tests
+disagree, stop and tell me instead of guessing.
+```
+**Review**
+```text
+Review my solution to "Tracing and metrics for LLM calls" as a senior forward deployed engineer would before it
+ships to a customer. Specifically: Do nested spans across threads keep the right parent? Is error status set before
+re-raising? Is the critical path computed from durations, not end times? Rank findings by customer impact, quote the
+line for each, and say which ones a test should catch.
+```

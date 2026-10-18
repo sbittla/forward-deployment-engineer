@@ -2,6 +2,8 @@ from collections import defaultdict
 
 
 def _mean(xs):
+    if not xs:
+        raise ValueError("every group needs at least one value")
     return sum(xs) / len(xs)
 
 

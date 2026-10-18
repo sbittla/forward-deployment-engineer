@@ -2,6 +2,11 @@
 
 **Module:** m09 · **Covers:** R13 Evaluation · **Time:** 60 min
 
+## Learning objectives
+- Use an LLM judge for criteria regex can't check.
+- Measure judge-human agreement with exact match, within-1 and Cohen's kappa.
+- Detect and neutralise position bias in pairwise judging.
+
 ## Scenario
 Many copilot answers can't be graded by regex ("Is this explanation of the exclusion accurate and polite?"). An
 LLM judge scales grading, but only if you check it agrees with humans and isn't fooled by answer order.
@@ -17,3 +22,40 @@ LLM judge scales grading, but only if you check it agrees with humans and isn't 
 3. `pairwise(llm, question, a, b) -> "A" | "B" | "tie"` — ask the judge twice with the answers in both orders; the
    model replies `"1"` or `"2"` (first/second shown). Return the winner only if both orders agree; otherwise `"tie"`
    (position bias).
+
+## Prompt kit
+**Learn (tutor prompt)**
+```text
+I'm preparing for a Forward Deployed Engineer role and working on the exercise "LLM-as-judge with calibration".
+Before I write code, teach me LLM-as-judge design (rubrics, reasoning before score), calibration against human
+labels, Cohen's kappa, and position bias. Use short Python examples that are not the exercise solution. Then ask me
+three questions to check my understanding, one at a time, and tell me what to re-read if I get one wrong.
+```
+**Build (coding-agent spec)**
+```text
+Implement exercises/m09-evaluation/ex50-llm-judge/starter.py so that test_judge.py passes. README.md in that folder
+is the spec: follow its names, formats, ordering and error messages exactly. Public API: `Verdict`, `judge`,
+`agreement`, `pairwise`. Constraints: Python 3.11+, the standard library and the repo's fde_kit package only (pyyaml
+is allowed where the README uses YAML). Do not modify the tests or fde_kit. When you're done, run `pytest
+exercises/m09-evaluation/ex50-llm-judge` and show me the output. If the README and the tests disagree, stop and tell
+me instead of guessing.
+```
+**Review**
+```text
+Review my solution to "LLM-as-judge with calibration" as a senior forward deployed engineer would before it ships to
+a customer. Specifically: Is the score validated as an integer in range, rejecting 4.5 and True? Is kappa correct
+when expected agreement is 1? Does pairwise judging swap the answers, not just the labels? Rank findings by customer
+impact, quote the line for each, and say which ones a test should catch.
+```
+**Production prompt (what this exercise's code sends to a model)**
+```text
+You grade a support copilot's answer against a reference answer using this rubric:
+{rubric}
+
+Think through the rubric first, then score. Return only JSON: {"reasoning": "<2-4 sentences>", "score": <integer 1-5>}.
+
+User turn:
+<question>{question}</question>
+<reference>{reference}</reference>
+<answer>{answer}</answer>
+```

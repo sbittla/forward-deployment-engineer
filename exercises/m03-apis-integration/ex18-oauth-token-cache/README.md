@@ -2,6 +2,11 @@
 
 **Module:** m03 · **Covers:** R05 Integration, R17 Auth · **Time:** 45 min
 
+## Learning objectives
+- Cache OAuth2 client-credentials tokens with expiry skew.
+- Make refresh single-flight under concurrency.
+- Recover from a 401 with one invalidate-and-retry.
+
 ## Scenario
 The customer's API gateway issues OAuth2 tokens (client-credentials grant) valid for 1 hour and rate-limits the
 token endpoint to 10 requests/minute. Your 32-thread backfill job requested a new token on every call and got
@@ -17,3 +22,28 @@ locked out.
 2. `invalidate()` — drop the cached token.
 3. `call_with_auth(fn)` — calls `fn(token)`. If it raises an exception with `status == 401`, invalidate, fetch a
    fresh token and retry **once**. Other exceptions propagate.
+
+## Prompt kit
+**Learn (tutor prompt)**
+```text
+I'm preparing for a Forward Deployed Engineer role and working on the exercise "OAuth2 client-credentials token
+cache". Before I write code, teach me the OAuth2 client-credentials grant, token caching with clock skew,
+single-flight refresh, and safe 401 retry. Use short Python examples that are not the exercise solution. Then ask me
+three questions to check my understanding, one at a time, and tell me what to re-read if I get one wrong.
+```
+**Build (coding-agent spec)**
+```text
+Implement exercises/m03-apis-integration/ex18-oauth-token-cache/starter.py so that test_oauth.py passes. README.md
+in that folder is the spec: follow its names, formats, ordering and error messages exactly. Public API:
+`TokenProvider`. Constraints: Python 3.11+, the standard library and the repo's fde_kit package only (pyyaml is
+allowed where the README uses YAML). Do not modify the tests or fde_kit. When you're done, run `pytest
+exercises/m03-apis-integration/ex18-oauth-token-cache` and show me the output. If the README and the tests disagree,
+stop and tell me instead of guessing.
+```
+**Review**
+```text
+Review my solution to "OAuth2 client-credentials token cache" as a senior forward deployed engineer would before it
+ships to a customer. Specifically: Under 32 threads, can more than one refresh happen? Could a 401 loop forever? Is
+the client secret ever logged or included in an exception? Rank findings by customer impact, quote the line for
+each, and say which ones a test should catch.
+```

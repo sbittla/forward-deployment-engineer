@@ -1,6 +1,6 @@
 # Forward Deployed Engineer: exercises & capstones
 
-94 hands-on exercises and 6 capstone engagements for engineers preparing for Forward Deployed
+100 hands-on exercises and 6 capstone engagements for engineers preparing for Forward Deployed
 Engineer (FDE) roles: building, integrating and running AI systems inside customers' environments, and owning the
 customer outcome. Every exercise ships with a starter, tests and a reference solution, and runs **offline**: a
 deterministic fake model stands in for the LLM, so no API key is needed.
@@ -19,6 +19,22 @@ Requirements: Python 3.11+, Node 23.6+ (for the TypeScript exercises; native typ
 - `pytest --solutions <path>` runs the same tests against the reference solution.
 - `capstones/<cN>/`: multi-day engagements with `starter/` packages, deliverable templates, shared `data/` and tests.
 - `fde_kit/`: the offline `FakeLLM`, an optional `AnthropicLLM` adapter (`FDE_LIVE=1`), and text utilities.
+
+## Recommended order (the book's five parts)
+The module folders group exercises by topic; the book teaches them in this order so that every capstone comes after
+the exercises it builds on. Each exercise takes 40–90 minutes and each capstone 2–3 days: about 90 hours of
+exercises plus 15 capstone days. Full-time (about 20 h/week), that's 10 weeks; part-time (8 h/week), about 25 weeks.
+
+| Part | Exercises | Then |
+|---|---|---|
+| **I · The role and the engagement** | ex01–ex08, ex68, ex69, ex81, ex82, ex84 | |
+| **II · Engineering foundations** | ex09–ex15 · ex16–ex21, ex78 · ex22–ex26, ex77, ex80, ex92 · ex27–ex30, ex91 | |
+| **III · Building AI systems** | ex31–ex36, ex86 · ex37–ex41, ex88 · ex95–ex98 (prompt engineering) · ex42–ex48, ex79, ex85 · ex49–ex52, ex99, ex100 · ex53–ex56, ex83, ex89, ex93 | Capstones 1, 2, 3 |
+| **IV · Production in the customer's world** | ex57–ex66, ex76, ex94 · ex67, ex70–ex75, ex87 | Capstone 4 |
+| **V · Leading engagements** | ex90 | Capstones 5, 6 |
+
+Every README has a **Prompt kit**: a tutor prompt to learn the concepts, a build spec you can hand to a coding agent,
+and a review prompt. Use the agent the way you would on a customer site: you own the result, so review what it writes.
 
 ## Exercises
 
@@ -109,6 +125,8 @@ Requirements: Python 3.11+, Node 23.6+ (for the TypeScript exercises; native typ
 | ex50 | [LLM-as-judge with calibration](exercises/m09-evaluation/ex50-llm-judge/README.md) |
 | ex51 | [Prompt regression gate for CI](exercises/m09-evaluation/ex51-prompt-regression/README.md) |
 | ex52 | [A/B experiment analysis with bootstrap CIs](exercises/m09-evaluation/ex52-ab-analysis/README.md) |
+| ex99 | [Agent trajectory evals and pass^k reliability](exercises/m09-evaluation/ex99-agent-trajectory-evals/README.md) |
+| ex100 | [Online quality monitoring and drift detection](exercises/m09-evaluation/ex100-online-monitoring-drift/README.md) |
 
 ### M10 · Safety, security & compliance
 | # | Exercise |
@@ -172,6 +190,14 @@ Requirements: Python 3.11+, Node 23.6+ (for the TypeScript exercises; native typ
 | ex93 | [AI red-team harness and security assessment report](exercises/m14-field-leadership/ex93-red-team-harness/README.md) |
 | ex94 | [Blameless postmortem and customer incident communications](exercises/m14-field-leadership/ex94-postmortem-comms/README.md) |
 
+### M15 · Prompt engineering
+| # | Exercise |
+|---|---|
+| ex95 | [Prompt linter for CI](exercises/m15-prompt-engineering/ex95-prompt-linter/README.md) |
+| ex96 | [Dynamic few-shot example selection](exercises/m15-prompt-engineering/ex96-few-shot-selection/README.md) |
+| ex97 | [Prompt hill-climbing with a held-out test set](exercises/m15-prompt-engineering/ex97-prompt-hill-climb/README.md) |
+| ex98 | [System prompt from a policy spec, with traceability](exercises/m15-prompt-engineering/ex98-prompt-from-spec/README.md) |
+
 ## Capstones
 | # | Engagement |
 |---|---|
@@ -187,3 +213,10 @@ Exercises accept any client with `complete(messages, system=..., tools=..., **kw
 official `anthropic` SDK (default model `claude-opus-5-5`, with server-side refusal fallbacks enabled). Install `anthropic`
 and set credentials, then pass `AnthropicLLM()` where the tests pass a `FakeLLM`. Outputs will vary, which is
 what the evaluation exercises are for.
+
+## License and notices
+Code is [MIT](LICENSE); written content is [CC BY-NC 4.0](LICENSE-CONTENT). See [NOTICE.md](NOTICE.md) for trademarks
+and sources, [VERSIONS.md](VERSIONS.md) for every dated fact (protocol versions, model ids, prices), and
+[CHANGELOG.md](CHANGELOG.md). Found something wrong or out of date? Open an errata issue.
+
+Without spoilers: `python scripts/export_learner.py ../fde-workspace` creates a copy with no reference solutions.

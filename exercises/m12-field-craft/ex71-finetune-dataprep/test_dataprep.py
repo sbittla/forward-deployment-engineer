@@ -1,3 +1,4 @@
+import pytest
 import json
 
 SYSTEM = "You are Northwind's friendly support agent."
@@ -57,3 +58,11 @@ def test_token_filter_jsonl_stats(impl, tmp_path):
     lines = p.read_text().splitlines()
     assert len(lines) == 2 and json.loads(lines[0]) == short
     assert impl.stats([short], [long]) == {"train": 1, "val": 1, "avg_tokens": 55.0}
+
+
+def test_unusable_conversations(impl):
+    with pytest.raises(ValueError):
+        impl.to_example({"id": "c9", "turns": [{"role": "customer", "text": "hello?"}]}, "sys")
+    unrated = {"id": 1, "intent": "a", "csat": None, "resolved": True, "turns": [{"role": "agent", "text": "x"}]}
+    assert impl.select([unrated]) == []
+    assert impl.split([{"m": 1}], ["a"]) == ([{"m": 1}], [])

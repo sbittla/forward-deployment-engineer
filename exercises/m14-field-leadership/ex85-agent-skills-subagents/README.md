@@ -3,6 +3,11 @@
 **Module:** m14 · **Covers:** R36 Vendor AI platforms, R11 Agents, R12 Connectors · **Hands-on:** Claude Agent Skills,
 Claude Code subagents · **Time:** 75 min
 
+## Learning objectives
+- Package expertise as Claude Agent Skills and Claude Code subagents.
+- Validate frontmatter rules and progressive disclosure.
+- Route tasks to skills and delegate to subagents with restricted tools.
+
 ## Scenario
 Anthropic's FDE posting lists the artifacts you hand customers: "MCP servers, sub-agents, and agent skills that will
 be used in production workflows". Two packaging formats matter:
@@ -37,3 +42,44 @@ claims customer.
 6. Author `skills/claims-triage/SKILL.md` (+ a `reference/routing-rules.md`) and `agents/policy-researcher.md`
    (tools: `search_policies, read_policy`) that pass your own validators. The tests also check that the skill's
    description says *when* to use it.
+
+## Prompt kit
+**Learn (tutor prompt)**
+```text
+I'm preparing for a Forward Deployed Engineer role and working on the exercise "Claude Agent Skills and subagents:
+package, route, delegate". Before I write code, teach me Agent Skills (SKILL.md frontmatter, body, resources,
+progressive disclosure) and Claude Code subagents (frontmatter name, description, tools, model; separate context).
+Use short Python examples that are not the exercise solution. Then ask me three questions to check my understanding,
+one at a time, and tell me what to re-read if I get one wrong.
+```
+**Build (coding-agent spec)**
+```text
+Implement exercises/m14-field-leadership/ex85-agent-skills-subagents/starter.py so that test_skills.py passes.
+README.md in that folder is the spec: follow its names, formats, ordering and error messages exactly. Public API:
+`Skill`, `Subagent`, `parse_frontmatter`, `parse_skill`, `SkillRegistry`, `parse_subagent`, `delegate`. Constraints:
+Python 3.11+, the standard library and the repo's fde_kit package only (pyyaml is allowed where the README uses
+YAML). Do not modify the tests or fde_kit. When you're done, run `pytest
+exercises/m14-field-leadership/ex85-agent-skills-subagents` and show me the output. If the README and the tests
+disagree, stop and tell me instead of guessing.
+```
+**Review**
+```text
+Review my solution to "Claude Agent Skills and subagents: package, route, delegate" as a senior forward deployed
+engineer would before it ships to a customer. Specifically: Are reserved words and XML tags rejected in names and
+descriptions? Does an omitted tools field inherit all tools while an empty one grants none? Is the description
+specific enough that routing picks this skill only when it should? Rank findings by customer impact, quote the line
+for each, and say which ones a test should catch.
+```
+**Production prompt (what this exercise's code sends to a model)**
+```text
+---
+name: claims-triage
+description: Triage new insurance claims: classify severity, check required documents and draft the adjuster handoff. Use when a new claim or FNOL arrives.
+---
+
+# Claims triage
+1. Read the claim and list any missing required documents.
+2. Classify severity using references/severity.md.
+3. Draft a handoff note for the adjuster: facts, gaps, recommended next step.
+Never approve or deny coverage; that decision belongs to the adjuster.
+```

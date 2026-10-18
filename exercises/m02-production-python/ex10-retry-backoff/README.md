@@ -2,6 +2,11 @@
 
 **Module:** m02 · **Covers:** R01 Python, R22 Production hardening, R15 Reliability · **Time:** 50 min
 
+## Learning objectives
+- Retry only transient failures with capped exponential backoff and full jitter.
+- Honour Retry-After from the server.
+- Make side-effecting calls safe to retry with idempotency keys.
+
 ## Scenario
 The customer's ERP API returns `429` and `503` under load. Your naive integration hammered it in a tight loop and
 got the FDE team's IP blocked. Worse, a retried `POST /refunds` paid a customer twice.
@@ -24,3 +29,29 @@ Payload equality: compare a SHA-256 of `json.dumps(payload, sort_keys=True)`.
 ## Field notes
 Retries without idempotency turn a reliability fix into a money bug. Always ask the customer's API team which
 endpoints accept an `Idempotency-Key` header.
+
+## Prompt kit
+**Learn (tutor prompt)**
+```text
+I'm preparing for a Forward Deployed Engineer role and working on the exercise "Retries, backoff, jitter,
+idempotency". Before I write code, teach me transient vs permanent errors, exponential backoff with full jitter,
+Retry-After, and why retries without idempotency create duplicate payments. Use short Python examples that are not
+the exercise solution. Then ask me three questions to check my understanding, one at a time, and tell me what to
+re-read if I get one wrong.
+```
+**Build (coding-agent spec)**
+```text
+Implement exercises/m02-production-python/ex10-retry-backoff/starter.py so that test_retry.py passes. README.md in
+that folder is the spec: follow its names, formats, ordering and error messages exactly. Public API: `retry`,
+`IdempotencyConflict`, `IdempotencyStore`. Constraints: Python 3.11+, the standard library and the repo's fde_kit
+package only (pyyaml is allowed where the README uses YAML). Do not modify the tests or fde_kit. When you're done,
+run `pytest exercises/m02-production-python/ex10-retry-backoff` and show me the output. If the README and the tests
+disagree, stop and tell me instead of guessing.
+```
+**Review**
+```text
+Review my solution to "Retries, backoff, jitter, idempotency" as a senior forward deployed engineer would before it
+ships to a customer. Specifically: Could the decorator retry a 400 or a programming error? Is the delay sequence
+correct for attempt 0? Can two concurrent callers with the same idempotency key both run fn? Rank findings by
+customer impact, quote the line for each, and say which ones a test should catch.
+```

@@ -44,3 +44,8 @@ def test_evaluate_and_compare(impl):
     assert lines[0] == "| Metric | baseline | new | Δ |"
     assert [l.split("|")[1].strip() for l in lines[2:]] == ["recall", "precision", "mrr", "ndcg"]
     assert "| mrr | 0.2500 | 1.0000 | +0.7500 |" in table
+
+
+def test_no_relevant_documents(impl):
+    assert impl.recall_at_k(["a"], {}, 5) == 0.0 and impl.mrr(["a"], {}) == 0.0
+    assert impl.ndcg_at_k(["a"], {}, 5) == 0.0 and impl.precision_at_k([], {"a": 1}, 3) == 0.0

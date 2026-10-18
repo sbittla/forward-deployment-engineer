@@ -2,6 +2,11 @@
 
 **Module:** m03 · **Covers:** R05 Integration, R17 Security · **Time:** 45 min
 
+## Learning objectives
+- Verify webhook signatures with HMAC and constant-time comparison.
+- Reject stale timestamps and replayed events.
+- Acknowledge duplicate deliveries without double-processing.
+
 ## Scenario
 The customer's CRM will push "case updated" events to your service. Their security team's review checklist:
 signatures verified with a shared secret, constant-time comparison, stale timestamps rejected, replays ignored,
@@ -22,3 +27,28 @@ is the raw request body string.
    - expired dedupe entries are purged on each call.
 
 Header names are case-insensitive.
+
+## Prompt kit
+**Learn (tutor prompt)**
+```text
+I'm preparing for a Forward Deployed Engineer role and working on the exercise "Webhook receiver with HMAC and
+replay protection". Before I write code, teach me webhook signing schemes, HMAC-SHA256, timing attacks, replay
+windows and idempotent event processing. Use short Python examples that are not the exercise solution. Then ask me
+three questions to check my understanding, one at a time, and tell me what to re-read if I get one wrong.
+```
+**Build (coding-agent spec)**
+```text
+Implement exercises/m03-apis-integration/ex17-webhook-hmac/starter.py so that test_webhook.py passes. README.md in
+that folder is the spec: follow its names, formats, ordering and error messages exactly. Public API: `sign`,
+`WebhookReceiver`. Constraints: Python 3.11+, the standard library and the repo's fde_kit package only (pyyaml is
+allowed where the README uses YAML). Do not modify the tests or fde_kit. When you're done, run `pytest
+exercises/m03-apis-integration/ex17-webhook-hmac` and show me the output. If the README and the tests disagree, stop
+and tell me instead of guessing.
+```
+**Review**
+```text
+Review my solution to "Webhook receiver with HMAC and replay protection" as a senior forward deployed engineer would
+before it ships to a customer. Specifically: Is the signature computed over the raw body exactly as received? Is
+compare_digest used for every comparison? Can the dedupe cache grow without bound? Rank findings by customer impact,
+quote the line for each, and say which ones a test should catch.
+```

@@ -38,3 +38,10 @@ def test_decide(impl):
     assert impl.decide(group(712, 1000), group(740, 1000), n=500, seed=1) == "inconclusive"
     assert impl.decide(group(7120, 10000), group(7400, 10000), n=500, seed=1) == "ship"
     assert impl.decide(group(7400, 10000), group(7100, 10000), n=500, seed=1) == "harmful"
+
+
+def test_empty_groups(impl):
+    for fn in (impl.lift, impl.bootstrap_ci, impl.z_test, impl.decide):
+        with pytest.raises(ValueError):
+            fn([], [1, 0, 1])
+    assert impl.z_test([0, 0, 0], [0, 0, 0]) == 1.0

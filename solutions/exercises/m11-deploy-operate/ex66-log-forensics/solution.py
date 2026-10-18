@@ -44,8 +44,10 @@ def _downstream(service: str, deps: dict, seen=None) -> set[str]:
     return seen
 
 
-def root_cause(records: list[dict], deps: dict[str, list[str]]) -> str:
+def root_cause(records: list[dict], deps: dict[str, list[str]]) -> str | None:
     fe = first_errors(records)
+    if not fe:
+        return None
     candidates = [s for s, ts in fe.items()
                   if not any(d in fe and fe[d] < ts for d in _downstream(s, deps))]
     return min(candidates, key=lambda s: fe[s])
@@ -61,7 +63,7 @@ def incident_summary(lines: list[str], deps: dict[str, list[str]]) -> str:
     blast = sorted(fe, key=lambda s: fe[s])
     return "\n".join([
         "# Incident summary", "",
-        f"Root cause: {root_cause(recs, deps)}",
-        f"Blast radius: {', '.join(blast)}",
+        f"Root cause: {root_cause(recs, deps) or 'none'}",
+        f"Blast radius: {', '.join(blast) or 'none'}",
         f"Malformed lines: {bad}",
     ]) + "\n"

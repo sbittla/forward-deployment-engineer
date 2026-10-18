@@ -2,6 +2,11 @@
 
 **Module:** m07 · **Covers:** R10 Retrieval, R13 Evaluation · **Time:** 50 min
 
+## Learning objectives
+- Measure retrieval separately from generation.
+- Compute recall@k, precision@k, MRR and nDCG correctly.
+- Compare two retrieval configurations with a clear delta table.
+
 ## Scenario
 Your teammate claims the new chunking "feels better". The customer's AI lead asks: *by how much, on what?* Most
 RAG failures are retrieval failures, so measure retrieval separately from generation.
@@ -18,3 +23,28 @@ RAG failures are retrieval failures, so measure retrieval separately from genera
    `{"per_query": {qid: {...4 metrics}}, "mean": {...}}` with all values rounded to 4 dp.
 6. `compare(a, b, names=("A","B")) -> str` — markdown table `| Metric | A | B | Δ |` over the mean metrics in the
    order recall, precision, mrr, ndcg, with Δ formatted with sign (e.g. `+0.1250`).
+
+## Prompt kit
+**Learn (tutor prompt)**
+```text
+I'm preparing for a Forward Deployed Engineer role and working on the exercise "Retrieval metrics: recall@k, MRR,
+nDCG". Before I write code, teach me information-retrieval metrics, graded relevance, ideal DCG, and why most RAG
+failures are retrieval failures. Use short Python examples that are not the exercise solution. Then ask me three
+questions to check my understanding, one at a time, and tell me what to re-read if I get one wrong.
+```
+**Build (coding-agent spec)**
+```text
+Implement exercises/m07-retrieval-rag/ex41-retrieval-eval/starter.py so that test_retrieval_eval.py passes.
+README.md in that folder is the spec: follow its names, formats, ordering and error messages exactly. Public API:
+`recall_at_k`, `precision_at_k`, `mrr`, `ndcg_at_k`, `evaluate`, `compare`. Constraints: Python 3.11+, the standard
+library and the repo's fde_kit package only (pyyaml is allowed where the README uses YAML). Do not modify the tests
+or fde_kit. When you're done, run `pytest exercises/m07-retrieval-rag/ex41-retrieval-eval` and show me the output.
+If the README and the tests disagree, stop and tell me instead of guessing.
+```
+**Review**
+```text
+Review my solution to "Retrieval metrics: recall@k, MRR, nDCG" as a senior forward deployed engineer would before it
+ships to a customer. Specifically: Is nDCG normalised by the ideal ordering of all relevant docs, not just retrieved
+ones? Are queries with no relevant docs handled? Is the comparison table sign-formatted correctly? Rank findings by
+customer impact, quote the line for each, and say which ones a test should catch.
+```

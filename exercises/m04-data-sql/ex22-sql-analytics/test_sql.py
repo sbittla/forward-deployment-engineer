@@ -70,3 +70,15 @@ def test_sql_constants_filled(impl):
     for name in ("TICKETS_PER_STATUS", "AVG_RESOLUTION_HOURS", "TOP_AGENTS", "REOPEN_RATE",
                  "CUSTOMERS_WITHOUT_TICKETS", "WEEKLY_FLOW"):
         assert "select" in getattr(impl, name).lower()
+
+
+def test_empty_database(impl):
+    c = sqlite3.connect(":memory:")
+    c.executescript("CREATE TABLE agents(id INTEGER PRIMARY KEY, name TEXT, team TEXT);"
+                    "CREATE TABLE customers(id INTEGER PRIMARY KEY, name TEXT, tier TEXT);"
+                    "CREATE TABLE tickets(id INTEGER PRIMARY KEY, customer_id INT, agent_id INT, category TEXT,"
+                    " priority TEXT, status TEXT, created_at TEXT, resolved_at TEXT, reopened INT);")
+    for fn in (impl.tickets_per_status, impl.avg_resolution_hours, impl.reopen_rate,
+               impl.customers_without_tickets, impl.weekly_flow):
+        assert fn(c) == []
+    assert impl.top_agents(c, "2026-01-01") == []

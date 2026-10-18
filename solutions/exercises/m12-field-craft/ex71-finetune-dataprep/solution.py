@@ -30,6 +30,8 @@ def to_example(conv: dict, system: str) -> dict:
             msgs.append({"role": role, "content": text})
     while msgs and msgs[-1]["role"] != "assistant":
         msgs.pop()
+    if not msgs:
+        raise ValueError(f"conversation {conv.get('id')} has no agent turn")
     return {"messages": [{"role": "system", "content": system}] + msgs}
 
 

@@ -24,6 +24,7 @@ def train_test_split(rows: list[tuple[str, str]], test_ratio: float, seed: int):
 class NaiveBayes:
     def __init__(self, alpha: float = 1.0):
         self.alpha = alpha
+        self.labels: list[str] = []
 
     def fit(self, texts: list[str], labels: list[str]) -> "NaiveBayes":
         self.labels = sorted(set(labels))
@@ -37,6 +38,8 @@ class NaiveBayes:
         return self
 
     def predict_proba(self, text: str) -> dict[str, float]:
+        if not self.labels:
+            raise RuntimeError("call fit() before predict")
         v = len(self.vocab)
         scores = {}
         for l in self.labels:

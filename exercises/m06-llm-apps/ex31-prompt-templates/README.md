@@ -2,6 +2,11 @@
 
 **Module:** m06 LLM Applications · **Covers:** R09 Prompt & context engineering, R08 LLM apps · **Time:** 45 min
 
+## Learning objectives
+- Treat prompts as versioned, immutable, traceable artifacts.
+- Fail loudly on missing or unexpected template variables.
+- Join logged answers to the exact prompt version with a content hash.
+
 ## Scenario
 Three engineers edit the same system prompt in three branches; a regression ships and nobody can say which prompt
 produced which answer. Treat prompts like code: named, versioned, validated and traceable in logs.
@@ -19,3 +24,28 @@ produced which answer. Treat prompts like code: named, versioned, validated and 
   (not the rendered text) so logs can join answers to exact prompt versions.
 - `diff(name, v1, v2) -> list[str]` — `difflib.unified_diff` of the two templates' lines (no line endings),
   with `fromfile=f"{name}@{v1}"`, `tofile=f"{name}@{v2}"`.
+
+## Prompt kit
+**Learn (tutor prompt)**
+```text
+I'm preparing for a Forward Deployed Engineer role and working on the exercise "Versioned prompt templates". Before
+I write code, teach me prompt versioning, semantic versioning, template rendering with strict variables, and prompt
+diffs in code review. Use short Python examples that are not the exercise solution. Then ask me three questions to
+check my understanding, one at a time, and tell me what to re-read if I get one wrong.
+```
+**Build (coding-agent spec)**
+```text
+Implement exercises/m06-llm-apps/ex31-prompt-templates/starter.py so that test_prompts.py passes. README.md in that
+folder is the spec: follow its names, formats, ordering and error messages exactly. Public API: `Rendered`,
+`PromptRegistry`. Constraints: Python 3.11+, the standard library and the repo's fde_kit package only (pyyaml is
+allowed where the README uses YAML). Do not modify the tests or fde_kit. When you're done, run `pytest
+exercises/m06-llm-apps/ex31-prompt-templates` and show me the output. If the README and the tests disagree, stop and
+tell me instead of guessing.
+```
+**Review**
+```text
+Review my solution to "Versioned prompt templates" as a senior forward deployed engineer would before it ships to a
+customer. Specifically: Is semver comparison numeric (1.10.0 > 1.9.0)? Does the hash cover the template rather than
+the rendered text? How would you roll back a bad prompt version in production? Rank findings by customer impact,
+quote the line for each, and say which ones a test should catch.
+```

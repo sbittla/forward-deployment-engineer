@@ -60,3 +60,10 @@ def test_llm_classify(impl):
 def test_recommend(impl):
     assert impl.recommend({"macro_f1": 0.93}, {"macro_f1": 0.95}, 500_000, 0.002) == ("baseline", 1000.0)
     assert impl.recommend({"macro_f1": 0.80}, {"macro_f1": 0.95}, 500_000, 0.002) == ("llm", 1000.0)
+
+
+def test_predict_before_fit_and_degenerate_metrics(impl):
+    with pytest.raises(RuntimeError):
+        impl.NaiveBayes().predict("refund please")
+    m = impl.metrics(["a", "a"], ["b", "b"])
+    assert m["accuracy"] == 0.0 and m["macro_f1"] == 0.0 and m["confusion"] == {("a", "b"): 2}

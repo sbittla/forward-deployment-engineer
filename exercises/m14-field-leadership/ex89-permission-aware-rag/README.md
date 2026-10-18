@@ -2,6 +2,11 @@
 
 **Module:** m14 · **Covers:** R39 Identity & permission-aware access, R10 Retrieval, R17 Security · **Time:** 75 min
 
+## Learning objectives
+- Validate OIDC ID tokens correctly, rejecting alg=none and bad claims.
+- Filter retrieval candidates by ACL before ranking.
+- Build an on-behalf-of token exchange request for downstream APIs.
+
 ## Scenario
 The copilot indexes the whole SharePoint/Confluence estate. A claims adjuster asks a question, and the top hit is
 an HR document about a colleague's disciplinary case. Nothing was "hacked". Retrieval simply ignored permissions.
@@ -27,3 +32,30 @@ customer's identity provider (Entra ID, Okta).
    `grant_type=urn:ietf:params:oauth:grant-type:token-exchange`, `subject_token`,
    `subject_token_type=urn:ietf:params:oauth:token-type:access_token`, `requested_token_type=...:access_token`,
    `scope`, `client_id`, `client_secret`.
+
+## Prompt kit
+**Learn (tutor prompt)**
+```text
+I'm preparing for a Forward Deployed Engineer role and working on the exercise "Permission-aware RAG: OIDC token
+validation, ACL filtering, on-behalf-of". Before I write code, teach me OIDC/JWT validation (alg, signature, iss,
+aud, exp, nbf), document ACLs with deny rules, permission-aware RAG, and OAuth 2.0 token exchange (RFC 8693). Use
+short Python examples that are not the exercise solution. Then ask me three questions to check my understanding, one
+at a time, and tell me what to re-read if I get one wrong.
+```
+**Build (coding-agent spec)**
+```text
+Implement exercises/m14-field-leadership/ex89-permission-aware-rag/starter.py so that test_permissions.py passes.
+README.md in that folder is the spec: follow its names, formats, ordering and error messages exactly. Public API:
+`AuthError`, `Principal`, `make_token`, `verify_id_token`, `allowed`, `secure_search`, `obo_exchange_request`.
+Constraints: Python 3.11+, the standard library and the repo's fde_kit package only (pyyaml is allowed where the
+README uses YAML). Do not modify the tests or fde_kit. When you're done, run `pytest
+exercises/m14-field-leadership/ex89-permission-aware-rag` and show me the output. If the README and the tests
+disagree, stop and tell me instead of guessing.
+```
+**Review**
+```text
+Review my solution to "Permission-aware RAG: OIDC token validation, ACL filtering, on-behalf-of" as a senior forward
+deployed engineer would before it ships to a customer. Specifically: Is the signature verified before claims are
+trusted? Could ranking before filtering leak counts or snippets? Does the audit record avoid logging document
+contents? Rank findings by customer impact, quote the line for each, and say which ones a test should catch.
+```

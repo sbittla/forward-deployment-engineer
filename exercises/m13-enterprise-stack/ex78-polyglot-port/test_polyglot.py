@@ -1,3 +1,4 @@
+import pytest
 """Vectors for the java variant were produced by compiling and running reference/CustomerSigner.java."""
 import base64
 import hashlib
@@ -48,3 +49,13 @@ def test_cpp_variant(impl):
     h = impl.sign_headers("get", "/v1/shipments", Q1, b"", TS, "AK1", "s3cr3t-key", variant="cpp")
     sig = base64.b64encode(hmac.new(b"s3cr3t-key", canon.encode(), hashlib.sha256).digest()).decode()
     assert h == {"Authorization": f"NWS1-HMAC-SHA256 Credential=AK1, Signature={sig}", "X-NWS-Date": "1792143000"}
+
+
+def test_unknown_variant_and_unicode(impl):
+    ts = datetime(2026, 1, 1, tzinfo=timezone.utc)
+    with pytest.raises(ValueError):
+        impl.canonical_request("GET", "/", {}, b"", ts, "rust")
+    with pytest.raises(ValueError):
+        impl.sign_headers("GET", "/", {}, b"", ts, "k", "s", variant="python")
+    assert impl.rfc3986("ü ~*") == "%C3%BC%20~%2A" and impl.encode_path("/a b/ü") == "/a%20b/%C3%BC"
+    assert impl.canonical_query({}) == ""

@@ -2,6 +2,11 @@
 
 **Module:** m14 Field Leadership · **Covers:** R33 Delivery management & SOW, R30 Value, R18 Scoping · **Time:** 75 min
 
+## Learning objectives
+- Estimate tasks with PERT and schedule them with the critical path method.
+- Produce P50/P90 estimates and dated milestones on working days.
+- Render a SOW with deliverables and acceptance criteria.
+
 ## Scenario
 OpenAI's Deployment Lead and Anthropic's Staff FDE postings both ask you to "scope the work, sequence it" and
 "prepare detailed scopes of work and project plans for both proof-of-concept prototypes and full production
@@ -29,3 +34,29 @@ working days).
    `Estimate` (`P50: N days ($X)` and `P90: N days ($Y)`, money with thousands separators, rounded to the dollar).
    Milestone due date = the finish date of the task tagged with it (finish day offset, rounded up, minus 1 → working
    day date).
+
+## Prompt kit
+**Learn (tutor prompt)**
+```text
+I'm preparing for a Forward Deployed Engineer role and working on the exercise "Statement of work and delivery plan
+with critical path". Before I write code, teach me statements of work, PERT estimation, critical path scheduling,
+slack, and communicating estimate ranges to procurement. Use short Python examples that are not the exercise
+solution. Then ask me three questions to check my understanding, one at a time, and tell me what to re-read if I get
+one wrong.
+```
+**Build (coding-agent spec)**
+```text
+Implement exercises/m14-field-leadership/ex81-sow-delivery-plan/starter.py so that test_sow.py passes. README.md in
+that folder is the spec: follow its names, formats, ordering and error messages exactly. Public API: `Task`, `Slot`,
+`pert`, `schedule`, `critical_path`, `project_estimate`, `to_dates`, `render_sow`. Constraints: Python 3.11+, the
+standard library and the repo's fde_kit package only (pyyaml is allowed where the README uses YAML). Do not modify
+the tests or fde_kit. When you're done, run `pytest exercises/m14-field-leadership/ex81-sow-delivery-plan` and show
+me the output. If the README and the tests disagree, stop and tell me instead of guessing.
+```
+**Review**
+```text
+Review my solution to "Statement of work and delivery plan with critical path" as a senior forward deployed engineer
+would before it ships to a customer. Specifically: Are cycles and unknown dependencies rejected? Is the backward
+pass correct for tasks with no successors? Would a customer sign this SOW, and what is missing? Rank findings by
+customer impact, quote the line for each, and say which ones a test should catch.
+```

@@ -2,6 +2,11 @@
 
 **Module:** m04 · **Covers:** R04 Data pipelines, R31 Data platforms (Databricks/Snowflake/lakehouse) · **Time:** 60 min
 
+## Learning objectives
+- Implement bronze, silver and gold layers with clear contracts.
+- Quarantine bad records with reasons instead of dropping them.
+- Deduplicate deterministically and compute business aggregates.
+
 ## Scenario
 Databricks, Snowflake and Palantir FDE postings all expect you to think in layered data products. Here you build
 the medallion pattern in plain Python so the concepts transfer to Delta Live Tables, dbt or Foundry pipelines:
@@ -29,3 +34,29 @@ Input: JSON lines of e-commerce events: `{"event_id","ts","type":"view|purchase"
 ## Field notes
 In Databricks terms: bronze = Auto Loader to a Delta table, silver = `MERGE INTO` with expectations, gold =
 materialised views. Keep the quarantine table — it is your best customer-facing data-quality report.
+
+## Prompt kit
+**Learn (tutor prompt)**
+```text
+I'm preparing for a Forward Deployed Engineer role and working on the exercise "Bronze / silver / gold mini
+lakehouse". Before I write code, teach me the medallion architecture, raw data preservation, conforming and
+deduplicating events, quarantine tables, and how this maps to Databricks, Snowflake and Foundry pipelines. Use short
+Python examples that are not the exercise solution. Then ask me three questions to check my understanding, one at a
+time, and tell me what to re-read if I get one wrong.
+```
+**Build (coding-agent spec)**
+```text
+Implement exercises/m04-data-sql/ex26-medallion-pipeline/starter.py so that test_medallion.py passes. README.md in
+that folder is the spec: follow its names, formats, ordering and error messages exactly. Public API: `bronze`,
+`silver`, `gold`. Constraints: Python 3.11+, the standard library and the repo's fde_kit package only (pyyaml is
+allowed where the README uses YAML). Do not modify the tests or fde_kit. When you're done, run `pytest
+exercises/m04-data-sql/ex26-medallion-pipeline` and show me the output. If the README and the tests disagree, stop
+and tell me instead of guessing.
+```
+**Review**
+```text
+Review my solution to "Bronze / silver / gold mini lakehouse" as a senior forward deployed engineer would before it
+ships to a customer. Specifically: Is the dedupe tie-break deterministic? Can a malformed line crash silver instead
+of being quarantined? Is conversion rate safe when a product has purchases but no views? Rank findings by customer
+impact, quote the line for each, and say which ones a test should catch.
+```

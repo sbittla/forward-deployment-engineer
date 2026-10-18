@@ -1,0 +1,14 @@
+{
+  "id": "ex99",
+  "module": "m09-evaluation",
+  "slug": "agent-trajectory-evals",
+  "title": "Agent trajectory evals and pass^k reliability",
+  "requirements": [
+    "R13",
+    "R11"
+  ],
+  "language": "python",
+  "tools": [
+    "Agent evals"
+  ]
+}

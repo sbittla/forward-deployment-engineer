@@ -3,6 +3,11 @@
 **Module:** m14 · **Covers:** R43 Regulatory frameworks, R17 Security & compliance, R33 Delivery (procurement gates) ·
 **Time:** 60 min
 
+## Learning objectives
+- Answer security questionnaires from a single source of system facts.
+- Route low-confidence answers to a human review queue.
+- Find contradictions between sales claims and how the system works.
+
 ## Scenario
 Anthropic's Staff FDE posting: "anticipate security and procurement gates". The pilot is done, and now a 180-question
 vendor security questionnaire (CAIQ/SIG-style) stands between you and production. Answers must be consistent with
@@ -32,3 +37,29 @@ regulations apply.
      interacts with people (chatbot) or generates content; else `"minimal"`
    - `obligations`: sorted list built from the above (`"DPIA"`, `"BAA"`, `"EU AI Act conformity assessment"` for high,
      `"AI transparency notice"` for limited or high).
+
+## Prompt kit
+**Learn (tutor prompt)**
+```text
+I'm preparing for a Forward Deployed Engineer role and working on the exercise "Security and procurement
+questionnaire responder with regulatory triage". Before I write code, teach me vendor security questionnaires
+(CAIQ/SIG style), consistency of answers, and which regulations apply to a deployment. Use short Python examples
+that are not the exercise solution. Then ask me three questions to check my understanding, one at a time, and tell
+me what to re-read if I get one wrong.
+```
+**Build (coding-agent spec)**
+```text
+Implement exercises/m14-field-leadership/ex83-security-questionnaire/starter.py so that test_questionnaire.py
+passes. README.md in that folder is the spec: follow its names, formats, ordering and error messages exactly. Public
+API: `Answer`, `answer`, `answer_all`, `contradictions`, `regulatory_triage`. Constraints: Python 3.11+, the
+standard library and the repo's fde_kit package only (pyyaml is allowed where the README uses YAML). Do not modify
+the tests or fde_kit. When you're done, run `pytest exercises/m14-field-leadership/ex83-security-questionnaire` and
+show me the output. If the README and the tests disagree, stop and tell me instead of guessing.
+```
+**Review**
+```text
+Review my solution to "Security and procurement questionnaire responder with regulatory triage" as a senior forward
+deployed engineer would before it ships to a customer. Specifically: Does prefix matching create false matches
+('train' matching 'training room')? Are contradictions checked for every claim? Which answers should never be
+auto-generated? Rank findings by customer impact, quote the line for each, and say which ones a test should catch.
+```

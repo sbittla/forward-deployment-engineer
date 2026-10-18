@@ -45,10 +45,14 @@ def run_load(fn, total: int, concurrency: int) -> LoadReport:
 
 
 def littles_law_concurrency(target_rps: float, avg_latency_s: float) -> int:
+    if target_rps < 0 or avg_latency_s < 0:
+        raise ValueError("inputs must be non-negative")
     return math.ceil(round(target_rps * avg_latency_s, 9))
 
 
 def max_rps(concurrency: int, avg_latency_s: float) -> float:
+    if avg_latency_s <= 0 or concurrency < 1:
+        raise ValueError("need avg_latency_s > 0 and concurrency >= 1")
     return round(concurrency / avg_latency_s, 1)
 
 

@@ -3,6 +3,11 @@
 **Module:** m13 · **Covers:** R04 Pipelines, R31 Data platforms, R27 Performance · **Hands-on:** Spark, Databricks ·
 **Time:** 75 min
 
+## Learning objectives
+- See partitions, narrow vs wide transformations and shuffles in a mini engine.
+- Diagnose and fix key skew with salting.
+- Write the equivalent PySpark/Delta job for Databricks.
+
 ## Scenario
 Databricks, Palantir and Snowflake-adjacent FDE roles assume you can reason about distributed execution: why a job
 with one hot key runs for hours, why `collect()` crashed the driver, and where the shuffle happens. Part A builds a
@@ -28,3 +33,30 @@ Write a PySpark job, the code you'd run on Databricks, that:
 
 `spark_job.py` isn't executed by the tests (no Spark cluster needed); it's parsed and checked statically. For the
 Scala API, the same job is `df.filter($"amount" > 0).groupBy("merchant").agg(sum("amount").as("total"))`.
+
+## Prompt kit
+**Learn (tutor prompt)**
+```text
+I'm preparing for a Forward Deployed Engineer role and working on the exercise "Spark fundamentals: partitions,
+shuffles, skew, and a PySpark/Delta job". Before I write code, teach me Spark execution: lazy evaluation,
+partitions, shuffles, skew, salting, and Delta table reads/writes. Use short Python examples that are not the
+exercise solution. Then ask me three questions to check my understanding, one at a time, and tell me what to re-read
+if I get one wrong.
+```
+**Build (coding-agent spec)**
+```text
+Implement exercises/m13-enterprise-stack/ex77-spark-fundamentals/starter.py so that test_spark.py passes. README.md
+in that folder is the spec: follow its names, formats, ordering and error messages exactly. Public API: `MiniRDD`,
+`parallelize`, `skew_ratio`, `salted_reduce_by_key`. Constraints: Python 3.11+, the standard library and the repo's
+fde_kit package only (pyyaml is allowed where the README uses YAML). Do not modify the tests or fde_kit. When you're
+done, run `pytest exercises/m13-enterprise-stack/ex77-spark-fundamentals` and show me the output. If the README and
+the tests disagree, stop and tell me instead of guessing.
+```
+**Review**
+```text
+Review my solution to "Spark fundamentals: partitions, shuffles, skew, and a PySpark/Delta job" as a senior forward
+deployed engineer would before it ships to a customer. Specifically: Does salting produce exactly the same result as
+a plain reduce? Is the shuffle counter incremented once per wide transformation? Would the PySpark job push the
+filter down before the shuffle? Rank findings by customer impact, quote the line for each, and say which ones a test
+should catch.
+```

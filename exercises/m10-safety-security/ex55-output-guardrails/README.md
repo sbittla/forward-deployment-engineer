@@ -2,6 +2,11 @@
 
 **Module:** m10 · **Covers:** R14 Guardrails & responsible AI · **Time:** 50 min
 
+## Learning objectives
+- Block policy-violating answers before they reach end users.
+- Remove sentences that are not supported by retrieved sources.
+- Detect PII that appears in the answer but not in sources.
+
 ## Scenario
 Legal reviewed your copilot and set rules for anything shown to policyholders: no legal or medical advice, no
 promises ("guaranteed approval"), no personal data that wasn't in the retrieved sources, and every sentence must be
@@ -23,3 +28,28 @@ Split the answer into sentences on `(?<=[.!?])\s+`. Content tokens = `fde_kit.to
 Result: if any block-level violation → `allowed=False`, `safe_text=policy.fallback`. Otherwise `allowed=True` and
 `safe_text` = the supported sentences joined by a single space (or `policy.fallback` if none remain).
 Violations are listed in the order of the checks above (sentences in order).
+
+## Prompt kit
+**Learn (tutor prompt)**
+```text
+I'm preparing for a Forward Deployed Engineer role and working on the exercise "Output guardrails and groundedness".
+Before I write code, teach me output guardrails, topic and phrase blocking, lexical groundedness checks, and their
+failure modes. Use short Python examples that are not the exercise solution. Then ask me three questions to check my
+understanding, one at a time, and tell me what to re-read if I get one wrong.
+```
+**Build (coding-agent spec)**
+```text
+Implement exercises/m10-safety-security/ex55-output-guardrails/starter.py so that test_guardrails.py passes.
+README.md in that folder is the spec: follow its names, formats, ordering and error messages exactly. Public API:
+`Policy`, `GuardResult`, `check_output`. Constraints: Python 3.11+, the standard library and the repo's fde_kit
+package only (pyyaml is allowed where the README uses YAML). Do not modify the tests or fde_kit. When you're done,
+run `pytest exercises/m10-safety-security/ex55-output-guardrails` and show me the output. If the README and the
+tests disagree, stop and tell me instead of guessing.
+```
+**Review**
+```text
+Review my solution to "Output guardrails and groundedness" as a senior forward deployed engineer would before it
+ships to a customer. Specifically: Is whole-word topic matching correct for multi-word phrases? Can paraphrased
+unsupported claims pass the token-overlap check? What fallback text would Legal accept? Rank findings by customer
+impact, quote the line for each, and say which ones a test should catch.
+```

@@ -1,3 +1,4 @@
+import pytest
 import asyncio
 import time
 
@@ -54,3 +55,13 @@ def test_bucket_starts_full(impl):
         return time.monotonic() - t0
 
     assert asyncio.run(take3()) < 0.05
+
+
+def test_invalid_limits(impl):
+    with pytest.raises(ValueError):
+        impl.TokenBucket(0, 5)
+    with pytest.raises(ValueError):
+        impl.TokenBucket(1.0, 0)
+    with pytest.raises(ValueError):
+        asyncio.run(impl.gather_limited([lambda: asyncio.sleep(0)], 0))
+    assert asyncio.run(impl.gather_limited([], 3)) == []

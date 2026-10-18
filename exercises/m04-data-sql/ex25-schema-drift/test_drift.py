@@ -49,3 +49,11 @@ def test_migration_sql(impl):
     assert "-- manual: removed adjuster ()" in sql
     assert "-- manual: type_changed fraud_flag (bool->str)" in sql
     assert len(sql) == 5
+
+
+def test_narrowing_and_empty(impl):
+    changes = impl.diff({"a": {"type": "float", "nullable": False}}, {"a": {"type": "int", "nullable": False}})
+    assert [(c.kind, c.detail, c.severity) for c in changes] == [("type_changed", "float->int", "error")]
+    assert impl.infer_schema([]) == {}
+    same = {"a": {"type": "int", "nullable": False}}
+    assert impl.diff(same, same) == []

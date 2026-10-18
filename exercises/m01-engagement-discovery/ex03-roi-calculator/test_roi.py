@@ -37,3 +37,9 @@ def test_sensitivity(impl):
     assert rows[1] == (1.0, 177_840)
     assert rows[0][1] == 216_000 * 0.5 - 38_160
     assert BASE["adoption"] == 0.6  # must not mutate inputs
+
+
+def test_edge_cases(impl):
+    assert impl.payback_months(1000, 0) == float("inf") and impl.payback_months(1000, -5) == float("inf")
+    assert impl.annual_llm_cost(0, 100, 100, 3, 15) == 0.0
+    assert impl.annual_labor_savings(1000, 5, 60, adoption=0.0) == 0.0

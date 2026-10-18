@@ -1,3 +1,4 @@
+import pytest
 import re
 
 CANARY = "sk-canary-7731"
@@ -68,3 +69,11 @@ def test_retest(impl):
     after = impl.run_suite(attacks(impl), hardened, [CANARY], FORBIDDEN)
     assert impl.retest_diff(before, after) == {"fixed": ["EX-1", "PI-1", "PII-1"], "regressed": ["PI-2"],
                                                 "still_failing": ["TM-1"]}
+
+
+def test_invalid_attacks_rejected(impl):
+    with pytest.raises(ValueError):
+        impl.Attack("a1", "nonsense", "p", "high")
+    with pytest.raises(ValueError):
+        impl.Attack("a1", "jailbreak", "p", "extreme")
+    assert set(impl.CATEGORIES) == {"prompt_injection", "jailbreak", "data_exfiltration", "pii_leak", "tool_misuse"}

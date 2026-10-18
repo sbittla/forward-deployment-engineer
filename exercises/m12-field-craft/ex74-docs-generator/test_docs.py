@@ -84,3 +84,10 @@ def test_render(impl, mod):
 
 def test_missing_docs(impl, mod):
     assert impl.missing_docs(mod) == ["ClaimsClient.update", "get_claim"]
+
+
+def test_empty_module(impl):
+    import types
+    mod = types.ModuleType("empty_mod")
+    assert impl.public_api(mod) == [] and impl.missing_docs(mod) == []
+    assert impl.parse_google_docstring("") == {"summary": "", "args": {}, "returns": ""}

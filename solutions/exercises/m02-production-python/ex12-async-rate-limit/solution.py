@@ -4,6 +4,8 @@ import time
 
 class TokenBucket:
     def __init__(self, rate: float, capacity: int):
+        if rate <= 0 or capacity < 1:
+            raise ValueError("rate must be > 0 and capacity >= 1")
         self.rate = rate
         self.capacity = capacity
         self._tokens = float(capacity)
@@ -26,6 +28,8 @@ class TokenBucket:
 
 
 async def gather_limited(factories, concurrency: int, bucket: TokenBucket | None = None) -> list:
+    if concurrency < 1:
+        raise ValueError("concurrency must be >= 1")
     sem = asyncio.Semaphore(concurrency)
     results: list = [None] * len(factories)
 

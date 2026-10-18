@@ -64,3 +64,11 @@ def test_summary(impl):
     assert "Root cause: vectordb" in md
     assert "Blast radius: vectordb, api, retriever, gateway, authsvc" in md
     assert "Malformed lines: 2" in md
+
+
+def test_no_errors_and_garbage(impl):
+    ok = json.dumps({"ts": "2026-01-01T02:00:00Z", "service": "api", "level": "INFO", "msg": "fine"})
+    assert impl.parse(["", "nope", ok]) == ([json.loads(ok)], 2)
+    assert impl.root_cause([], {}) is None and impl.timeline([], "zzz") == []
+    summary = impl.incident_summary([ok, "garbage"], {"api": []})
+    assert "Root cause: none" in summary and "Blast radius: none" in summary and "Malformed lines: 1" in summary

@@ -3,6 +3,11 @@
 **Module:** m13 · **Covers:** R03 SQL, R10 Vector search, R28 Architecture · **Hands-on:** Postgres, SQL, vector DB ·
 **Time:** 60 min
 
+## Learning objectives
+- Port SQLite schemas and queries to Postgres.
+- Generate pgvector DDL, indexes and similarity queries.
+- Avoid placeholder and quoting bugs during translation.
+
 ## Scenario
 You prototyped on SQLite (fast, zero setup). The customer's platform team only runs managed Postgres (RDS, Cloud SQL,
 Azure Database for PostgreSQL), and their security team won't approve a separate vector database, so embeddings go
@@ -30,3 +35,28 @@ into Postgres with the `pgvector` extension. Port the schema and queries and gen
 4. `knn_query(table, k, metric="cosine") -> str` using operators `<=>` (cosine), `<->` (l2), `<#>` (ip):
    `SELECT doc_id, chunk, embedding {op} %s AS distance FROM {table} ORDER BY embedding {op} %s LIMIT {k}`.
    `k` must be 1–100.
+
+## Prompt kit
+**Learn (tutor prompt)**
+```text
+I'm preparing for a Forward Deployed Engineer role and working on the exercise "SQLite to Postgres portability and
+pgvector". Before I write code, teach me SQLite vs Postgres differences, psycopg placeholders, pgvector types,
+distance operators and HNSW/IVFFlat indexes. Use short Python examples that are not the exercise solution. Then ask
+me three questions to check my understanding, one at a time, and tell me what to re-read if I get one wrong.
+```
+**Build (coding-agent spec)**
+```text
+Implement exercises/m13-enterprise-stack/ex80-postgres-pgvector/starter.py so that test_postgres.py passes.
+README.md in that folder is the spec: follow its names, formats, ordering and error messages exactly. Public API:
+`translate_ddl`, `translate_query`, `vector_schema`, `knn_query`. Constraints: Python 3.11+, the standard library
+and the repo's fde_kit package only (pyyaml is allowed where the README uses YAML). Do not modify the tests or
+fde_kit. When you're done, run `pytest exercises/m13-enterprise-stack/ex80-postgres-pgvector` and show me the
+output. If the README and the tests disagree, stop and tell me instead of guessing.
+```
+**Review**
+```text
+Review my solution to "SQLite to Postgres portability and pgvector" as a senior forward deployed engineer would
+before it ships to a customer. Specifically: Are '?' characters inside string literals left alone? Does the distance
+operator match the chosen metric? Which translations need a human because they change semantics? Rank findings by
+customer impact, quote the line for each, and say which ones a test should catch.
+```

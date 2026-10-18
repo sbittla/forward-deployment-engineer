@@ -2,6 +2,11 @@
 
 **Module:** m05 · **Covers:** R02 TypeScript/full-stack · **Time:** 45 min
 
+## Learning objectives
+- Model chat UI state transitions as a pure reducer.
+- Prevent double-sends, duplicate retries and stuck spinners.
+- Unit test UI behaviour without a browser.
+
 ## Scenario
 Your copilot demo's chat widget has state bugs: double-sends while streaming, retry duplicates messages, and an
 error leaves the spinner on forever. Pull all state transitions into one **pure reducer** you can unit test —
@@ -31,4 +36,30 @@ messages only, joined with `\n`.
 ## Run
 ```
 node --test exercises/m05-fullstack-typescript/ex29-ts-chat-reducer/reducer.test.ts
+```
+
+## Prompt kit
+**Learn (tutor prompt)**
+```text
+I'm preparing for a Forward Deployed Engineer role and working on the exercise "TypeScript: chat UI state reducer".
+Before I write code, teach me reducers and immutable state updates, the useReducer pattern, and the chat streaming
+lifecycle. Use short TypeScript examples that are not the exercise solution. Then ask me three questions to check my
+understanding, one at a time, and tell me what to re-read if I get one wrong.
+```
+**Build (coding-agent spec)**
+```text
+Implement exercises/m05-fullstack-typescript/ex29-ts-chat-reducer/starter.ts so that reducer.test.ts passes.
+README.md in that folder is the spec: follow its names, formats, ordering and error messages exactly. Public API:
+`initialState`, `reduce`, `transcript`. Constraints: TypeScript executed directly by Node 23.6+ type stripping: no
+npm packages, no build step, and only erasable type syntax (no enums, namespaces or parameter properties). Do not
+modify the tests. When you're done, run `node --test
+exercises/m05-fullstack-typescript/ex29-ts-chat-reducer/reducer.test.ts` and show me the output. If the README and
+the tests disagree, stop and tell me instead of guessing.
+```
+**Review**
+```text
+Review my solution to "TypeScript: chat UI state reducer" as a senior forward deployed engineer would before it
+ships to a customer. Specifically: Does any action mutate the previous state object or arrays? Is retry a no-op in
+every state where it should be? What race would still exist when wired to a real stream? Rank findings by customer
+impact, quote the line for each, and say which ones a test should catch.
 ```

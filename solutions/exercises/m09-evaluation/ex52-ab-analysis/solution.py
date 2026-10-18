@@ -4,6 +4,8 @@ import statistics
 
 
 def _mean(xs):
+    if not xs:
+        raise ValueError("each group needs at least one outcome")
     return sum(xs) / len(xs)
 
 

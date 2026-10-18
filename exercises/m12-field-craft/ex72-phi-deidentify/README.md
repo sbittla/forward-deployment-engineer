@@ -2,6 +2,11 @@
 
 **Module:** m12 · **Covers:** R25 Regulated industry context, R17 Compliance · **Time:** 60 min
 
+## Learning objectives
+- De-identify health records with a Safe Harbor-style subset of rules.
+- Enforce retention with legal holds.
+- Log access by purpose without logging record contents.
+
 ## Scenario
 A health system wants to use LLMs to summarise intake notes for research dashboards. Their privacy officer
 requires a HIPAA Safe Harbor-style de-identification step (this exercise implements a teaching subset — real
@@ -24,3 +29,29 @@ programmes need the full 18 identifiers, an expert review, and legal sign-off) p
 
 `access_log_entry(user, purpose, record_ids, today) -> dict` — `{"user", "purpose", "record_count", "date"}`
 (never the record contents); raise `ValueError` if `purpose` is not in `ALLOWED_PURPOSES`.
+
+## Prompt kit
+**Learn (tutor prompt)**
+```text
+I'm preparing for a Forward Deployed Engineer role and working on the exercise "Regulated data: de-identification
+and retention". Before I write code, teach me HIPAA Safe Harbor de-identification concepts, generalising dates and
+ZIP codes, age bands, retention policies and purpose-based access logging. Use short Python examples that are not
+the exercise solution. Then ask me three questions to check my understanding, one at a time, and tell me what to
+re-read if I get one wrong.
+```
+**Build (coding-agent spec)**
+```text
+Implement exercises/m12-field-craft/ex72-phi-deidentify/starter.py so that test_phi.py passes. README.md in that
+folder is the spec: follow its names, formats, ordering and error messages exactly. Public API: `deidentify`,
+`apply_retention`, `access_log_entry`. Constraints: Python 3.11+, the standard library and the repo's fde_kit
+package only (pyyaml is allowed where the README uses YAML). Do not modify the tests or fde_kit. When you're done,
+run `pytest exercises/m12-field-craft/ex72-phi-deidentify` and show me the output. If the README and the tests
+disagree, stop and tell me instead of guessing.
+```
+**Review**
+```text
+Review my solution to "Regulated data: de-identification and retention" as a senior forward deployed engineer would
+before it ships to a customer. Specifically: Is replacement order correct so a name inside an email isn't
+half-redacted? Are ages computed correctly around birthdays? Which identifiers from the full list of 18 are still
+missing? Rank findings by customer impact, quote the line for each, and say which ones a test should catch.
+```

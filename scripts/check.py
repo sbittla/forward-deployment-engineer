@@ -2,7 +2,7 @@
 
 usage:
   python scripts/check.py               # your work (starters); red until you solve them
-  python scripts/check.py --solutions   # reference solutions; must be all green
+  python scripts/check.py --solutions   # reference solutions (+ spec lint); must be all green
   python scripts/check.py --solutions exercises/m07-retrieval-rag   # one module
 """
 import os
@@ -28,6 +28,8 @@ def main(argv: list[str]) -> int:
             rc |= subprocess.call(["node", "--test", str(t)], cwd=ROOT, env=env)
     elif ts_tests:
         print("node not found: skipping TypeScript exercises (needs Node >= 23.6)")
+    if solutions:
+        rc |= subprocess.call([sys.executable, str(ROOT / "scripts" / "spec_lint.py")], cwd=ROOT)
     return rc
 
 

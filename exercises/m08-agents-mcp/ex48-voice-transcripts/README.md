@@ -2,6 +2,11 @@
 
 **Module:** m08 · **Covers:** R32 Voice / multimodal AI, R15 Observability · **Time:** 50 min
 
+## Learning objectives
+- Turn a voice call event log into segments, turns and latency metrics.
+- Measure response latency, barge-ins and silences.
+- Report conversational quality in numbers a contact-centre lead understands.
+
 ## Scenario
 Voice-agent FDE roles (contact centres, healthcare intake, drive-through ordering) live and die by conversational
 latency and interruption handling. The customer says "the bot feels slow and talks over people". Turn that feeling
@@ -24,3 +29,28 @@ speech segment; `text` events carry the transcript for the segment currently ope
    percentile; `None` if no latencies), `barge_in_count`, `agent_talk_ratio` (agent talk time / total talk time,
    3 dp), `long_silences` (count of gaps between consecutive segments, any speaker, longer than the threshold).
 6. `to_transcript(turns) -> str` — `"Caller: ...\nAgent: ..."`.
+
+## Prompt kit
+**Learn (tutor prompt)**
+```text
+I'm preparing for a Forward Deployed Engineer role and working on the exercise "Voice agent transcripts: turns,
+barge-in, latency". Before I write code, teach me voice agent pipelines (ASR, LLM, TTS), conversational latency,
+barge-in, and turn-taking metrics. Use short Python examples that are not the exercise solution. Then ask me three
+questions to check my understanding, one at a time, and tell me what to re-read if I get one wrong.
+```
+**Build (coding-agent spec)**
+```text
+Implement exercises/m08-agents-mcp/ex48-voice-transcripts/starter.py so that test_voice.py passes. README.md in that
+folder is the spec: follow its names, formats, ordering and error messages exactly. Public API: `Segment`,
+`segments`, `turns`, `response_latencies`, `barge_ins`, `call_metrics`, `to_transcript`. Constraints: Python 3.11+,
+the standard library and the repo's fde_kit package only (pyyaml is allowed where the README uses YAML). Do not
+modify the tests or fde_kit. When you're done, run `pytest exercises/m08-agents-mcp/ex48-voice-transcripts` and show
+me the output. If the README and the tests disagree, stop and tell me instead of guessing.
+```
+**Review**
+```text
+Review my solution to "Voice agent transcripts: turns, barge-in, latency" as a senior forward deployed engineer
+would before it ships to a customer. Specifically: Are unclosed segments and stray end events handled? Is
+nearest-rank percentile implemented exactly? Which metric best captures 'the bot talks over people'? Rank findings
+by customer impact, quote the line for each, and say which ones a test should catch.
+```

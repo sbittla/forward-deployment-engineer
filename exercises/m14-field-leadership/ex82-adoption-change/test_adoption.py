@@ -1,3 +1,4 @@
+import pytest
 def E(user, team, event, week):
     return {"user": user, "team": team, "event": event, "week": week}
 
@@ -39,3 +40,9 @@ def test_lagging_and_plan(impl):
 def test_diff_in_diff(impl):
     r = impl.diff_in_diff([11, 12, 10], [8, 9, 7], [11, 11, 11], [10.5, 10, 10.5])
     assert r == {"treatment_change": -3.0, "control_change": -0.67, "effect": -2.33, "effect_pct": -21.21}
+
+
+def test_empty_inputs(impl):
+    with pytest.raises(ValueError):
+        impl.diff_in_diff([], [1.0], [1.0], [1.0])
+    assert impl.funnel([])["activation_rate"] == 0.0 and impl.weekly_retention([], 1) == []

@@ -57,3 +57,7 @@ def test_render(impl):
 def test_render_empty_sections(impl):
     md = impl.render([], TODAY, "P")
     assert md.count("- none") == 4
+
+
+def test_no_tasks_is_green(impl):
+    assert impl.overall_status([], "2026-10-18") == "green"

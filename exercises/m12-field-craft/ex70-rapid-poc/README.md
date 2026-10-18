@@ -2,6 +2,11 @@
 
 **Module:** m12 · **Covers:** R21 Rapid prototyping, R08 LLM apps · **Time-box:** 90 minutes, hard stop
 
+## Learning objectives
+- Run an honest, time-boxed POC: rules first, the LLM only for gaps.
+- Measure per-field accuracy on real samples.
+- Write a readout with clear next steps and limits.
+
 ## Scenario
 The AP manager at a logistics customer: *"Can AI read our vendor invoices?"* You have until lunch. A good POC is
 honest: deterministic rules where they work, the LLM only where they don't, a measured accuracy table on real
@@ -26,3 +31,37 @@ Fields: `invoice_number`, `invoice_date` (ISO `YYYY-MM-DD`), `total` (float), `v
 4. `poc_readout(metrics) -> str` — markdown table `| Field | Accuracy |` (one row per field, value as given) and a `## Next steps` list that includes
    `- Improve <field> extraction` for each field under 0.9 accuracy, and always
    `- Run on 200 labelled invoices before any production decision`.
+
+## Prompt kit
+**Learn (tutor prompt)**
+```text
+I'm preparing for a Forward Deployed Engineer role and working on the exercise "Time-boxed POC: invoice extraction".
+Before I write code, teach me how to scope a POC, combine deterministic extraction with an LLM fallback, measure
+accuracy per field, and present results honestly. Use short Python examples that are not the exercise solution. Then
+ask me three questions to check my understanding, one at a time, and tell me what to re-read if I get one wrong.
+```
+**Build (coding-agent spec)**
+```text
+Implement exercises/m12-field-craft/ex70-rapid-poc/starter.py so that test_poc.py passes. README.md in that folder
+is the spec: follow its names, formats, ordering and error messages exactly. Public API: `Extraction`,
+`rule_extract`, `extract`, `evaluate`, `poc_readout`. Constraints: Python 3.11+, the standard library and the repo's
+fde_kit package only (pyyaml is allowed where the README uses YAML). Do not modify the tests or fde_kit. When you're
+done, run `pytest exercises/m12-field-craft/ex70-rapid-poc` and show me the output. If the README and the tests
+disagree, stop and tell me instead of guessing.
+```
+**Review**
+```text
+Review my solution to "Time-boxed POC: invoice extraction" as a senior forward deployed engineer would before it
+ships to a customer. Specifically: Can the LLM override a rule-extracted value? Are DD/MM dates parsed as specified
+and not as MM/DD? Does the readout state sample size and what was not tested? Rank findings by customer impact,
+quote the line for each, and say which ones a test should catch.
+```
+**Production prompt (what this exercise's code sends to a model)**
+```text
+Extract the requested fields from the vendor invoice. Return only a JSON object containing exactly the fields listed on the first line, using: invoice_number (string), invoice_date (YYYY-MM-DD), total (number, no currency symbol), vendor (string). Use null when a field is not present; do not guess.
+
+User turn:
+Fields: {missing_fields}
+
+{invoice_text}
+```

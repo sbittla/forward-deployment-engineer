@@ -1,0 +1,14 @@
+{
+  "id": "ex96",
+  "module": "m15-prompt-engineering",
+  "slug": "few-shot-selection",
+  "title": "Dynamic few-shot example selection",
+  "requirements": [
+    "R09",
+    "R10"
+  ],
+  "language": "python",
+  "tools": [
+    "Prompt engineering"
+  ]
+}

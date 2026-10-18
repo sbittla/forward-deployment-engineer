@@ -2,6 +2,11 @@
 
 **Module:** m03 · **Covers:** R26 On-site embedding, R05 Integration, R17 Security · **Time:** 45 min
 
+## Learning objectives
+- Diagnose proxy, TLS-interception and egress problems in customer networks.
+- Implement NO_PROXY and allowlist matching correctly.
+- Produce a diagnosis the customer's network team can act on.
+
 ## Scenario
 Day one inside a bank: every outbound connection goes through an authenticated corporate proxy, TLS is
 intercepted with the bank's own root CA, and the firewall team only opens egress to an explicit allowlist. Your
@@ -25,3 +30,29 @@ Methods:
   `"ca_bundle: <path>"` or `"ca_bundle: system default"`.
 - `opener()` — a `urllib.request.OpenerDirector` with a `ProxyHandler` configured from the policy (proxies for
   http/https, plus `no` from NO_PROXY).
+
+## Prompt kit
+**Learn (tutor prompt)**
+```text
+I'm preparing for a Forward Deployed Engineer role and working on the exercise "Proxy-, CA- and allowlist-aware
+client for customer networks". Before I write code, teach me corporate proxies, NO_PROXY semantics, custom CA
+bundles for TLS interception, and egress allowlists. Use short Python examples that are not the exercise solution.
+Then ask me three questions to check my understanding, one at a time, and tell me what to re-read if I get one
+wrong.
+```
+**Build (coding-agent spec)**
+```text
+Implement exercises/m03-apis-integration/ex21-proxy-aware-client/starter.py so that test_network.py passes.
+README.md in that folder is the spec: follow its names, formats, ordering and error messages exactly. Public API:
+`EgressDenied`, `NetworkPolicy`. Constraints: Python 3.11+, the standard library and the repo's fde_kit package only
+(pyyaml is allowed where the README uses YAML). Do not modify the tests or fde_kit. When you're done, run `pytest
+exercises/m03-apis-integration/ex21-proxy-aware-client` and show me the output. If the README and the tests
+disagree, stop and tell me instead of guessing.
+```
+**Review**
+```text
+Review my solution to "Proxy-, CA- and allowlist-aware client for customer networks" as a senior forward deployed
+engineer would before it ships to a customer. Specifically: Does '*.x.com' wrongly match 'x.com' or 'evilx.com'? Are
+ports in NO_PROXY entries respected? Would the diagnose() output let a network engineer fix the problem without a
+call? Rank findings by customer impact, quote the line for each, and say which ones a test should catch.
+```

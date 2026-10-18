@@ -2,6 +2,11 @@
 
 **Module:** m12 · **Covers:** R23 Product feedback loop, R19 Communication · **Time:** 50 min
 
+## Learning objectives
+- Cluster field feedback across customers instead of forwarding anecdotes.
+- Weigh requests by reach, revenue and severity.
+- Write a one-page brief product will act on.
+
 ## Scenario
 FDEs are the product team's eyes in the field. But a Slack channel of 200 anecdotes isn't feedback — it's noise.
 Cluster requests across customers, weigh them by reach and revenue, and write the one-page brief product will act on.
@@ -25,3 +30,29 @@ Feedback items: `{"customer", "text", "arr" (annual revenue, USD), "severity": "
    > "<text of the highest-severity item (ties: earliest)>" — <customer>
    ```
    clusters ordered by score desc (ties: earliest first index); one blank line between clusters.
+
+## Prompt kit
+**Learn (tutor prompt)**
+```text
+I'm preparing for a Forward Deployed Engineer role and working on the exercise "Field feedback triage to product
+brief". Before I write code, teach me turning field feedback into product input: clustering, weighting by customers
+and ARR, and writing a concise brief with a representative quote. Use short Python examples that are not the
+exercise solution. Then ask me three questions to check my understanding, one at a time, and tell me what to re-read
+if I get one wrong.
+```
+**Build (coding-agent spec)**
+```text
+Implement exercises/m12-field-craft/ex68-feedback-triage/starter.py so that test_triage.py passes. README.md in that
+folder is the spec: follow its names, formats, ordering and error messages exactly. Public API: `cluster`, `score`,
+`brief`. Constraints: Python 3.11+, the standard library and the repo's fde_kit package only (pyyaml is allowed
+where the README uses YAML). Do not modify the tests or fde_kit. When you're done, run `pytest
+exercises/m12-field-craft/ex68-feedback-triage` and show me the output. If the README and the tests disagree, stop
+and tell me instead of guessing.
+```
+**Review**
+```text
+Review my solution to "Field feedback triage to product brief" as a senior forward deployed engineer would before it
+ships to a customer. Specifically: Is each customer's ARR counted once per cluster? Does greedy clustering depend on
+input order in a way that changes the top item? Would a product manager trust the brief without the raw data? Rank
+findings by customer impact, quote the line for each, and say which ones a test should catch.
+```

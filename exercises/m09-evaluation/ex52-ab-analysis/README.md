@@ -2,6 +2,11 @@
 
 **Module:** m09 · **Covers:** R13 Evaluation, R30 Business value metrics · **Time:** 50 min
 
+## Learning objectives
+- Quantify an A/B lift with a bootstrap confidence interval.
+- Run a two-proportion z-test and compute required sample sizes.
+- Make a ship / inconclusive / harmful recommendation a sponsor can defend.
+
 ## Scenario
 The pilot ran the copilot for half of the agents for three weeks. Resolution rate went from 71.2% to 74.0%. The
 sponsor asks: is that real, and should we roll out? You will answer with an interval, not a vibe.
@@ -21,3 +26,30 @@ Outcomes are lists of 0/1 (1 = ticket resolved on first contact).
    `statistics.NormalDist().inv_cdf` for other alpha/power values.
 5. `decide(control, variant, **kw) -> str` — `"ship"` if CI lower bound > 0 and p < 0.05; `"harmful"` if CI upper
    bound < 0; else `"inconclusive"`.
+
+**Errors:** `lift`, `bootstrap_ci`, `z_test` and `decide` raise `ValueError` if either group is empty.
+
+## Prompt kit
+**Learn (tutor prompt)**
+```text
+I'm preparing for a Forward Deployed Engineer role and working on the exercise "A/B experiment analysis with
+bootstrap CIs". Before I write code, teach me A/B testing for AI pilots: lift, bootstrap CIs, two-proportion
+z-tests, statistical power and sample size. Use short Python examples that are not the exercise solution. Then ask
+me three questions to check my understanding, one at a time, and tell me what to re-read if I get one wrong.
+```
+**Build (coding-agent spec)**
+```text
+Implement exercises/m09-evaluation/ex52-ab-analysis/starter.py so that test_ab.py passes. README.md in that folder
+is the spec: follow its names, formats, ordering and error messages exactly. Public API: `lift`, `bootstrap_ci`,
+`z_test`, `sample_size`, `decide`. Constraints: Python 3.11+, the standard library and the repo's fde_kit package
+only (pyyaml is allowed where the README uses YAML). Do not modify the tests or fde_kit. When you're done, run
+`pytest exercises/m09-evaluation/ex52-ab-analysis` and show me the output. If the README and the tests disagree,
+stop and tell me instead of guessing.
+```
+**Review**
+```text
+Review my solution to "A/B experiment analysis with bootstrap CIs" as a senior forward deployed engineer would
+before it ships to a customer. Specifically: Is the bootstrap deterministic for a seed and are quantile indices
+clamped? Does the z-test handle zero variance? Would you trust a 'ship' decision from a three-week pilot with
+novelty effects? Rank findings by customer impact, quote the line for each, and say which ones a test should catch.
+```

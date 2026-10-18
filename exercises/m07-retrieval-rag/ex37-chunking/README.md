@@ -2,6 +2,11 @@
 
 **Module:** m07 Retrieval & RAG · **Covers:** R10 RAG & retrieval · **Time:** 50 min
 
+## Learning objectives
+- Compare fixed, recursive and heading-aware chunking strategies.
+- Keep chunk offsets exact so citations point at source text.
+- Choose chunking based on document structure and retrieval behaviour.
+
 ## Scenario
 Policy documents are 80-page PDFs converted to markdown. Fixed-size chunks cut exclusions in half ("…is covered" /
 "except flood damage"), and retrieval misses the critical sentence. You'll implement three strategies and compare.
@@ -19,3 +24,28 @@ Policy documents are 80-page PDFs converted to markdown. Fixed-size chunks cut e
 3. `heading_chunks(markdown)` — one chunk per section starting at each ATX heading (`#`..`######`); text before the
    first heading is its own chunk with `meta["path"] == ""`. `meta["path"]` is the heading trail joined by
    `" > "` (e.g. `"Policy > Coverage > Exclusions"`); a heading pops deeper/equal levels off the trail.
+
+## Prompt kit
+**Learn (tutor prompt)**
+```text
+I'm preparing for a Forward Deployed Engineer role and working on the exercise "Chunking strategies". Before I write
+code, teach me chunking strategies for RAG, overlap, separator hierarchies, heading paths as metadata, and how
+chunking affects retrieval recall. Use short Python examples that are not the exercise solution. Then ask me three
+questions to check my understanding, one at a time, and tell me what to re-read if I get one wrong.
+```
+**Build (coding-agent spec)**
+```text
+Implement exercises/m07-retrieval-rag/ex37-chunking/starter.py so that test_chunking.py passes. README.md in that
+folder is the spec: follow its names, formats, ordering and error messages exactly. Public API: `Chunk`,
+`fixed_chunks`, `recursive_chunks`, `heading_chunks`. Constraints: Python 3.11+, the standard library and the repo's
+fde_kit package only (pyyaml is allowed where the README uses YAML). Do not modify the tests or fde_kit. When you're
+done, run `pytest exercises/m07-retrieval-rag/ex37-chunking` and show me the output. If the README and the tests
+disagree, stop and tell me instead of guessing.
+```
+**Review**
+```text
+Review my solution to "Chunking strategies" as a senior forward deployed engineer would before it ships to a
+customer. Specifically: Does concatenating recursive chunks reproduce the input exactly? Can an empty chunk be
+produced? Which strategy would keep an exclusion clause with the coverage it modifies? Rank findings by customer
+impact, quote the line for each, and say which ones a test should catch.
+```

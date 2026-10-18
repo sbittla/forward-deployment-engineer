@@ -26,6 +26,8 @@ def _timestamp(ts: datetime, variant: str) -> str:
 
 
 def canonical_request(method: str, path: str, query: dict, body: bytes, ts: datetime, variant: str = "java") -> str:
+    if variant not in ("java", "go", "cpp"):
+        raise ValueError(f"unknown variant {variant!r}")
     body_hash = hashlib.sha256(body).hexdigest()
     if variant == "cpp":
         body_hash = body_hash.upper()

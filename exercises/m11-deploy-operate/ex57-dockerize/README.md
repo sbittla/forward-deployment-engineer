@@ -2,6 +2,11 @@
 
 **Module:** m11 Deploy & Operate · **Covers:** R07 Containers & CI/CD · **Time:** 50 min
 
+## Learning objectives
+- Write a production Dockerfile that passes a registry policy check.
+- Lint Dockerfiles for root users, unpinned bases, secrets and cache misuse.
+- Order layers for fast, reproducible builds.
+
 ## Scenario
 The customer's container platform team rejects images that run as root, use `:latest`, bake secrets into layers, or
 lack health checks. They run an automated policy check in their registry. You'll write the check *and* a Dockerfile
@@ -22,3 +27,28 @@ that passes it, for the answer service from ex20.
 2. Write `Dockerfile` in this directory that yields **no** issues and would run `python -m app` on port 8080.
 
 The starter `Dockerfile` violates most rules — fix it.
+
+## Prompt kit
+**Learn (tutor prompt)**
+```text
+I'm preparing for a Forward Deployed Engineer role and working on the exercise "Production Dockerfile". Before I
+write code, teach me container hardening: pinned base images, non-root users, healthchecks, secret handling, layer
+caching and exec-form entrypoints. Use short Python examples that are not the exercise solution. Then ask me three
+questions to check my understanding, one at a time, and tell me what to re-read if I get one wrong.
+```
+**Build (coding-agent spec)**
+```text
+Implement exercises/m11-deploy-operate/ex57-dockerize/starter.py so that test_dockerfile.py passes. README.md in
+that folder is the spec: follow its names, formats, ordering and error messages exactly. Public API:
+`lint_dockerfile`. Also create Dockerfile in the same folder, exactly as the README specifies. Constraints: Python
+3.11+, the standard library and the repo's fde_kit package only (pyyaml is allowed where the README uses YAML). Do
+not modify the tests or fde_kit. When you're done, run `pytest exercises/m11-deploy-operate/ex57-dockerize` and show
+me the output. If the README and the tests disagree, stop and tell me instead of guessing.
+```
+**Review**
+```text
+Review my solution to "Production Dockerfile" as a senior forward deployed engineer would before it ships to a
+customer. Specifically: Are line continuations handled when linting? Would the image still build reproducibly in a
+year? Does anything in the build context leak into the image? Rank findings by customer impact, quote the line for
+each, and say which ones a test should catch.
+```

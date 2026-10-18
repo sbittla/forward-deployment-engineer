@@ -3,6 +3,11 @@
 **Module:** m14 · **Covers:** R36 Vendor AI platforms, R08 LLM apps, R05 Integration · **Hands-on:** multi-provider ·
 **Time:** 75 min
 
+## Learning objectives
+- Translate one neutral tool-calling format to Anthropic, OpenAI and Gemini APIs.
+- Map tool calls and tool results correctly in each wire format.
+- Parse each provider's response back into one neutral shape.
+
 ## Scenario
 Accenture's FDE posting asks for "building abstraction layers to manage multi-provider pipelines"; Deloitte lists
 Claude, OpenAI and Gemini side by side. Customers often mandate a provider per region or per data class, and the
@@ -33,3 +38,31 @@ tool results are shaped differently by each API.
    ids, so generate `gemini_call_0`, `gemini_call_1`… in order. A Gemini reply containing a function call has stop
    `"tool_use"`.
 3. `PROVIDERS = {"anthropic": (to_anthropic, from_anthropic), "openai": (...), "gemini": (...)}`.
+
+## Prompt kit
+**Learn (tutor prompt)**
+```text
+I'm preparing for a Forward Deployed Engineer role and working on the exercise "One tool-calling interface over
+Claude, OpenAI and Gemini formats". Before I write code, teach me the differences between the Anthropic Messages
+API, OpenAI Chat Completions and Gemini generateContent: system prompts, tool schemas, tool calls, tool results, and
+role names. Use short Python examples that are not the exercise solution. Then ask me three questions to check my
+understanding, one at a time, and tell me what to re-read if I get one wrong.
+```
+**Build (coding-agent spec)**
+```text
+Implement exercises/m14-field-leadership/ex86-multi-provider-adapter/starter.py so that test_providers.py passes.
+README.md in that folder is the spec: follow its names, formats, ordering and error messages exactly. Public API:
+`Reply`, `to_anthropic`, `to_openai`, `to_gemini`, `from_anthropic`, `from_openai`, `from_gemini`. Constraints:
+Python 3.11+, the standard library and the repo's fde_kit package only (pyyaml is allowed where the README uses
+YAML). Do not modify the tests or fde_kit. When you're done, run `pytest
+exercises/m14-field-leadership/ex86-multi-provider-adapter` and show me the output. If the README and the tests
+disagree, stop and tell me instead of guessing.
+```
+**Review**
+```text
+Review my solution to "One tool-calling interface over Claude, OpenAI and Gemini formats" as a senior forward
+deployed engineer would before it ships to a customer. Specifically: Are consecutive tool results merged into one
+user message for Anthropic? Are OpenAI arguments a JSON string? Does Gemini receive function responses with the
+right role and names? Rank findings by customer impact, quote the line for each, and say which ones a test should
+catch.
+```

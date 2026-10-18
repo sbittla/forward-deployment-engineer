@@ -29,3 +29,7 @@ def test_brief(impl):
     assert '> "Need SSO login with Azure AD" — Initech' in md
     assert "## 2. Export answers to PDF" in md
     assert "Dark mode" not in md
+
+
+def test_empty_feedback(impl):
+    assert impl.cluster([]) == [] and impl.brief([]).strip() == "# Field feedback brief"

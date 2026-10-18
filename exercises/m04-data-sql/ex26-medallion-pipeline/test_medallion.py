@@ -44,3 +44,15 @@ def test_gold(impl):
     g = impl.gold(events)
     assert g["revenue_by_day_country"] == {("2026-10-01", "US"): 25.0, ("2026-10-02", "GB"): 10.56}
     assert g["conversion_by_product"] == {"p1": 1.0, "p2": 0.0}
+
+
+def test_quarantine_reasons(impl):
+    base = '"ts":"2026-01-01T00:00:00","product":"p"'
+    lines = ["not json", '{"event_id":"e1"}',
+             '{"event_id":"e2",' + base + ',"type":"click","country":"US"}',
+             '{"event_id":"e3",' + base + ',"type":"purchase","country":"US","amount":-1}',
+             '{"event_id":"e4",' + base + ',"type":"view","country":"Atlantis"}']
+    events, quarantine = impl.silver(impl.bronze(lines, "s3://raw", "2026-01-02T00:00:00"))
+    assert events == [] and [q["line_no"] for q in quarantine] == [0, 1, 2, 3, 4]
+    assert all(q["reason"] for q in quarantine)
+    assert impl.gold([]) == {"revenue_by_day_country": {}, "conversion_by_product": {}}
