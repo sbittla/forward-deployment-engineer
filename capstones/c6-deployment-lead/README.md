@@ -4,7 +4,7 @@
 R43 Regulatory/security gates · R19 Executive communication · R30 Value · R20 Ambiguity · R23 Product feedback ·
 R13 Measurement
 **Suggested time:** 2 days · **Builds on:** ex05, ex07, ex08, ex81–ex84, ex90
-**Take after:** Part V, last: after ex81–ex84 (Part I) and ex90.
+**Take after:** Part V, last: after ex81, ex82 and ex84 (Part I), ex83 (Part III) and ex90.
 
 ## The engagement
 You are the **Deployment Lead** (OpenAI's title; Anthropic's Staff FDE does the same job) for Meridian Bank's

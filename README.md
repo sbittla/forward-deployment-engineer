@@ -29,7 +29,7 @@ exercises plus 15 capstone days. Full-time (about 20 h/week), that's 10 weeks; p
 |---|---|---|
 | **I · The role and the engagement** | ex01–ex08, ex68, ex69, ex81, ex82, ex84 | |
 | **II · Engineering foundations** | ex09–ex15 · ex16–ex21, ex78 · ex22–ex26, ex77, ex80, ex92 · ex27–ex30, ex91 | |
-| **III · Building AI systems** | ex31–ex36, ex86 · ex37–ex41, ex88 · ex95–ex98 (prompt engineering) · ex42–ex48, ex79, ex85 · ex49–ex52, ex99, ex100 · ex53–ex56, ex83, ex89, ex93 | Capstones 1, 2, 3 |
+| **III · Building AI systems** | ex95–ex98 (prompt engineering) · ex31–ex36, ex86 · ex37–ex41, ex88 · ex42–ex48, ex79, ex85 · ex49–ex52, ex99, ex100 · ex53–ex56, ex83, ex89, ex93 | Capstones 1, 2, 3 |
 | **IV · Production in the customer's world** | ex57–ex66, ex76, ex94 · ex67, ex70–ex75, ex87 | Capstone 4 |
 | **V · Leading engagements** | ex90 | Capstones 5, 6 |
 

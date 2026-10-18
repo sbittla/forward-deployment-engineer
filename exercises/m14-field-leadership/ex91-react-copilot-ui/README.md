@@ -8,8 +8,8 @@
 - Test React logic in plain Node without a bundler.
 
 ## Scenario
-28% of FDE postings mention front-end work; OpenAI asks for full-stack engineers and Palantir for "front-end
-frameworks". Most customer front ends are React. Here you write a real React component and hook, authored against
+60% of FDE postings mention TypeScript, JavaScript or full-stack work; OpenAI asks for full-stack engineers and
+Palantir for "front-end frameworks". Most customer front ends are React. Here you write a real React component and hook, authored against
 React's own `createElement` and `useReducer` APIs and injected as factories. That way they drop into the customer's
 app unchanged (`makeCopilotPanel(React.createElement)`), yet they test in plain Node with no bundler or JSX
 transform.

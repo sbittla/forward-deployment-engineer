@@ -1,7 +1,10 @@
 # Book manuscript, research data, course outline and scoring stay on localhost only
 book/
+book/manuscript/
 course-outline*.md
 *.book.md
+The-Forward-Deployed-Engineer*.docx
+The-Forward-Deployed-Engineer*.pdf
 
 # Python
 __pycache__/
