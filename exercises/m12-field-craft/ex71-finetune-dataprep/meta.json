@@ -6,5 +6,8 @@
   "requirements": [
     "R16"
   ],
-  "language": "python"
+  "language": "python",
+  "tools": [
+    "Fine-tuning"
+  ]
 }

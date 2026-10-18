@@ -4,7 +4,7 @@
   "type": "module",
   "engines": { "node": ">=23.6" },
   "scripts": {
-    "test": "node --test \"exercises/**/*.test.ts\"",
-    "test:solutions": "FDE_SOLUTIONS=1 node --test \"exercises/**/*.test.ts\""
+    "test": "python scripts/check.py",
+    "test:solutions": "python scripts/check.py --solutions"
   }
 }

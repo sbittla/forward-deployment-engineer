@@ -1,0 +1,14 @@
+{
+  "id": "ex79",
+  "module": "m13-enterprise-stack",
+  "slug": "graph-orchestration",
+  "title": "LangGraph-style state graph with checkpoints and interrupts",
+  "requirements": [
+    "R11",
+    "R22"
+  ],
+  "language": "python",
+  "tools": [
+    "LangGraph/LangChain"
+  ]
+}

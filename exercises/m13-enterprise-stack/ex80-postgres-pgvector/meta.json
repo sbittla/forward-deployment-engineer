@@ -1,0 +1,17 @@
+{
+  "id": "ex80",
+  "module": "m13-enterprise-stack",
+  "slug": "postgres-pgvector",
+  "title": "SQLite to Postgres portability and pgvector",
+  "requirements": [
+    "R03",
+    "R10",
+    "R28"
+  ],
+  "language": "python",
+  "tools": [
+    "Postgres",
+    "SQL",
+    "Vector DB"
+  ]
+}

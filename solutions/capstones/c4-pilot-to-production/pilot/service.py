@@ -67,6 +67,7 @@ def make_server(settings: Settings, llm, metrics: Metrics | None = None, logger:
                 return self._send(404, {"error": "not found"})
             auth = self.headers.get("Authorization", "")
             if not (auth.startswith("Bearer ") and any(hmac.compare_digest(auth[7:], t) for t in tokens)):
+                self.rfile.read(min(int(self.headers.get("Content-Length") or 0), 1 << 20))  # drain so the client reads the 401 instead of a TCP reset
                 return self._send(401, {"error": "unauthorized"})
             length = int(self.headers.get("Content-Length") or 0)
             if length > settings.max_input_chars * 4 + 1024:

@@ -1,4 +1,5 @@
 import threading
+import time
 
 import pytest
 
@@ -89,12 +90,16 @@ def test_bulkhead_threads(impl):
                 gate.wait(1)
         except impl.BulkheadFull:
             results.append("full")
+        except Exception as exc:  # e.g. NotImplementedError from an unfinished starter
+            results.append(type(exc).__name__)
 
-    ts = [threading.Thread(target=worker) for _ in range(6)]
+    ts = [threading.Thread(target=worker, daemon=True) for _ in range(6)]
     for t in ts:
         t.start()
-    while len(results) < 6 and results.count("full") < 3:
-        pass
+    deadline = time.monotonic() + 2
+    while results.count("full") + len([r for r in results if r not in ("in", "full")]) < 3 \
+            and time.monotonic() < deadline:
+        time.sleep(0.005)
     gate.set()
     for t in ts:
         t.join()

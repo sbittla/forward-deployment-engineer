@@ -43,6 +43,7 @@ def make_server(answer_fn, tokens, host="127.0.0.1", port=0) -> ThreadingHTTPSer
             if path == "/healthz":
                 return self._send(200, {"status": "ok"})
             if not self._authorized():
+                self.rfile.read(min(int(self.headers.get("Content-Length") or 0), 1 << 20))  # drain so the client reads the 401 instead of a TCP reset
                 return self._send(401, {"error": "unauthorized"})
             length = int(self.headers.get("Content-Length") or 0)
             if length > MAX_BODY:

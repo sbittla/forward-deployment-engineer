@@ -6,5 +6,8 @@
   "requirements": [
     "R07"
   ],
-  "language": "python"
+  "language": "python",
+  "tools": [
+    "Docker"
+  ]
 }

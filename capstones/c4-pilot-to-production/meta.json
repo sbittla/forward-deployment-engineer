@@ -14,5 +14,9 @@
     "R27",
     "R28",
     "R29"
+  ],
+  "tools": [
+    "Kubernetes",
+    "Docker"
   ]
 }

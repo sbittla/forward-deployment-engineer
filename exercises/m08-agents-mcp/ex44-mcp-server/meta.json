@@ -7,5 +7,8 @@
     "R12",
     "R11"
   ],
-  "language": "python"
+  "language": "python",
+  "tools": [
+    "MCP"
+  ]
 }

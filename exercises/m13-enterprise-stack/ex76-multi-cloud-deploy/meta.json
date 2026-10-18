@@ -1,0 +1,17 @@
+{
+  "id": "ex76",
+  "module": "m13-enterprise-stack",
+  "slug": "multi-cloud-deploy",
+  "title": "One service spec rendered for AWS, GCP and Azure with data residency",
+  "requirements": [
+    "R06",
+    "R07",
+    "R25"
+  ],
+  "language": "python",
+  "tools": [
+    "AWS",
+    "GCP",
+    "Azure"
+  ]
+}

@@ -8,5 +8,9 @@
     "R07",
     "R17"
   ],
-  "language": "python"
+  "language": "python",
+  "tools": [
+    "AWS",
+    "Terraform"
+  ]
 }

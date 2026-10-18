@@ -34,6 +34,7 @@ def make_server(copilot, tokens, host: str = "127.0.0.1", port: int = 0) -> Thre
                 return self._send(404, {"error": "not found"})
             auth = self.headers.get("Authorization", "")
             if not (auth.startswith("Bearer ") and any(hmac.compare_digest(auth[7:], t) for t in tokens)):
+                self.rfile.read(min(int(self.headers.get("Content-Length") or 0), 1 << 20))  # drain so the client reads the 401 instead of a TCP reset
                 return self._send(401, {"error": "unauthorized"})
             try:
                 body = json.loads(self.rfile.read(int(self.headers.get("Content-Length") or 0)))
