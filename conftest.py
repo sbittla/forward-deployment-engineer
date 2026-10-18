@@ -51,15 +51,29 @@ def exercise_dir(request):
     return _target_dir(request, "exercises")
 
 
+def _cap_base(request) -> Path:
+    cap_root = Path(str(request.fspath)).parent.parent  # capstones/cN-name/
+    if request.config.getoption("--solutions"):
+        return ROOT / "solutions" / "capstones" / cap_root.name
+    return cap_root / "starter"
+
+
+@pytest.fixture
+def cap_dir(request) -> Path:
+    """Directory holding the capstone code and deliverables under test (starter or solution)."""
+    return _cap_base(request)
+
+
+@pytest.fixture
+def cap_data(request) -> Path:
+    """Shared, read-only data directory of the capstone (same for starter and solution)."""
+    return Path(str(request.fspath)).parent.parent / "data"
+
+
 @pytest.fixture
 def cap(request):
     """Import the capstone package (name given by the test module's PACKAGE)."""
-    test_dir = Path(str(request.fspath)).parent
-    cap_root = test_dir.parent  # capstones/cN-name/
-    if request.config.getoption("--solutions"):
-        base = ROOT / "solutions" / "capstones" / cap_root.name
-    else:
-        base = cap_root / "starter"
+    base = _cap_base(request)
     pkg = request.module.PACKAGE
     for m in [m for m in sys.modules if m == pkg or m.startswith(pkg + ".")]:
         del sys.modules[m]

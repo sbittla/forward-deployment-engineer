@@ -1,0 +1,22 @@
+{"text": "is water damage covered by my policy", "intent": "policy_question"}
+{"text": "what does my deductible cover", "intent": "policy_question"}
+{"text": "does insurance cover flood or storm damage", "intent": "policy_question"}
+{"text": "am I covered if my car is stolen", "intent": "policy_question"}
+{"text": "how long do I have to file a claim", "intent": "policy_question"}
+{"text": "is jewelry theft covered", "intent": "policy_question"}
+{"text": "what is the rental reimbursement limit", "intent": "policy_question"}
+{"text": "how do appeals work for a claim decision", "intent": "policy_question"}
+{"text": "does the policy include roadside assistance", "intent": "policy_question"}
+{"text": "how soon does an adjuster contact me", "intent": "policy_question"}
+{"text": "is glass repair covered", "intent": "policy_question"}
+{"text": "what is the status of my claim", "intent": "claim_status"}
+{"text": "where is my claim payment", "intent": "claim_status"}
+{"text": "has my claim been approved yet", "intent": "claim_status"}
+{"text": "check claim status for claim number", "intent": "claim_status"}
+{"text": "when will I get paid for claim", "intent": "claim_status"}
+{"text": "update on my open claim", "intent": "claim_status"}
+{"text": "let me talk to a person", "intent": "speak_to_human"}
+{"text": "I want a real human agent", "intent": "speak_to_human"}
+{"text": "connect me to a representative now", "intent": "speak_to_human"}
+{"text": "stop the bot I need to speak to someone", "intent": "speak_to_human"}
+{"text": "transfer me to customer service person", "intent": "speak_to_human"}

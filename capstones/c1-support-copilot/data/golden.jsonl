@@ -1,0 +1,12 @@
+{"id": "g01", "question": "Is water damage from a burst pipe covered?", "intent": "policy_question", "must_contain": ["burst pipe", "covered"], "expected_docs": ["homeowners"]}
+{"id": "g02", "question": "Does my homeowners policy cover flood damage from the river?", "intent": "policy_question", "must_contain": ["flood"], "expected_docs": ["homeowners"]}
+{"id": "g03", "question": "What is the standard deductible per claim on my home policy?", "intent": "policy_question", "must_contain": ["$1,000"], "expected_docs": ["homeowners"]}
+{"id": "g04", "question": "How many days do I have to file a claim after the loss?", "intent": "policy_question", "must_contain": ["30 days"], "expected_docs": ["claims-process"]}
+{"id": "g05", "question": "How much rental car reimbursement per day do I get?", "intent": "policy_question", "must_contain": ["$40 per day"], "expected_docs": ["auto"]}
+{"id": "g06", "question": "Is glass chip repair covered without a deductible?", "intent": "policy_question", "must_contain": ["glass"], "expected_docs": ["auto"]}
+{"id": "g07", "question": "How soon will an adjuster contact me to schedule an inspection?", "intent": "policy_question", "must_contain": ["2 business days"], "expected_docs": ["claims-process"]}
+{"id": "g08", "question": "How long do I have to appeal a claim decision?", "intent": "policy_question", "must_contain": ["60 days"], "expected_docs": ["claims-process"]}
+{"id": "g09", "question": "Does the policy cover cryptocurrency mining equipment overheating?", "intent": "policy_question", "should_abstain": true}
+{"id": "g10", "question": "What is the status of my claim CL-20931?", "intent": "claim_status"}
+{"id": "g11", "question": "I want to talk to a real person right now", "intent": "speak_to_human"}
+{"id": "g12", "question": "My email is ana@example.com - is jewelry theft covered?", "intent": "policy_question", "must_contain": ["jewelry", "$1,500"], "expected_docs": ["homeowners"]}
