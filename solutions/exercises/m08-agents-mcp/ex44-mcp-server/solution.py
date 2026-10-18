@@ -1,66 +1,112 @@
+"""Dual-era MCP server: stateless 2026-07-28 requests, plus the legacy initialize handshake for older clients."""
 import json
+import re
 import sys
 
-SUPPORTED_VERSIONS = ("2025-06-18", "2025-03-26", "2024-11-05")
-LATEST = SUPPORTED_VERSIONS[0]
+MODERN_VERSIONS = ("2026-07-28",)
+LEGACY_VERSIONS = ("2025-11-25", "2025-06-18", "2025-03-26", "2024-11-05")
+META_VERSION = "io.modelcontextprotocol/protocolVersion"
+SERVER_INFO = "io.modelcontextprotocol/serverInfo"
+TOOL_NAME = re.compile(r"^[A-Za-z0-9_.-]{1,128}$")
 
-PARSE_ERROR, INVALID_REQUEST, METHOD_NOT_FOUND, INVALID_PARAMS = -32700, -32600, -32601, -32602
+PARSE_ERROR, INVALID_REQUEST, METHOD_NOT_FOUND, INVALID_PARAMS, UNSUPPORTED_VERSION = -32700, -32600, -32601, -32602, -32022
 
 
-def _error(id_, code, message):
-    return {"jsonrpc": "2.0", "id": id_, "error": {"code": code, "message": message}}
-
-
-def _result(id_, result):
-    return {"jsonrpc": "2.0", "id": id_, "result": result}
+def _error(id_, code, message, data=None):
+    err = {"code": code, "message": message}
+    if data is not None:
+        err["data"] = data
+    return {"jsonrpc": "2.0", "id": id_, "error": err}
 
 
 class MCPServer:
-    def __init__(self, name: str, version: str):
+    def __init__(self, name: str, version: str, instructions: str = ""):
         self.name = name
         self.version = version
+        self.instructions = instructions
         self._tools: dict[str, dict] = {}
+        self._legacy_version: str | None = None   # set by an initialize request (stdio: process-scoped)
 
     def tool(self, name: str, description: str, input_schema: dict):
+        if not TOOL_NAME.match(name):
+            raise ValueError(f"invalid tool name {name!r}")
+        if not isinstance(input_schema, dict):
+            raise ValueError("inputSchema must be a JSON Schema object")
+
         def deco(fn):
             self._tools[name] = {"description": description, "inputSchema": input_schema, "fn": fn}
             return fn
         return deco
 
-    def _call_tool(self, id_, params):
+    # ---------- shared method implementations ----------
+
+    def _tools_list(self):
+        return {"tools": [{"name": n, "description": t["description"], "inputSchema": t["inputSchema"]}
+                          for n, t in self._tools.items()]}
+
+    def _tools_call(self, id_, params):
         name, args = params.get("name"), params.get("arguments", {})
         if name not in self._tools:
-            return _error(id_, INVALID_PARAMS, f"unknown tool: {name}")
+            return None, _error(id_, INVALID_PARAMS, f"Unknown tool: {name}")
         if not isinstance(args, dict):
-            return _error(id_, INVALID_PARAMS, "arguments must be an object")
+            return None, _error(id_, INVALID_PARAMS, "arguments must be an object")
         try:
             out = self._tools[name]["fn"](**args)
-            text, is_error = (out if isinstance(out, str) else json.dumps(out, default=str)), False
-        except Exception as exc:  # tool failures are results the model can read, not protocol errors
+        except Exception as exc:  # tool failures are results the model can read and recover from
             msg = exc.args[0] if isinstance(exc, KeyError) and exc.args else str(exc)
-            text, is_error = f"Error: {msg}", True
-        return _result(id_, {"content": [{"type": "text", "text": text}], "isError": is_error})
+            return {"content": [{"type": "text", "text": f"Error: {msg}"}], "isError": True}, None
+        if isinstance(out, (dict, list)):
+            return {"content": [{"type": "text", "text": json.dumps(out)}], "structuredContent": out,
+                    "isError": False}, None
+        return {"content": [{"type": "text", "text": str(out)}], "isError": False}, None
+
+    # ---------- dispatch ----------
 
     def handle(self, message) -> dict | None:
         if not isinstance(message, dict) or message.get("jsonrpc") != "2.0" or "method" not in message:
             return _error(message.get("id") if isinstance(message, dict) else None, INVALID_REQUEST, "invalid request")
         if "id" not in message:
-            return None  # notification
-        id_, method, params = message["id"], message["method"], message.get("params") or {}
+            return None  # notifications never get a response
+        id_, method = message["id"], message["method"]
+        params = message.get("params") or {}
+        version = (params.get("_meta") or {}).get(META_VERSION)
+
         if method == "initialize":
             requested = params.get("protocolVersion")
-            return _result(id_, {
-                "protocolVersion": requested if requested in SUPPORTED_VERSIONS else LATEST,
-                "capabilities": {"tools": {}},
-                "serverInfo": {"name": self.name, "version": self.version},
-            })
+            self._legacy_version = requested if requested in LEGACY_VERSIONS else LEGACY_VERSIONS[0]
+            return {"jsonrpc": "2.0", "id": id_, "result": {
+                "protocolVersion": self._legacy_version, "capabilities": {"tools": {}},
+                "serverInfo": {"name": self.name, "version": self.version}}}
+
+        if version is None:
+            if self._legacy_version is None:
+                return _error(id_, INVALID_PARAMS, f"missing _meta['{META_VERSION}'] (or legacy initialize first)")
+            return self._dispatch(id_, method, params, modern=False)
+        if version not in MODERN_VERSIONS:
+            return _error(id_, UNSUPPORTED_VERSION, "Unsupported protocol version",
+                          {"supported": list(MODERN_VERSIONS + LEGACY_VERSIONS), "requested": version})
+        return self._dispatch(id_, method, params, modern=True)
+
+    def _dispatch(self, id_, method, params, modern: bool):
+        def ok(result):
+            if modern:
+                result = {"resultType": "complete", **result}
+            return {"jsonrpc": "2.0", "id": id_, "result": result}
+
+        if method == "server/discover" and modern:
+            return ok({"supportedVersions": list(MODERN_VERSIONS), "capabilities": {"tools": {}},
+                       "_meta": {SERVER_INFO: {"name": self.name, "version": self.version}},
+                       "instructions": self.instructions, "ttlMs": 3600000})
         if method == "ping":
-            return _result(id_, {})
+            return ok({})
         if method == "tools/list":
-            return _result(id_, {"tools": [{"name": n, "description": t["description"], "inputSchema": t["inputSchema"]}
-                                           for n, t in self._tools.items()]})
+            result = self._tools_list()
+            if modern:
+                result["ttlMs"] = 300000
+            return ok(result)
         if method == "tools/call":
-            return self._call_tool(id_, params)
+            result, err = self._tools_call(id_, params)
+            return err or ok(result)
         return _error(id_, METHOD_NOT_FOUND, f"method not found: {method}")
 
     def serve(self, stdin=sys.stdin, stdout=sys.stdout) -> None:
@@ -79,7 +125,7 @@ class MCPServer:
 
 
 def demo_server() -> MCPServer:
-    server = MCPServer("policy-db", "0.1.0")
+    server = MCPServer("policy-db", "0.2.0", instructions="Look up insurance policies by id (e.g. P-100).")
 
     @server.tool("lookup_policy", "Look up a policy by id (e.g. P-100).",
                  {"type": "object", "required": ["policy_id"], "properties": {"policy_id": {"type": "string"}}})

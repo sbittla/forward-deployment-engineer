@@ -1,34 +1,53 @@
-# ex44 · Build an MCP server
+# ex44 · Build an MCP server (spec 2026-07-28, dual-era)
 
-**Module:** m08 · **Covers:** R12 MCP & connectors, R11 Tool use · **Time:** 75 min
+**Module:** m08 · **Covers:** R12 MCP & connectors, R11 Tool use · **Time:** 90 min · **As of:** MCP spec 2026-07-28
+
+## Learning objectives
+- Implement the current, stateless MCP request model and the mandatory `server/discover` RPC.
+- Negotiate protocol versions per request and stay interoperable with handshake-based (legacy) clients.
+- Separate protocol errors from tool execution errors so models can self-correct.
 
 ## Scenario
-The customer wants their internal policy database usable from Claude Desktop, Claude Code and their own agent —
-without three integrations. The Model Context Protocol (MCP) solves that: build one server, every MCP client can
-use it. Production servers usually use an official SDK; building the wire protocol once by hand means you can
-debug any MCP integration on a customer site.
+The customer wants their internal policy database usable from Claude Desktop, Claude Code and their own agent
+without three integrations. MCP solves that. The protocol changed in **2026-07-28**: the `initialize` handshake is
+gone, and every request carries its own protocol version, so servers are stateless and load-balance freely. Customers
+still run older clients, though, so your server must be **dual-era**. Production servers normally use an official
+SDK; building the wire protocol once by hand means you can debug any integration on site.
 
-## Protocol subset (JSON-RPC 2.0, newline-delimited over stdio)
+## Protocol you implement (JSON-RPC 2.0, newline-delimited over stdio)
+**Modern requests** (2026-07-28) carry `params._meta["io.modelcontextprotocol/protocolVersion"]` (plus
+`.../clientInfo` and `.../clientCapabilities`). Every modern result includes `"resultType": "complete"`.
+
 | Method | Result |
 |---|---|
-| `initialize` | `{"protocolVersion": <client's if in SUPPORTED_VERSIONS else LATEST>, "capabilities": {"tools": {}}, "serverInfo": {"name", "version"}}` |
-| `notifications/initialized` | notification — **no response** |
-| `ping` | `{}` |
-| `tools/list` | `{"tools": [{"name", "description", "inputSchema"}]}` |
-| `tools/call` `{name, arguments}` | `{"content": [{"type": "text", "text": ...}], "isError": bool}` |
+| `server/discover` | `{"resultType", "supportedVersions": MODERN_VERSIONS, "capabilities": {"tools": {}}, "_meta": {"io.modelcontextprotocol/serverInfo": {"name", "version"}}, "instructions", "ttlMs": 3600000}` |
+| `tools/list` | `{"resultType", "tools": [{"name", "description", "inputSchema"}...] (registration order), "ttlMs": 300000}` |
+| `tools/call` `{name, arguments}` | `{"resultType", "content": [{"type": "text", "text"}], "isError": bool}`; when the tool returns a dict or list, also `"structuredContent"` with the value and the JSON text in `content` |
+| `ping` | `{"resultType": "complete"}` |
 
-Errors (JSON-RPC `error` objects): parse error `-32700`, invalid request `-32600` (not a dict, wrong/missing
-`"jsonrpc": "2.0"`, or missing `method`), method not found `-32601`, invalid params `-32602` (unknown tool name or
-arguments not a dict). A tool that **raises** is not a protocol error: return a normal result with `isError: true`
-and the text `"Error: <message>"`. Any message without an `id` is a notification and never gets a response.
+**Legacy requests** (`2025-11-25` and earlier): an `initialize` request returns `{"protocolVersion": <client's
+if in LEGACY_VERSIONS else LEGACY_VERSIONS[0]>, "capabilities": {"tools": {}}, "serverInfo": {...}}` and switches
+this server process into legacy mode. After that, requests **without** `_meta` are served with legacy result shapes
+(no `resultType`, no `ttlMs`). `notifications/initialized` and any other message without an `id` gets no response.
+
+**Errors**
+| Condition | Error |
+|---|---|
+| Modern request with a version not in `MODERN_VERSIONS` | `-32022` `"Unsupported protocol version"`, `data = {"supported": MODERN_VERSIONS + LEGACY_VERSIONS, "requested": ...}` |
+| Request without `_meta` version and no legacy `initialize` seen | `-32602` (message names the missing `_meta` key) |
+| Not a dict, `jsonrpc != "2.0"`, or no `method` | `-32600` |
+| Unknown method | `-32601` |
+| Unknown tool, or `arguments` not an object | `-32602` (`"Unknown tool: <name>"`) |
+| Tool raises | **not** a protocol error: result with `isError: true` and text `"Error: <message>"` |
+| Bad JSON on the wire (`serve`) | `-32700` with `"id": null` |
 
 ## Your task
-`MCPServer(name, version)`:
-- `@server.tool(name, description, input_schema)` decorator registers a function called with `**arguments`;
-  non-string return values are JSON-encoded.
-- `handle(message: dict) -> dict | None` implements the table above.
-- `serve(stdin, stdout)` — read lines, parse JSON (bad JSON → `-32700` response with `"id": null`), write each
-  response as one JSON line and flush.
-- Running the file as a script (`python starter.py`) must start a demo server on real stdin/stdout exposing
-  `lookup_policy(policy_id)` that returns `{"policy_id": ..., "status": "active"}` for ids starting with `"P-"`,
-  and raises `KeyError` otherwise.
+- `MCPServer(name, version, instructions="")` with `@server.tool(name, description, input_schema)`. Reject tool names
+  that don't match `^[A-Za-z0-9_.-]{1,128}$` and schemas that aren't dicts (`ValueError`).
+- `handle(message) -> dict | None` implementing the tables above; `serve(stdin, stdout)` for stdio.
+- Running the file as a script starts a demo server exposing `lookup_policy(policy_id)`, which returns
+  `{"policy_id": ..., "status": "active"}` for ids starting with `P-` and raises `KeyError` otherwise.
+
+## Field notes
+When a customer's MCP integration "just stopped working" after a client upgrade, check the era first: a legacy-only
+server facing a modern client fails silently or with an obscure error. Dual-era servers buy you a migration window.

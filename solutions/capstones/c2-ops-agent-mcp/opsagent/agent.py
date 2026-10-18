@@ -56,7 +56,7 @@ class OpsAgent:
         approvals = ApprovalQueue(self.store, self.audit)
         client = InProcessClient(MCPServer("orders", build_tools(self.store, self.policy, customer_email,
                                                                  approvals, self.audit)))
-        client.initialize()
+        client.connect()
         specs = [{"name": t["name"], "description": t["description"], "input_schema": t["inputSchema"]}
                  for t in client.list_tools()]
         messages = [{"role": "user", "content": wrap_untrusted(message)}]

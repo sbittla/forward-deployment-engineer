@@ -6,9 +6,10 @@ from typing import Callable
 
 
 class RPCError(Exception):
-    def __init__(self, code: int, message: str):
+    def __init__(self, code: int, message: str, data=None):
         super().__init__(f"{code}: {message}")
         self.code = code
+        self.data = data
 
 
 class ToolError(Exception):
@@ -56,14 +57,32 @@ class StdioTransport:
         self.proc.stdout.close()
 
 
+MODERN_VERSIONS = ("2026-07-28",)
+LEGACY_VERSIONS = ("2025-11-25", "2025-06-18", "2025-03-26", "2024-11-05")
+META_VERSION = "io.modelcontextprotocol/protocolVersion"
+UNSUPPORTED_VERSION = -32022
+
+
 class MCPClient:
-    def __init__(self, transport):
+    """Dual-era client: probes server/discover (2026-07-28) and falls back to the legacy initialize handshake."""
+
+    def __init__(self, transport, name: str = "fde-client", version: str = "0.1"):
         self.transport = transport
+        self.name, self.version = name, version
+        self.era: str | None = None
+        self.protocol_version: str | None = None
         self._next_id = 1
+
+    def _meta(self) -> dict:
+        return {META_VERSION: self.protocol_version,
+                "io.modelcontextprotocol/clientInfo": {"name": self.name, "version": self.version},
+                "io.modelcontextprotocol/clientCapabilities": {}}
 
     def _request(self, method: str, params: dict | None = None):
         mid = self._next_id
         self._next_id += 1
+        if self.era == "modern":
+            params = {**(params or {}), "_meta": self._meta()}
         msg = {"jsonrpc": "2.0", "id": mid, "method": method}
         if params is not None:
             msg["params"] = params
@@ -73,12 +92,35 @@ class MCPClient:
             if reply.get("id") != mid:
                 continue  # notification or unrelated message
             if "error" in reply:
-                raise RPCError(reply["error"]["code"], reply["error"].get("message", ""))
+                err = reply["error"]
+                raise RPCError(err["code"], err.get("message", ""), err.get("data"))
             return reply["result"]
 
-    def initialize(self, name: str, version: str, protocol_version: str = "2025-06-18") -> dict:
+    def connect(self) -> dict:
+        """Negotiate an era once per connection; returns {era, protocolVersion, serverInfo, capabilities}."""
+        self.era, self.protocol_version = "modern", MODERN_VERSIONS[0]
+        try:
+            r = self._request("server/discover")
+        except RPCError as exc:
+            supported = (exc.data or {}).get("supported", []) if exc.code == UNSUPPORTED_VERSION else []
+            modern = [v for v in MODERN_VERSIONS if v in supported]
+            if modern:  # the server speaks a different modern revision we also know
+                self.protocol_version = modern[0]
+                r = self._request("server/discover")
+            else:
+                legacy = [v for v in LEGACY_VERSIONS if v in supported]
+                result = self.initialize(legacy[0] if legacy else LEGACY_VERSIONS[0])
+                return {"era": "legacy", "protocolVersion": result["protocolVersion"],
+                        "serverInfo": result.get("serverInfo", {}), "capabilities": result.get("capabilities", {})}
+        return {"era": "modern", "protocolVersion": self.protocol_version,
+                "serverInfo": r.get("_meta", {}).get("io.modelcontextprotocol/serverInfo", {}),
+                "capabilities": r.get("capabilities", {})}
+
+    def initialize(self, protocol_version: str = LEGACY_VERSIONS[0]) -> dict:
+        self.era, self.protocol_version = "legacy", protocol_version
         result = self._request("initialize", {"protocolVersion": protocol_version, "capabilities": {},
-                                              "clientInfo": {"name": name, "version": version}})
+                                              "clientInfo": {"name": self.name, "version": self.version}})
+        self.protocol_version = result.get("protocolVersion", protocol_version)
         self.transport.send({"jsonrpc": "2.0", "method": "notifications/initialized"})
         return result
 

@@ -1,14 +1,18 @@
 import json
+import re
 import sys
 
-SUPPORTED_VERSIONS = ("2025-06-18", "2025-03-26", "2024-11-05")
-LATEST = SUPPORTED_VERSIONS[0]
+MODERN_VERSIONS = ("2026-07-28",)
+LEGACY_VERSIONS = ("2025-11-25", "2025-06-18", "2025-03-26", "2024-11-05")
+META_VERSION = "io.modelcontextprotocol/protocolVersion"
+TOOL_NAME = re.compile(r"^[A-Za-z0-9_.-]{1,128}$")
 
 
 class MCPServer:
-    def __init__(self, name: str, version: str):
+    def __init__(self, name: str, version: str, instructions: str = ""):
         self.name = name
         self.version = version
+        self.instructions = instructions
 
     def tool(self, name: str, description: str, input_schema: dict):
         raise NotImplementedError

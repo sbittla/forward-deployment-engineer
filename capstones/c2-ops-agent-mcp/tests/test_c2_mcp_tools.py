@@ -16,8 +16,9 @@ def client(cap, cap_data):
     return c
 
 
-def test_handshake_and_listing(client):
-    info = client.initialize()
+def test_discovery_and_listing(client):
+    info = client.connect()
+    assert info["protocolVersion"] == "2026-07-28"
     assert info["capabilities"] == {"tools": {}} and info["serverInfo"]["name"] == "orders"
     tools = {t["name"]: t for t in client.list_tools()}
     assert set(tools) == {"get_order", "list_orders", "issue_refund"}
@@ -55,6 +56,25 @@ def test_approval_queue(cap, cap_data):
     assert audit.events()[-2:] == ["tool_ok", "approval_resolved"] or "approval_resolved" in audit.events()
 
 
+def _meta(version="2026-07-28"):
+    return {"_meta": {"io.modelcontextprotocol/protocolVersion": version}}
+
+
 def test_protocol_errors(cap, client):
-    assert client.server.handle({"jsonrpc": "2.0", "id": 1, "method": "nope"})["error"]["code"] == -32601
-    assert client.server.handle({"jsonrpc": "2.0", "method": "notifications/initialized"}) is None
+    srv = client.server
+    assert srv.handle({"jsonrpc": "2.0", "id": 1, "method": "nope", "params": _meta()})["error"]["code"] == -32601
+    assert srv.handle({"jsonrpc": "2.0", "id": 2, "method": "tools/list"})["error"]["code"] == -32602
+    bad = srv.handle({"jsonrpc": "2.0", "id": 3, "method": "tools/list", "params": _meta("2099-01-01")})["error"]
+    assert bad["code"] == -32022 and bad["data"]["requested"] == "2099-01-01" and "2026-07-28" in bad["data"]["supported"]
+    assert srv.handle({"jsonrpc": "2.0", "method": "notifications/initialized"}) is None
+    listed = srv.handle({"jsonrpc": "2.0", "id": 4, "method": "tools/list", "params": _meta()})["result"]
+    assert listed["resultType"] == "complete" and listed["ttlMs"] > 0
+
+
+def test_legacy_handshake_still_served(client):
+    srv = client.server
+    init = srv.handle({"jsonrpc": "2.0", "id": 1, "method": "initialize",
+                       "params": {"protocolVersion": "2025-06-18", "capabilities": {}, "clientInfo": {"name": "old", "version": "1"}}})
+    assert init["result"]["protocolVersion"] == "2025-06-18" and init["result"]["serverInfo"]["name"] == "orders"
+    listed = srv.handle({"jsonrpc": "2.0", "id": 2, "method": "tools/list"})["result"]
+    assert "resultType" not in listed and len(listed["tools"]) == 3

@@ -26,7 +26,7 @@ an injection), plus the expected outcome. The evals measure whether your *harnes
 | `store.py` | Order store queries and refund recording (SQLite) |
 | `policy.py` | `RefundPolicy.evaluate()`: delivered, window, balance, approval threshold |
 | `tools.py` | Customer-scoped tools with schema validation; `ApprovalQueue`; registry that returns safe, actionable errors |
-| `mcp.py` | JSON-RPC MCP server (`initialize`, `tools/list`, `tools/call`, `ping`) and in-process client |
+| `mcp.py` | MCP 2026-07-28 server (`server/discover`, per-request `_meta` version, `-32022` on unsupported versions, `tools/list`, `tools/call`, `ping`) that still answers legacy `initialize`; in-process client with `connect()` |
 | `audit.py` | Hash-chained audit log with `verify()` |
 | `agent.py` | Injection gate (block when ≥ 2 signals), untrusted wrapping, tool loop over MCP, max-steps escalation, approvals, outcome status |
 | `evals.py` | Scenario runner plus an independent policy re-check of every refund in the store |
