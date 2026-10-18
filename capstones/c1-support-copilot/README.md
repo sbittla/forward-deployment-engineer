@@ -4,6 +4,7 @@
 R16 ML baseline · R18 Discovery · R19 Exec communication · R22 Production · R24 Writing · R25 Regulated domain ·
 R27 Cost · R30 Value metrics
 **Suggested time:** 2–3 days · **Builds on:** ex01, ex03, ex20, ex31–ex41, ex49, ex53, ex55, ex69
+**Take after:** End of Part III: after ex31–ex41, ex49 and ex53–ex55, plus ex01, ex03 and ex69 from Part I and ex20 from Part II.
 
 ## The engagement
 Northwind Insurance's 400 claims adjusters spend about 11 minutes per coverage question digging through policy

@@ -1,0 +1,17 @@
+name: Stuck on an exercise
+description: Ask for a hint without posting a full solution
+labels: [question]
+body:
+  - type: input
+    id: exercise
+    attributes:
+      label: Exercise id
+      placeholder: ex33
+    validations:
+      required: true
+  - type: textarea
+    id: tried
+    attributes:
+      label: What you tried and the failing test output
+    validations:
+      required: true

@@ -3,6 +3,7 @@
 **Covers:** R01 Python · R06 Cloud · R07 Containers/K8s/CI · R15 Observability · R20 Ambiguity · R22 Production ·
 R24 Writing · R26 On-site embedding · R27 Cost & latency · R28 Architecture · R29 Debugging
 **Suggested time:** 3 days · **Builds on:** ex09–ex14, ex20, ex21, ex57–ex66
+**Take after:** End of Part IV: after ex57–ex66, plus ex09–ex14, ex20 and ex21 from Part II.
 
 ## The engagement
 A logistics company's shipment-exception summarizer (`data/legacy_pilot.py`) impressed executives in a demo. In

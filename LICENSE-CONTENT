@@ -1,0 +1,18 @@
+Written content license
+
+Copyright (c) 2026 Srinivasa Rao Bittla
+
+The written instructional content in this repository (exercise and capstone
+README files, deliverable templates and other Markdown documents, excluding code
+blocks) is licensed under the Creative Commons Attribution-NonCommercial 4.0
+International License (CC BY-NC 4.0).
+
+You are free to share and adapt the material for non-commercial purposes,
+provided you give appropriate credit, link to the license, and indicate if
+changes were made.
+
+Full license text: https://creativecommons.org/licenses/by-nc/4.0/legalcode
+
+Source code (Python, TypeScript, workflow and configuration files, and code
+blocks inside documents) is licensed separately under the MIT License; see
+LICENSE.

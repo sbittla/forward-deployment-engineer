@@ -5,6 +5,7 @@ R21 Rapid POC · R23 Product feedback · R24 Writing · R25 Regulated domain (he
 R30 Value metrics · R32 Voice
 **Suggested time:** 3 days (the whole arc of a 6-week engagement, compressed) · **Builds on:** ex01–ex08, ex32,
 ex48, ex53, ex68, ex72, ex75
+**Take after:** Part V: after all of Part I, ex32 and ex48 (Part III), and ex72 and ex75 (Part IV).
 
 ## The engagement
 You are embedded at Lakeside Community Health for six weeks. Their after-hours voice agent records patient calls;

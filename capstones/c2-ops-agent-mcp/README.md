@@ -3,6 +3,7 @@
 **Covers:** R01 Python · R05 Integration · R11 Agents · R12 MCP · R13 Evals · R14 Safety · R17 Security ·
 R22 Production · R23 Product feedback · R24 Writing · R28 Architecture
 **Suggested time:** 2–3 days · **Builds on:** ex10, ex15, ex42–ex46, ex54, ex56, ex68
+**Take after:** End of Part III: after ex42–ex46, ex54 and ex56, plus ex10 and ex15 (Part II) and ex68 (Part I).
 
 ## The engagement
 An online retailer's support team handles 9,000 "where is my order / I want a refund" emails a week. They want an

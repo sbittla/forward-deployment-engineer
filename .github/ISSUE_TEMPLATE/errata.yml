@@ -1,0 +1,31 @@
+name: Errata
+description: Something in an exercise, capstone or the book is wrong or out of date
+labels: [errata]
+body:
+  - type: input
+    id: location
+    attributes:
+      label: Where
+      description: Exercise or capstone id and file, or book chapter and page
+      placeholder: "ex44 README, Errors table"
+    validations:
+      required: true
+  - type: dropdown
+    id: kind
+    attributes:
+      label: Kind
+      options:
+        - Spec and tests disagree
+        - Out of date (API, protocol, model, price)
+        - Wrong explanation or typo
+        - Reference solution bug
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: details
+    attributes:
+      label: What's wrong, and what should it say?
+      description: Include command output if a test misbehaves (python, node and OS versions help).
+    validations:
+      required: true

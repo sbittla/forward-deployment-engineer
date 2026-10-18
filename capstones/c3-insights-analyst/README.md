@@ -3,6 +3,7 @@
 **Covers:** R01 Python · R03 SQL & modelling · R04 Pipelines · R05 Integration · R08 LLM apps · R13 Evals ·
 R24 Writing · R25 Regulated domain · R31 Data platforms
 **Suggested time:** 2 days · **Builds on:** ex19, ex22–ex26, ex32, ex49, ex55
+**Take after:** End of Part III: after ex32, ex49 and ex55, plus ex19 and ex22–ex26 from Part II.
 
 ## The engagement
 A commercial bank wants relationship managers to ask questions like "Which client spent the most in Q1?" without
