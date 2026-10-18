@@ -1,0 +1,19 @@
+{
+  "events": [
+    {"user": "rm1", "team": "commercial", "event": "invited", "week": 1}, {"user": "rm2", "team": "commercial", "event": "invited", "week": 1},
+    {"user": "rm3", "team": "commercial", "event": "invited", "week": 1}, {"user": "rm4", "team": "commercial", "event": "invited", "week": 1},
+    {"user": "pb1", "team": "private-banking", "event": "invited", "week": 1}, {"user": "pb2", "team": "private-banking", "event": "invited", "week": 1},
+    {"user": "pb3", "team": "private-banking", "event": "invited", "week": 1}, {"user": "pb4", "team": "private-banking", "event": "invited", "week": 1},
+    {"user": "rm1", "team": "commercial", "event": "login", "week": 1}, {"user": "rm1", "team": "commercial", "event": "query", "week": 1},
+    {"user": "rm1", "team": "commercial", "event": "query", "week": 2}, {"user": "rm1", "team": "commercial", "event": "query", "week": 3},
+    {"user": "rm2", "team": "commercial", "event": "login", "week": 1}, {"user": "rm2", "team": "commercial", "event": "query", "week": 2},
+    {"user": "rm2", "team": "commercial", "event": "query", "week": 3}, {"user": "rm2", "team": "commercial", "event": "query", "week": 4},
+    {"user": "rm3", "team": "commercial", "event": "login", "week": 2}, {"user": "rm3", "team": "commercial", "event": "query", "week": 2},
+    {"user": "pb1", "team": "private-banking", "event": "login", "week": 3}
+  ],
+  "kpi": {
+    "metric": "minutes to prepare a client briefing",
+    "pre_treatment": [42, 38, 45, 40], "post_treatment": [24, 22, 27, 25],
+    "pre_control": [41, 39, 44, 40], "post_control": [39, 38, 42, 39]
+  }
+}

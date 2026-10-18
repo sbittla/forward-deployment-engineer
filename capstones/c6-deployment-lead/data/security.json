@@ -1,0 +1,17 @@
+{
+  "facts": {"data_retention_days": 30, "encryption_at_rest": "AES-256", "encryption_in_transit": "TLS 1.2+",
+            "subprocessors": ["Anthropic", "Atlas SI"], "data_residency": "UK (London)", "trains_on_customer_data": false,
+            "sso": true, "pen_test_date": "2026-09-30", "incident_notification_hours": 24},
+  "questions": [
+    "How long is customer data retained?",
+    "Is data encrypted at rest?",
+    "Is data encrypted in transit with TLS?",
+    "List all subprocessors and third party providers.",
+    "Where is customer data hosted?",
+    "Is customer data used for model training?",
+    "Do you support SAML single sign-on?",
+    "When was the last penetration test?",
+    "Describe your physical security controls for data centres.",
+    "Describe your model risk validation process under the bank's MRM policy."
+  ]
+}

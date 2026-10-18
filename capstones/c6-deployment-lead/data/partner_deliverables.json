@@ -1,0 +1,13 @@
+[
+  {"id": "D-data-1", "workstream": "data", "partner": "Atlas SI",
+   "design": {"auth": "Workload identity to the warehouse", "data_flow": "diagram v2", "rollback": "re-run from bronze snapshot",
+              "pii_handling": "Account numbers are tokenised before indexing; PII is redacted before being sent to model",
+              "evals": "row-count and freshness checks", "observability": "pipeline metrics in Datadog",
+              "threat_model": "STRIDE workshop 2026-11-09", "slo": "daily load by 06:00", "cost_estimate": "$1.2k/month"},
+   "evidence": {"tests_passed": 84, "tests_total": 84, "eval_pass_rate": 0.97, "open_criticals": 0}},
+  {"id": "D-fe-1", "workstream": "frontend", "partner": "Atlas SI",
+   "design": {"auth": "SSO via Entra ID", "data_flow": "diagram v1", "rollback": "",
+              "pii_handling": "Customer names are sent to model for greetings",
+              "evals": "", "observability": "browser RUM", "slo": "", "cost_estimate": ""},
+   "evidence": {"tests_passed": 40, "tests_total": 46, "eval_pass_rate": 0.88, "open_criticals": 1}}
+]
