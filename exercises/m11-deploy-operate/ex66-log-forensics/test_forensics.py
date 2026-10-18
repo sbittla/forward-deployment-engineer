@@ -36,7 +36,7 @@ def test_first_errors_and_root(impl):
     recs, _ = impl.parse(LINES)
     fe = impl.first_errors(recs)
     assert fe["vectordb"] == "2026-10-17T02:14:01" and "gateway" in fe
-    # authsvc errors too, but only after api's first error -> not the root; vectordb has no deps
+    # authsvc also has no erroring dependencies, but its first error is later than vectordb's
     assert impl.root_cause(recs, DEPS) == "vectordb"
 
 
