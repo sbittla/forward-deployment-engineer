@@ -1,0 +1,13 @@
+# Example: block merges when the eval gate fails
+name: eval-gate
+on: [pull_request]
+jobs:
+  eval:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python run_evals.py --out candidate.json        # your eval runner (ex49)
+      - run: python gate.py baseline/main.json candidate.json --max-drop 0.02

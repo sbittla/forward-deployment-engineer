@@ -1,0 +1,13 @@
+name: ci
+on: push
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@main
+      - run: echo "key is ${{ secrets.API_KEY }}"
+      - run: pytest
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - run: ./deploy.sh
