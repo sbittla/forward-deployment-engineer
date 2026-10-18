@@ -1,0 +1,6 @@
+{
+  "C1": {"reason": "fever and cough", "urgency": "urgent", "symptoms": ["cough", "fever"], "callback_window": "morning"},
+  "C2": {"reason": "chest pain", "urgency": "emergency", "symptoms": ["chest pain", "shortness of breath"], "callback_window": "asap"},
+  "C3": {"reason": "medication refill", "urgency": "routine", "symptoms": [], "callback_window": "afternoon"},
+  "C4": {"reason": "rash and fever in child", "urgency": "urgent", "symptoms": ["fever", "rash"], "callback_window": "any"}
+}

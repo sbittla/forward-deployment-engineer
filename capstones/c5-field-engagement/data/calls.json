@@ -1,0 +1,26 @@
+[
+  {"call_id": "C1", "patient_name": "Maria Lopez", "events": [
+    {"t": 0.0, "speaker": "agent", "type": "start"}, {"t": 0.4, "speaker": "agent", "type": "text", "text": "Lakeside after-hours line, how can I help?"}, {"t": 2.6, "speaker": "agent", "type": "end"},
+    {"t": 3.4, "speaker": "caller", "type": "start"}, {"t": 3.8, "speaker": "caller", "type": "text", "text": "Hi, this is Maria Lopez, date of birth 04/02/1981, MRN 88231."}, {"t": 9.0, "speaker": "caller", "type": "text", "text": "I've had a fever and a cough for three days and it's getting worse."}, {"t": 14.5, "speaker": "caller", "type": "end"},
+    {"t": 15.4, "speaker": "agent", "type": "start"}, {"t": 15.6, "speaker": "agent", "type": "text", "text": "I'm sorry to hear that. What number should the nurse call?"}, {"t": 18.0, "speaker": "agent", "type": "end"},
+    {"t": 18.7, "speaker": "caller", "type": "start"}, {"t": 19.0, "speaker": "caller", "type": "text", "text": "415-555-0100, mornings are best."}, {"t": 21.5, "speaker": "caller", "type": "end"}
+  ]},
+  {"call_id": "C2", "patient_name": "John Carter", "events": [
+    {"t": 0.0, "speaker": "agent", "type": "start"}, {"t": 0.3, "speaker": "agent", "type": "text", "text": "Lakeside after-hours line, how can I help?"}, {"t": 2.5, "speaker": "agent", "type": "end"},
+    {"t": 3.0, "speaker": "caller", "type": "start"}, {"t": 3.2, "speaker": "caller", "type": "text", "text": "John Carter here. I'm having chest pain and some shortness of breath since an hour ago."}, {"t": 9.8, "speaker": "caller", "type": "end"},
+    {"t": 12.6, "speaker": "agent", "type": "start"}, {"t": 12.8, "speaker": "agent", "type": "text", "text": "Thank you. Is this the best number to reach you?"}, {"t": 15.0, "speaker": "agent", "type": "end"},
+    {"t": 14.2, "speaker": "caller", "type": "start"}, {"t": 14.3, "speaker": "caller", "type": "text", "text": "Yes, call me back at 312 555 0199 as soon as possible."}, {"t": 17.9, "speaker": "caller", "type": "end"}
+  ]},
+  {"call_id": "C3", "patient_name": "Wei Zhang", "events": [
+    {"t": 0.0, "speaker": "agent", "type": "start"}, {"t": 0.3, "speaker": "agent", "type": "text", "text": "Lakeside after-hours line, how can I help?"}, {"t": 2.4, "speaker": "agent", "type": "end"},
+    {"t": 3.1, "speaker": "caller", "type": "start"}, {"t": 3.3, "speaker": "caller", "type": "text", "text": "This is Wei Zhang. I need a refill of my blood pressure medication, I run out on Friday."}, {"t": 8.9, "speaker": "caller", "type": "end"},
+    {"t": 9.6, "speaker": "agent", "type": "start"}, {"t": 9.8, "speaker": "agent", "type": "text", "text": "Got it. When is a good time for a callback?"}, {"t": 12.0, "speaker": "agent", "type": "end"},
+    {"t": 12.5, "speaker": "caller", "type": "start"}, {"t": 12.7, "speaker": "caller", "type": "text", "text": "Afternoons, at 646 555 0142, or email wei.zhang@example.com."}, {"t": 16.4, "speaker": "caller", "type": "end"}
+  ]},
+  {"call_id": "C4", "patient_name": "Grace Kim", "events": [
+    {"t": 0.0, "speaker": "agent", "type": "start"}, {"t": 0.2, "speaker": "agent", "type": "text", "text": "Lakeside after-hours line, how can I help?"}, {"t": 2.2, "speaker": "agent", "type": "end"},
+    {"t": 2.9, "speaker": "caller", "type": "start"}, {"t": 3.0, "speaker": "caller", "type": "text", "text": "Hi, Grace Kim. My son has a rash and a mild fever since yesterday, he's eating fine."}, {"t": 8.4, "speaker": "caller", "type": "end"},
+    {"t": 9.1, "speaker": "agent", "type": "start"}, {"t": 9.3, "speaker": "agent", "type": "text", "text": "Thanks Grace. What number should we call?"}, {"t": 11.4, "speaker": "agent", "type": "end"},
+    {"t": 12.0, "speaker": "caller", "type": "start"}, {"t": 12.2, "speaker": "caller", "type": "text", "text": "You can reach me at (773) 555-0123 any time."}, {"t": 15.0, "speaker": "caller", "type": "end"}
+  ]}
+]
