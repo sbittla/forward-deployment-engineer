@@ -1,0 +1,11 @@
+{
+  "id": "ex35",
+  "module": "m06-llm-apps",
+  "slug": "llm-cache-costs",
+  "title": "Response cache and cost accounting",
+  "requirements": [
+    "R27",
+    "R08"
+  ],
+  "language": "python"
+}

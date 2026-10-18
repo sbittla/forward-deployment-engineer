@@ -1,0 +1,11 @@
+{
+  "id": "ex03",
+  "module": "m01-engagement-discovery",
+  "slug": "roi-calculator",
+  "title": "ROI and payback model for an AI deployment",
+  "requirements": [
+    "R30",
+    "R27"
+  ],
+  "language": "python"
+}

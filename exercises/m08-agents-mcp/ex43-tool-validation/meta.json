@@ -1,0 +1,10 @@
+{
+  "id": "ex43",
+  "module": "m08-agents-mcp",
+  "slug": "tool-validation",
+  "title": "Tool input validation and error recovery",
+  "requirements": [
+    "R11"
+  ],
+  "language": "python"
+}

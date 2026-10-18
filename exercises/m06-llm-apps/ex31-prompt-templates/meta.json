@@ -1,0 +1,11 @@
+{
+  "id": "ex31",
+  "module": "m06-llm-apps",
+  "slug": "prompt-templates",
+  "title": "Versioned prompt templates",
+  "requirements": [
+    "R09",
+    "R08"
+  ],
+  "language": "python"
+}

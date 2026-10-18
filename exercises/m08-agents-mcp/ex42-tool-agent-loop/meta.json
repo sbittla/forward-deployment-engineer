@@ -1,0 +1,11 @@
+{
+  "id": "ex42",
+  "module": "m08-agents-mcp",
+  "slug": "tool-agent-loop",
+  "title": "Tool-calling agent loop",
+  "requirements": [
+    "R11",
+    "R08"
+  ],
+  "language": "python"
+}

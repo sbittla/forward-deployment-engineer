@@ -1,0 +1,11 @@
+{
+  "id": "ex13",
+  "module": "m02-production-python",
+  "slug": "debug-customer-script",
+  "title": "Triage and fix a broken customer script",
+  "requirements": [
+    "R29",
+    "R01"
+  ],
+  "language": "python"
+}

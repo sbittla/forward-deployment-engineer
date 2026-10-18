@@ -1,0 +1,11 @@
+{
+  "id": "ex18",
+  "module": "m03-apis-integration",
+  "slug": "oauth-token-cache",
+  "title": "OAuth2 client-credentials token cache",
+  "requirements": [
+    "R05",
+    "R17"
+  ],
+  "language": "python"
+}

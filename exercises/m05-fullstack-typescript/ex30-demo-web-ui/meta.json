@@ -1,0 +1,11 @@
+{
+  "id": "ex30",
+  "module": "m05-fullstack-typescript",
+  "slug": "demo-web-ui",
+  "title": "Demo chat UI served from Python",
+  "requirements": [
+    "R02",
+    "R21"
+  ],
+  "language": "python"
+}

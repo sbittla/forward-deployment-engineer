@@ -1,0 +1,11 @@
+{
+  "id": "ex19",
+  "module": "m03-apis-integration",
+  "slug": "schema-mapper",
+  "title": "CRM to canonical schema mapper",
+  "requirements": [
+    "R05",
+    "R03"
+  ],
+  "language": "python"
+}

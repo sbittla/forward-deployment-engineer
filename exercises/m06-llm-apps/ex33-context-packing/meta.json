@@ -1,0 +1,11 @@
+{
+  "id": "ex33",
+  "module": "m06-llm-apps",
+  "slug": "context-packing",
+  "title": "Token budgeting and context packing",
+  "requirements": [
+    "R09",
+    "R27"
+  ],
+  "language": "python"
+}

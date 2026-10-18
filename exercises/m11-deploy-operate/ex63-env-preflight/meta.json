@@ -1,0 +1,12 @@
+{
+  "id": "ex63",
+  "module": "m11-deploy-operate",
+  "slug": "env-preflight",
+  "title": "Customer-environment preflight checker",
+  "requirements": [
+    "R26",
+    "R29",
+    "R06"
+  ],
+  "language": "python"
+}

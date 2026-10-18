@@ -1,0 +1,11 @@
+{
+  "id": "ex70",
+  "module": "m12-field-craft",
+  "slug": "rapid-poc",
+  "title": "Time-boxed POC: invoice extraction",
+  "requirements": [
+    "R21",
+    "R08"
+  ],
+  "language": "python"
+}

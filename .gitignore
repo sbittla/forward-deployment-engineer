@@ -1,0 +1,20 @@
+# Book manuscript, research data, course outline and scoring stay on localhost only
+book/
+course-outline*.md
+*.book.md
+
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+venv/
+*.egg-info/
+
+# Node
+node_modules/
+
+# Local secrets / scratch
+.env
+*.local.json
+.DS_Store

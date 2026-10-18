@@ -1,0 +1,18 @@
+{
+  "id": "c4",
+  "slug": "pilot-to-production",
+  "title": "Pilot to production hardening in a constrained customer environment",
+  "requirements": [
+    "R01",
+    "R06",
+    "R07",
+    "R15",
+    "R20",
+    "R22",
+    "R24",
+    "R26",
+    "R27",
+    "R28",
+    "R29"
+  ]
+}

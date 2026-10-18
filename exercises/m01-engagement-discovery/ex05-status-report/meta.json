@@ -1,0 +1,11 @@
+{
+  "id": "ex05",
+  "module": "m01-engagement-discovery",
+  "slug": "status-report",
+  "title": "Weekly status report generator",
+  "requirements": [
+    "R19",
+    "R30"
+  ],
+  "language": "python"
+}

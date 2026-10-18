@@ -1,0 +1,11 @@
+{
+  "id": "ex60",
+  "module": "m11-deploy-operate",
+  "slug": "llm-tracing",
+  "title": "Tracing and metrics for LLM calls",
+  "requirements": [
+    "R15",
+    "R27"
+  ],
+  "language": "python"
+}

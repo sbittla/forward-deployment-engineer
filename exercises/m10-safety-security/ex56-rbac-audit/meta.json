@@ -1,0 +1,10 @@
+{
+  "id": "ex56",
+  "module": "m10-safety-security",
+  "slug": "rbac-audit",
+  "title": "RBAC and audit log for multi-tenant AI",
+  "requirements": [
+    "R17"
+  ],
+  "language": "python"
+}

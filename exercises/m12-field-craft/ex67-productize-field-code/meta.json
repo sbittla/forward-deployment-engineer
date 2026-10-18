@@ -1,0 +1,10 @@
+{
+  "id": "ex67",
+  "module": "m12-field-craft",
+  "slug": "productize-field-code",
+  "title": "Productise a one-off field script",
+  "requirements": [
+    "R23"
+  ],
+  "language": "python"
+}

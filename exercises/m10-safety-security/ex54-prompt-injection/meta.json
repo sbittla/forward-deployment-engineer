@@ -1,0 +1,11 @@
+{
+  "id": "ex54",
+  "module": "m10-safety-security",
+  "slug": "prompt-injection",
+  "title": "Prompt-injection defences for agents",
+  "requirements": [
+    "R14",
+    "R11"
+  ],
+  "language": "python"
+}

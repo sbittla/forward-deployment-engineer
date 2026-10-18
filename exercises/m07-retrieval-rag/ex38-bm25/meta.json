@@ -1,0 +1,10 @@
+{
+  "id": "ex38",
+  "module": "m07-retrieval-rag",
+  "slug": "bm25",
+  "title": "BM25 from scratch",
+  "requirements": [
+    "R10"
+  ],
+  "language": "python"
+}

@@ -1,0 +1,18 @@
+{
+  "id": "c2",
+  "slug": "ops-agent-mcp",
+  "title": "Agentic Order-Ops with MCP connectors (retail)",
+  "requirements": [
+    "R01",
+    "R05",
+    "R11",
+    "R12",
+    "R13",
+    "R14",
+    "R17",
+    "R22",
+    "R23",
+    "R24",
+    "R28"
+  ]
+}

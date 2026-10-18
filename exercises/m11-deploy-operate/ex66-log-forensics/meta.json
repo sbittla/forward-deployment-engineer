@@ -1,0 +1,11 @@
+{
+  "id": "ex66",
+  "module": "m11-deploy-operate",
+  "slug": "log-forensics",
+  "title": "Log forensics: root-cause an incident",
+  "requirements": [
+    "R29",
+    "R15"
+  ],
+  "language": "python"
+}

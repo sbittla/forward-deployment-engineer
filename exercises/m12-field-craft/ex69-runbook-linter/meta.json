@@ -1,0 +1,10 @@
+{
+  "id": "ex69",
+  "module": "m12-field-craft",
+  "slug": "runbook-linter",
+  "title": "Runbook and handoff doc linter",
+  "requirements": [
+    "R24"
+  ],
+  "language": "python"
+}

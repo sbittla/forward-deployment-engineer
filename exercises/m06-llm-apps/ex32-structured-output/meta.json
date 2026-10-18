@@ -1,0 +1,11 @@
+{
+  "id": "ex32",
+  "module": "m06-llm-apps",
+  "slug": "structured-output",
+  "title": "Structured output with validation and repair",
+  "requirements": [
+    "R08",
+    "R09"
+  ],
+  "language": "python"
+}

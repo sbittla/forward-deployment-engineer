@@ -1,0 +1,10 @@
+{
+  "id": "ex55",
+  "module": "m10-safety-security",
+  "slug": "output-guardrails",
+  "title": "Output guardrails and groundedness",
+  "requirements": [
+    "R14"
+  ],
+  "language": "python"
+}

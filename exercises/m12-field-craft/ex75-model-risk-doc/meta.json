@@ -1,0 +1,12 @@
+{
+  "id": "ex75",
+  "module": "m12-field-craft",
+  "slug": "model-risk-doc",
+  "title": "Model risk documentation for a regulated customer",
+  "requirements": [
+    "R25",
+    "R24",
+    "R14"
+  ],
+  "language": "python"
+}

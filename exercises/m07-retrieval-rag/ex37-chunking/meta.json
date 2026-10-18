@@ -1,0 +1,10 @@
+{
+  "id": "ex37",
+  "module": "m07-retrieval-rag",
+  "slug": "chunking",
+  "title": "Chunking strategies",
+  "requirements": [
+    "R10"
+  ],
+  "language": "python"
+}

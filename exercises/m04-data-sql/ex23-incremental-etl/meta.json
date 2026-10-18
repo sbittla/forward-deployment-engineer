@@ -1,0 +1,11 @@
+{
+  "id": "ex23",
+  "module": "m04-data-sql",
+  "slug": "incremental-etl",
+  "title": "Incremental ETL with watermarks and upserts",
+  "requirements": [
+    "R04",
+    "R03"
+  ],
+  "language": "python"
+}

@@ -1,0 +1,12 @@
+{
+  "id": "ex08",
+  "module": "m01-engagement-discovery",
+  "slug": "scope-prioritization",
+  "title": "Scope negotiation with MoSCoW under a deadline",
+  "requirements": [
+    "R20",
+    "R18",
+    "R30"
+  ],
+  "language": "python"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ex52",
+  "module": "m09-evaluation",
+  "slug": "ab-analysis",
+  "title": "A/B experiment analysis with bootstrap CIs",
+  "requirements": [
+    "R13",
+    "R30"
+  ],
+  "language": "python"
+}

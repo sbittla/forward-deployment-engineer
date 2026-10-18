@@ -1,0 +1,19 @@
+{
+  "id": "c5",
+  "slug": "field-engagement",
+  "title": "Embedded field engagement: healthcare intake from call transcripts",
+  "requirements": [
+    "R14",
+    "R17",
+    "R18",
+    "R19",
+    "R20",
+    "R21",
+    "R23",
+    "R24",
+    "R25",
+    "R26",
+    "R30",
+    "R32"
+  ]
+}

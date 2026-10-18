@@ -1,0 +1,11 @@
+{
+  "id": "ex72",
+  "module": "m12-field-craft",
+  "slug": "phi-deidentify",
+  "title": "Regulated data: de-identification and retention",
+  "requirements": [
+    "R25",
+    "R17"
+  ],
+  "language": "python"
+}

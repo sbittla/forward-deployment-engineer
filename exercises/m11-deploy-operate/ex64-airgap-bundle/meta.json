@@ -1,0 +1,12 @@
+{
+  "id": "ex64",
+  "module": "m11-deploy-operate",
+  "slug": "airgap-bundle",
+  "title": "Air-gapped deployment bundle with manifest and checksums",
+  "requirements": [
+    "R26",
+    "R22",
+    "R17"
+  ],
+  "language": "python"
+}

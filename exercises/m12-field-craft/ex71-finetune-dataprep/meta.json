@@ -1,0 +1,10 @@
+{
+  "id": "ex71",
+  "module": "m12-field-craft",
+  "slug": "finetune-dataprep",
+  "title": "Fine-tuning dataset preparation",
+  "requirements": [
+    "R16"
+  ],
+  "language": "python"
+}

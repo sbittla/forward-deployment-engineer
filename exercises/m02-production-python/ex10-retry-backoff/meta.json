@@ -1,0 +1,12 @@
+{
+  "id": "ex10",
+  "module": "m02-production-python",
+  "slug": "retry-backoff",
+  "title": "Retries, backoff, jitter, idempotency",
+  "requirements": [
+    "R01",
+    "R22",
+    "R15"
+  ],
+  "language": "python"
+}

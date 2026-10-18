@@ -1,0 +1,11 @@
+{
+  "id": "ex48",
+  "module": "m08-agents-mcp",
+  "slug": "voice-transcripts",
+  "title": "Voice agent transcripts: turns, barge-in, latency",
+  "requirements": [
+    "R32",
+    "R15"
+  ],
+  "language": "python"
+}

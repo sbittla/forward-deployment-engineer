@@ -1,0 +1,11 @@
+{
+  "id": "ex44",
+  "module": "m08-agents-mcp",
+  "slug": "mcp-server",
+  "title": "Build an MCP server",
+  "requirements": [
+    "R12",
+    "R11"
+  ],
+  "language": "python"
+}

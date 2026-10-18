@@ -1,0 +1,16 @@
+{
+  "id": "c3",
+  "slug": "insights-analyst",
+  "title": "Lakehouse ETL + NL-to-SQL analyst (financial services)",
+  "requirements": [
+    "R01",
+    "R03",
+    "R04",
+    "R05",
+    "R08",
+    "R13",
+    "R24",
+    "R25",
+    "R31"
+  ]
+}

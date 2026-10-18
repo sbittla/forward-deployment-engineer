@@ -1,0 +1,12 @@
+{
+  "id": "ex65",
+  "module": "m11-deploy-operate",
+  "slug": "iac-least-privilege",
+  "title": "IaC config with least-privilege IAM validator",
+  "requirements": [
+    "R06",
+    "R07",
+    "R17"
+  ],
+  "language": "python"
+}

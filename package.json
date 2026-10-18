@@ -1,0 +1,10 @@
+{
+  "name": "fde-exercises",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=23.6" },
+  "scripts": {
+    "test": "node --test \"exercises/**/*.test.ts\"",
+    "test:solutions": "FDE_SOLUTIONS=1 node --test \"exercises/**/*.test.ts\""
+  }
+}

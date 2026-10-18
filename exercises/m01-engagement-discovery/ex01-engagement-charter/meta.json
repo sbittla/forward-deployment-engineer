@@ -1,0 +1,12 @@
+{
+  "id": "ex01",
+  "module": "m01-engagement-discovery",
+  "slug": "engagement-charter",
+  "title": "Engagement charter from discovery notes",
+  "requirements": [
+    "R18",
+    "R30",
+    "R19"
+  ],
+  "language": "python"
+}

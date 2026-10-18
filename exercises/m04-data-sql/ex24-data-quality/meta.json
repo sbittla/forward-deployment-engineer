@@ -1,0 +1,10 @@
+{
+  "id": "ex24",
+  "module": "m04-data-sql",
+  "slug": "data-quality",
+  "title": "Data-quality checks framework",
+  "requirements": [
+    "R04"
+  ],
+  "language": "python"
+}

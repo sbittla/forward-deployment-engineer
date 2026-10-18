@@ -1,0 +1,4 @@
+pytest>=8
+pyyaml>=6
+# optional: real model calls when FDE_LIVE=1
+# anthropic>=1.0
