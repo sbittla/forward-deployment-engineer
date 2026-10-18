@@ -1,0 +1,8 @@
+name: summarizer-ci
+on: push
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@main
+      - run: docker build -f deploy/Dockerfile .

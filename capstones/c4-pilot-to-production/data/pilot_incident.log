@@ -1,0 +1,18 @@
+2026-10-14T13:00:02Z INFO request ok route=/summarize status=200 duration_ms=2210
+2026-10-14T13:00:09Z INFO request ok route=/summarize status=200 duration_ms=2480
+2026-10-14T13:02:11Z ERROR llm call failed status=529 error=overloaded_error
+2026-10-14T13:02:11Z ERROR request failed route=/summarize status=500 duration_ms=1210
+2026-10-14T13:02:13Z ERROR llm call failed status=529 error=overloaded_error
+2026-10-14T13:02:13Z ERROR request failed route=/summarize status=500 duration_ms=1180
+2026-10-14T13:02:20Z ERROR llm call failed status=529 error=overloaded_error
+2026-10-14T13:02:20Z ERROR request failed route=/summarize status=500 duration_ms=1305
+2026-10-14T13:02:44Z WARN slow request route=/summarize status=200 duration_ms=31002
+2026-10-14T13:02:45Z WARN request queue backlog depth=64
+2026-10-14T13:03:16Z WARN slow request route=/summarize status=200 duration_ms=30871
+2026-10-14T13:03:17Z WARN request queue backlog depth=128
+2026-10-14T13:03:18Z ERROR request failed route=/summarize status=504 duration_ms=60000
+2026-10-14T13:03:30Z ERROR llm call failed status=529 error=overloaded_error
+2026-10-14T13:03:30Z ERROR request failed route=/summarize status=500 duration_ms=1250
+2026-10-14T13:04:02Z ERROR kubelet liveness probe failed: no /healthz endpoint (404)
+2026-10-14T13:04:03Z INFO container restarted reason=liveness
+2026-10-14T13:05:10Z INFO request ok route=/summarize status=200 duration_ms=2390

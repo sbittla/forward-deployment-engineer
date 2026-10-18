@@ -1,0 +1,15 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: summarizer
+spec:
+  replicas: 1
+  selector:
+    matchLabels: {app: summarizer}
+  template:
+    metadata:
+      labels: {app: summarizer}
+    spec:
+      containers:
+        - name: app
+          image: registry.logistics.example/summarizer:latest
