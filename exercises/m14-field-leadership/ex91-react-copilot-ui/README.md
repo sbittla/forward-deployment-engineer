@@ -21,7 +21,8 @@ transform.
    error, sets pending). Never mutate the state.
 2. `makeUseChat(useReducer, sendToApi)` returns a hook `useChat()` → `{state, setDraft(text), send(), retry()}`.
    `send()` dispatches `send`, then calls `sendToApi(text)` and dispatches `reply` with the answer or `fail` with
-   the error message. `retry()` re-sends the last user message. Generate ids as `m1`, `m2`… per hook instance.
+   the error message. `retry()` re-sends the last user message. Generate ids as `m1`, `m2`… from one counter per
+   `makeUseChat` call, shared by every hook it returns (a counter inside `useChat` would reset on each render).
 3. `makeCopilotPanel(h)` returns a component `CopilotPanel(props)` where props are `{state, onDraft, onSend,
    onRetry, title}`, rendering:
    - `section` with `aria-label` = title, containing an `h2` with the title
