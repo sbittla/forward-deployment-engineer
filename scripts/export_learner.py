@@ -8,7 +8,7 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-INCLUDE = ["exercises", "capstones", "playbook", "fde_kit", "scripts", "conftest.py", "pytest.ini",
+INCLUDE = ["exercises", "capstones", "playbook", "interview", "fde_kit", "scripts", "conftest.py", "pytest.ini",
            "requirements.txt", "package.json", "README.md", "LICENSE", "LICENSE-CONTENT", "NOTICE.md", "VERSIONS.md",
            "CHANGELOG.md", ".gitattributes"]
 SKIP = shutil.ignore_patterns("__pycache__", "*.pyc", ".pytest_cache", "node_modules")

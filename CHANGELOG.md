@@ -5,6 +5,11 @@ change to a README spec or test contract bumps the major version, new exercises 
 and errata fixes are patch releases. Exercise ids never change within an edition of the book; directory names change
 only in a major release.
 
+## [Unreleased]
+### Added
+- `interview/questions-and-answers.md`: the book's 127 end-of-chapter interview questions with their model answers,
+  strong signals and red flags (Appendix J), grouped by chapter.
+
 ## [2.0.0] - 2026-10-20
 The release verified against *The Forward Deployed Engineer*, First Edition, revision 2.0. The repository is now
 organised the way the book is, so a chapter number is enough to find its exercises, solutions and test reports.

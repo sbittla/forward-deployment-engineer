@@ -33,6 +33,8 @@ CPU-only, so the GPU is reported in `output/environment.txt` but not needed. Res
   All six are assessed with one [rubric](capstones/RUBRIC.md): gates first, then a weighted score.
 - `playbook/`: [copyable templates](playbook/README.md) for the engagement artefacts the book teaches, in five packs
   (discovery, solution design, delivery, production readiness, handover).
+- `interview/`: [127 interview questions with model answers](interview/questions-and-answers.md), seven or eight
+  per book chapter, tagged technical, coding, debugging, system design, customer scenario or behavioural.
 - `fde_kit/`: the offline `FakeLLM`, an optional `AnthropicLLM` adapter (`FDE_LIVE=1`), and text utilities.
 - `scripts/`: `check.py` (all tests, or `--chapter N`), `run_all.py` (every suite, checked, report in `output/`), `starters_red.py` (every suite starts red), `spec_lint.py`,
   `hints_lint.py` and `export_learner.py`.
