@@ -30,6 +30,15 @@ def run(cmd: list[str], cwd: Path, env: dict, log: Path) -> tuple[int, str]:
     log.write_text(p.stdout + p.stderr, encoding="utf-8")
     lines = [line.strip() for line in (p.stdout + p.stderr).splitlines() if line.strip()]
     key = [line for line in lines if SUMMARY.search(line)]
+    # pytest -q prints only progress dots and node --test prints "ℹ pass N" per file: total them
+    progress = "".join(m.group(1) for line in lines if (m := re.match(r"^([.FEsx]+)\s+\[\s*\d+%\]$", line)))
+    ts_pass = sum(int(n) for n in re.findall(r"^ℹ pass (\d+)$", "\n".join(lines), re.M))
+    ts_fail = sum(int(n) for n in re.findall(r"^ℹ fail (\d+)$", "\n".join(lines), re.M))
+    if progress:
+        key.insert(0, f"pytest: {progress.count('.')} passed, {progress.count('F') + progress.count('E')} failed, "
+                      f"{progress.count('s')} skipped")
+    if ts_pass or ts_fail:
+        key.insert(1 if progress else 0, f"node --test: {ts_pass} passed, {ts_fail} failed")
     return p.returncode, "; ".join(dict.fromkeys(key)) if key else (lines[-1] if lines else "")
 
 
@@ -72,7 +81,7 @@ def main() -> int:
     venv.create(work / "venv", with_pip=True)
     py = str(work / "venv" / ("Scripts/python.exe" if os.name == "nt" else "bin/python"))
     checks = [
-        ("Install documented requirements", [py, "-m", "pip", "install", "--quiet", "-r", "requirements.txt"]),
+        ("Install documented requirements", [py, "-m", "pip", "install", "--quiet", "--disable-pip-version-check", "-r", "requirements.txt"]),
         ("All reference solutions and linters", [py, "scripts/check.py", "--solutions"]),
         ("Every starter fails at least one test", [py, "scripts/starters_red.py"]),
     ]
