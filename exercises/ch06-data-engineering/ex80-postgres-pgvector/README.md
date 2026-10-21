@@ -35,6 +35,9 @@ into Postgres with the `pgvector` extension. Port the schema and queries and gen
 4. `knn_query(table, k, metric="cosine") -> str` using operators `<=>` (cosine), `<->` (l2), `<#>` (ip):
    `SELECT doc_id, chunk, embedding {op} %s AS distance FROM {table} ORDER BY embedding {op} %s LIMIT {k}`.
    `k` must be 1–100.
+5. Both `vector_schema` and `knn_query` splice `table` into SQL, so treat it as untrusted: unless it matches
+   `[A-Za-z_][A-Za-z0-9_]{0,62}` (a plain Postgres identifier of at most 63 characters), raise
+   `ValueError("invalid table name: ...")` before building any SQL. Values (`%s`) stay parameters.
 
 Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
 
@@ -43,10 +46,10 @@ Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each
 - **Prerequisites:** Python 3.11 or later and `pip install -r requirements.txt`, run once from the repository root.
   No API key or network access is needed.
 - **Run your work:** from the repository root, `pytest exercises/ch06-data-engineering/ex80-postgres-pgvector`.
-- **Expected output:** all 9 tests fail against the starter; when you're done, all 9 pass.
+- **Expected output:** all 10 tests fail against the starter; when you're done, all 10 pass.
 - **Check the reference solution:** `pytest --solutions exercises/ch06-data-engineering/ex80-postgres-pgvector`: all
-  9 pass.
-- **Tests:** `test_postgres.py` (9 tests).
+  10 pass.
+- **Tests:** `test_postgres.py` (10 tests).
 - **Common failures:** `ModuleNotFoundError: No module named 'fde_kit'` means the command didn't run from the
   repository root. For a failing test, [HINTS.md](HINTS.md) says what it usually means.
 - **Whose failure is it?** If your run fails but the reference run passes, it's your code. If the reference run fails
@@ -55,7 +58,7 @@ Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each
 - **Cleanup:** none. The tests write only to temporary directories, and `__pycache__` folders are ignored by git.
 - **Production caveats:** The translators are regex-based and cover only the listed constructs, and the pgvector
   statements are generated, not run. A production port is tested against a real Postgres with the extension
-  installed, uses a migration tool and parameterised queries, and measures recall (including filtered queries) before
+  installed, uses a migration tool and parameterized queries, and measures recall (including filtered queries) before
   choosing the index and its `ef_search` or `lists` settings.
 
 ## Prompt kit

@@ -1,9 +1,11 @@
 import json
+import math
 import re
 from dataclasses import dataclass, field
 from datetime import datetime
 
 FIELDS = ("invoice_number", "invoice_date", "total", "vendor")
+EXIT_GATES = {"invoice_number": 0.95, "invoice_date": 0.95, "total": 0.97, "vendor": 0.90}
 
 NUMBER = re.compile(r"(?i:\binvoice\s*(?:no\.?|number|#)|\binv\b\.?)\s*[:#]?\s*([A-Z0-9-]*\d[A-Z0-9-]*)")
 DATE_LABEL = re.compile(r"(?i:\b(?:invoice\s+)?date)\s*:?\s*(.+)")
@@ -90,7 +92,12 @@ def extract(text: str, llm=None) -> Extraction:
                   "omit a key if the invoice does not contain it.")
         reply = llm.complete([{"role": "user", "content": prompt}], system=system).text
         m = re.search(r"\{.*\}", reply, re.S)
-        data = json.loads(m.group(0)) if m else {}
+        try:
+            data = json.loads(m.group(0)) if m else {}
+        except json.JSONDecodeError:
+            data = {}                      # a malformed reply fills nothing; the fields stay missing
+        if not isinstance(data, dict):
+            data = {}
         for f in missing:
             if f in data and (v := _normalize(f, data[f])) is not None:
                 ex.fields[f] = v
@@ -127,3 +134,22 @@ def poc_readout(metrics: dict) -> str:
     lines += [f"- Improve {f} extraction" for f in FIELDS if metrics[f] < 0.9]
     lines.append("- Run on 200 labelled invoices before any production decision")
     return "\n".join(lines) + "\n"
+
+
+def wilson_lower(p: float, n: int, z: float = 1.96) -> float:
+    if n <= 0:
+        return 0.0
+    centre = p + z * z / (2 * n)
+    margin = z * math.sqrt(p * (1 - p) / n + z * z / (4 * n * n))
+    return (centre - margin) / (1 + z * z / n)
+
+
+def exit_decision(metrics: dict, n: int, gates: dict = EXIT_GATES, min_n: int = 200) -> tuple[str, list[str]]:
+    if n < min_n:
+        return "extend", [f"n={n} < {min_n} labeled invoices"]
+    below = [f"{f}: {metrics[f]} < {g}" for f, g in gates.items() if metrics[f] < g]
+    if below:
+        return "no-go", below
+    unsure = [f"{f}: 95% lower bound {wilson_lower(metrics[f], n):.3f} < {g}"
+              for f, g in gates.items() if wilson_lower(metrics[f], n) < g]
+    return ("extend", unsure) if unsure else ("go", [])

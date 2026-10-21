@@ -6,6 +6,8 @@ CHECKLIST = {
     "evals": "major", "observability": "major", "threat_model": "major",
     "slo": "minor", "cost_estimate": "minor",
 }
+RISK_FIELDS = ("risk", "owner", "owner_org", "rationale", "compensating_control", "decided_on", "expires")
+MAX_ACCEPTANCE_DAYS = 90
 
 
 @dataclass
@@ -36,4 +38,8 @@ def review_design(design: dict) -> list[Finding]:
 
 
 def gate(findings: list[Finding], evidence: dict) -> tuple[str, list[str]]:
+    raise NotImplementedError
+
+
+def lint_risk_acceptance(record: dict) -> list[str]:
     raise NotImplementedError

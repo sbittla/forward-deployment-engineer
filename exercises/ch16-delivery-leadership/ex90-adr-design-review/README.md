@@ -6,11 +6,12 @@
 - Write and lint ADRs that capture why, alternatives and downsides.
 - Review partner designs against a severity-ranked checklist.
 - Gate partner deliverables on evidence, not assurances.
+- Record residual risk so a named customer owner accepts it, with a control and an expiry.
 
 ## Scenario
 Anthropic's Staff FDE "leads engagements delivered with partners, setting the architecture and the quality bar for
 work you don't build yourself" and "reviews designs and unblocks other FDEs". Deloitte's Lead FDE runs pods. Senior
-FDEs scale through review, not typing. You'll formalise the two tools they use: ADRs that capture *why*, and a
+FDEs scale through review, not typing. You'll formalize the two tools they use: ADRs that capture *why*, and a
 review gate that decides whether a partner's design or deliverable can ship.
 
 ## Your task
@@ -31,6 +32,14 @@ review gate that decides whether a partner's design or deliverable can ship.
    `tests_total`, `eval_pass_rate`, `open_criticals`. Decision `"reject"` if any blocker or `open_criticals > 0`;
    `"conditional"` if majors exist, test pass rate < 100%, or `eval_pass_rate < 0.9`; else `"accept"`. Reasons list
    every triggered condition in that order.
+5. `lint_risk_acceptance(record) -> list[str]` checks a **risk acceptance record**, the written acceptance of a known
+   gap that goes live (Section 16.2). `record` is a dict with the fields in `RISK_FIELDS`: `risk`, `owner`,
+   `owner_org`, `rationale`, `compensating_control`, `decided_on` and `expires` (ISO dates, `YYYY-MM-DD`). Report
+   `missing:<field>` for each absent or blank field, in `RISK_FIELDS` order, and return only those if there are any.
+   Otherwise: `owner_org` must be `"customer"` (case-insensitive), since neither you nor the partner can accept the
+   customer's risk (`owner:not-customer`); dates that don't parse add `dates:invalid` and stop there; `expires` on or
+   before `decided_on` → `expires:not-after-decision`; more than `MAX_ACCEPTANCE_DAYS` (90) days after it →
+   `expires:over-90-days`, because an acceptance without a near review date becomes permanent. A valid record → `[]`.
 
 Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
 
@@ -39,10 +48,10 @@ Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each
 - **Prerequisites:** Python 3.11 or later and `pip install -r requirements.txt`, run once from the repository root.
   No API key or network access is needed.
 - **Run your work:** from the repository root, `pytest exercises/ch16-delivery-leadership/ex90-adr-design-review`.
-- **Expected output:** all 4 tests fail against the starter; when you're done, all 4 pass.
+- **Expected output:** all 5 tests fail against the starter; when you're done, all 5 pass.
 - **Check the reference solution:** `pytest --solutions exercises/ch16-delivery-leadership/ex90-adr-design-review`:
-  all 4 pass.
-- **Tests:** `test_review_gate.py` (4 tests).
+  all 5 pass.
+- **Tests:** `test_review_gate.py` (5 tests).
 - **Common failures:** `ModuleNotFoundError: No module named 'fde_kit'` means the command didn't run from the
   repository root. For a failing test, [HINTS.md](HINTS.md) says what it usually means.
 - **Whose failure is it?** If your run fails but the reference run passes, it's your code. If the reference run fails
@@ -51,8 +60,10 @@ Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each
 - **Cleanup:** none. The tests write only to temporary directories, and `__pycache__` folders are ignored by git.
 - **Production caveats:** the gate checks that each design field is present and non-empty, and takes the evidence
   numbers as reported; it can't tell a real rollback plan or threat model from a placeholder sentence. In production,
-  link each item to the artefact itself (the CI run, the evaluation report, the signed security review), have a named
-  reviewer read it, and keep the gate decision and its reasons in the RAID log.
+  link each item to the artifact itself (the CI run, the evaluation report, the signed security review), have a named
+  reviewer read it, and keep the gate decision and its reasons in the RAID log. `lint_risk_acceptance` checks a
+  record's shape, not whether the owner had the authority or the control works; have the risk owner sign it and test
+  the control.
 
 ## Prompt kit
 **Learn (tutor prompt)**
@@ -67,7 +78,7 @@ wrong.
 ```text
 Implement exercises/ch16-delivery-leadership/ex90-adr-design-review/starter.py so that test_review_gate.py passes.
 README.md in that folder is the spec: follow its names, formats, ordering and error messages exactly. Public API:
-`ADR`, `Finding`, `parse_adr`, `lint_adr`, `review_design`, `gate`. Constraints: Python 3.11+, the standard library
+`ADR`, `Finding`, `parse_adr`, `lint_adr`, `review_design`, `gate`, `lint_risk_acceptance`. Constraints: Python 3.11+, the standard library
 and the repo's fde_kit package only (pyyaml is allowed where the README uses YAML). Do not modify the tests or
 fde_kit. When you're done, run `pytest exercises/ch16-delivery-leadership/ex90-adr-design-review` and show me the
 output. If the README and the tests disagree, stop and tell me instead of guessing.

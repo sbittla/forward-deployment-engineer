@@ -1,10 +1,10 @@
 {
   "ok": true,
-  "seconds": 67.3,
+  "seconds": 80.7,
   "suites": 106,
   "suites_passed": 106,
   "tests": {
-    "passed": 805,
+    "passed": 955,
     "failed": 0,
     "error": 0,
     "skipped": 0
@@ -128,14 +128,14 @@
       "status": "PASS",
       "problems": [],
       "tests": {
-        "passed": 7,
+        "passed": 8,
         "failed": 0,
         "error": 0,
         "skipped": 0
       },
-      "declared": 7,
-      "ran": 7,
-      "starter_failing": 7
+      "declared": 8,
+      "ran": 8,
+      "starter_failing": 8
     },
     {
       "path": "exercises/ch03-technical-communication/ex05-status-report",
@@ -226,6 +226,34 @@
       "status": "PASS",
       "problems": [],
       "tests": {
+        "passed": 15,
+        "failed": 0,
+        "error": 0,
+        "skipped": 0
+      },
+      "declared": 15,
+      "ran": 15,
+      "starter_failing": 15
+    },
+    {
+      "path": "exercises/ch04-production-grade-python/ex11-structured-logging",
+      "status": "PASS",
+      "problems": [],
+      "tests": {
+        "passed": 7,
+        "failed": 0,
+        "error": 0,
+        "skipped": 0
+      },
+      "declared": 7,
+      "ran": 7,
+      "starter_failing": 7
+    },
+    {
+      "path": "exercises/ch04-production-grade-python/ex12-async-rate-limit",
+      "status": "PASS",
+      "problems": [],
+      "tests": {
         "passed": 9,
         "failed": 0,
         "error": 0,
@@ -234,34 +262,6 @@
       "declared": 9,
       "ran": 9,
       "starter_failing": 9
-    },
-    {
-      "path": "exercises/ch04-production-grade-python/ex11-structured-logging",
-      "status": "PASS",
-      "problems": [],
-      "tests": {
-        "passed": 4,
-        "failed": 0,
-        "error": 0,
-        "skipped": 0
-      },
-      "declared": 4,
-      "ran": 4,
-      "starter_failing": 4
-    },
-    {
-      "path": "exercises/ch04-production-grade-python/ex12-async-rate-limit",
-      "status": "PASS",
-      "problems": [],
-      "tests": {
-        "passed": 6,
-        "failed": 0,
-        "error": 0,
-        "skipped": 0
-      },
-      "declared": 6,
-      "ran": 6,
-      "starter_failing": 6
     },
     {
       "path": "exercises/ch04-production-grade-python/ex13-debug-customer-script",
@@ -282,70 +282,70 @@
       "status": "PASS",
       "problems": [],
       "tests": {
-        "passed": 6,
+        "passed": 8,
         "failed": 0,
         "error": 0,
         "skipped": 0
       },
-      "declared": 6,
-      "ran": 6,
-      "starter_failing": 6
+      "declared": 8,
+      "ran": 8,
+      "starter_failing": 8
     },
     {
       "path": "exercises/ch04-production-grade-python/ex15-job-queue",
       "status": "PASS",
       "problems": [],
       "tests": {
-        "passed": 6,
+        "passed": 9,
         "failed": 0,
         "error": 0,
         "skipped": 0
       },
-      "declared": 6,
-      "ran": 6,
-      "starter_failing": 6
+      "declared": 9,
+      "ran": 9,
+      "starter_failing": 9
     },
     {
       "path": "exercises/ch05-enterprise-integration/ex16-paginated-client",
       "status": "PASS",
       "problems": [],
       "tests": {
-        "passed": 6,
+        "passed": 8,
         "failed": 0,
         "error": 0,
         "skipped": 0
       },
-      "declared": 6,
-      "ran": 6,
-      "starter_failing": 6
+      "declared": 7,
+      "ran": 8,
+      "starter_failing": 8
     },
     {
       "path": "exercises/ch05-enterprise-integration/ex17-webhook-hmac",
       "status": "PASS",
       "problems": [],
       "tests": {
-        "passed": 12,
+        "passed": 15,
         "failed": 0,
         "error": 0,
         "skipped": 0
       },
-      "declared": 12,
-      "ran": 12,
-      "starter_failing": 12
+      "declared": 15,
+      "ran": 15,
+      "starter_failing": 15
     },
     {
       "path": "exercises/ch05-enterprise-integration/ex18-oauth-token-cache",
       "status": "PASS",
       "problems": [],
       "tests": {
-        "passed": 6,
+        "passed": 10,
         "failed": 0,
         "error": 0,
         "skipped": 0
       },
-      "declared": 6,
-      "ran": 6,
-      "starter_failing": 6
+      "declared": 10,
+      "ran": 10,
+      "starter_failing": 10
     },
     {
       "path": "exercises/ch05-enterprise-integration/ex19-schema-mapper",
@@ -366,28 +366,28 @@
       "status": "PASS",
       "problems": [],
       "tests": {
-        "passed": 11,
+        "passed": 12,
         "failed": 0,
         "error": 0,
         "skipped": 0
       },
-      "declared": 7,
-      "ran": 11,
-      "starter_failing": 11
+      "declared": 8,
+      "ran": 12,
+      "starter_failing": 12
     },
     {
       "path": "exercises/ch05-enterprise-integration/ex21-proxy-aware-client",
       "status": "PASS",
       "problems": [],
       "tests": {
-        "passed": 10,
+        "passed": 12,
         "failed": 0,
         "error": 0,
         "skipped": 0
       },
-      "declared": 6,
-      "ran": 10,
-      "starter_failing": 10
+      "declared": 8,
+      "ran": 12,
+      "starter_failing": 12
     },
     {
       "path": "exercises/ch05-enterprise-integration/ex78-polyglot-port",
@@ -422,28 +422,28 @@
       "status": "PASS",
       "problems": [],
       "tests": {
-        "passed": 5,
+        "passed": 9,
         "failed": 0,
         "error": 0,
         "skipped": 0
       },
-      "declared": 5,
-      "ran": 5,
-      "starter_failing": 5
+      "declared": 9,
+      "ran": 9,
+      "starter_failing": 9
     },
     {
       "path": "exercises/ch06-data-engineering/ex24-data-quality",
       "status": "PASS",
       "problems": [],
       "tests": {
-        "passed": 8,
+        "passed": 9,
         "failed": 0,
         "error": 0,
         "skipped": 0
       },
-      "declared": 8,
-      "ran": 8,
-      "starter_failing": 8
+      "declared": 9,
+      "ran": 9,
+      "starter_failing": 9
     },
     {
       "path": "exercises/ch06-data-engineering/ex25-schema-drift",
@@ -492,14 +492,14 @@
       "status": "PASS",
       "problems": [],
       "tests": {
-        "passed": 9,
+        "passed": 10,
         "failed": 0,
         "error": 0,
         "skipped": 0
       },
-      "declared": 4,
-      "ran": 9,
-      "starter_failing": 9
+      "declared": 5,
+      "ran": 10,
+      "starter_failing": 10
     },
     {
       "path": "exercises/ch06-data-engineering/ex92-ontology-modeling",
@@ -534,56 +534,56 @@
       "status": "PASS",
       "problems": [],
       "tests": {
-        "passed": 5,
+        "passed": 10,
         "failed": 0,
         "error": 0,
         "skipped": 0
       },
-      "declared": 5,
-      "ran": 5,
-      "starter_failing": 5
+      "declared": 10,
+      "ran": 10,
+      "starter_failing": 10
     },
     {
       "path": "exercises/ch07-full-stack-engineering/ex29-ts-chat-reducer",
       "status": "PASS",
       "problems": [],
       "tests": {
-        "passed": 5,
+        "passed": 7,
         "failed": 0,
         "error": 0,
         "skipped": 0
       },
-      "declared": 5,
-      "ran": 5,
-      "starter_failing": 5
+      "declared": 7,
+      "ran": 7,
+      "starter_failing": 7
     },
     {
       "path": "exercises/ch07-full-stack-engineering/ex30-demo-web-ui",
       "status": "PASS",
       "problems": [],
       "tests": {
-        "passed": 13,
+        "passed": 15,
         "failed": 0,
         "error": 0,
         "skipped": 0
       },
-      "declared": 10,
-      "ran": 13,
-      "starter_failing": 13
+      "declared": 12,
+      "ran": 15,
+      "starter_failing": 15
     },
     {
       "path": "exercises/ch07-full-stack-engineering/ex91-react-copilot-ui",
       "status": "PASS",
       "problems": [],
       "tests": {
-        "passed": 3,
+        "passed": 6,
         "failed": 0,
         "error": 0,
         "skipped": 0
       },
-      "declared": 3,
-      "ran": 3,
-      "starter_failing": 3
+      "declared": 6,
+      "ran": 6,
+      "starter_failing": 6
     },
     {
       "path": "exercises/ch08-prompt-engineering/ex95-prompt-linter",
@@ -604,28 +604,28 @@
       "status": "PASS",
       "problems": [],
       "tests": {
-        "passed": 7,
+        "passed": 8,
         "failed": 0,
         "error": 0,
         "skipped": 0
       },
-      "declared": 7,
-      "ran": 7,
-      "starter_failing": 7
+      "declared": 8,
+      "ran": 8,
+      "starter_failing": 8
     },
     {
       "path": "exercises/ch08-prompt-engineering/ex97-prompt-hill-climb",
       "status": "PASS",
       "problems": [],
       "tests": {
-        "passed": 7,
+        "passed": 12,
         "failed": 0,
         "error": 0,
         "skipped": 0
       },
-      "declared": 7,
-      "ran": 7,
-      "starter_failing": 7
+      "declared": 12,
+      "ran": 12,
+      "starter_failing": 12
     },
     {
       "path": "exercises/ch08-prompt-engineering/ex98-prompt-from-spec",
@@ -646,28 +646,28 @@
       "status": "PASS",
       "problems": [],
       "tests": {
-        "passed": 6,
+        "passed": 8,
         "failed": 0,
         "error": 0,
         "skipped": 0
       },
-      "declared": 6,
-      "ran": 6,
-      "starter_failing": 6
+      "declared": 8,
+      "ran": 8,
+      "starter_failing": 8
     },
     {
       "path": "exercises/ch09-llm-application-engineering/ex32-structured-output",
       "status": "PASS",
       "problems": [],
       "tests": {
-        "passed": 17,
+        "passed": 22,
         "failed": 0,
         "error": 0,
         "skipped": 0
       },
-      "declared": 8,
-      "ran": 17,
-      "starter_failing": 17
+      "declared": 13,
+      "ran": 22,
+      "starter_failing": 22
     },
     {
       "path": "exercises/ch09-llm-application-engineering/ex33-context-packing",
@@ -688,28 +688,28 @@
       "status": "PASS",
       "problems": [],
       "tests": {
-        "passed": 6,
+        "passed": 17,
         "failed": 0,
         "error": 0,
         "skipped": 0
       },
-      "declared": 6,
-      "ran": 6,
-      "starter_failing": 6
+      "declared": 13,
+      "ran": 17,
+      "starter_failing": 17
     },
     {
       "path": "exercises/ch09-llm-application-engineering/ex35-llm-cache-costs",
       "status": "PASS",
       "problems": [],
       "tests": {
-        "passed": 8,
+        "passed": 9,
         "failed": 0,
         "error": 0,
         "skipped": 0
       },
-      "declared": 8,
-      "ran": 8,
-      "starter_failing": 8
+      "declared": 9,
+      "ran": 9,
+      "starter_failing": 9
     },
     {
       "path": "exercises/ch09-llm-application-engineering/ex36-ml-baseline",
@@ -772,56 +772,56 @@
       "status": "PASS",
       "problems": [],
       "tests": {
-        "passed": 5,
+        "passed": 7,
         "failed": 0,
         "error": 0,
         "skipped": 0
       },
-      "declared": 5,
-      "ran": 5,
-      "starter_failing": 5
+      "declared": 7,
+      "ran": 7,
+      "starter_failing": 7
     },
     {
       "path": "exercises/ch10-rag/ex40-rag-citations",
       "status": "PASS",
       "problems": [],
       "tests": {
-        "passed": 8,
+        "passed": 9,
         "failed": 0,
         "error": 0,
         "skipped": 0
       },
-      "declared": 8,
-      "ran": 8,
-      "starter_failing": 8
+      "declared": 9,
+      "ran": 9,
+      "starter_failing": 9
     },
     {
       "path": "exercises/ch10-rag/ex41-retrieval-eval",
       "status": "PASS",
       "problems": [],
       "tests": {
-        "passed": 5,
+        "passed": 9,
         "failed": 0,
         "error": 0,
         "skipped": 0
       },
-      "declared": 5,
-      "ran": 5,
-      "starter_failing": 5
+      "declared": 9,
+      "ran": 9,
+      "starter_failing": 9
     },
     {
       "path": "exercises/ch10-rag/ex88-document-ai",
       "status": "PASS",
       "problems": [],
       "tests": {
-        "passed": 5,
+        "passed": 6,
         "failed": 0,
         "error": 0,
         "skipped": 0
       },
-      "declared": 5,
-      "ran": 5,
-      "starter_failing": 5
+      "declared": 6,
+      "ran": 6,
+      "starter_failing": 6
     },
     {
       "path": "exercises/ch11-ai-agents/ex42-tool-agent-loop",
@@ -842,14 +842,14 @@
       "status": "PASS",
       "problems": [],
       "tests": {
-        "passed": 8,
+        "passed": 12,
         "failed": 0,
         "error": 0,
         "skipped": 0
       },
-      "declared": 8,
-      "ran": 8,
-      "starter_failing": 8
+      "declared": 12,
+      "ran": 12,
+      "starter_failing": 12
     },
     {
       "path": "exercises/ch11-ai-agents/ex44-mcp-server",
@@ -884,14 +884,14 @@
       "status": "PASS",
       "problems": [],
       "tests": {
-        "passed": 7,
+        "passed": 12,
         "failed": 0,
         "error": 0,
         "skipped": 0
       },
-      "declared": 5,
-      "ran": 7,
-      "starter_failing": 7
+      "declared": 8,
+      "ran": 12,
+      "starter_failing": 12
     },
     {
       "path": "exercises/ch11-ai-agents/ex47-agent-memory",
@@ -968,28 +968,28 @@
       "status": "PASS",
       "problems": [],
       "tests": {
-        "passed": 22,
+        "passed": 29,
         "failed": 0,
         "error": 0,
         "skipped": 0
       },
-      "declared": 10,
-      "ran": 22,
-      "starter_failing": 22
+      "declared": 13,
+      "ran": 29,
+      "starter_failing": 29
     },
     {
       "path": "exercises/ch12-llm-evaluation/ex50-llm-judge",
       "status": "PASS",
       "problems": [],
       "tests": {
-        "passed": 9,
+        "passed": 11,
         "failed": 0,
         "error": 0,
         "skipped": 0
       },
-      "declared": 6,
-      "ran": 9,
-      "starter_failing": 9
+      "declared": 8,
+      "ran": 11,
+      "starter_failing": 11
     },
     {
       "path": "exercises/ch12-llm-evaluation/ex51-prompt-regression",
@@ -1108,28 +1108,28 @@
       "status": "PASS",
       "problems": [],
       "tests": {
-        "passed": 9,
+        "passed": 21,
         "failed": 0,
         "error": 0,
         "skipped": 0
       },
-      "declared": 6,
-      "ran": 9,
-      "starter_failing": 9
+      "declared": 11,
+      "ran": 21,
+      "starter_failing": 21
     },
     {
       "path": "exercises/ch13-ai-security-and-guardrails/ex93-red-team-harness",
       "status": "PASS",
       "problems": [],
       "tests": {
-        "passed": 6,
+        "passed": 8,
         "failed": 0,
         "error": 0,
         "skipped": 0
       },
-      "declared": 6,
-      "ran": 6,
-      "starter_failing": 6
+      "declared": 8,
+      "ran": 8,
+      "starter_failing": 8
     },
     {
       "path": "exercises/ch14-llmops-and-sre/ex57-dockerize",
@@ -1150,6 +1150,20 @@
       "status": "PASS",
       "problems": [],
       "tests": {
+        "passed": 6,
+        "failed": 0,
+        "error": 0,
+        "skipped": 0
+      },
+      "declared": 6,
+      "ran": 6,
+      "starter_failing": 6
+    },
+    {
+      "path": "exercises/ch14-llmops-and-sre/ex59-ci-pipeline",
+      "status": "PASS",
+      "problems": [],
+      "tests": {
         "passed": 5,
         "failed": 0,
         "error": 0,
@@ -1158,20 +1172,6 @@
       "declared": 5,
       "ran": 5,
       "starter_failing": 5
-    },
-    {
-      "path": "exercises/ch14-llmops-and-sre/ex59-ci-pipeline",
-      "status": "PASS",
-      "problems": [],
-      "tests": {
-        "passed": 4,
-        "failed": 0,
-        "error": 0,
-        "skipped": 0
-      },
-      "declared": 4,
-      "ran": 4,
-      "starter_failing": 4
     },
     {
       "path": "exercises/ch14-llmops-and-sre/ex60-llm-tracing",
@@ -1192,28 +1192,28 @@
       "status": "PASS",
       "problems": [],
       "tests": {
-        "passed": 7,
+        "passed": 9,
         "failed": 0,
         "error": 0,
         "skipped": 0
       },
-      "declared": 7,
-      "ran": 7,
-      "starter_failing": 7
+      "declared": 9,
+      "ran": 9,
+      "starter_failing": 9
     },
     {
       "path": "exercises/ch14-llmops-and-sre/ex62-load-test",
       "status": "PASS",
       "problems": [],
       "tests": {
-        "passed": 5,
+        "passed": 6,
         "failed": 0,
         "error": 0,
         "skipped": 0
       },
-      "declared": 5,
-      "ran": 5,
-      "starter_failing": 5
+      "declared": 6,
+      "ran": 6,
+      "starter_failing": 6
     },
     {
       "path": "exercises/ch14-llmops-and-sre/ex63-env-preflight",
@@ -1234,14 +1234,14 @@
       "status": "PASS",
       "problems": [],
       "tests": {
-        "passed": 4,
+        "passed": 5,
         "failed": 0,
         "error": 0,
         "skipped": 0
       },
-      "declared": 4,
-      "ran": 4,
-      "starter_failing": 4
+      "declared": 5,
+      "ran": 5,
+      "starter_failing": 5
     },
     {
       "path": "exercises/ch14-llmops-and-sre/ex65-iac-least-privilege",
@@ -1290,14 +1290,14 @@
       "status": "PASS",
       "problems": [],
       "tests": {
-        "passed": 8,
+        "passed": 9,
         "failed": 0,
         "error": 0,
         "skipped": 0
       },
-      "declared": 5,
-      "ran": 8,
-      "starter_failing": 8
+      "declared": 6,
+      "ran": 9,
+      "starter_failing": 9
     },
     {
       "path": "exercises/ch15-field-engineering-and-productisation/ex67-productize-field-code",
@@ -1318,14 +1318,14 @@
       "status": "PASS",
       "problems": [],
       "tests": {
-        "passed": 7,
+        "passed": 9,
         "failed": 0,
         "error": 0,
         "skipped": 0
       },
-      "declared": 7,
-      "ran": 7,
-      "starter_failing": 7
+      "declared": 9,
+      "ran": 9,
+      "starter_failing": 9
     },
     {
       "path": "exercises/ch15-field-engineering-and-productisation/ex71-finetune-dataprep",
@@ -1346,14 +1346,14 @@
       "status": "PASS",
       "problems": [],
       "tests": {
-        "passed": 5,
+        "passed": 6,
         "failed": 0,
         "error": 0,
         "skipped": 0
       },
-      "declared": 5,
-      "ran": 5,
-      "starter_failing": 5
+      "declared": 6,
+      "ran": 6,
+      "starter_failing": 6
     },
     {
       "path": "exercises/ch15-field-engineering-and-productisation/ex73-connector-framework",
@@ -1388,14 +1388,14 @@
       "status": "PASS",
       "problems": [],
       "tests": {
-        "passed": 4,
+        "passed": 5,
         "failed": 0,
         "error": 0,
         "skipped": 0
       },
-      "declared": 4,
-      "ran": 4,
-      "starter_failing": 4
+      "declared": 5,
+      "ran": 5,
+      "starter_failing": 5
     },
     {
       "path": "exercises/ch15-field-engineering-and-productisation/ex87-review-ai-code",
@@ -1416,28 +1416,28 @@
       "status": "PASS",
       "problems": [],
       "tests": {
-        "passed": 4,
+        "passed": 5,
         "failed": 0,
         "error": 0,
         "skipped": 0
       },
-      "declared": 4,
-      "ran": 4,
-      "starter_failing": 4
+      "declared": 5,
+      "ran": 5,
+      "starter_failing": 5
     },
     {
       "path": "capstones/c1-support-copilot",
       "status": "PASS",
       "problems": [],
       "tests": {
-        "passed": 17,
+        "passed": 42,
         "failed": 0,
         "error": 0,
         "skipped": 0
       },
-      "declared": 16,
-      "ran": 17,
-      "starter_failing": 17
+      "declared": 35,
+      "ran": 42,
+      "starter_failing": 42
     },
     {
       "path": "capstones/c2-ops-agent-mcp",

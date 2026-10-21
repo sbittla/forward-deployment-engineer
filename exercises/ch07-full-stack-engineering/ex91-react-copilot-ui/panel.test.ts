@@ -94,3 +94,86 @@ test("panel renders accessible, safe markup", () => {
   const calm = Panel({ state: { ...state, error: null, pending: false }, title: "t", onDraft() {}, onSend() {}, onRetry() {} });
   assert.equal(find(calm, (e) => e.props.role === "alert").length, 0);
 });
+
+test("hook: stop aborts the request and shows Stopped, not an error", async () => {
+  const rt = makeUseReducer();
+  let seen: AbortSignal | undefined;
+  const api = (_t: string, signal?: AbortSignal) => new Promise<string>((_resolve, reject) => {
+    seen = signal;
+    signal?.addEventListener("abort", () => reject(new DOMException("aborted", "AbortError")));
+  });
+  const useChat = m.makeUseChat(rt.useReducer, api);
+  let chat = useChat();
+  chat.setDraft("Is flood covered?");
+  chat = useChat();
+  const sending = chat.send();
+  chat = useChat();
+  chat.stop();
+  await sending;
+  const st = rt.get();
+  assert.equal(seen?.aborted, true);              // the fetch is aborted, so the BFF closes the upstream
+  assert.equal(st.pending, false);
+  assert.equal(st.stopped, true);
+  assert.equal(st.error, null);                   // the user stopped it: no alert
+  assert.deepEqual(st.messages.map((x: any) => x.role), ["user"]);
+  chat = useChat();
+  chat.stop();                                    // nothing in flight: no-op
+  assert.equal(rt.get(), st);
+});
+
+test("hook: a 401 asks the user to sign in and never retries", async () => {
+  const rt = makeUseReducer();
+  const calls: string[] = [];
+  const api = async (t: string) => {
+    calls.push(t);
+    throw Object.assign(new Error("Your session has expired. Sign in again."), { name: "AuthExpiredError" });
+  };
+  const useChat = m.makeUseChat(rt.useReducer, api);
+  let chat = useChat();
+  chat.setDraft("Is flood covered?");
+  chat = useChat();
+  await chat.send();
+  assert.equal(rt.get().authExpired, true);
+  assert.equal(rt.get().error, m.SESSION_EXPIRED);
+  chat = useChat();
+  await chat.retry();
+  assert.deepEqual(calls, ["Is flood covered?"]);  // retry is a no-op until sign-in
+  assert.equal(m.chatReducer(rt.get(), { type: "retry" }), rt.get());
+});
+
+test("panel: every failure state is announced with plain text and one labeled action", () => {
+  const Panel = m.makeCopilotPanel(h);
+  const base = { ...m.initialState, messages: [{ id: "m1", role: "user", text: "Is flood covered?" }] };
+  const cases = [
+    { name: "provider error", state: { ...base, error: "The assistant is unavailable." },
+      role: "alert", text: "The assistant is unavailable.", action: "Retry" },
+    { name: "connection lost", state: { ...base, error: "Connection lost. Check your network and retry." },
+      role: "alert", text: "Connection lost. Check your network and retry.", action: "Retry" },
+    { name: "session expired", state: { ...base, error: m.SESSION_EXPIRED, authExpired: true },
+      role: "alert", text: m.SESSION_EXPIRED, action: "Sign in" },
+    { name: "stopped", state: { ...base, stopped: true }, role: "status", text: m.STOPPED, action: null },
+  ];
+  for (const c of cases) {
+    const clicks: string[] = [];
+    const el = Panel({ state: c.state, title: "Claims copilot", onDraft() {}, onSend() {},
+      onRetry: () => clicks.push("Retry"), onStop: () => clicks.push("Stop"), onSignIn: () => clicks.push("Sign in") });
+    const regions = find(el, (e) => e.props.role === "alert" || e.props.role === "status");
+    assert.equal(regions.length, 1, c.name);
+    const [region] = regions;
+    assert.equal(region.props.role, c.role, c.name);
+    assert.equal(region.children[0], c.text, c.name);
+    assert.doesNotMatch(c.text, /\b[45]\d\d\b|Error:|anthropic|openai/i, c.name);  // no codes, traces or providers
+    const buttons = find(region, (e) => e.type === "button");
+    assert.deepEqual(buttons.map((b) => b.children[0]), c.action ? [c.action] : [], c.name);
+    for (const b of buttons) {
+      assert.equal(b.props.type, "button", c.name);  // a real, keyboard-reachable button that doesn't submit
+      b.props.onClick();
+    }
+    assert.deepEqual(clicks, c.action ? [c.action] : [], c.name);
+  }
+  const busy = Panel({ state: { ...base, pending: true }, title: "t", onDraft() {}, onSend() {}, onRetry() {},
+    onStop() {} });
+  assert.equal(find(busy, (e) => e.type === "button" && e.children.includes("Stop")).length, 1);
+  const idle = Panel({ state: base, title: "t", onDraft() {}, onSend() {}, onRetry() {} });
+  assert.equal(find(idle, (e) => e.type === "button" && e.children.includes("Stop")).length, 0);  // only in flight
+});

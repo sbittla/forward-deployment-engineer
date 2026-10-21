@@ -41,3 +41,7 @@ the first run so every row qualifies.
 | `test_failed_batch_rolls_back` | Watermark committed separately from the rows, or the whole run in one transaction (so batch 1 is lost too) |
 | `test_boundary_late_arriving_row_is_missed` | Selection isn't the composite `(updated_at, id)` predicate (e.g. a full rescan); this pins the documented limit |
 | `test_boundary_replay_after_watermark_reset` | Missing `etl_state` row not treated as `("", -1)`; plain `INSERT` duplicates or fails on replayed ids |
+| `test_duplicate_source_rows_keep_latest` | Plain `INSERT` fails on the repeated id; or the upsert keeps the first version instead of the last |
+| `test_reconcile_deletes_removes_hard_deleted_rows` | `reconcile_deletes` compares against the watermark instead of the source ids; or a rerun deletes again |
+| `test_boundary_reconcile_refuses_mass_delete` | No `max_fraction` guard, or the check runs after the `DELETE` instead of before it |
+| `test_backfill_100k_rows` | One transaction per row (slow); watermark taken from the wrong row; replay inserts duplicates |

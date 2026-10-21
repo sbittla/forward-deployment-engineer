@@ -1,0 +1,8 @@
+{
+  "adjuster": {"user": "u-lee", "tenant": "northwind", "groups": ["claims"]},
+  "adjuster_2": {"user": "u-kim", "tenant": "northwind", "groups": ["claims"]},
+  "supervisor": {"user": "u-dana", "tenant": "northwind", "groups": ["claims", "supervisors"]},
+  "investigator": {"user": "u-sam", "tenant": "northwind", "groups": ["claims", "siu"]},
+  "harbor_adjuster": {"user": "u-hm1", "tenant": "harbor-mutual", "groups": ["claims"]},
+  "harbor_supervisor": {"user": "u-hm2", "tenant": "harbor-mutual", "groups": ["claims", "supervisors"]}
+}

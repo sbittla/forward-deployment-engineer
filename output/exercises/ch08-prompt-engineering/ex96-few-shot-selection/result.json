@@ -3,14 +3,14 @@
   "status": "PASS",
   "problems": [],
   "tests": {
-    "passed": 7,
+    "passed": 8,
     "failed": 0,
     "error": 0,
     "skipped": 0
   },
-  "declared": 7,
-  "ran": 7,
-  "starter_failing": 7,
+  "declared": 8,
+  "ran": 8,
+  "starter_failing": 8,
   "cases": [
     {
       "test": "py:test_relevance_order_and_duplicate_suppression",
@@ -38,6 +38,10 @@
     },
     {
       "test": "py:test_build_messages",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_injected_ticket_cannot_close_its_tag",
       "status": "passed"
     }
   ]

@@ -1,8 +1,11 @@
 import math
+import re
 from dataclasses import dataclass
 from datetime import date, timedelta
 
 Z90 = 1.2816
+VAGUE_WORDS = {"deployed", "delivered", "done", "complete", "completed", "working", "works", "fast", "faster",
+               "better", "good", "improved", "satisfactory", "user-friendly"}
 
 
 @dataclass(frozen=True)
@@ -105,6 +108,10 @@ def render_sow(engagement: dict, tasks: list[Task], start: date, rate_per_day: f
     missing = [t.milestone for t in milestones if t.milestone not in acc]
     if missing:
         raise ValueError(f"milestones without acceptance criteria: {missing}")
+    vague = [m for m, text in acc.items() if not re.search(r"\d", text)
+             and VAGUE_WORDS & set(re.findall(r"[a-z][a-z-]*", text.lower()))]
+    if vague:
+        raise ValueError(f"acceptance criteria not measurable: {vague}")
     s = schedule(tasks)
     p50, p90 = project_estimate(tasks)
     lines = ["# Statement of work", ""]

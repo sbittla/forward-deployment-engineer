@@ -20,11 +20,11 @@ class Principal:
         raise NotImplementedError
 
 
-def make_token(claims: dict, secret: str) -> str:
+def make_token(claims: dict, secret: str, kid: str | None = None) -> str:
     raise NotImplementedError
 
 
-def verify_id_token(token: str, secret: str, issuer: str, audience: str, now: int) -> dict:
+def verify_id_token(token: str, secret: str | dict[str, str], issuer: str, audience: str, now: int) -> dict:
     raise NotImplementedError
 
 

@@ -15,16 +15,32 @@ legacy systems, with identity and access". Enterprise RAG must enforce the **use
 customer's identity provider (Entra ID, Okta).
 
 ## Your task
-1. `verify_id_token(token, secret, issuer, audience, now)` for an HS256 JWT (production IdPs use RS256 with their
-   JWKS keys; the checks are identical): split `header.payload.signature` (base64url, no padding), require
-   `alg == "HS256"` (reject `none` and anything else), verify the HMAC-SHA256 signature with
-   `hmac.compare_digest`, then check `iss`, `aud` (string or list), `exp > now` and `nbf <= now` when present.
-   Raise `AuthError` with a specific message; return the claims dict.
-2. `make_token(claims, secret)` builds such a token (handy for tests and local dev).
+1. `verify_id_token(token, secret, issuer, audience, now)` for an HS256 JWT. Check, in this order, and raise
+   `AuthError` at the first failure, with a message containing the keyword in brackets:
+   - **structure**: three base64url segments (no padding), whose header and payload decode to JSON objects
+     (`malformed`);
+   - **algorithm**: `alg` must be exactly `"HS256"`, an allowlist of one. `none` in any capitalization, `RS256`,
+     `ES256`, `HS512`, an empty or a missing `alg` are all rejected (`alg`). The token never chooses how it's verified;
+   - **key**: `secret` is either one key (a string) or a key set during rotation, a dict of `kid -> key`. With a dict,
+     the header's `kid` selects the key; a missing or unknown `kid` is rejected (`kid`);
+   - **signature**: the HMAC-SHA256 of the received `header.payload`, compared with `hmac.compare_digest`
+     (`signature`);
+   - **issuer** `iss` equals `issuer` (`issuer`);
+   - **audience** `aud` (a string or a list) includes `audience` (`audience`);
+   - **expiry**: `exp` must be a number greater than `now`; a missing `exp` fails closed (`expired`, plus `exp`
+     when it's missing: for example `token expired or missing exp`);
+   - **not-before**: when `nbf` is present it must be `<= now` (`not yet valid`).
+
+   Return the claims dict.
+2. `make_token(claims, secret, kid=None)` builds such a token (handy for tests and local dev), adding a `kid` header
+   when one is given.
 3. `Principal.from_claims(claims)`: `user = claims["sub"]`, `email`, `groups` (list, default empty).
 4. `allowed(doc_acl, principal)`: ACL is `{"users": [...], "groups": [...], "deny_groups": [...]}`. Deny wins;
-   otherwise allow if the user is listed, or shares a group, or the ACL has group `"everyone"`.
-5. `secure_search(principal, query, docs, search_fn, k)`: filter to permitted docs **before** ranking (never rank
+   otherwise allow if the user is listed, or shares a group, or the ACL has group `"everyone"`. A missing, `None` or
+   empty ACL denies: retrieval authorization **fails closed** (Chapter 10, Section 10.6, makes the same rule for
+   tenant metadata).
+5. `secure_search(principal, query, docs, search_fn, k)`: filter to permitted docs (by each doc's `acl`, which may
+   be absent) **before** ranking (never rank
    and then drop: that leaks result counts and snippets), call `search_fn(query, permitted_docs, k)`, and return
    `(results, audit)` where audit is `{"user", "query", "candidates", "permitted", "denied"}`.
 6. `obo_exchange_request(user_token, client_id, client_secret, scope)`: the form body for an OAuth 2.0 token
@@ -32,6 +48,26 @@ customer's identity provider (Entra ID, Okta).
    `grant_type=urn:ietf:params:oauth:grant-type:token-exchange`, `subject_token`,
    `subject_token_type=urn:ietf:params:oauth:token-type:access_token`, `requested_token_type=...:access_token`,
    `scope`, `client_id`, `client_secret`.
+
+### Algorithms and key management
+
+The exercise signs with **HS256**, a shared secret, so the tests need no key server. Production identity providers
+(Entra ID, Okta, Ping) sign with an asymmetric algorithm, **RS256** or **ES256**: they keep the private key and
+publish the public keys at a **JWKS** endpoint (found through the provider's OpenID configuration document). Your
+service then:
+
+- pins the allowlist to the provider's algorithm (`["RS256"]`), never to whatever the header says. Letting the
+  header choose enables **algorithm confusion**: a token that says `HS256` is checked with the RSA *public* key as
+  the HMAC secret, and anyone can forge it. `test_alg_confusion_rejected` is the negative test;
+- selects the key by the header's `kid`, caches the key set, and refetches it at most once (rate-limited) on an
+  unknown `kid`. During **rotation** the provider publishes the new key before signing with it and keeps the old one
+  until tokens signed with it expire, so the cached set holds both. `test_kid_selects_key_during_rotation` models this
+  with a dict of keys;
+- validates the same boundary as here: issuer, audience, expiry and not-before (allow a small clock skew, at most a
+  minute or two, in production), and rejects `alg: none`;
+- keeps any shared secret it does have (client secrets for token exchange) in the secret manager, never in code.
+
+Use a maintained JWT library and configure these explicitly; don't hand-roll verification in production.
 
 Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
 
@@ -41,10 +77,10 @@ Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each
   No API key or network access is needed.
 - **Run your work:** from the repository root,
   `pytest exercises/ch13-ai-security-and-guardrails/ex89-permission-aware-rag`.
-- **Expected output:** all 9 tests fail against the starter; when you're done, all 9 pass.
+- **Expected output:** all 21 tests fail against the starter; when you're done, all 21 pass.
 - **Check the reference solution:**
-  `pytest --solutions exercises/ch13-ai-security-and-guardrails/ex89-permission-aware-rag`: all 9 pass.
-- **Tests:** `test_permissions.py` (9 tests).
+  `pytest --solutions exercises/ch13-ai-security-and-guardrails/ex89-permission-aware-rag`: all 21 pass.
+- **Tests:** `test_permissions.py` (21 tests).
 - **Common failures:** `ModuleNotFoundError: No module named 'fde_kit'` means the command didn't run from the
   repository root. For a failing test, [HINTS.md](HINTS.md) says what it usually means.
 - **Whose failure is it?** If your run fails but the reference run passes, it's your code. If the reference run fails

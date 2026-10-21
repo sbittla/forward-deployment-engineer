@@ -59,3 +59,5 @@ Write `sse` and `relay` before the streaming endpoint. They only need an iterato
 | `test_relay_cancels_upstream_on_disconnect` | Upstream iterator not closed; reading continued after the failed write; exception not caught |
 | `test_relay_upstream_error` | Exception text sent to the browser, or a `done` event written after the error |
 | `test_stream_endpoint` | Missing SSE headers; the whole answer sent as one delta; validation skipped on the stream path |
+| `test_stream_requires_token_when_configured` | Token checked only on one path; the `Bearer ` prefix not required; the model called before the check |
+| `test_oversized_body_rejected` | Body read (or parsed) before the size check; a missing `MAX_BODY_BYTES` constant; 400 instead of 413 |

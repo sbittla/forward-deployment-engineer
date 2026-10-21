@@ -68,6 +68,19 @@ def test_safe_extract(impl, src, tmp_path):
     assert not (tmp_path / "escape.txt").exists()
 
 
+def test_downgrade_refused(impl, src, tmp_path):
+    # A correctly signed old bundle replayed over a newer install must not verify.
+    old = tmp_path / "old.tar.gz"
+    impl.build_bundle(src, old, "1.9.2", KEY)
+    assert impl.verify_bundle(old, KEY, installed_version="1.10.0") == ["downgrade: 1.9.2 < 1.10.0"]
+    assert impl.verify_bundle(old, KEY, installed_version="1.9.2") == []      # reinstalling the same version is fine
+    assert impl.verify_bundle(old, KEY, installed_version="1.4.0") == []      # numeric, not string, comparison
+    assert impl.verify_bundle(old, KEY, installed_version="v2") == ["unparseable version: 1.9.2"]
+    with pytest.raises(ValueError):
+        impl.safe_extract(old, tmp_path / "install", KEY, installed_version="1.10.0")
+    assert not (tmp_path / "install" / "app" / "main.py").exists()
+
+
 def test_boundary_shared_key_can_resign(impl, src, tmp_path):
     # HMAC is symmetric: anyone holding the key can sign altered content, and it verifies.
     original = impl.build_bundle(src, tmp_path / "bundle.tar.gz", "1", KEY)

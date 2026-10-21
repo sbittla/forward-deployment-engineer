@@ -81,3 +81,31 @@ def test_boundary_approval_follows_plan_flag(impl):
     r = o.run("g")
     assert asked == [] and r.statuses == {"s1": "done"}
     assert "s1: approval requested" not in r.audit
+
+
+def test_policy_approval_overrides_plan_flag(impl):
+    """always_approve is policy in code: an unflagged refund still waits for a person, and never runs on a no."""
+    plan = [{"id": "s1", "worker": "billing", "task": "refund $40", "depends_on": [], "requires_approval": False}]
+    seen = []
+    o = impl.Orchestrator(FakeLLM([json.dumps(plan)]), workers(seen), approve=lambda s: False,
+                          always_approve={"billing"})
+    r = o.run("g")
+    assert r.statuses == {"s1": "rejected"} and seen == []
+    assert r.audit == ["plan: 1 steps", "s1: approval requested", "s1: rejected"]
+
+
+@pytest.mark.parametrize("approve", [lambda s: 1 / 0, lambda s: "yes", lambda s: None])
+def test_approval_fails_closed(impl, approve):
+    seen = []
+    r = impl.Orchestrator(FakeLLM([json.dumps(PLAN)]), workers(seen), approve=approve).run("g")
+    assert r.statuses["s4"] == "rejected" and ("billing", "refund $40") not in [(w, t) for w, t, _ in seen]
+
+
+def test_failed_step_has_no_downstream_side_effects(impl):
+    seen, asked = [], []
+    w = workers(seen)
+    w["logs"] = lambda t, c: (_ for _ in ()).throw(ConnectionError("log store down"))
+    r = impl.Orchestrator(FakeLLM([json.dumps(PLAN)]), w, approve=lambda s: asked.append(s.id) or True).run("g")
+    assert [t for _, t, _ in seen] == ["fetch invoice INV-9"]  # the refund never ran
+    assert asked == [] and r.audit[-3:] == ["s2: failed", "s3: skipped", "s4: skipped"]
+    assert r.outputs == {"s1": "invoice total $40, charged twice", "s2": "ConnectionError: log store down"}

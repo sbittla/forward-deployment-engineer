@@ -3,14 +3,14 @@
   "status": "PASS",
   "problems": [],
   "tests": {
-    "passed": 13,
+    "passed": 15,
     "failed": 0,
     "error": 0,
     "skipped": 0
   },
-  "declared": 10,
-  "ran": 13,
-  "starter_failing": 13,
+  "declared": 12,
+  "ran": 15,
+  "starter_failing": 15,
   "cases": [
     {
       "test": "py:test_page",
@@ -62,6 +62,14 @@
     },
     {
       "test": "py:test_stream_endpoint",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_stream_requires_token_when_configured",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_oversized_body_rejected",
       "status": "passed"
     }
   ]

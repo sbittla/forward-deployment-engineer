@@ -59,3 +59,15 @@ def test_invalid_capacity_inputs(impl):
     with pytest.raises(ValueError):
         impl.littles_law_concurrency(-1, 0.5)
     assert impl.littles_law_concurrency(0, 1.0) == 0 and impl.stage_breakdown([]) == []
+
+
+def test_report_states_load_model(impl):
+    rep = impl.run_load(lambda: time.sleep(0.01), total=8, concurrency=2, think_time_s=0.02)
+    assert rep.concurrency == 2 and rep.think_time_s == 0.02
+    assert rep.rps < 75          # 2 workers x 4 calls of ~0.03 s each: about 67 a second at most
+    line = impl.report_line(rep, "simulated")
+    assert line.startswith(f"p50 {rep.p50} ms, p95 {rep.p95} ms, p99 {rep.p99} ms, max {rep.max} ms (n=8,")
+    assert "| load model: closed loop, concurrency 2, think time 0.02 s | simulated" in line
+    assert "load model: open arrivals 2.0 req/s," in impl.report_line(rep, "measured", arrival_rps=2.0)
+    with pytest.raises(ValueError):
+        impl.report_line(rep, "estimated")

@@ -54,3 +54,13 @@ def test_knn(impl):
     assert "<#>" in impl.knn_query("chunks", 3, metric="ip") and "<->" in impl.knn_query("chunks", 3, metric="l2")
     with pytest.raises(ValueError):
         impl.knn_query("chunks", 0)
+
+
+def test_table_name_is_validated(impl):
+    # Untrusted identifiers: a table name is spliced into SQL, so anything but a plain identifier is refused.
+    for bad in ("chunks; DROP TABLE users", "chunks--", "1chunks", "", "a" * 64):
+        with pytest.raises(ValueError, match="invalid table name"):
+            impl.vector_schema(bad, 8)
+        with pytest.raises(ValueError, match="invalid table name"):
+            impl.knn_query(bad, 5)
+    assert impl.knn_query("tenant_a_chunks", 1).endswith("FROM tenant_a_chunks ORDER BY embedding <=> %s LIMIT 1")

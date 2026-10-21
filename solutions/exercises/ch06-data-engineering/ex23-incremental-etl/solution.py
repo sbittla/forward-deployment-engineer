@@ -37,3 +37,23 @@ def run_incremental(src: sqlite3.Connection, dst: sqlite3.Connection, job: str =
             dst.executemany(UPSERT, batch)
             dst.execute(SAVE_WM, (job, batch[-1][3], batch[-1][0]))
         loaded += len(batch)
+
+
+def reconcile_deletes(src: sqlite3.Connection, dst: sqlite3.Connection, max_fraction: float = 0.5) -> int:
+    """Delete warehouse rows whose id no longer exists at the source, in one transaction.
+
+    Fails closed: if more than max_fraction of the warehouse would go, the source extract is more likely empty or
+    truncated than the deletes real, so nothing is deleted and ValueError is raised.
+    """
+    dst.executescript(DDL)
+    source_ids = [(r[0],) for r in src.execute("SELECT DISTINCT id FROM src_orders")]
+    with dst:
+        dst.execute("CREATE TEMP TABLE IF NOT EXISTS _src_ids(id INTEGER PRIMARY KEY)")
+        dst.execute("DELETE FROM _src_ids")
+        dst.executemany("INSERT INTO _src_ids VALUES (?)", source_ids)
+        total = dst.execute("SELECT COUNT(*) FROM dw_orders").fetchone()[0]
+        gone = dst.execute("SELECT COUNT(*) FROM dw_orders WHERE id NOT IN (SELECT id FROM _src_ids)").fetchone()[0]
+        if total and gone / total > max_fraction:
+            raise ValueError(f"refusing to delete {gone} of {total} rows (max_fraction={max_fraction})")
+        dst.execute("DELETE FROM dw_orders WHERE id NOT IN (SELECT id FROM _src_ids)")
+    return gone

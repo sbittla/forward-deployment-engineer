@@ -49,3 +49,8 @@ group `everyone`.
 | `test_allowed` | Deny groups checked after the allow rules; `everyone` not handled |
 | `test_secure_search_filters_before_ranking` | All documents passed to `search_fn` and filtered afterwards; audit counts wrong |
 | `test_obo` | Grant type or token type URNs misspelled |
+| `test_alg_confusion_rejected` | `alg` compared case-insensitively, or any `HS*`/`RS*` value accepted; the header's `alg` used to pick the verifier |
+| `test_expired_wrong_audience_issuer_and_malformed_rejected` | Missing `exp` treated as "never expires"; a header or payload that isn't a JSON object not reported as `malformed` |
+| `test_tampered_signature_rejected` | Signature not recomputed over the received parts; an empty signature accepted |
+| `test_kid_selects_key_during_rotation` | A dict of keys not supported; an unknown or missing `kid` falls back to some key instead of failing |
+| `test_missing_acl_fails_closed` | A chunk without an ACL treated as public; `None` ACL crashes instead of denying |

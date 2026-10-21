@@ -43,3 +43,4 @@ so a bad update never gets built.
 | `test_impact` | Minutes measured from the wrong events; events not sorted by time |
 | `test_blame_lint` | Matches out of order; name pattern too broad (flags blameless sentences) |
 | `test_postmortem` | Sections out of order; blame not checked in the root cause; missing owner accepted |
+| `test_postmortem_requires_fields` | A blank root cause, an empty action list or a timeline without `resolved` accepted |

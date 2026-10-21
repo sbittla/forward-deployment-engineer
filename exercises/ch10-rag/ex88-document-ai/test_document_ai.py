@@ -65,3 +65,15 @@ def test_vision_request(impl, tmp_path):
     assert impl.vision_request(jpg, "q")[0]["type"] == "image" and impl.vision_request(jpg, "q")[0]["source"]["media_type"] == "image/jpeg"
     with pytest.raises(ValueError):
         impl.vision_request(tmp_path / "notes.docx", "q")
+
+
+def test_vision_request_rejects_oversized_file(impl, tmp_path):
+    big = tmp_path / "scan.pdf"
+    with open(big, "wb") as f:
+        f.truncate(32 * 1024 * 1024 + 1)  # sparse: one byte over the limit, nothing sent onward
+    with pytest.raises(ValueError):
+        impl.vision_request(big, "q")
+    exact = tmp_path / "ok.pdf"
+    with open(exact, "wb") as f:
+        f.truncate(32 * 1024 * 1024)
+    assert impl.vision_request(exact, "q")[0]["type"] == "document"

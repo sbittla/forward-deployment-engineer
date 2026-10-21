@@ -2,6 +2,12 @@ import re
 
 OPCLASS = {"cosine": "vector_cosine_ops", "l2": "vector_l2_ops", "ip": "vector_ip_ops"}
 OPERATOR = {"cosine": "<=>", "l2": "<->", "ip": "<#>"}
+IDENTIFIER = re.compile(r"[A-Za-z_][A-Za-z0-9_]{0,62}")
+
+
+def _check_table(table: str) -> None:
+    if not isinstance(table, str) or not IDENTIFIER.fullmatch(table):
+        raise ValueError(f"invalid table name: {table!r}")
 
 
 def _translate_column(col: str) -> str:
@@ -41,6 +47,7 @@ def translate_query(sql: str) -> str:
 
 
 def vector_schema(table: str, dim: int, metric: str = "cosine", index: str = "hnsw") -> list[str]:
+    _check_table(table)
     if index not in ("hnsw", "ivfflat"):
         raise ValueError("index must be hnsw or ivfflat")
     idx = f"CREATE INDEX IF NOT EXISTS {table}_embedding_idx ON {table} USING {index} (embedding {OPCLASS[metric]})"
@@ -55,6 +62,7 @@ def vector_schema(table: str, dim: int, metric: str = "cosine", index: str = "hn
 
 
 def knn_query(table: str, k: int, metric: str = "cosine") -> str:
+    _check_table(table)
     if not 1 <= k <= 100:
         raise ValueError("k must be between 1 and 100")
     op = OPERATOR[metric]

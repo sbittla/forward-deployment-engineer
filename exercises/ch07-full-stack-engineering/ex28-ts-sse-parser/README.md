@@ -6,6 +6,7 @@
 - Parse Server-Sent Events correctly under arbitrary re-chunking.
 - Decode UTF-8 streams without splitting multi-byte characters.
 - Accumulate streamed LLM text deltas and surface stream errors.
+- Stream with an auth header, user cancellation and bounded reconnection that resumes from `Last-Event-ID`.
 
 ## Scenario
 LLM APIs stream tokens as Server-Sent Events. The customer's corporate proxy re-chunks the stream arbitrarily —
@@ -24,6 +25,31 @@ corrupts answers about 1 in 50 times. Write the parser properly.
 3. `accumulateText(events: SSEEvent[]): string` — for Anthropic-style streams: concatenate
    `JSON.parse(data).delta.text` for every `content_block_delta` event whose delta type is `text_delta`; stop at
    `message_stop`; throw `Error(<error.message>)` on an `error` event; ignore everything else (`ping`, etc.).
+4. `SSEParser` also keeps `lastEventId: string` (initially `""`): an `id: x` line sets a buffer (ignored if the value
+   contains a NUL character), and every blank line (dispatch) copies the buffer into `lastEventId`, even for a block
+   with no data. The buffer carries over to later events that have no `id` line.
+
+### Part B · A streaming client: authentication, cancellation, reconnection
+`streamAnswer(fetchFn, url, opts) -> Promise<StreamResult>` reads the backend-for-frontend's stream (ex30's
+events: `delta` with `{"text"}`, `done`, `error` with `{"message"}`). `opts` is
+`{ token, body?, signal?, maxReconnects? }` (`maxReconnects` defaults to 2); the result is
+`{ status: "done" | "canceled", text, lastEventId, reconnects }`. The starter gives you the types and the messages
+`SESSION_EXPIRED`, `CONNECTION_LOST` and `UNAVAILABLE`, and an `AuthExpiredError` class to finish (its message is
+`SESSION_EXPIRED`).
+
+- **Authentication.** Each request is `fetchFn(url, { method: "POST", headers, body: JSON.stringify(opts.body ?? {}),
+  signal })` with headers `Authorization: Bearer <token>`, `Accept: text/event-stream` and
+  `Content-Type: application/json`. An empty token throws `AuthExpiredError` before any request (fail closed). A 401
+  response throws `AuthExpiredError` and is never retried. Any other non-2xx status throws `Error(UNAVAILABLE)`.
+- **Cancellation.** Pass `opts.signal` (from an `AbortController`) to `fetchFn`. If it's aborted, stop reading (check
+  before handling each chunk, and when a read fails) and return `status: "canceled"` with the text so far. A canceled
+  stream never reconnects.
+- **Reconnection.** Decode chunks with `Utf8Chunker` and parse with `SSEParser`, tracking the parser's
+  `lastEventId`. A `TypeError` from `fetchFn` or the body (how `fetch` reports network failures), or a body that ends
+  without `done`, is a dropped connection: reconnect with the same headers plus `Last-Event-ID: <lastEventId>`, so
+  the server resumes after that event and nothing is duplicated. After `maxReconnects` reconnects, throw
+  `Error(CONNECTION_LOST)`.
+- **Errors that aren't retried.** An `error` event throws `Error(<message>)`; malformed JSON throws as it is.
 
 ## Run
 ```
@@ -39,12 +65,12 @@ Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each
   access is needed.
 - **Run your work:** from the repository root,
   `node --test exercises/ch07-full-stack-engineering/ex28-ts-sse-parser/sse.test.ts`.
-- **Expected output:** all 5 tests fail against the starter; when you're done, all 5 pass.
+- **Expected output:** all 10 tests fail against the starter; when you're done, all 10 pass.
 - **Check the reference solution:**
   `FDE_SOLUTIONS=1 node --test exercises/ch07-full-stack-engineering/ex28-ts-sse-parser/sse.test.ts` (PowerShell:
-  `$env:FDE_SOLUTIONS=1; node --test exercises/ch07-full-stack-engineering/ex28-ts-sse-parser/sse.test.ts`): all 5
+  `$env:FDE_SOLUTIONS=1; node --test exercises/ch07-full-stack-engineering/ex28-ts-sse-parser/sse.test.ts`): all 10
   pass.
-- **Tests:** `sse.test.ts` (5 tests).
+- **Tests:** `sse.test.ts` (10 tests).
 - **Common failures:** `ModuleNotFoundError: No module named 'fde_kit'` means the command didn't run from the
   repository root; a Node.js error about the `.ts` extension means Node is older than 22.18. For a failing test,
   [HINTS.md](HINTS.md) says what it usually means.

@@ -39,3 +39,5 @@ gives 1-based ranks; add `1 / (k + rank)` to that doc's running total in a dict.
 | `test_rrf_tie_break` | Ties left in insertion order instead of sorted by id |
 | `test_hybrid` | Raw scores fused instead of ranks; result not cut to `k` |
 | `test_hybrid_calls_with_depth` | Retrievers called with `k` instead of `depth` |
+| `test_search_as_never_crosses_tenants` | Ranked everything and then dropped foreign chunks with too small a `k`; tenant compared loosely; scores differ from `search` |
+| `test_search_as_fails_closed` | A chunk with no ACL, tenant or groups treated as public; a user without a tenant allowed through instead of `PermissionError` |

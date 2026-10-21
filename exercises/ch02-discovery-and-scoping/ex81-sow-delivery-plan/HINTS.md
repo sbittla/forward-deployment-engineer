@@ -46,3 +46,4 @@ a cycle. Both passes of the critical path method walk this ordered list: forward
 | `test_working_days` | Weekend start not moved to Monday; weekends counted |
 | `test_render_sow` | Headings out of order; due-date offset off by one; money not formatted with commas |
 | `test_missing_acceptance` | Missing criteria detected too late or silently skipped |
+| `test_render_sow_rejects_unmeasurable_acceptance_criteria` | Vague words matched as substrings, or a criterion with a number rejected; the error doesn't name the milestone |

@@ -24,6 +24,15 @@ you still validate at your boundary, because schemas drift and not every deploym
 3. `complete_structured(llm, prompt, schema, max_repairs=2) -> (obj, attempts)` — ask the model (include the
    schema as JSON in the system prompt), parse + validate; on failure send back the errors and retry up to
    `max_repairs` times. Raise `ValueError` with the last errors if still invalid.
+4. `classify_reply(response) -> str` reads `response.stop_reason` before any parsing: `"refusal"` for stop reason
+   `refusal`, `"truncated"` for `max_tokens`, `"declined"` when the extracted JSON equals `DECLINE`
+   (`{"status": "cannot_extract"}`, provided), otherwise `"answer"` (including text with no JSON, which is a repair
+   case). `complete_structured` classifies every reply first: on a refusal raise `RefusalError`, on truncation
+   raise `TruncatedError` (both provided, both subclasses of `ValueError`), with no repair call; on a decline return
+   `({"status": "cannot_extract"}, attempt)`. Its system prompt also says to reply with that object when the text
+   holds no such data. `max_repairs < 0` raises `ValueError`; `max_repairs=0` means exactly one call.
+   Unexpected properties (for example an `approved` flag injected through the email) fail validation on every
+   attempt, so the loop fails closed with `ValueError`.
 
 Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
 
@@ -33,20 +42,20 @@ Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each
   No API key or network access is needed.
 - **Run your work:** from the repository root,
   `pytest exercises/ch09-llm-application-engineering/ex32-structured-output`.
-- **Expected output:** all 17 tests fail against the starter; when you're done, all 17 pass.
+- **Expected output:** all 22 tests fail against the starter; when you're done, all 22 pass.
 - **Check the reference solution:**
-  `pytest --solutions exercises/ch09-llm-application-engineering/ex32-structured-output`: all 17 pass.
-- **Tests:** `test_structured.py` (17 tests).
+  `pytest --solutions exercises/ch09-llm-application-engineering/ex32-structured-output`: all 22 pass.
+- **Tests:** `test_structured.py` (22 tests).
 - **Common failures:** `ModuleNotFoundError: No module named 'fde_kit'` means the command didn't run from the
   repository root. For a failing test, [HINTS.md](HINTS.md) says what it usually means.
 - **Whose failure is it?** If your run fails but the reference run passes, it's your code. If the reference run fails
   too, check the prerequisites (`python --version`, `node --version`); if they're met, it's a defect in the published
   solution, so report it with the repository's Errata issue template.
 - **Cleanup:** none. The tests write only to temporary directories, and `__pycache__` folders are ignored by git.
-- **Production caveats:** `validate` checks shape only, and `complete_structured` reads the reply text without its
-  stop reason, so truncated or refused replies spend repairs and schema-valid but invented values pass. In
-  production, use the provider's native structured output and a maintained validator such as `jsonschema`, handle
-  `max_tokens` and `refusal` separately, and add business-rule and grounding checks (Section 9.2).
+- **Production caveats:** `validate` checks shape only, so schema-valid but invented values pass, and a refusal
+  written in prose (stop reason `end_turn`) still looks malformed and spends repairs. In production, use the
+  provider's native structured output and a maintained validator such as `jsonschema`, count refusals, truncations
+  and declines on the dashboard, and add business-rule and grounding checks (Section 9.2).
 
 ## Prompt kit
 **Learn (tutor prompt)**

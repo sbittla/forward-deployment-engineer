@@ -43,3 +43,5 @@ step by step. Turn both score lists into pass/fail booleans (`score >= threshold
 | `test_agreement_perfect` | Division by zero when `pe == 1` |
 | `test_pairwise` | Second-order answer not translated; answers shown in the same order both times |
 | `test_boundary_consistent_bias_passes_through` | A consistent preference in both orders turned into a tie; only disagreement between orders is a tie |
+| `test_labeler_agreement` | Kappa computed on raw 1–5 scores instead of pass/fail; `within_1` uses `< 1` |
+| `test_always_pass_judge_has_zero_kappa` | Raw agreement reported as kappa; expected agreement not computed from both raters' pass rates |

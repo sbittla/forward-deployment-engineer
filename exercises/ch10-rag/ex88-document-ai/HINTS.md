@@ -44,3 +44,4 @@ first-word centre is within `y_tol`, or start a new group. Sort each group's wor
 | `test_table` | Columns assigned by `x0` instead of centre; multi-word cells not joined; total row included |
 | `test_route` | Reasons not in order (missing first, then low confidence) |
 | `test_vision_request` | Text block placed before the file; extension compared case-sensitively; `.jpeg` not mapped to `image/jpeg` |
+| `test_vision_request_rejects_oversized_file` | Size compared with `>=` instead of `>`, or checked after reading and encoding the whole file |

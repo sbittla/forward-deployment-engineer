@@ -14,7 +14,7 @@ Status: proposed | accepted | superseded by ADR-<m>
 ## Context
 What forces the decision, with numbers.
 
-## Options
+## Alternatives considered
 - Option A: ...
 - Option B: ...
 (at least two)

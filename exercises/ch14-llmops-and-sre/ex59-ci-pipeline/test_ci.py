@@ -60,6 +60,15 @@ def test_write_scope_and_unpinned(impl):
     assert set(impl.lint_workflow(d)) == {"permissions", "pin:deploy", "deploy-gate"}
 
 
+def test_long_lived_cloud_key_flagged(impl):
+    d = copy.deepcopy(GOOD)
+    d["jobs"]["deploy"]["steps"][1]["env"] = {"AWS_SECRET_ACCESS_KEY": "${{ secrets.AWS_SECRET_ACCESS_KEY }}"}
+    assert impl.lint_workflow(d) == ["static-cloud-key:deploy"]
+    d = copy.deepcopy(GOOD)
+    d["jobs"]["deploy"]["env"] = {"GOOGLE_CREDENTIALS": "${{ secrets.GOOGLE_CREDENTIALS }}"}
+    assert impl.lint_workflow(d) == ["static-cloud-key:deploy"]
+
+
 def test_your_workflow(impl, exercise_dir):
     doc = yaml.safe_load((exercise_dir / "ci.yml").read_text())
     assert impl.lint_workflow(doc) == []

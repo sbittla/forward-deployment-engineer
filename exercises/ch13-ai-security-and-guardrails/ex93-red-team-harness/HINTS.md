@@ -49,3 +49,5 @@ fires: canary, then forbidden tool, then PII, then injection. The order sets whi
 | `test_invalid_attacks_rejected` | No validation in `__post_init__` |
 | `test_tool_poisoning` | Phrases matched before stripping invisible characters; stopping at the first reason; a tool flagged for naming itself |
 | `test_token_audience_and_no_passthrough` | `aud` list not handled; missing `aud` accepted; inbound token forwarded when the exchange returns it unchanged |
+| `test_remediation_evidence_fails_before_passes_after` | `run_suite` or `retest_diff` from earlier tests not finished; evidence string differs from `canary leaked: <canary>` |
+| `test_residual_risk_acceptance` | Critical findings accepted; an acceptance treated as expired on its own review date; passing attacks listed; no `ValueError` for a blank owner or a non-ISO date |

@@ -20,7 +20,8 @@ are worth their weight in gold.
 - `NO_PROXY` / `no_proxy`: comma list; entries match exact host, domain suffix (`.corp.local` or `corp.local`
   matches `api.corp.local`), or `*` (bypass everything). Ports in entries (`host:8443`) match only that port.
 - `REQUESTS_CA_BUNDLE` then `SSL_CERT_FILE` → `ca_bundle`
-- `FDE_EGRESS_ALLOWLIST`: comma list of host patterns (`api.anthropic.com`, `*.corp.local`). Empty ⇒ allow all.
+- `FDE_EGRESS_ALLOWLIST`: comma list of host patterns (`api.anthropic.com`, `*.corp.local`). Empty ⇒ allow
+  all: unset means "no client-side restriction", because the customer's firewall, not this check, is the egress control.
 
 Methods:
 - `proxy_for(url) -> str | None` — proxy by scheme unless NO_PROXY matches.
@@ -31,6 +32,13 @@ Methods:
 - `opener()` — a `urllib.request.OpenerDirector` with a `ProxyHandler` configured from the policy (proxies for
   http/https, plus `no` from NO_PROXY).
 
+### Offline and air-gap tests
+`test_offline_policy_makes_no_network_calls` disables DNS and sockets and checks that every method works without
+the network (the tool only reads settings). `test_air_gap_allowlist_fails_closed` uses an internal-only allowlist
+(`*.bank.internal`) and checks that public hosts, an IP literal, a userinfo trick
+(`https://idp.bank.internal@evil.com/`, whose real host is `evil.com`) and the bare domain are all denied with
+`EgressDenied`. Match on the URL's parsed hostname, never on the raw string.
+
 Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
 
 ## Run and verify
@@ -39,10 +47,10 @@ Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each
   No API key or network access is needed.
 - **Run your work:** from the repository root,
   `pytest exercises/ch05-enterprise-integration/ex21-proxy-aware-client`.
-- **Expected output:** all 10 tests fail against the starter; when you're done, all 10 pass.
+- **Expected output:** all 12 tests fail against the starter; when you're done, all 12 pass.
 - **Check the reference solution:**
-  `pytest --solutions exercises/ch05-enterprise-integration/ex21-proxy-aware-client`: all 10 pass.
-- **Tests:** `test_network.py` (10 tests).
+  `pytest --solutions exercises/ch05-enterprise-integration/ex21-proxy-aware-client`: all 12 pass.
+- **Tests:** `test_network.py` (12 tests).
 - **Common failures:** `ModuleNotFoundError: No module named 'fde_kit'` means the command didn't run from the
   repository root. For a failing test, [HINTS.md](HINTS.md) says what it usually means.
 - **Whose failure is it?** If your run fails but the reference run passes, it's your code. If the reference run fails

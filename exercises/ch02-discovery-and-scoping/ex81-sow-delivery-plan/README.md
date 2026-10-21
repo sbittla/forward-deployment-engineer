@@ -30,7 +30,11 @@ working days).
 6. `render_sow(engagement, tasks, start, rate_per_day)` → markdown with headings, in order: `Objectives`,
    `In scope`, `Out of scope`, `Deliverables and acceptance criteria` (table `| Milestone | Due | Acceptance
    criteria |`; every milestone in the tasks must have acceptance criteria in `engagement["acceptance"]`, otherwise
-   raise `ValueError`), `Timeline` (critical path), `Assumptions`, `Customer responsibilities`, `Change control`,
+   raise `ValueError`; a criterion that contains no digit and uses a vague word, case-insensitive, from
+   `deployed`, `delivered`, `done`, `complete`, `completed`, `working`, `works`, `fast`, `faster`, `better`, `good`,
+   `improved`, `satisfactory` or `user-friendly` isn't measurable, so raise `ValueError` naming its milestone:
+   "Copilot deployed" fails, "golden-set pass rate >= 90%" passes), `Timeline` (critical path), `Assumptions`,
+   `Customer responsibilities`, `Change control`,
    `Estimate` (`P50: N days ($X)` and `P90: N days ($Y)`, money with thousands separators, rounded to the dollar).
    Milestone due date = the finish date of the task tagged with it (finish day offset, rounded up, minus 1 → working
    day date).
@@ -42,10 +46,10 @@ Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each
 - **Prerequisites:** Python 3.11 or later and `pip install -r requirements.txt`, run once from the repository root.
   No API key or network access is needed.
 - **Run your work:** from the repository root, `pytest exercises/ch02-discovery-and-scoping/ex81-sow-delivery-plan`.
-- **Expected output:** all 7 tests fail against the starter; when you're done, all 7 pass.
+- **Expected output:** all 8 tests fail against the starter; when you're done, all 8 pass.
 - **Check the reference solution:** `pytest --solutions exercises/ch02-discovery-and-scoping/ex81-sow-delivery-plan`:
-  all 7 pass.
-- **Tests:** `test_sow.py` (7 tests).
+  all 8 pass.
+- **Tests:** `test_sow.py` (8 tests).
 - **Common failures:** `ModuleNotFoundError: No module named 'fde_kit'` means the command didn't run from the
   repository root. For a failing test, [HINTS.md](HINTS.md) says what it usually means.
 - **Whose failure is it?** If your run fails but the reference run passes, it's your code. If the reference run fails

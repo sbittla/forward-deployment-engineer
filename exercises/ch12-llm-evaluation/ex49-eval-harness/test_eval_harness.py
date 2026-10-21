@@ -132,3 +132,36 @@ def test_find_leakage(impl, cases):
     ]
     assert impl.find_leakage(cases, examples) == ["c1", "c4"]
     assert impl.find_leakage(cases, []) == []
+
+
+def test_provenance(impl, tmp_path):
+    rows = [{"id": f"p{i}", "input": f"q{i}", "expected": "x", "grader": "exact", "source": "production"}
+            for i in range(3)]
+    rows += [{"id": "e1", "input": "qe", "expected": "x", "grader": "exact", "source": "expert"},
+             {"id": "r1", "input": "qr", "expected": "x", "grader": "exact", "source": "red_team"},
+             {"id": "u1", "input": "qu", "expected": "x", "grader": "exact"}]
+    p = tmp_path / "golden.jsonl"
+    p.write_text("\n".join(json.dumps(r) for r in rows) + "\n")
+    cases = impl.load_cases(p)
+    assert cases[0].source == "production" and cases[-1].source == ""
+    assert impl.provenance(cases) == {"expert": 1, "production": 3, "red_team": 1, "unspecified": 1}
+    assert list(impl.provenance(cases)) == ["expert", "production", "red_team", "unspecified"]
+    with pytest.raises(ValueError):
+        impl.provenance([impl.Case("z", "q", "x", "exact", [], "scraped")])
+
+
+@pytest.mark.parametrize("fixed,broken,p", [
+    (24, 14, 0.143),   # candidate B overall (Chapter 12 worked decision): the gain may be noise
+    (1, 6, 0.125),     # exclusions slice: six broken, one fixed
+    (0, 0, 1.0),
+    (5, 5, 1.0),
+    (0, 10, 0.002),
+])
+def test_mcnemar_exact_paired_comparison(impl, fixed, broken, p):
+    assert round(impl.mcnemar_exact(fixed, broken), 3) == p
+    assert impl.mcnemar_exact(broken, fixed) == impl.mcnemar_exact(fixed, broken)
+
+
+def test_mcnemar_rejects_negative_counts(impl):
+    with pytest.raises(ValueError):
+        impl.mcnemar_exact(-1, 3)

@@ -3,14 +3,14 @@
   "status": "PASS",
   "problems": [],
   "tests": {
-    "passed": 5,
+    "passed": 6,
     "failed": 0,
     "error": 0,
     "skipped": 0
   },
-  "declared": 5,
-  "ran": 5,
-  "starter_failing": 5,
+  "declared": 6,
+  "ran": 6,
+  "starter_failing": 6,
   "cases": [
     {
       "test": "py:test_group_lines",
@@ -30,6 +30,10 @@
     },
     {
       "test": "py:test_vision_request",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_vision_request_rejects_oversized_file",
       "status": "passed"
     }
   ]

@@ -1,3 +1,5 @@
+import random
+
 import pytest
 
 LABELS = {"refund": "billing", "invoice": "billing", "charge": "billing", "password": "account", "login": "account",
@@ -100,3 +102,64 @@ def test_mcnemar(impl):
     assert impl.mcnemar_p([True, False], [True, False]) == 1.0
     with pytest.raises(ValueError):
         impl.mcnemar_p([True], [])
+
+
+V1 = BASE + "\nReply with the label only."
+
+
+def test_prompt_version_and_dataset_hash(impl):
+    assert impl.prompt_version(BASE) == "1ca21bd17d9e" and impl.prompt_version(V1) == "c243f7b249ac"
+    assert impl.dataset_hash(CASES) == "4f02d43fe161"
+    assert impl.dataset_hash(CASES[::-1]) != impl.dataset_hash(CASES)          # reordering is a new set
+    edited = [dict(c) for c in CASES]
+    edited[0]["expected"] = "other"
+    assert impl.dataset_hash(edited) != impl.dataset_hash(CASES)                # so is a relabeled case
+
+
+def test_repeat_evaluate_reports_spread(impl):
+    rng = random.Random(3)
+
+    def sampled(prompt, text):                    # a "temperature > 0" model: wrong 20% of the time, seeded
+        out = model(prompt, text)
+        return "other" if rng.random() < 0.2 else out
+
+    best = "\n".join([V1, "Use lowercase.", "Escalate means: urgent tickets keep their topic label."])
+    r = impl.repeat_evaluate(best, CASES, sampled, grader, runs=5)
+    assert r == {"runs": 5, "scores": [0.85, 0.8, 0.95, 0.75, 0.75], "mean": 0.82, "spread": 0.2}
+    assert impl.repeat_evaluate(best, CASES, model, grader, runs=3)["spread"] == 0.0
+    with pytest.raises(ValueError):
+        impl.repeat_evaluate(best, CASES, model, grader, runs=0)
+
+
+def test_wilson_interval(impl):
+    assert impl.wilson_interval(0, 6) == (0.0, 0.3903)
+    assert impl.wilson_interval(6, 6) == (0.6097, 1.0)
+    assert impl.wilson_interval(164, 200) == (0.7609, 0.8671)
+    assert impl.wilson_interval(172, 200) == (0.8051, 0.9013)
+    for bad in ((1, 0), (7, 6), (-1, 6)):
+        with pytest.raises(ValueError):
+            impl.wilson_interval(*bad)
+
+
+def test_regression_gate(impl):
+    base, cand = [True, True, False, True], [True, False, True, True]
+    assert impl.regression_gate(base, cand) == {"passed": True, "broken": [1], "reasons": []}
+    blocked = impl.regression_gate(base, cand, protected=frozenset({1}))
+    assert blocked["passed"] is False and blocked["reasons"] == ["protected case 1 regressed"]
+    worse = impl.regression_gate([True, True], [True, False])
+    assert worse["passed"] is False and "below baseline" in worse["reasons"][0]
+    assert impl.regression_gate([True, True], [True, False], max_drop=0.5)["passed"] is True
+    with pytest.raises(ValueError):
+        impl.regression_gate([True], [])
+
+
+def test_experiment_record(impl):
+    train, test = impl.split(CASES, 0.3, seed=7)
+    best = impl.hill_climb(BASE, EDITS, train, test, model, grader).prompt
+    rec = impl.experiment_record("EXP-1", V1, best, CASES, model, grader, seed=7)
+    assert rec["dataset"] == "4f02d43fe161" and rec["seed"] == 7 and rec["n_test"] == 6
+    assert rec["baseline"] == {"prompt": "c243f7b249ac", "passes": 0, "rate": 0.0, "ci95": (0.0, 0.3903)}
+    assert rec["candidate"] == {"prompt": "bf733e7f0523", "passes": 6, "rate": 1.0, "ci95": (0.6097, 1.0)}
+    assert rec["mcnemar_p"] == 0.03125 and rec["gate"]["passed"] is True
+    reverted = impl.experiment_record("EXP-2", best, V1, CASES, model, grader, seed=7, protected=frozenset({0}))
+    assert reverted["gate"]["passed"] is False and "protected case 0 regressed" in reverted["gate"]["reasons"]

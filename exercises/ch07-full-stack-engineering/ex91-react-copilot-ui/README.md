@@ -6,6 +6,7 @@
 - Write a React component and hook against React's own APIs, injected as factories.
 - Keep chat state transitions pure and accessible markup correct.
 - Test React logic in plain Node without a bundler.
+- Give Stop, session expiry and each failure an accessible state with one clear action.
 
 ## Scenario
 60% of FDE postings mention TypeScript, JavaScript or full-stack work; OpenAI asks for full-stack engineers and
@@ -34,6 +35,28 @@ transform.
      draft, `onChange(e)` → `onDraft(e.target.value)`, `aria-label` "Message") and a submit `button` "Send" with
      `disabled` = pending
 
+### Part B · Stop, session expiry and accessible failure states
+State also carries `stopped` and `authExpired` (both `false` in `initialState`); the starter exports the messages
+`SESSION_EXPIRED` ("Your session has expired. Sign in again.") and `STOPPED` ("Stopped. Edit your question or send it
+again.") and the `SendToApi` type, `(text, signal?) => Promise<string>`.
+
+4. Reducer: `send` and `retry` also clear `stopped`. `cancel` is a no-op (same object) unless `pending`; otherwise it
+   sets `pending=false`, `error=null`, `stopped=true`. `auth_expired` sets `pending=false`, `error=SESSION_EXPIRED`,
+   `authExpired=true`. `retry` is a no-op (same object) while `authExpired`.
+5. Hook: `send` and `retry` create an `AbortController` per call and pass its `signal` as `sendToApi`'s second
+   argument; keep the in-flight controller beside the id counter (shared across renders). The hook also returns
+   `stop()`: with a request in flight, abort it and dispatch `cancel`; otherwise do nothing. When the call then
+   rejects because it was aborted, dispatch nothing more. An error whose `name` is `"AuthExpiredError"` (ex28) or
+   whose `status` is 401 dispatches `auth_expired` instead of `fail`. `retry()` does nothing while `authExpired`.
+6. Panel: props also take optional `onStop` and `onSignIn`. Every failure state renders plain text in one announced
+   region with at most one action, a `button` with `type: "button"` and a visible label:
+   - `authExpired`: a `div` with `role="alert"`, the text `SESSION_EXPIRED` and a "Sign in" button calling
+     `onSignIn` (no Retry, which would only earn another 401);
+   - any other `error`: the Retry alert above;
+   - `stopped`: a `p` with `role="status"` and the text `STOPPED`, no button (the user chose to stop; it isn't an
+     error);
+   - while `pending`: a "Stop" button (`type: "button"`) after Send, calling `onStop`.
+
 Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
 
 ## Run and verify
@@ -43,13 +66,13 @@ Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each
   access is needed.
 - **Run your work:** from the repository root,
   `node --test exercises/ch07-full-stack-engineering/ex91-react-copilot-ui/panel.test.ts`.
-- **Expected output:** all 3 tests fail against the starter; when you're done, all 3 pass.
+- **Expected output:** all 6 tests fail against the starter; when you're done, all 6 pass.
 - **Check the reference solution:**
   `FDE_SOLUTIONS=1 node --test exercises/ch07-full-stack-engineering/ex91-react-copilot-ui/panel.test.ts`
   (PowerShell:
   `$env:FDE_SOLUTIONS=1; node --test exercises/ch07-full-stack-engineering/ex91-react-copilot-ui/panel.test.ts`): all
-  3 pass.
-- **Tests:** `panel.test.ts` (3 tests).
+  6 pass.
+- **Tests:** `panel.test.ts` (6 tests).
 - **Common failures:** `ModuleNotFoundError: No module named 'fde_kit'` means the command didn't run from the
   repository root; a Node.js error about the `.ts` extension means Node is older than 22.18. For a failing test,
   [HINTS.md](HINTS.md) says what it usually means.
@@ -57,10 +80,10 @@ Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each
   too, check the prerequisites (`python --version`, `node --version`); if they're met, it's a defect in the published
   solution, so report it with the repository's Errata issue template.
 - **Cleanup:** none. The tests write only to temporary directories, and `__pycache__` folders are ignored by git.
-- **Production caveats:** The hook calls a non-streaming `sendToApi` with no timeout or cancellation, and shows
-  whatever message the thrown error carries. In production, map errors to plain user-facing messages (never raw
-  exception text), abort in-flight requests on unmount or Stop with an `AbortController`, and test the rendered panel
-  with axe and a real screen reader.
+- **Production caveats:** The hook calls a non-streaming `sendToApi` with no timeout, and shows whatever message the
+  thrown error carries. In production, pass ex28's `streamAnswer` as `sendToApi`, map errors to plain user-facing
+  messages (never raw exception text), abort on unmount as well as on Stop, and test the rendered panel with axe and
+  a real screen reader.
 
 ## Prompt kit
 **Learn (tutor prompt)**

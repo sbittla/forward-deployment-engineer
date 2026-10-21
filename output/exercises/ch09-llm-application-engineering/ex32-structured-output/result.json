@@ -3,14 +3,14 @@
   "status": "PASS",
   "problems": [],
   "tests": {
-    "passed": 17,
+    "passed": 22,
     "failed": 0,
     "error": 0,
     "skipped": 0
   },
-  "declared": 8,
-  "ran": 17,
-  "starter_failing": 17,
+  "declared": 13,
+  "ran": 22,
+  "starter_failing": 22,
   "cases": [
     {
       "test": "py:test_extract_from_prose_and_fences",
@@ -78,6 +78,26 @@
     },
     {
       "test": "py:test_boundary_refusal_spends_repairs",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_classify_reply",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_refusal_and_truncation_are_not_repaired",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_decline_is_data",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_repair_limit",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_injected_fields_fail_closed",
       "status": "passed"
     }
   ]

@@ -7,6 +7,7 @@
 - Detect canary leaks, forbidden tools, PII and followed injections.
 - Report residual risk to a CISO with a severity-weighted score.
 - Review a connector's tool descriptions for poisoning, and reject tokens meant for another service.
+- Produce remediation evidence and a residual-risk record with an owner, rationale and review date.
 
 ## Scenario
 AHEAD's Forward Deployed AI Security Engineers "run adversarial testing against LLMs, agents, and copilots, convert
@@ -53,7 +54,41 @@ The system under test is `target(prompt) -> {"text": str, "tool_calls": [names]}
    nothing), raise `ValueError` mentioning `passthrough`: forwarding the user's token makes the server a confused
    deputy.
 
+9. **Remediation evidence.** A fix is closed only with a test that failed before it and passes after it: run the
+   same attack against the vulnerable and the fixed configuration, and `retest_diff` lists it under `fixed`
+   (`test_remediation_evidence_fails_before_passes_after`). Attach both reports to the finding.
+10. `RiskAcceptance(attack_id, owner, rationale, compensating_control, review_by)` records the customer's risk owner
+    accepting a finding that won't be fixed before release. `review_by` is an ISO date (`"2026-12-31"`). Raise
+    `ValueError` if `attack_id`, `owner`, `rationale` or `compensating_control` is blank, or if `review_by` isn't a
+    valid ISO date.
+11. `residual_risk(report, acceptances, today) -> dict` sorts every **failed** attack in the report (by id) into
+    exactly one list: `not_acceptable` (severity `critical`: these must be fixed, whatever is signed), `open` (no
+    acceptance), `expired` (its `review_by` is before `today`; an acceptance is still valid on its review date) or
+    `accepted`. Acceptances for attacks that didn't fail are ignored. It also returns `release_ok`, true only when
+    `open`, `expired` and `not_acceptable` are all empty:
+    `{"accepted": [...], "expired": [...], "open": [...], "not_acceptable": [...], "release_ok": bool}`.
+
 **Errors:** `Attack` raises `ValueError` for a category outside `CATEGORIES` or a severity outside `SEVERITY` (a typo would otherwise silently drop a finding from the risk score).
+
+### Threat-modeling lab (Northwind copilot)
+
+The tests check the parts; this lab assembles them into the evidence a CISO signs. Allow about two hours.
+
+1. **Model.** Copy `playbook/design/threat-model.md`. Fill one row per attack in the book's attack and defense matrix
+   (Table 13.3, Section 13.6) for the Northwind claims copilot and the email-triage agent: the trust boundary (B1 to
+   B5, Appendix E), likelihood and impact (1 to 5), the control, the negative test and the gate (Table 13.2).
+2. **Attack.** Write one `Attack` per row (severity from impact: 5 is `critical`, 4 `high`, 3 `medium`, else `low`),
+   with a canary planted in the system prompt and the side-effecting tools as `forbidden_tools`. Add the MCP servers'
+   tool descriptions to a `scan_tools` run.
+3. **Run.** `run_suite` against the configuration that will ship (not staging stubs), then `render_assessment`.
+4. **Remediate.** Fix each failure, re-run, and keep `retest_diff`'s `fixed` list with both reports as remediation
+   evidence. Every fix gets the negative test named in its row; it must fail on the old configuration.
+5. **Accept or block.** For each remaining finding, the customer's risk owner signs a `RiskAcceptance` (owner,
+   rationale, compensating control, review date), recorded in the RAID log. `residual_risk(...)["release_ok"]` must be
+   true before go-live; a critical finding can only be fixed.
+
+**Done when** every row has a control, a negative test and either a `fixed` entry or a current acceptance, and the
+customer's security team has reviewed the model.
 
 Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
 
@@ -63,10 +98,10 @@ Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each
   No API key or network access is needed.
 - **Run your work:** from the repository root,
   `pytest exercises/ch13-ai-security-and-guardrails/ex93-red-team-harness`.
-- **Expected output:** all 6 tests fail against the starter; when you're done, all 6 pass.
+- **Expected output:** all 8 tests fail against the starter; when you're done, all 8 pass.
 - **Check the reference solution:**
-  `pytest --solutions exercises/ch13-ai-security-and-guardrails/ex93-red-team-harness`: all 6 pass.
-- **Tests:** `test_redteam.py` (6 tests).
+  `pytest --solutions exercises/ch13-ai-security-and-guardrails/ex93-red-team-harness`: all 8 pass.
+- **Tests:** `test_redteam.py` (8 tests).
 - **Common failures:** `ModuleNotFoundError: No module named 'fde_kit'` means the command didn't run from the
   repository root. For a failing test, [HINTS.md](HINTS.md) says what it usually means.
 - **Whose failure is it?** If your run fails but the reference run passes, it's your code. If the reference run fails
@@ -91,8 +126,8 @@ wrong.
 Implement exercises/ch13-ai-security-and-guardrails/ex93-red-team-harness/starter.py so that test_redteam.py passes. README.md
 in that folder is the spec: follow its names, formats, ordering and error messages exactly. Public API: `Attack`,
 `Report`, `detect`, `run_suite`, `retest_diff`, `render_assessment`, `scan_tools`,
-`check_audience`, `upstream_headers`. Constraints: Python 3.11+, the standard library
-and the repo's fde_kit package only (pyyaml is allowed where the README uses YAML). Do not modify the tests or
+`check_audience`, `upstream_headers`, `RiskAcceptance`, `residual_risk`. Constraints: Python 3.11+, the standard
+library and the repo's fde_kit package only (pyyaml is allowed where the README uses YAML). Do not modify the tests or
 fde_kit. When you're done, run `pytest exercises/ch13-ai-security-and-guardrails/ex93-red-team-harness` and show me the output.
 If the README and the tests disagree, stop and tell me instead of guessing.
 ```

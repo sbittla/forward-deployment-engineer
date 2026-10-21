@@ -20,7 +20,8 @@ rejected twice last week. Encode the standards as a linter and ship manifests th
      `image-tag:<c>`; an `env` entry with a literal `value` whose name contains KEY/SECRET/TOKEN/PASSWORD →
      `secret-literal:<c>`
    - pod `securityContext.runAsNonRoot` not true → `non-root`; container
-     `securityContext.readOnlyRootFilesystem` not true → `readonly-fs:<c>`
+     `securityContext.readOnlyRootFilesystem` not true → `readonly-fs:<c>`; container `securityContext.privileged`
+     or `securityContext.allowPrivilegeEscalation` true → `privileged:<c>`
    - Service: `selector` must match the pod template labels of some Deployment → `selector`
    - HorizontalPodAutoscaler: `minReplicas` < 2 → `hpa-min`; `scaleTargetRef.name` not an existing Deployment →
      `hpa-target`
@@ -34,10 +35,10 @@ Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each
 - **Prerequisites:** Python 3.11 or later and `pip install -r requirements.txt`, run once from the repository root.
   No API key or network access is needed.
 - **Run your work:** from the repository root, `pytest exercises/ch14-llmops-and-sre/ex58-k8s-manifests`.
-- **Expected output:** all 5 tests fail against the starter; when you're done, all 5 pass.
-- **Check the reference solution:** `pytest --solutions exercises/ch14-llmops-and-sre/ex58-k8s-manifests`: all 5
+- **Expected output:** all 6 tests fail against the starter; when you're done, all 6 pass.
+- **Check the reference solution:** `pytest --solutions exercises/ch14-llmops-and-sre/ex58-k8s-manifests`: all 6
   pass.
-- **Tests:** `test_k8s.py` (5 tests).
+- **Tests:** `test_k8s.py` (6 tests).
 - **Common failures:** `ModuleNotFoundError: No module named 'fde_kit'` means the command didn't run from the
   repository root. For a failing test, [HINTS.md](HINTS.md) says what it usually means.
 - **Whose failure is it?** If your run fails but the reference run passes, it's your code. If the reference run fails

@@ -1,4 +1,9 @@
-"""The copilot request path: route -> redact -> retrieve -> (abstain | generate) -> cite -> guard -> restore."""
+"""The copilot request path: route -> redact -> retrieve -> (abstain | generate) -> cite -> guard -> restore.
+
+Retrieval is permission-aware when the retriever is (it then needs the caller's principal, and fails closed without
+one). Faults degrade safely: a search outage escalates without calling the model; a model that still fails after
+`max_retries` retries returns the cited policy sections without an answer (retrieval-only mode).
+"""
 import math
 import re
 from dataclasses import dataclass, field
@@ -8,6 +13,8 @@ from .retrieval import HybridRetriever
 
 ABSTAIN_TEXT = "I can't find that in your policy documents, so I've flagged it for a licensed agent."
 ESCALATE_TEXT = "Connecting you with a licensed agent now."
+SEARCH_DOWN_TEXT = "Policy search is unavailable right now, so I've flagged this for a licensed agent."
+MODEL_DOWN_TEXT = "The answer service is degraded. These policy sections are the closest matches:"
 MODEL_ABSTAIN = "NOT_IN_SOURCES"
 CLAIM_ID = re.compile(r"\bCL-\d{4,}\b", re.I)
 CITE = re.compile(r"\[(\d+(?:\s*,\s*\d+)*)\]")
@@ -31,6 +38,7 @@ class Response:
     escalated: bool = False
     cost_usd: float = 0.0
     redacted: bool = False
+    degraded: bool = False
 
 
 def build_prompt(question: str, hits) -> str:
@@ -40,10 +48,28 @@ def build_prompt(question: str, hits) -> str:
 
 class Copilot:
     def __init__(self, llm, retriever: HybridRetriever, router, model: str = "claude-sonnet-5-5",
-                 k: int = 4, min_coverage: float = 0.4, budget_usd: float = 0.02, prices: dict = PRICES):
+                 k: int = 4, min_coverage: float = 0.4, budget_usd: float = 0.02, prices: dict = PRICES,
+                 max_retries: int = 1):
         self.llm, self.retriever, self.router = llm, retriever, router
         self.model, self.k, self.min_coverage = model, k, min_coverage
         self.budget_usd, self.prices = budget_usd, prices
+        self.max_retries = max_retries
+
+    def search(self, query: str, principal=None):
+        """Retrieve for this caller. A permission-aware retriever with no principal returns nothing (fail closed)."""
+        if getattr(self.retriever, "permission_aware", False):
+            return self.retriever.search(query, principal, self.k) if principal is not None else []
+        return self.retriever.search(query, self.k)
+
+    def _complete(self, prompt: str):
+        """Call the model with bounded retries; None when every attempt failed."""
+        for _ in range(self.max_retries + 1):
+            try:
+                return self.llm.complete([{"role": "user", "content": prompt}],
+                                         system=SYSTEM, model=self.model, max_tokens=1024)
+            except Exception:  # timeouts, connection errors, 5xx: all retried the same bounded number of times
+                continue
+        return None
 
     def _cost(self, in_tokens: int, out_tokens: int) -> float:
         p_in, p_out = self.prices[self.model]
@@ -58,7 +84,7 @@ class Copilot:
             hits = hits[:-1]
         return hits
 
-    def ask(self, question: str) -> Response:
+    def ask(self, question: str, principal=None) -> Response:
         intent, _ = self.router.route(question)
         if intent == "speak_to_human":
             return Response(intent, ESCALATE_TEXT, escalated=True)
@@ -69,15 +95,22 @@ class Copilot:
             return Response(intent, text)
 
         safe_q, mapping = pii.redact(question)
-        hits = self.retriever.search(pii.strip_tokens(safe_q), self.k)
+        try:
+            hits = self.search(pii.strip_tokens(safe_q), principal)
+        except Exception:
+            return Response(intent, SEARCH_DOWN_TEXT, escalated=True, redacted=bool(mapping), degraded=True)
         if not hits or max(h.coverage for h in hits) < self.min_coverage:
             return Response(intent, ABSTAIN_TEXT, abstained=True, redacted=bool(mapping))
         hits = self._fit_budget(safe_q, hits)
         if not hits:
             return Response(intent, ABSTAIN_TEXT, abstained=True, redacted=bool(mapping))
 
-        resp = self.llm.complete([{"role": "user", "content": build_prompt(safe_q, hits)}],
-                                 system=SYSTEM, model=self.model, max_tokens=1024)
+        resp = self._complete(build_prompt(safe_q, hits))
+        if resp is None:
+            listing = " ".join(f"[{i}] {h.chunk.path}." for i, h in enumerate(hits, 1))
+            return Response(intent, f"{MODEL_DOWN_TEXT} {listing}",
+                            citations=list(dict.fromkeys(h.chunk.doc_id for h in hits)),
+                            chunk_ids=[h.chunk.id for h in hits], redacted=bool(mapping), degraded=True)
         cost = round(self._cost(resp.input_tokens, resp.output_tokens), 6)
         text = resp.text.strip()
         if text == MODEL_ABSTAIN:

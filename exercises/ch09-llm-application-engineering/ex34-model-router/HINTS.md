@@ -15,7 +15,7 @@ Check it against `test_cost` before you write `route`, which filters and sorts u
 - **route:** a list comprehension with the three conditions (tier, latency, cost), then sort with the key
   `(estimated cost, p50_ms)`. Raise `NoRouteError` when the list is empty.
 - **call_with_fallback:** loop over `order`. Wrap each call in `try/except`. On failure, read
-  `getattr(exc, "status", None)`. If it's in `{429, 503, 529}`, record `(name, str(status))`, remember the exception
+  `getattr(exc, "status", None)`. If it's in `FAILOVER_STATUS`, record `(name, str(status))`, remember the exception
   and continue; otherwise re-raise immediately. On success, record `(name, "ok")` and return.
 </details>
 
@@ -38,3 +38,10 @@ Check it against `test_cost` before you write `route`, which filters and sorts u
 | `test_fallback_on_overload` | 529 not in the fail-over set; status recorded as an int |
 | `test_non_retryable_propagates` | Every error triggers fail-over, so the second client gets called |
 | `test_all_fail` | Returns `None` instead of raising after the last model fails |
+| `test_fails_over_on_timeout_and_5xx` | `TimeoutError` not caught; 500, 502 or 504 missing from the fail-over set |
+| `test_malformed_reply_fails_over` | `accept` checked but the rejected reply returned anyway; no `MalformedReply` after the last model |
+| `test_budget_refuses_before_the_call` | Budget checked after the call (the model already ran) or against the actual, not worst-case, cost |
+| `test_budget_fails_closed` | A model over budget skipped instead of stopping, so a pricier fallback runs; unknown models priced at zero |
+| `test_non_retryable_carries_attempts` | Attempts not attached to the propagated exception |
+| `test_percentile` | Interpolated percentile instead of nearest rank; off-by-one in the rank |
+| `test_route_comparison_is_reproducible` | Failed or malformed replies not charged; timed-out attempts counted at the model's latency |

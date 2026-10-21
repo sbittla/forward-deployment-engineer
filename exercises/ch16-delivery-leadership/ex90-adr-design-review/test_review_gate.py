@@ -63,3 +63,22 @@ def test_gate(impl):
     assert d == "conditional" and reasons == ["major findings: 1", "tests 118/120", "eval pass rate 0.85 < 0.9"]
     d, reasons = impl.gate([F("blocker", "auth", "x")], {**ev, "open_criticals": 2})
     assert d == "reject" and reasons[:2] == ["blocker findings: 1", "open critical defects: 2"]
+
+
+RISK = {"risk": "R-12: the red-team covered current policy forms, not endorsements",
+        "owner": "Northwind CISO", "owner_org": "Customer",
+        "rationale": "Wave 1 is 100 adjusters with read-only answers; endorsements are added in wave 2",
+        "compensating_control": "Nightly injection test set, output guardrail, rehearsed kill switch",
+        "decided_on": "2026-11-06", "expires": "2026-12-04"}
+
+
+def test_risk_acceptance(impl):
+    assert impl.lint_risk_acceptance(RISK) == []
+    assert impl.lint_risk_acceptance({**RISK, "compensating_control": " ", "expires": ""}) == [
+        "missing:compensating_control", "missing:expires"]
+    # the delivery team or the partner can't accept the customer's risk
+    assert impl.lint_risk_acceptance({**RISK, "owner_org": "partner"}) == ["owner:not-customer"]
+    # an acceptance with no end, or an end before the decision, isn't a review date
+    assert impl.lint_risk_acceptance({**RISK, "expires": "2027-06-30"}) == ["expires:over-90-days"]
+    assert impl.lint_risk_acceptance({**RISK, "expires": "2026-11-01"}) == ["expires:not-after-decision"]
+    assert impl.lint_risk_acceptance({**RISK, "expires": "next quarter"}) == ["dates:invalid"]

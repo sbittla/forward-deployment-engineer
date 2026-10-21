@@ -6,6 +6,7 @@
 - Measure retrieval separately from generation.
 - Compute recall@k, precision@k, MRR and nDCG correctly.
 - Compare two retrieval configurations with a clear delta table.
+- Benchmark stale documents, tenant leaks, citation precision and abstention alongside ranking quality.
 
 ## Scenario
 Your teammate claims the new chunking "feels better". The customer's AI lead asks: *by how much, on what?* Most
@@ -24,6 +25,25 @@ RAG failures are retrieval failures, so measure retrieval separately from genera
 6. `compare(a, b, names=("A","B")) -> str` — markdown table `| Metric | A | B | Δ |` over the mean metrics in the
    order recall, precision, mrr, ndcg, with Δ formatted with sign (e.g. `+0.1250`).
 
+7. `citation_precision(answers) -> float` — `answers` is a list of `{"citations": [doc_id, ...], "supporting":
+   [doc_id, ...]}`. Return supported citations ÷ all citations, pooled over every answer (an answer that cites
+   nothing adds nothing), rounded to 4 dp; 0.0 when nothing was cited.
+8. `abstention_report(results) -> dict` — `results` is a list of `{"answerable": bool, "abstained": bool}`. Return
+   `{"answerable": n, "abstained_answerable": n, "unanswerable": n, "answered_unanswerable": n}`. The launch bar
+   for `answered_unanswerable` is zero.
+
+### The fixed benchmark in the tests
+`test_retrieval_eval.py` ships a small, reproducible benchmark (exercise data) that runs on your functions:
+`BENCH_CORPUS` (12 Northwind chunks: two superseded versions, one chunk from tenant `acme`, one upload with no
+tenant), `BENCH_QRELS` (8 answerable queries with graded relevance) and `BENCH_UNANSWERABLE` (2 queries). Both
+retrievers use the same ranker (the share of query terms found in a chunk, ties by doc id); the **baseline** ranks
+every chunk, the **candidate** ranks only current chunks of the user's tenant and drops chunks with no tenant (fail
+closed). A question is abstained when the top score is below 0.5; a simulated answer cites its top chunk. The tests
+pin the results at k = 3: recall@3 0.9375 → 0.9375, MRR 0.7917 → 1.0, nDCG 0.8235 → 0.9783; queries with a
+superseded chunk in the top 3: 6 → 0; with another tenant's or an untenanted chunk: 4 → 0; citation precision
+0.625 → 1.0; unanswerable questions answered: 1 of 2 → 0 of 2. Eight queries can't show significance; the point is
+that every change to retrieval arrives with these numbers, including the traps.
+
 Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
 
 ## Run and verify
@@ -31,9 +51,9 @@ Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each
 - **Prerequisites:** Python 3.11 or later and `pip install -r requirements.txt`, run once from the repository root.
   No API key or network access is needed.
 - **Run your work:** from the repository root, `pytest exercises/ch10-rag/ex41-retrieval-eval`.
-- **Expected output:** all 5 tests fail against the starter; when you're done, all 5 pass.
-- **Check the reference solution:** `pytest --solutions exercises/ch10-rag/ex41-retrieval-eval`: all 5 pass.
-- **Tests:** `test_retrieval_eval.py` (5 tests).
+- **Expected output:** all 9 tests fail against the starter; when you're done, all 9 pass.
+- **Check the reference solution:** `pytest --solutions exercises/ch10-rag/ex41-retrieval-eval`: all 9 pass.
+- **Tests:** `test_retrieval_eval.py` (9 tests).
 - **Common failures:** `ModuleNotFoundError: No module named 'fde_kit'` means the command didn't run from the
   repository root. For a failing test, [HINTS.md](HINTS.md) says what it usually means.
 - **Whose failure is it?** If your run fails but the reference run passes, it's your code. If the reference run fails
@@ -56,7 +76,8 @@ questions to check my understanding, one at a time, and tell me what to re-read 
 ```text
 Implement exercises/ch10-rag/ex41-retrieval-eval/starter.py so that test_retrieval_eval.py passes.
 README.md in that folder is the spec: follow its names, formats, ordering and error messages exactly. Public API:
-`recall_at_k`, `precision_at_k`, `mrr`, `ndcg_at_k`, `evaluate`, `compare`. Constraints: Python 3.11+, the standard
+`recall_at_k`, `precision_at_k`, `mrr`, `ndcg_at_k`, `evaluate`, `compare`, `citation_precision`,
+`abstention_report`. Constraints: Python 3.11+, the standard
 library and the repo's fde_kit package only (pyyaml is allowed where the README uses YAML). Do not modify the tests
 or fde_kit. When you're done, run `pytest exercises/ch10-rag/ex41-retrieval-eval` and show me the output.
 If the README and the tests disagree, stop and tell me instead of guessing.

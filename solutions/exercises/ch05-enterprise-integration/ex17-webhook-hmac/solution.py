@@ -35,9 +35,10 @@ def reconcile(client, store: dict, since: str) -> int:
 
 
 class WebhookReceiver:
-    def __init__(self, secret: str, clock=time.time, tolerance: int = 300, dedupe_ttl: int = 3600,
+    def __init__(self, secret: str | list[str], clock=time.time, tolerance: int = 300, dedupe_ttl: int = 3600,
                  store: dict | None = None):
         self.secret = secret
+        self._secrets = [secret] if isinstance(secret, str) else list(secret)  # [new, old] during rotation
         self.clock = clock
         self.tolerance = tolerance
         self.dedupe_ttl = dedupe_ttl
@@ -56,7 +57,7 @@ class WebhookReceiver:
             t, sig = _parse(header)
         except (KeyError, ValueError):
             return 401, "malformed signature"
-        if not hmac.compare_digest(sig, _mac(self.secret, t, body)):
+        if not any(hmac.compare_digest(sig, _mac(s, t, body)) for s in self._secrets):
             return 401, "bad signature"
         if abs(now - t) > self.tolerance:
             return 400, "stale"

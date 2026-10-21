@@ -3,14 +3,14 @@
   "status": "PASS",
   "problems": [],
   "tests": {
-    "passed": 7,
+    "passed": 12,
     "failed": 0,
     "error": 0,
     "skipped": 0
   },
-  "declared": 7,
-  "ran": 7,
-  "starter_failing": 7,
+  "declared": 12,
+  "ran": 12,
+  "starter_failing": 12,
   "cases": [
     {
       "test": "py:test_split_is_deterministic_and_disjoint",
@@ -38,6 +38,26 @@
     },
     {
       "test": "py:test_mcnemar",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_prompt_version_and_dataset_hash",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_repeat_evaluate_reports_spread",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_wilson_interval",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_regression_gate",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_experiment_record",
       "status": "passed"
     }
   ]

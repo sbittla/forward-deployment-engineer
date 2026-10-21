@@ -3,14 +3,14 @@
   "status": "PASS",
   "problems": [],
   "tests": {
-    "passed": 6,
+    "passed": 9,
     "failed": 0,
     "error": 0,
     "skipped": 0
   },
-  "declared": 6,
-  "ran": 6,
-  "starter_failing": 6,
+  "declared": 9,
+  "ran": 9,
+  "starter_failing": 9,
   "cases": [
     {
       "test": "py:test_idempotent_enqueue_and_fifo",
@@ -34,6 +34,18 @@
     },
     {
       "test": "py:test_run_worker",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_fault_enqueue_retry_storm_creates_one_job_per_key",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_fault_flaky_handler_attempts_are_bounded",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_fault_worker_crash_midjob_redelivers_without_duplicate_effect",
       "status": "passed"
     }
   ]

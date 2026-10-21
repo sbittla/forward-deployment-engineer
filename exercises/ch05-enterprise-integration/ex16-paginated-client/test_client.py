@@ -68,3 +68,15 @@ def test_cursor_loop_guard(impl):
     c = impl.ApiClient("https://x", "t", api, sleep=lambda s: None)
     with pytest.raises(impl.ApiError):
         list(c.list_all("/t", max_pages=3))
+
+
+# Negative tests: invalid or expired credentials are never retried
+
+@pytest.mark.parametrize("status", [401, 403])
+def test_invalid_or_expired_token_is_not_retried(impl, status):
+    sleeps = []
+    api = FakeAPI(impl, [R(impl, status, {"error": "invalid_token"}), R(impl, body={"ok": True})])
+    c = impl.ApiClient("https://x", "expired", api, sleep=sleeps.append)
+    with pytest.raises(impl.ApiError) as e:
+        c.get("/a")
+    assert e.value.status == status and len(api.calls) == 1 and sleeps == []

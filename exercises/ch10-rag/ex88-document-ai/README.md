@@ -41,9 +41,9 @@ Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each
 - **Prerequisites:** Python 3.11 or later and `pip install -r requirements.txt`, run once from the repository root.
   No API key or network access is needed.
 - **Run your work:** from the repository root, `pytest exercises/ch10-rag/ex88-document-ai`.
-- **Expected output:** all 5 tests fail against the starter; when you're done, all 5 pass.
-- **Check the reference solution:** `pytest --solutions exercises/ch10-rag/ex88-document-ai`: all 5 pass.
-- **Tests:** `test_document_ai.py` (5 tests).
+- **Expected output:** all 6 tests fail against the starter; when you're done, all 6 pass.
+- **Check the reference solution:** `pytest --solutions exercises/ch10-rag/ex88-document-ai`: all 6 pass.
+- **Tests:** `test_document_ai.py` (6 tests).
 - **Common failures:** `ModuleNotFoundError: No module named 'fde_kit'` means the command didn't run from the
   repository root. For a failing test, [HINTS.md](HINTS.md) says what it usually means.
 - **Whose failure is it?** If your run fails but the reference run passes, it's your code. If the reference run fails

@@ -76,3 +76,13 @@ def test_missing_acceptance(impl, tasks):
     eng = {**ENG, "acceptance": {"POC demo": "x"}}
     with pytest.raises(ValueError):
         impl.render_sow(eng, tasks, date(2026, 10, 19), 2000)
+
+
+def test_render_sow_rejects_unmeasurable_acceptance_criteria(impl, tasks):
+    for vague in ("Copilot deployed", "Answers are faster and better"):
+        eng = {**ENG, "acceptance": {**ENG["acceptance"], "Go-live": vague}}
+        with pytest.raises(ValueError, match="Go-live"):
+            impl.render_sow(eng, tasks, date(2026, 10, 19), 2000)
+    eng = {**ENG, "acceptance": {**ENG["acceptance"], "Go-live": "Copilot deployed; golden-set pass rate >= 90%"}}
+    assert "| Go-live | 2026-11-11 | Copilot deployed; golden-set pass rate >= 90% |" in impl.render_sow(
+        eng, tasks, date(2026, 10, 19), 2000)

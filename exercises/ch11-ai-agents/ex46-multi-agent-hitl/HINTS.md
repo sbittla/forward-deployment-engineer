@@ -42,3 +42,6 @@ already placed.
 | `test_run_approved` | Context includes every output instead of only the step's dependencies; approval asked for steps that don't need it |
 | `test_run_rejected_and_failure_cascade` | Skipped steps still asked for approval; audit lines out of order; exception text format differs |
 | `test_boundary_approval_follows_plan_flag` | Approval asked for a step whose `requires_approval` is false, or an unasked step not run |
+| `test_policy_approval_overrides_plan_flag` | Only the plan's `requires_approval` flag consulted; `always_approve` ignored |
+| `test_approval_fails_closed` | Truthiness used instead of `is True`; an exception from `approve` crashes the run or approves |
+| `test_failed_step_has_no_downstream_side_effects` | Dependents of a failed step run or are asked for approval; the failure's output not recorded |

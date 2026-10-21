@@ -20,6 +20,7 @@ permissions, pinned actions, timeouts, no secrets echoed to logs, deploys only f
    | `timeout:<job>` | a job has no `timeout-minutes` |
    | `pin:<job>` | a step `uses:` an action at a branch ref (`@main`, `@master`) or with no ref |
    | `secret-echo:<job>` | a `run:` contains `echo` and `${{ secrets.` on the same line |
+   | `static-cloud-key:<job>` | anything in the job (step or job `env`, `with`) references a long-lived cloud key secret: `secrets.AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `AZURE_CLIENT_SECRET`, `AZURE_CREDENTIALS`, `GCP_SA_KEY` or `GOOGLE_CREDENTIALS` (federate with OIDC instead) |
    | `matrix` | no job uses `strategy.matrix` with ≥ 2 python versions under key `python-version` |
    | `deploy-gate` | a job named `deploy` lacks `needs` including `test`, or lacks an `if` mentioning `refs/heads/main` |
 2. Write `ci.yml` in this directory (jobs `test` and `deploy`) that has **no** issues; the test job must run `pytest`.
@@ -31,9 +32,9 @@ Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each
 - **Prerequisites:** Python 3.11 or later and `pip install -r requirements.txt`, run once from the repository root.
   No API key or network access is needed.
 - **Run your work:** from the repository root, `pytest exercises/ch14-llmops-and-sre/ex59-ci-pipeline`.
-- **Expected output:** all 4 tests fail against the starter; when you're done, all 4 pass.
-- **Check the reference solution:** `pytest --solutions exercises/ch14-llmops-and-sre/ex59-ci-pipeline`: all 4 pass.
-- **Tests:** `test_ci.py` (4 tests).
+- **Expected output:** all 5 tests fail against the starter; when you're done, all 5 pass.
+- **Check the reference solution:** `pytest --solutions exercises/ch14-llmops-and-sre/ex59-ci-pipeline`: all 5 pass.
+- **Tests:** `test_ci.py` (5 tests).
 - **Common failures:** `ModuleNotFoundError: No module named 'fde_kit'` means the command didn't run from the
   repository root. For a failing test, [HINTS.md](HINTS.md) says what it usually means.
 - **Whose failure is it?** If your run fails but the reference run passes, it's your code. If the reference run fails

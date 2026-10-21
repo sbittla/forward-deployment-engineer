@@ -98,3 +98,77 @@ def test_boundary_cancellation_propagates(impl):
         return task.cancelled()
 
     assert asyncio.run(asyncio.wait_for(main(), timeout=5))
+
+
+# Fault injection: hung calls, partial failures and cancellation in the middle of a batch
+
+def test_fault_hung_calls_time_out_and_free_their_slots(impl):
+    # Two of eight calls hang forever. Each factory bounds its call with asyncio.timeout(); the TimeoutError lands in
+    # that slot, the semaphore slot is released, and the batch finishes well inside its deadline.
+    hang = {1, 4}
+
+    def factory(i):
+        async def call():
+            async with asyncio.timeout(0.05):
+                if i in hang:
+                    await asyncio.Event().wait()  # never set: a dependency that never answers
+                await asyncio.sleep(0.005)
+                return i
+        return call
+
+    async def main():
+        t0 = time.monotonic()
+        res = await asyncio.wait_for(impl.gather_limited([factory(i) for i in range(8)], concurrency=2), timeout=2)
+        return res, time.monotonic() - t0
+
+    res, elapsed = asyncio.run(main())
+    assert [isinstance(r, TimeoutError) for r in res] == [i in hang for i in range(8)]
+    assert [r for r in res if not isinstance(r, Exception)] == [0, 2, 3, 5, 6, 7]
+    assert elapsed < 1.0
+
+
+def test_fault_partial_failures_isolated_under_rate_limit(impl):
+    # A seeded 25% of 40 calls fail; every other slot still holds its own result, in order.
+    import random
+    rng = random.Random(3)
+    failing = {i for i in range(40) if rng.random() < 0.25}
+    bucket = impl.TokenBucket(rate=1000, capacity=10)
+
+    def factory(i):
+        async def call():
+            if i in failing:
+                raise ConnectionError(f"item {i}")
+            return i
+        return call
+
+    res = asyncio.run(impl.gather_limited([factory(i) for i in range(40)], concurrency=5, bucket=bucket))
+    assert {i for i, r in enumerate(res) if isinstance(r, ConnectionError)} == failing
+    assert all(r == i for i, r in enumerate(res) if i not in failing)
+    assert 0 < len(failing) < 40
+
+
+def test_fault_cancel_midflight_cleans_up_every_started_call(impl):
+    # Canceling the batch mid-flight must reach every in-flight call (its finally runs) and start no new ones.
+    started, cleaned = [], []
+
+    def factory(i):
+        async def call():
+            started.append(i)
+            try:
+                await asyncio.sleep(10)
+            finally:
+                cleaned.append(i)
+        return call
+
+    async def main():
+        task = asyncio.create_task(impl.gather_limited([factory(i) for i in range(10)], concurrency=3))
+        for _ in range(100):
+            if len(started) == 3:
+                break
+            await asyncio.sleep(0)
+        task.cancel()
+        with pytest.raises(asyncio.CancelledError):
+            await task
+
+    asyncio.run(asyncio.wait_for(main(), timeout=5))
+    assert len(started) == 3 and sorted(cleaned) == sorted(started)

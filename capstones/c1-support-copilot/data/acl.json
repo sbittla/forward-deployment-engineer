@@ -1,0 +1,7 @@
+{
+  "homeowners": {"tenant": "northwind", "groups": ["claims"]},
+  "auto": {"tenant": "northwind", "groups": ["claims"]},
+  "claims-process": {"tenant": "northwind", "groups": ["claims"]},
+  "siu-referrals": {"tenant": "northwind", "groups": ["siu"]},
+  "harbor-marine": {"tenant": "harbor-mutual", "groups": ["claims"]}
+}

@@ -20,10 +20,12 @@ class RunReport:
 
 
 class Orchestrator:
-    def __init__(self, planner_llm, workers: dict[str, Callable[[str, dict], str]], approve: Callable[[Step], bool]):
+    def __init__(self, planner_llm, workers: dict[str, Callable[[str, dict], str]], approve: Callable[[Step], bool],
+                 always_approve=frozenset()):
         self.planner_llm = planner_llm
         self.workers = workers
         self.approve = approve
+        self.always_approve = frozenset(always_approve)
 
     def plan(self, goal: str) -> list[Step]:
         raise NotImplementedError

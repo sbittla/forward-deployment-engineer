@@ -6,6 +6,7 @@
 - Load data incrementally with a composite watermark that is correct under ties.
 - Make each batch atomic: data and watermark commit together or not at all.
 - Keep the job idempotent so re-runs are safe.
+- Reconcile hard deletes by id, and refuse a mass delete from a truncated extract.
 
 ## Scenario
 Nightly full reloads of the customer's 80M-row orders table take 6 hours and lock their replica. Move to an
@@ -27,6 +28,21 @@ incremental load that is **idempotent** (safe to re-run), **atomic** (a crash le
 - With no `etl_state` row for the job (the first run, or after you delete it to replay a backfill), start from
   `("", -1)` so every source row qualifies; the upsert makes a replay add no duplicate rows. A row that arrives late,
   with an `updated_at` behind the saved watermark, is not selected: that is the composite watermark's known limit.
+- A source row delivered more than once (the same `id` again, or a later version of it) leaves one warehouse row
+  holding the values of the last one loaded in `(updated_at, id)` order.
+- Backfill at volume: `test_backfill_100k_rows` loads 100,000 generated rows (1,000 per timestamp) with
+  `batch_size=5000`, deletes the watermark, replays them, and checks the row count, `SUM(amount)` and the final
+  watermark against the source. *Measured* by that test (Python 3.13, Windows 11 laptop, in-memory SQLite): about
+  0.22 s for the load and 0.22 s for the replay; the test allows 30 s so slow CI runners pass.
+
+`reconcile_deletes(src, dst, max_fraction=0.5) -> int` handles the deletes the watermark can't see:
+
+- Delete every `dw_orders` row whose `id` is no longer in `src_orders`, in one destination transaction, and return
+  how many were deleted (0 on a rerun).
+- **Fail closed:** if the rows to delete exceed `max_fraction` of `dw_orders`, the extract is more likely empty or
+  truncated than the deletes real. Delete nothing and raise
+  `ValueError("refusing to delete <gone> of <total> rows (max_fraction=<max_fraction>)")`. A caller who has checked
+  can pass `max_fraction=1.0`.
 
 Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
 
@@ -35,10 +51,10 @@ Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each
 - **Prerequisites:** Python 3.11 or later and `pip install -r requirements.txt`, run once from the repository root.
   No API key or network access is needed.
 - **Run your work:** from the repository root, `pytest exercises/ch06-data-engineering/ex23-incremental-etl`.
-- **Expected output:** all 5 tests fail against the starter; when you're done, all 5 pass.
-- **Check the reference solution:** `pytest --solutions exercises/ch06-data-engineering/ex23-incremental-etl`: all 5
+- **Expected output:** all 9 tests fail against the starter; when you're done, all 9 pass.
+- **Check the reference solution:** `pytest --solutions exercises/ch06-data-engineering/ex23-incremental-etl`: all 9
   pass.
-- **Tests:** `test_etl.py` (5 tests).
+- **Tests:** `test_etl.py` (9 tests).
 - **Common failures:** `ModuleNotFoundError: No module named 'fde_kit'` means the command didn't run from the
   repository root. For a failing test, [HINTS.md](HINTS.md) says what it usually means.
 - **Whose failure is it?** If your run fails but the reference run passes, it's your code. If the reference run fails

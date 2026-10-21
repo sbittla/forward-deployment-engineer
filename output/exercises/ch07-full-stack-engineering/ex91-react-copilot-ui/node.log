@@ -1,12 +1,15 @@
 $ node --test exercises/ch07-full-stack-engineering/ex91-react-copilot-ui/panel.test.ts
-✔ reducer (3.223131ms)
-✔ hook sends, replies and retries (1.745792ms)
-✔ panel renders accessible, safe markup (1.54735ms)
-ℹ tests 3
+✔ reducer (2.423107ms)
+✔ hook sends, replies and retries (1.002364ms)
+✔ panel renders accessible, safe markup (0.986246ms)
+✔ hook: stop aborts the request and shows Stopped, not an error (0.604977ms)
+✔ hook: a 401 asks the user to sign in and never retries (0.493602ms)
+✔ panel: every failure state is announced with plain text and one labeled action (2.514276ms)
+ℹ tests 6
 ℹ suites 0
-ℹ pass 3
+ℹ pass 6
 ℹ fail 0
 ℹ cancelled 0
 ℹ skipped 0
 ℹ todo 0
-ℹ duration_ms 526.135845
+ℹ duration_ms 466.108445

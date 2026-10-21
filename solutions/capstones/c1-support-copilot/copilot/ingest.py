@@ -1,4 +1,5 @@
-"""Load policy markdown into heading-scoped chunks that keep their section path."""
+"""Load policy markdown into heading-scoped chunks that keep their section path; sync changes incrementally."""
+import hashlib
 import re
 from dataclasses import dataclass
 from pathlib import Path
@@ -44,3 +45,36 @@ def load_corpus(policy_dir) -> list[Chunk]:
     for p in sorted(Path(policy_dir).glob("*.md")):
         out += chunk_markdown(p.stem, p.read_text(encoding="utf-8"))
     return out
+
+
+def sync_corpus(policy_dir, previous: dict | None = None) -> tuple[dict, dict]:
+    """Incremental ingestion: re-chunk only documents whose content hash changed since `previous`.
+
+    State maps doc_id -> (sha256, chunks). A document that yields no chunks (an empty or broken export) fails the
+    data-quality check: it's reported as blocked and its previous version keeps serving. Removed files are dropped.
+    """
+    previous = previous or {}
+    state, report = {}, {"added": [], "changed": [], "unchanged": [], "removed": [], "blocked": []}
+    for p in sorted(Path(policy_dir).glob("*.md")):
+        text = p.read_text(encoding="utf-8")
+        digest = hashlib.sha256(text.encode("utf-8")).hexdigest()
+        doc = p.stem
+        if doc in previous and previous[doc][0] == digest:
+            state[doc] = previous[doc]
+            report["unchanged"].append(doc)
+            continue
+        chunks = chunk_markdown(doc, text)
+        if not chunks:
+            report["blocked"].append(doc)
+            if doc in previous:
+                state[doc] = previous[doc]
+            continue
+        state[doc] = (digest, chunks)
+        report["changed" if doc in previous else "added"].append(doc)
+    report["removed"] = sorted(set(previous) - {p.stem for p in Path(policy_dir).glob("*.md")})
+    return state, report
+
+
+def chunks_of(state: dict) -> list[Chunk]:
+    """Flatten a sync state into the chunk list the retriever indexes (stable order by doc id)."""
+    return [c for doc in sorted(state) for c in state[doc][1]]

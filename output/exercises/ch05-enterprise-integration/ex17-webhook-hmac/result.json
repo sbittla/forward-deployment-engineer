@@ -3,14 +3,14 @@
   "status": "PASS",
   "problems": [],
   "tests": {
-    "passed": 12,
+    "passed": 15,
     "failed": 0,
     "error": 0,
     "skipped": 0
   },
-  "declared": 12,
-  "ran": 12,
-  "starter_failing": 12,
+  "declared": 15,
+  "ran": 15,
+  "starter_failing": 15,
   "cases": [
     {
       "test": "py:test_sign_format",
@@ -58,6 +58,18 @@
     },
     {
       "test": "py:test_boundary_dedupe_is_per_process",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_rewritten_timestamp_is_rejected",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_future_timestamp_is_stale",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_rotation_accepts_either_secret_during_overlap",
       "status": "passed"
     }
   ]

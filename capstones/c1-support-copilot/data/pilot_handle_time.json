@@ -1,0 +1,7 @@
+{
+  "label": "exercise data: the pilot of Appendix E (two pilot teams, two control teams, three weeks)",
+  "baseline_min": 11.0,
+  "target_min": 7.0,
+  "pilot_min": 7.5,
+  "control_min": 10.4
+}

@@ -3,14 +3,14 @@
   "status": "PASS",
   "problems": [],
   "tests": {
-    "passed": 5,
+    "passed": 10,
     "failed": 0,
     "error": 0,
     "skipped": 0
   },
-  "declared": 5,
-  "ran": 5,
-  "starter_failing": 5,
+  "declared": 10,
+  "ran": 10,
+  "starter_failing": 10,
   "cases": [
     {
       "test": "ts:whole stream",
@@ -30,6 +30,26 @@
     },
     {
       "test": "ts:error event throws",
+      "status": "passed"
+    },
+    {
+      "test": "ts:parser tracks the last event id",
+      "status": "passed"
+    },
+    {
+      "test": "ts:stream: sends the bearer token and fails closed on 401 without retrying",
+      "status": "passed"
+    },
+    {
+      "test": "ts:stream: user cancellation stops reading and keeps the partial text",
+      "status": "passed"
+    },
+    {
+      "test": "ts:stream: reconnects with Last-Event-ID and resumes without duplicates",
+      "status": "passed"
+    },
+    {
+      "test": "ts:stream: reconnects are bounded, and provider errors are not retried",
       "status": "passed"
     }
   ]

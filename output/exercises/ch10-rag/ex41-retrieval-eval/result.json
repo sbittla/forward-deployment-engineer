@@ -3,14 +3,14 @@
   "status": "PASS",
   "problems": [],
   "tests": {
-    "passed": 5,
+    "passed": 9,
     "failed": 0,
     "error": 0,
     "skipped": 0
   },
-  "declared": 5,
-  "ran": 5,
-  "starter_failing": 5,
+  "declared": 9,
+  "ran": 9,
+  "starter_failing": 9,
   "cases": [
     {
       "test": "py:test_recall_precision",
@@ -30,6 +30,22 @@
     },
     {
       "test": "py:test_no_relevant_documents",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_citation_precision_and_abstention_report",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_benchmark_baseline_vs_candidate",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_benchmark_stale_and_foreign_never_cited",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_benchmark_abstention",
       "status": "passed"
     }
   ]

@@ -1,4 +1,6 @@
 """Greedy prompt optimisation against a train split, judged once on a held-out test split."""
+import hashlib
+import json
 import math
 import random
 from dataclasses import dataclass, field
@@ -41,4 +43,39 @@ def hill_climb(base_prompt: str, edits: dict[str, Callable[[str], str]], train: 
 
 def mcnemar_p(base: list[bool], cand: list[bool]) -> float:
     """Exact two-sided McNemar test on paired outcomes: are the discordant cases balanced?"""
+    raise NotImplementedError
+
+
+def prompt_version(prompt: str) -> str:
+    """First 12 hex characters of the SHA-256 of the prompt text: the version a record and a log line cite."""
+    raise NotImplementedError
+
+
+def dataset_hash(cases: list[dict]) -> str:
+    """Freeze an evaluation set by content: any edited, added, removed or reordered case changes the hash."""
+    raise NotImplementedError
+
+
+def repeat_evaluate(prompt: str, cases: list[dict], model: Model, grader: Grader, runs: int = 3) -> dict:
+    """Score the same prompt `runs` times. A sampled model gives different scores; the spread is the noise floor."""
+    raise NotImplementedError
+
+
+def wilson_interval(passes: int, n: int, z: float = 1.96) -> tuple[float, float]:
+    """95% Wilson score interval for a pass rate; honest at small n and at 0% or 100%."""
+    raise NotImplementedError
+
+
+def regression_gate(base: list[bool], cand: list[bool], protected: frozenset[int] = frozenset(),
+                    max_drop: float = 0.0) -> dict:
+    """Block a candidate whose pass rate falls more than `max_drop` below the baseline, or that breaks any
+    protected (for example safety-tagged) case the baseline passed."""
+    raise NotImplementedError
+
+
+def experiment_record(name: str, base_prompt: str, cand_prompt: str, cases: list[dict], model: Model,
+                      grader: Grader, seed: int = 0, test_frac: float = 0.3,
+                      protected: frozenset[int] = frozenset()) -> dict:
+    """Score baseline and candidate once each on the held-out split and return the fields a reviewer needs.
+    `protected` holds indices into the test split."""
     raise NotImplementedError

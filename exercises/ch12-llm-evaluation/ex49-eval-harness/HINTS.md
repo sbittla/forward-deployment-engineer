@@ -48,3 +48,6 @@ and independent, and `run_eval` just looks them up by name. Each grader returns 
 | `test_failure_taxonomy` | Passing cases counted; unlabelled failures dropped; ties not sorted by cause |
 | `test_cost_per_success` | Multiplying by the pass rate instead of dividing; no `ValueError` for a zero pass rate |
 | `test_find_leakage` | No normalisation of case or punctuation; plain substring match flags partial words |
+| `test_provenance` | `source` not read by `load_cases`; missing source not counted as `unspecified`; unknown source accepted |
+| `test_mcnemar_exact_paired_comparison` | One-sided tail; concordant cases included in `n`; no cap at 1.0 when the counts are equal |
+| `test_mcnemar_rejects_negative_counts` | No `ValueError` for a negative count |

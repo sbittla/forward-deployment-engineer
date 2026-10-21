@@ -13,6 +13,10 @@ class Case:
     expected: object
     grader: str
     tags: list[str] = field(default_factory=list)
+    source: str = ""
+
+
+SOURCES = ("production", "expert", "red_team", "synthetic")
 
 
 @dataclass
@@ -104,7 +108,7 @@ def load_cases(path) -> list[Case]:
     for line in Path(path).read_text(encoding="utf-8").splitlines():
         if line.strip():
             d = json.loads(line)
-            cases.append(Case(d["id"], d["input"], d["expected"], d["grader"], d.get("tags", [])))
+            cases.append(Case(d["id"], d["input"], d["expected"], d["grader"], d.get("tags", []), d.get("source", "")))
     return cases
 
 
@@ -151,3 +155,22 @@ def find_leakage(cases: list[Case], examples: list[str]) -> list[str]:
         if needle and any(f" {needle} " in e for e in pool):
             leaked.append(c.id)
     return leaked
+
+
+def provenance(cases: list[Case]) -> dict[str, int]:
+    counts = defaultdict(int)
+    for c in cases:
+        if c.source and c.source not in SOURCES:
+            raise ValueError(f"unknown source {c.source!r} for case {c.id}")
+        counts[c.source or "unspecified"] += 1
+    return dict(sorted(counts.items()))
+
+
+def mcnemar_exact(fixed: int, broken: int) -> float:
+    if fixed < 0 or broken < 0:
+        raise ValueError("counts must be non-negative")
+    n = fixed + broken
+    if n == 0:
+        return 1.0
+    tail = sum(math.comb(n, i) for i in range(min(fixed, broken) + 1)) / 2 ** n
+    return min(1.0, 2 * tail)

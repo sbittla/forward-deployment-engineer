@@ -55,3 +55,16 @@ def test_boundary_consistent_bias_passes_through(impl):
     )
     short_right = "Not covered: the house was unoccupied."
     assert impl.pairwise(FakeLLM(["1", "2"]), "q", long_wrong, short_right) == "A"
+
+
+def test_labeler_agreement(impl):
+    # Two experts label the same golden-set cases independently; the judge's kappa measures them too.
+    expert_1 = [5, 4, 4, 2, 1, 5, 3, 4]
+    expert_2 = [5, 4, 3, 2, 2, 4, 3, 5]
+    assert impl.agreement(expert_1, expert_2) == {"exact": 0.5, "within_1": 1.0, "kappa": 0.75}
+
+
+def test_always_pass_judge_has_zero_kappa(impl):
+    humans = [5] * 9 + [1]          # 90% of answers are good
+    a = impl.agreement([5] * 10, humans)
+    assert a["exact"] == 0.9 and a["kappa"] == 0.0

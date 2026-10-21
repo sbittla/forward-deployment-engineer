@@ -23,10 +23,16 @@ def required_controls(tier: int) -> list[str]:
     return out
 
 
+def _complete(e: dict) -> bool:
+    return all(isinstance(e.get(k), (int, float)) for k in ("value", "threshold"))
+
+
 def validate(meta: dict) -> list[str]:
     issues = [f"missing:{k}" for k in REQUIRED if not meta.get(k)]
     issues += [f"missing:{f}" for f in FLAGS if f not in meta]
-    issues += [f"eval_below_threshold:{e['name']}" for e in meta.get("evals", []) if e["value"] < e["threshold"]]
+    evals = meta.get("evals") or []
+    issues += [f"eval_incomplete:{e.get('name')}" for e in evals if not _complete(e)]
+    issues += [f"eval_below_threshold:{e['name']}" for e in evals if _complete(e) and e["value"] < e["threshold"]]
     if risk_tier(meta) == 1:
         oversight = str(meta.get("human_oversight", "")).lower()
         if "review" not in oversight and "approve" not in oversight:
@@ -49,8 +55,8 @@ def render(meta: dict) -> str:
              "## Data", *_bullets(meta.get("data_sources", [])), "",
              "## Evaluation", "| Eval | Metric | Value | Threshold | Status |", "|---|---|---|---|---|"]
     for e in meta.get("evals", []):
-        status = "PASS" if e["value"] >= e["threshold"] else "FAIL"
-        lines.append(f"| {e['name']} | {e['metric']} | {e['value']} | {e['threshold']} | {status} |")
+        status = "PASS" if _complete(e) and e["value"] >= e["threshold"] else "FAIL"
+        lines.append(f"| {e.get('name')} | {e.get('metric')} | {e.get('value')} | {e.get('threshold')} | {status} |")
     lines += ["", "## Limitations", *_bullets(meta.get("limitations", [])), "",
               "## Monitoring", *_bullets(meta.get("monitoring", [])), "",
               "## Human oversight", str(meta.get("human_oversight", "")), "",

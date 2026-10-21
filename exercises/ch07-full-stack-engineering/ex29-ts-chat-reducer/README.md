@@ -5,7 +5,8 @@
 ## Learning objectives
 - Model chat UI state transitions as a pure reducer.
 - Prevent double-sends, duplicate retries and stuck spinners.
-- Unit test UI behaviour without a browser.
+- Model user cancellation and session expiry as their own states, not as generic errors.
+- Unit test UI behavior without a browser.
 
 ## Scenario
 Your copilot demo's chat widget has state bugs: double-sends while streaming, retry duplicates messages, and an
@@ -16,7 +17,7 @@ the same pattern React's `useReducer` and Redux use.
 `reduce(state: ChatState, action: Action): ChatState` — must never mutate `state`.
 
 ```ts
-type Msg = { id: string; role: "user" | "assistant"; text: string; status: "done" | "streaming" | "error" };
+type Msg = { id: string; role: "user" | "assistant"; text: string; status: "done" | "streaming" | "error" | "stopped" };
 type ChatState = { messages: Msg[]; pending: boolean; error: string | null };
 ```
 
@@ -24,13 +25,16 @@ type ChatState = { messages: Msg[]; pending: boolean; error: string | null };
 |---|---|
 | `{type:"send", id, text}` | ignored if `pending` or `text.trim()===""`; else append user msg (`done`), `pending=true`, `error=null` |
 | `{type:"stream_start", id}` | append assistant msg `{text:"", status:"streaming"}` |
-| `{type:"delta", id, text}` | append text to that assistant msg (ignore unknown ids) |
+| `{type:"delta", id, text}` | append text to that assistant msg if it is `streaming` (ignore unknown ids and deltas for a stopped or failed msg) |
 | `{type:"stream_end", id}` | status `done`, `pending=false` |
 | `{type:"stream_error", id, error}` | status `error`, `pending=false`, `error=<error>` |
-| `{type:"retry"}` | if the last message is an assistant `error`: remove it, `pending=true`, `error=null`; else no-op |
+| `{type:"cancel"}` | the user pressed Stop: if not `pending`, no-op (same object); else every `streaming` msg becomes `stopped` (text kept), `pending=false`, `error=null` |
+| `{type:"auth_expired"}` | the BFF answered 401: every `streaming` msg becomes `error`, `pending=false`, `error=SESSION_EXPIRED`; the user's question is kept |
+| `{type:"retry"}` | no-op (same object) when `error === SESSION_EXPIRED`; if the last message is an assistant `error`: remove it, `pending=true`, `error=null`; else no-op |
 | `{type:"clear"}` | back to `initialState` |
 
-Also export `initialState` and `transcript(state): string` → lines `"user: ..."`/`"assistant: ..."` for `done`
+The starter exports `SESSION_EXPIRED = "Your session has expired. Sign in again."`. Also export `initialState` and
+`transcript(state): string` → lines `"user: ..."`/`"assistant: ..."` for `done`
 messages only, joined with `\n`.
 
 ## Run
@@ -47,13 +51,13 @@ Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each
   access is needed.
 - **Run your work:** from the repository root,
   `node --test exercises/ch07-full-stack-engineering/ex29-ts-chat-reducer/reducer.test.ts`.
-- **Expected output:** all 5 tests fail against the starter; when you're done, all 5 pass.
+- **Expected output:** all 7 tests fail against the starter; when you're done, all 7 pass.
 - **Check the reference solution:**
   `FDE_SOLUTIONS=1 node --test exercises/ch07-full-stack-engineering/ex29-ts-chat-reducer/reducer.test.ts`
   (PowerShell:
   `$env:FDE_SOLUTIONS=1; node --test exercises/ch07-full-stack-engineering/ex29-ts-chat-reducer/reducer.test.ts`):
-  all 5 pass.
-- **Tests:** `reducer.test.ts` (5 tests).
+  all 7 pass.
+- **Tests:** `reducer.test.ts` (7 tests).
 - **Common failures:** `ModuleNotFoundError: No module named 'fde_kit'` means the command didn't run from the
   repository root; a Node.js error about the `.ts` extension means Node is older than 22.18. For a failing test,
   [HINTS.md](HINTS.md) says what it usually means.
@@ -61,10 +65,9 @@ Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each
   too, check the prerequisites (`python --version`, `node --version`); if they're met, it's a defect in the published
   solution, so report it with the repository's Errata issue template.
 - **Cleanup:** none. The tests write only to temporary directories, and `__pycache__` folders are ignored by git.
-- **Production caveats:** The reducer models one stream at a time, and a dropped connection, an expired session and a
-  cancelled stream all arrive as `stream_error`. A production version adds actions for cancellation and
-  authentication expiry (keep the draft, ask the user to sign in again, offer no Retry), ignores deltas from a stream
-  the user has stopped, and is driven by a hook with timeouts.
+- **Production caveats:** The reducer models one stream at a time. A production version is driven by a hook with
+  timeouts (ex28's `streamAnswer` and ex91's hook), keeps the user's draft across sign-in, and lets the user edit and
+  resend a stopped question.
 
 ## Prompt kit
 **Learn (tutor prompt)**

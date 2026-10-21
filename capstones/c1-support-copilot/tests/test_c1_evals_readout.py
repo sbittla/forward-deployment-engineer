@@ -27,3 +27,16 @@ def test_exec_readout_uses_measured_numbers(cap, cap_data, copilot):
     for heading in ("## Executive summary", "## Results", "## Business impact", "## Risks", "## Next steps"):
         assert heading in md
     assert f"{metrics['pass_rate']:.0%}" in md and "1,200" in md and "proceed" in md
+
+
+def test_eval_reports_refusal_recall_and_slices(cap, cap_data, copilot):
+    evals = importlib.import_module("copilot.evals")
+    golden = evals.load_golden(cap_data / "golden.jsonl")
+    metrics = evals.run_golden(copilot, golden)
+    assert metrics["over_refusal_rate"] == 0.0 and metrics["retrieval_recall"] == 1.0
+    assert set(metrics["slices"]) == {"policy_question", "claim_status", "speak_to_human", "unanswerable"}
+    assert metrics["successes"] == 12 and metrics["total_cost_usd"] > 0
+    copilot.min_coverage = 1.01                       # a copilot that refuses everything is safe but useless
+    timid = evals.run_golden(copilot, golden)
+    assert timid["false_answer_rate"] == 0.0 and timid["over_refusal_rate"] == 1.0
+    assert timid["retrieval_recall"] == 1.0           # retrieval still found the documents: the refusal is the bug

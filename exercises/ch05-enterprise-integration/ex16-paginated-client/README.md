@@ -27,6 +27,9 @@ build the RAG corpus. The vendor's docs say: respect `Retry-After` on 429 and st
 
 Header lookups are case-insensitive.
 
+`test_invalid_or_expired_token_is_not_retried` pins the negative case: a `401` or `403` (an invalid or expired
+token) raises `ApiError` after one request, with no sleep and no retry.
+
 Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
 
 ## Run and verify
@@ -34,10 +37,10 @@ Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each
 - **Prerequisites:** Python 3.11 or later and `pip install -r requirements.txt`, run once from the repository root.
   No API key or network access is needed.
 - **Run your work:** from the repository root, `pytest exercises/ch05-enterprise-integration/ex16-paginated-client`.
-- **Expected output:** all 6 tests fail against the starter; when you're done, all 6 pass.
+- **Expected output:** all 8 tests fail against the starter; when you're done, all 8 pass.
 - **Check the reference solution:** `pytest --solutions exercises/ch05-enterprise-integration/ex16-paginated-client`:
-  all 6 pass.
-- **Tests:** `test_client.py` (6 tests).
+  all 8 pass.
+- **Tests:** `test_client.py` (8 tests).
 - **Common failures:** `ModuleNotFoundError: No module named 'fde_kit'` means the command didn't run from the
   repository root. For a failing test, [HINTS.md](HINTS.md) says what it usually means.
 - **Whose failure is it?** If your run fails but the reference run passes, it's your code. If the reference run fails

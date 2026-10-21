@@ -27,7 +27,8 @@ def build_prompt(question: str, sources: list[Source]) -> tuple[str, str]:
         "After every claim, cite the supporting source number in square brackets, like [1] or [1][3].\n"
         f"If the sources do not contain the answer, reply exactly: {ABSTAIN_TEXT}"
     )
-    lines = [f"[{i}] ({s.doc_id}) {s.text}" for i, s in enumerate(sources, 1)]
+    # Retrieved text is data: keep it on its own line so it can't forge another "[n] (doc_id)" source line.
+    lines = [f"[{i}] ({s.doc_id}) {' '.join(s.text.split())}" for i, s in enumerate(sources, 1)]
     user = "Sources:\n" + "\n".join(lines) + f"\n\nQuestion: {question}"
     return system, user
 

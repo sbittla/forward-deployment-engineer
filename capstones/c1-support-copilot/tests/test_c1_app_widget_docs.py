@@ -55,8 +55,19 @@ def test_answer_view_widget(cap_dir):
 REQUIRED = {
     "discovery_brief.md": ["Problem", "Users", "Success metrics", "Data sources", "Constraints", "Out of scope",
                            "Stakeholders"],
-    "runbook.md": ["Overview", "Deploy", "Rollback", "Monitoring", "Re-indexing policy documents", "Escalation"],
+    "runbook.md": ["Overview", "Deploy", "Rollback", "Monitoring", "Re-indexing policy documents", "Escalation",
+                   "Dashboards", "Canary rollout", "Incident procedure", "Ownership transfer"],
+    "engagement_charter.md": ["Sponsor", "Problem and baseline", "Acceptance criteria", "Scope", "Budget",
+                              "Change log"],
+    "architecture.md": ["Diagram", "Components", "Trust boundaries", "Degraded modes"],
+    "threat_model.md": ["Assets", "Threats", "Security findings", "Negative tests"],
+    "evaluation_report.md": ["Test sets", "Results", "Slices", "Failure analysis", "Latency and cost",
+                             "v0 against v1"],
+    "test_report.md": ["Summary", "Gates", "Failure injection", "Load model", "Known gaps"],
+    "final_readout.md": ["Decision", "Value against the baseline", "Gates", "Risks", "Conditions",
+                         "Ownership transfer"],
 }
+MEASURED = {"evaluation_report.md", "test_report.md", "final_readout.md"}
 
 
 @pytest.mark.parametrize("name", sorted(REQUIRED))
@@ -67,5 +78,9 @@ def test_deliverables(cap_dir, name):
     for section in REQUIRED[name]:
         assert any(section.lower() in h for h in headings), f"{name} is missing a '{section}' section"
     assert not re.search(r"TODO|TBD|FIXME", text), f"{name} still has placeholders"
+    if name == "architecture.md":
+        assert "```" in text, "the architecture needs a diagram (Mermaid or ASCII in a fenced block)"
+    if name in MEASURED:
+        assert re.search(r"\bmeasured\b", text, re.I), f"{name} must label which numbers are measured"
     if name == "discovery_brief.md":
         assert re.search(r"\d+(\.\d+)?\s*(%|min)", text), "success metrics must be quantified"

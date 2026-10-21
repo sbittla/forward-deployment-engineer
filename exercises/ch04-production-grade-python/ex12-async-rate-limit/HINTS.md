@@ -42,3 +42,6 @@ passes.
 | `test_bucket_starts_full` | Initial token count of 0 |
 | `test_invalid_limits` | Validation missing in `TokenBucket.__init__`, or `concurrency=0` hangs instead of raising |
 | `test_boundary_cancellation_propagates` | `except BaseException` (or a bare `except`) stores `CancelledError` in a slot instead of letting it propagate |
+| `test_fault_hung_calls_time_out_and_free_their_slots` | `TimeoutError` escapes the batch instead of landing in its slot, so the other results are lost |
+| `test_fault_partial_failures_isolated_under_rate_limit` | Results appended as they finish, or one failure cancels the rest |
+| `test_fault_cancel_midflight_cleans_up_every_started_call` | Calls started as bare tasks that outlive the canceled batch, or cancellation swallowed |

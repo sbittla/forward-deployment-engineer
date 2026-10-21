@@ -46,3 +46,8 @@ parses.
 | `test_gives_up` | Wrong number of calls (should be `max_repairs + 1`), or final error doesn't list the problems |
 | `test_boundary_schema_valid_is_not_correct` | `validate` checking values against the source or rejecting large amounts; it should check shape only |
 | `test_boundary_refusal_spends_repairs` | Not raising `ValueError` when no reply contains JSON, or stopping before `max_repairs + 1` calls |
+| `test_classify_reply` | Text parsed before the stop reason is checked; a reply with no JSON classified as a decline |
+| `test_refusal_and_truncation_are_not_repaired` | Refusals and truncations fed into the repair loop, spending every attempt |
+| `test_decline_is_data` | The decline object validated against the claim schema and repaired; system prompt doesn't offer it |
+| `test_repair_limit` | `range(max_repairs)` instead of `max_repairs + 1` attempts; negative limits accepted |
+| `test_injected_fields_fail_closed` | `additionalProperties: false` not enforced, so an injected field slips through |

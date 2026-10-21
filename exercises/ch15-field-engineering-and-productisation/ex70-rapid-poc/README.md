@@ -31,8 +31,69 @@ Fields: `invoice_number`, `invoice_date` (ISO `YYYY-MM-DD`), `total` (float), `v
 4. `poc_readout(metrics) -> str` — markdown table `| Field | Accuracy |` (one row per field, value as given) and a `## Next steps` list that includes
    `- Improve <field> extraction` for each field under 0.9 accuracy, and always
    `- Run on 200 labelled invoices before any production decision`.
+5. Injected or malformed model replies change nothing they shouldn't: `extract` merges only the missing `FIELDS`
+   (extra keys such as `approved` or `bank_account` are ignored, and rule values are never overridden), and a reply
+   whose JSON doesn't parse, or isn't an object, fills nothing.
+6. `wilson_lower(p, n, z=1.96) -> float` — the lower end of the Wilson score interval for an accuracy `p` measured on
+   `n` samples (`0.0` when `n <= 0`).
+7. `exit_decision(metrics, n, gates=EXIT_GATES, min_n=200) -> (decision, reasons)` — the POC's exit gate, applied in
+   this order:
+   - `n < min_n` → `("extend", ["n=<n> < <min_n> labeled invoices"])`, whatever the accuracy;
+   - any field whose accuracy is below its gate → `("no-go", ["<field>: <accuracy> < <gate>", ...])`, in
+     `gates` order;
+   - any field whose `wilson_lower(accuracy, n)` is below its gate → `("extend", ["<field>: 95% lower bound
+     <bound, 3 dp> < <gate>", ...])`;
+   - otherwise `("go", [])`.
+
+   `EXIT_GATES = {"invoice_number": 0.95, "invoice_date": 0.95, "total": 0.97, "vendor": 0.90}` (illustrative: agree
+   real gates with the accounts-payable manager before the run, not after).
 
 Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
+
+## From POC to production: the handover pack
+
+Chapter 15's Table 15.1 points here. The readout answers "can it work?"; these tables are what you agree and hand
+over when the answer becomes "switch it on". Every target below is *illustrative*: the contract and the customer's
+support policy set the real ones.
+
+**Exit gates.** Agree them before the 200-invoice run; `exit_decision` applies the first three.
+
+| Gate | Threshold | Decision if missed |
+|---|---|---|
+| Sample | At least 200 labeled invoices, held out, drawn across vendors and months | `extend` |
+| Accuracy per field | Point estimate at or above `EXIT_GATES` | `no-go` |
+| Uncertainty | 95% Wilson lower bound at or above the same gate | `extend` (label more) |
+| Cost and latency | Measured cost per successful invoice and p95 latency, with the load model stated, within the agreed budget | `extend` (not tested here) |
+
+**Support model.** Who owns what after handover.
+
+| Tier | Who | Owns | Response target |
+|---|---|---|---|
+| L1 | The customer's service desk | Intake, known-issue runbook, user communication | Acknowledge within 1 business hour |
+| L2 | The customer's platform team (service owner, on call) | Deploy, rollback, kill switch, prompt and configuration changes | Severity 1: respond in 15 minutes, mitigate in 4 hours |
+| L3 | Your product engineering team | Defects in shared code, model upgrades, security fixes | Severity 1: engaged within 1 hour |
+| Field | You, until the agreed handover date | Shadowing L2 and coaching; no production access afterward | None after handover |
+
+**Ownership-transfer checklist.**
+
+- [ ] A named service owner, and an on-call rotation that has accepted the service and its alerts (Section 14.7).
+- [ ] Deploy, rollback, kill-switch and key-rotation runbooks pass the linter and were rehearsed by the owner.
+- [ ] Repository, CI, secrets and model keys live in customer-owned accounts; the trial key is revoked.
+- [ ] The 200 labeled invoices and the evaluation script are handed over, and the owner has rerun them.
+- [ ] Dashboards show per-field accuracy on sampled invoices, cost per invoice and the SLO.
+- [ ] Your accounts and tokens are revoked; nothing depends on credentials tied to you.
+- [ ] The field-code register (Section 15.6) has an entry with an owner and a review date.
+
+**Product feedback loop.**
+
+| Signal | Goes to | With | When |
+|---|---|---|---|
+| Field code written for this customer | The field-code register (Section 15.6) | Owner, review date | At handover |
+| The same pattern at a second or third customer | The product team, as a feedback brief (Section 3.4) | Golden-output tests, the configuration that varied, incidents, revenue at stake | Monthly |
+| A defect in shared code | The product backlog, through L3 | A failing test | Per incident |
+| A user's feature request | The feedback brief; close the loop with the requester (Section 3.4) | Number of customers asking | Monthly |
+
+The compliance evidence map (which test or document proves which control) is in ex75's README.
 
 ## Run and verify
 
@@ -40,10 +101,10 @@ Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each
   No API key or network access is needed.
 - **Run your work:** from the repository root,
   `pytest exercises/ch15-field-engineering-and-productisation/ex70-rapid-poc`.
-- **Expected output:** all 7 tests fail against the starter; when you're done, all 7 pass.
+- **Expected output:** all 9 tests fail against the starter; when you're done, all 9 pass.
 - **Check the reference solution:**
-  `pytest --solutions exercises/ch15-field-engineering-and-productisation/ex70-rapid-poc`: all 7 pass.
-- **Tests:** `test_poc.py` (7 tests).
+  `pytest --solutions exercises/ch15-field-engineering-and-productisation/ex70-rapid-poc`: all 9 pass.
+- **Tests:** `test_poc.py` (9 tests).
 - **Common failures:** `ModuleNotFoundError: No module named 'fde_kit'` means the command didn't run from the
   repository root. For a failing test, [HINTS.md](HINTS.md) says what it usually means.
 - **Whose failure is it?** If your run fails but the reference run passes, it's your code. If the reference run fails

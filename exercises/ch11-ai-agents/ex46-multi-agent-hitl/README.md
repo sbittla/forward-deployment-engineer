@@ -13,7 +13,8 @@ logs, draft a customer email, and — only with a human's OK — issue a refund.
 specialised workers execute steps; risky steps pause for approval. Everything is audited.
 
 ## Your task
-`Orchestrator(planner_llm, workers: dict[str, Callable[[str, dict], str]], approve: Callable[[Step], bool])`
+`Orchestrator(planner_llm, workers: dict[str, Callable[[str, dict], str]], approve: Callable[[Step], bool],
+always_approve=frozenset())`
 
 1. `plan(goal) -> list[Step]` — ask the planner (system prompt must list the available worker names) for a JSON
    array of `{"id", "worker", "task", "depends_on": [...], "requires_approval": bool}` and validate:
@@ -21,7 +22,10 @@ specialised workers execute steps; risky steps pause for approval. Everything is
    Return steps in a **topological order** (stable: original order among ready steps).
 2. `run(goal) -> RunReport` — plan, then execute each step:
    - if any dependency is not `done` → status `skipped`
-   - if `requires_approval` and `approve(step)` is False → `rejected`
+   - a step needs approval if `requires_approval` is true **or** its worker is in `always_approve` (policy in code,
+     which the plan can't switch off). Ask only for steps whose dependencies are all `done`. Approval fails closed:
+     only a return value of exactly `True` approves; `False`, `None`, any other value or an exception from
+     `approve` → `rejected`, and the worker is not called
    - else call `workers[step.worker](step.task, context)` where `context = {dep_id: output}` for its dependencies;
      success → `done` with output; exception → `failed` (output = `"<ExceptionType>: <msg>"`)
 3. `RunReport(steps, statuses: {id: status}, outputs: {id: str}, audit: list[str])` — audit lines like
@@ -34,19 +38,19 @@ Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each
 - **Prerequisites:** Python 3.11 or later and `pip install -r requirements.txt`, run once from the repository root.
   No API key or network access is needed.
 - **Run your work:** from the repository root, `pytest exercises/ch11-ai-agents/ex46-multi-agent-hitl`.
-- **Expected output:** all 7 tests fail against the starter; when you're done, all 7 pass.
-- **Check the reference solution:** `pytest --solutions exercises/ch11-ai-agents/ex46-multi-agent-hitl`: all 7 pass.
-- **Tests:** `test_orchestrator.py` (7 tests).
+- **Expected output:** all 12 tests fail against the starter; when you're done, all 12 pass.
+- **Check the reference solution:** `pytest --solutions exercises/ch11-ai-agents/ex46-multi-agent-hitl`: all 12 pass.
+- **Tests:** `test_orchestrator.py` (12 tests).
 - **Common failures:** `ModuleNotFoundError: No module named 'fde_kit'` means the command didn't run from the
   repository root. For a failing test, [HINTS.md](HINTS.md) says what it usually means.
 - **Whose failure is it?** If your run fails but the reference run passes, it's your code. If the reference run fails
   too, check the prerequisites (`python --version`, `node --version`); if they're met, it's a defect in the published
   solution, so report it with the repository's Errata issue template.
 - **Cleanup:** none. The tests write only to temporary directories, and `__pycache__` folders are ignored by git.
-- **Production caveats:** The orchestrator trusts the planner's `requires_approval` flag and keeps its audit trail in
-  an in-memory list. Production forces approval for risky workers by policy in code (Section 11.4's
-  `ALWAYS_APPROVE`), records who approved what, and writes the audit trail to an append-only, tamper-evident store
-  (ex56).
+- **Production caveats:** Without `always_approve`, the orchestrator trusts the planner's `requires_approval` flag
+  (`test_boundary_approval_follows_plan_flag`), and the audit trail is an in-memory list that doesn't record who
+  approved. Production sets `always_approve` for every risky worker (Section 11.4's `ALWAYS_APPROVE`), records the
+  approver's identity, and writes the audit trail to an append-only, tamper-evident store (ex56).
 
 ## Prompt kit
 **Learn (tutor prompt)**

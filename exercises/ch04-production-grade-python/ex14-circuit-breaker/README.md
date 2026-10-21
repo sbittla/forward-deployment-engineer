@@ -24,6 +24,12 @@ pile up waiting on 30-second timeouts and the whole app goes down with it. Conta
 2. `Bulkhead(max_concurrent)` — a context manager guarding a resource. Entering when `max_concurrent` holders are
    already inside raises `BulkheadFull` immediately (no waiting). Must be thread-safe.
 
+### Fault-injection tests
+The `test_fault_*` tests replay a 60-second outage with one caller a second for 100 seconds: the dependency may see
+at most the threshold plus one trial per `reset_timeout` while it is down, most callers fail fast, and the breaker
+closes once it recovers. A second test hangs the half-open trial call and checks that concurrent callers get
+`CircuitOpenError` instead of reaching the dependency (exactly one trial is in flight).
+
 ## Field notes
 Pair breakers with a useful fallback: "Policy lookup is temporarily unavailable — here is the cached clause from
 yesterday" beats a spinner.
@@ -35,10 +41,10 @@ Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each
 - **Prerequisites:** Python 3.11 or later and `pip install -r requirements.txt`, run once from the repository root.
   No API key or network access is needed.
 - **Run your work:** from the repository root, `pytest exercises/ch04-production-grade-python/ex14-circuit-breaker`.
-- **Expected output:** all 6 tests fail against the starter; when you're done, all 6 pass.
+- **Expected output:** all 8 tests fail against the starter; when you're done, all 8 pass.
 - **Check the reference solution:** `pytest --solutions exercises/ch04-production-grade-python/ex14-circuit-breaker`:
-  all 6 pass.
-- **Tests:** `test_breaker.py` (6 tests).
+  all 8 pass.
+- **Tests:** `test_breaker.py` (8 tests).
 - **Common failures:** `ModuleNotFoundError: No module named 'fde_kit'` means the command didn't run from the
   repository root. For a failing test, [HINTS.md](HINTS.md) says what it usually means.
 - **Whose failure is it?** If your run fails but the reference run passes, it's your code. If the reference run fails

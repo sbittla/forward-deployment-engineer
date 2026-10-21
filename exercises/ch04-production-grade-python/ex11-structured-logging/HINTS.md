@@ -41,3 +41,6 @@ Create one module-level `contextvars.ContextVar("correlation_id", default=None)`
 | `test_generated_and_nested` | Outer id not restored after the inner block (no token reset), or id isn't `uuid4().hex` |
 | `test_redaction_nested` | Redaction doesn't recurse into lists, or compares keys case-sensitively |
 | `test_exception_and_no_duplicate_handlers` | A handler added on every `get_logger` call, so each record is written twice |
+| `test_fault_each_injected_failure_logged_with_correlation_id` | Correlation id read when the logger is created instead of in `format`, or exception info dropped |
+| `test_fault_concurrent_failures_keep_their_own_correlation_id` | Correlation id stored in a global or thread-local instead of a `ContextVar` |
+| `test_fault_exception_inside_block_restores_outer_id` | The id is restored after `yield` without a `finally`, so an exception skips the reset |

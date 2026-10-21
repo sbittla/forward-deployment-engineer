@@ -43,6 +43,12 @@ def blame_lint(text: str) -> list[str]:
 
 
 def render_postmortem(title, events, root_cause, contributing, went_well, actions) -> str:
+    if not root_cause.strip():
+        raise ValueError("a postmortem needs a root cause")
+    if not actions:
+        raise ValueError("a postmortem needs at least one action item")
+    if not {"detected", "resolved"} <= {e["type"] for e in events}:
+        raise ValueError("the timeline needs a detected and a resolved event")
     flagged = blame_lint(" ".join([root_cause, *contributing]))
     if flagged:
         raise ValueError(f"blameful language: {flagged}")

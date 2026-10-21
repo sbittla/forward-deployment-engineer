@@ -14,7 +14,7 @@ def reconcile(client, store: dict, since: str) -> int:
 
 
 class WebhookReceiver:
-    def __init__(self, secret: str, clock=time.time, tolerance: int = 300, dedupe_ttl: int = 3600,
+    def __init__(self, secret: str | list[str], clock=time.time, tolerance: int = 300, dedupe_ttl: int = 3600,
                  store: dict | None = None):
         self.secret = secret
         self.clock = clock

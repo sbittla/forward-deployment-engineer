@@ -104,3 +104,65 @@ def test_bulkhead_threads(impl):
     for t in ts:
         t.join()
     assert results.count("in") == 3 and results.count("full") == 3
+
+
+# Fault injection: an outage, a recovery and concurrent callers during the half-open trial
+
+def test_fault_outage_load_on_dependency_is_bounded(impl):
+    # The dependency is down from t=0 to t=60 and callers arrive once a second for 100 s. Without a breaker it
+    # would take 60 failing calls; with one, it sees the threshold plus one trial per reset timeout.
+    clk = Clock()
+    cb = impl.CircuitBreaker(failure_threshold=3, reset_timeout=10, clock=clk)
+    hits = []
+
+    def dependency():
+        hits.append(clk.t)
+        if clk.t < 60:
+            raise ConnectionError("down")
+        return "ok"
+
+    outcomes = []
+    for second in range(100):
+        clk.t = float(second)
+        try:
+            outcomes.append(cb.call(dependency))
+        except impl.CircuitOpenError:
+            outcomes.append("fast-fail")
+        except ConnectionError:
+            outcomes.append("error")
+    during_outage = [t for t in hits if t < 60]
+    assert len(during_outage) <= 3 + 60 // 10
+    assert outcomes.count("fast-fail") >= 50
+    assert cb.state == "closed" and outcomes[-30:] == ["ok"] * 30
+
+
+def test_fault_half_open_admits_one_trial_under_concurrency(impl):
+    # While the single trial call hangs, every other caller fails fast instead of piling onto the dependency.
+    clk = Clock()
+    cb = impl.CircuitBreaker(failure_threshold=1, reset_timeout=10, clock=clk)
+    with pytest.raises(ConnectionError):
+        cb.call(boom)
+    clk.t = 10
+    gate, entered, trial_calls = threading.Event(), threading.Event(), []
+
+    def slow_trial():
+        trial_calls.append(1)
+        entered.set()
+        gate.wait(2)
+        return "ok"
+
+    results = []
+    trial = threading.Thread(target=lambda: results.append(cb.call(slow_trial)), daemon=True)
+    trial.start()
+    assert entered.wait(2)
+    rejected = 0
+    for _ in range(5):
+        try:
+            cb.call(slow_trial)
+        except impl.CircuitOpenError:
+            rejected += 1
+        except Exception:
+            pass
+    gate.set()
+    trial.join(2)
+    assert rejected == 5 and trial_calls == [1] and results == ["ok"] and cb.state == "closed"

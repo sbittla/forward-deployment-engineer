@@ -48,3 +48,42 @@ def test_hybrid_calls_with_depth(impl):
 
     impl.hybrid_search("q", kw, kw, k=3, depth=7)
     assert seen == [7, 7]
+
+
+ADJ = ["adjusters"]
+ACL_DOCS = [
+    ("nw-claims", "claims must be filed within 30 days", {"tenant": "northwind", "groups": ADJ}),
+    ("acme-pricing", "claims filed within 30 days get the premium pricing tier", {"tenant": "acme", "groups": ADJ}),
+    ("nw-siu", "fraud referral notes for claims under investigation", {"tenant": "northwind", "groups": ["siu"]}),
+    ("no-acl", "claims filed within 30 days pricing tier", None),
+    ("no-tenant", "claims filed within 30 days premium pricing tier", {"groups": ADJ}),
+    ("no-groups", "claims filed within 30 days premium pricing", {"tenant": "northwind", "groups": []}),
+]
+QUERY = "claims filed within 30 days premium pricing tier"
+
+
+def acl_index(impl):
+    vi = impl.VectorIndex()
+    for doc_id, text, acl in ACL_DOCS:
+        vi.add(doc_id, text, acl=acl)
+    return vi
+
+
+def test_search_as_never_crosses_tenants(impl):
+    vi = acl_index(impl)
+    assert vi.search(QUERY, k=1)[0][0] != "nw-claims"  # unfiltered, a foreign or untagged chunk wins
+    nw = vi.search_as({"tenant": "northwind", "groups": ADJ}, QUERY, k=10)
+    assert [d for d, _ in nw] == ["nw-claims"]
+    assert dict(nw)["nw-claims"] == dict(vi.search(QUERY, k=10))["nw-claims"]  # same score as search
+    assert [d for d, _ in vi.search_as({"tenant": "acme", "groups": ADJ}, QUERY, k=10)] == ["acme-pricing"]
+
+
+def test_search_as_fails_closed(impl):
+    vi = acl_index(impl)
+    everyone = {"tenant": "northwind", "groups": ["adjusters", "siu"]}
+    ids = [d for d, _ in vi.search_as(everyone, QUERY + " fraud referral", k=10)]
+    assert set(ids) == {"nw-claims", "nw-siu"}  # no ACL, no tenant or no groups: never returned
+    assert vi.search_as({"tenant": "northwind", "groups": []}, QUERY, k=10) == []
+    for user in ({"groups": ADJ}, {"tenant": "", "groups": ADJ}, {}):
+        with pytest.raises(PermissionError):
+            vi.search_as(user, QUERY, k=10)

@@ -68,7 +68,7 @@ def test_pseudonymise_is_keyed_and_stable(impl):
     token = impl.pseudonymise("Ana@Example.com", KEY)
     assert token == hmac.new(KEY, b"ana@example.com", hashlib.sha256).hexdigest()[:32]
     assert impl.pseudonymise(" ana@example.com ", KEY) == token  # normalised before hashing
-    assert impl.pseudonymise("Ana@Example.com", b"another-key") != token
+    assert impl.pseudonymise("Ana@Example.com", b"another-pseudonym-key") != token
     assert token != hashlib.sha256(b"ana@example.com").hexdigest()[:32]  # not a plain hash
 
 
@@ -103,3 +103,11 @@ def test_contract_rejects_unknown_blocking_check(impl):
     bad = {**CONTRACT, "checks_blocking": ["row_count_between(1,10)"]}
     with pytest.raises(ValueError, match="unknown blocking check: row_count_between"):
         impl.checks_from_contract(bad)
+
+
+def test_pseudonymise_rejects_weak_key(impl):
+    # Fail closed: a missing or short key would make tokens a plain, dictionary-attackable hash.
+    import pytest
+    for key in (b"", b"short", None):
+        with pytest.raises(ValueError, match="key must be at least 16 bytes"):
+            impl.pseudonymise("ana@example.com", key)

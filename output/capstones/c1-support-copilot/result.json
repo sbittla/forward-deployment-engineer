@@ -3,15 +3,31 @@
   "status": "PASS",
   "problems": [],
   "tests": {
-    "passed": 17,
+    "passed": 42,
     "failed": 0,
     "error": 0,
     "skipped": 0
   },
-  "declared": 16,
-  "ran": 17,
-  "starter_failing": 17,
+  "declared": 35,
+  "ran": 42,
+  "starter_failing": 42,
   "cases": [
+    {
+      "test": "py:test_tool_requires_authorization",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_tool_requires_valid_approval",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_tool_is_idempotent",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_execution_budget_stops_runaway_tool_calls",
+      "status": "passed"
+    },
     {
       "test": "py:test_http_api",
       "status": "passed"
@@ -21,11 +37,35 @@
       "status": "passed"
     },
     {
+      "test": "py:test_deliverables[architecture.md]",
+      "status": "passed"
+    },
+    {
       "test": "py:test_deliverables[discovery_brief.md]",
       "status": "passed"
     },
     {
+      "test": "py:test_deliverables[engagement_charter.md]",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_deliverables[evaluation_report.md]",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_deliverables[final_readout.md]",
+      "status": "passed"
+    },
+    {
       "test": "py:test_deliverables[runbook.md]",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_deliverables[test_report.md]",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_deliverables[threat_model.md]",
       "status": "passed"
     },
     {
@@ -69,6 +109,22 @@
       "status": "passed"
     },
     {
+      "test": "py:test_eval_reports_refusal_recall_and_slices",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_v0_fails_the_gates",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_remediated_build_passes_every_gate",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_go_no_go_compares_value_with_baseline",
+      "status": "passed"
+    },
+    {
       "test": "py:test_chunks_keep_section_paths",
       "status": "passed"
     },
@@ -78,6 +134,50 @@
     },
     {
       "test": "py:test_coverage_definition",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_model_timeout_retries_once_then_degrades",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_retrieval_outage_escalates_without_model_call",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_load_model_reports_latency_and_cost_per_success",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_burn_rate_alerts",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_canary_rolls_back_on_quality_or_leak",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_staged_rollout_rolls_back_automatically",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_cross_tenant_chunks_never_retrieved",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_restricted_groups_and_missing_acl_fail_closed",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_copilot_without_principal_fails_closed",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_incremental_sync_reindexes_only_changes",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_sync_blocks_empty_document_and_keeps_previous",
       "status": "passed"
     }
   ]

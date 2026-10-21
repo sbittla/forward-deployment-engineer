@@ -3,14 +3,14 @@
   "status": "PASS",
   "problems": [],
   "tests": {
-    "passed": 9,
+    "passed": 21,
     "failed": 0,
     "error": 0,
     "skipped": 0
   },
-  "declared": 6,
-  "ran": 9,
-  "starter_failing": 9,
+  "declared": 11,
+  "ran": 21,
+  "starter_failing": 21,
   "cases": [
     {
       "test": "py:test_token_roundtrip",
@@ -46,6 +46,54 @@
     },
     {
       "test": "py:test_obo",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_alg_confusion_rejected[none]",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_alg_confusion_rejected[None0]",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_alg_confusion_rejected[NONE]",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_alg_confusion_rejected[RS256]",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_alg_confusion_rejected[ES256]",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_alg_confusion_rejected[HS512]",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_alg_confusion_rejected[]",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_alg_confusion_rejected[None1]",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_expired_wrong_audience_issuer_and_malformed_rejected",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_tampered_signature_rejected",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_kid_selects_key_during_rotation",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_missing_acl_fails_closed",
       "status": "passed"
     }
   ]

@@ -14,9 +14,11 @@ class LoadReport:
     p95: float
     p99: float
     max: float
+    concurrency: int = 0
+    think_time_s: float = 0.0
 
 
-def run_load(fn, total: int, concurrency: int) -> LoadReport:
+def run_load(fn, total: int, concurrency: int, think_time_s: float = 0.0) -> LoadReport:
     raise NotImplementedError
 
 
@@ -29,4 +31,8 @@ def max_rps(concurrency: int, avg_latency_s: float) -> float:
 
 
 def stage_breakdown(traces: list[dict]) -> list[tuple[str, float]]:
+    raise NotImplementedError
+
+
+def report_line(rep: LoadReport, label: str, arrival_rps: float | None = None) -> str:
     raise NotImplementedError

@@ -72,3 +72,13 @@ def test_method_and_path(server):
 def test_internal_error_does_not_leak(server):
     status, _, body = call(server + "/v1/answer", "POST", {"question": "explode"}, AUTH)
     assert status == 500 and body["error"] == "internal error" and "hunter2" not in json.dumps(body)
+
+
+def test_auth_checked_before_body_is_parsed(server):
+    # Unauthenticated requests get 401 whatever their body: the server does no parsing or size work for them.
+    q = {"question": "hi"}
+    assert call(server + "/v1/answer", "POST", b"not json", {"Authorization": "Bearer nope"})[0] == 401
+    assert call(server + "/v1/answer", "POST", b"x" * 70000, {"Authorization": "Bearer nope"})[0] == 401
+    assert call(server + "/v1/answer", "POST", q, {"Authorization": "Basic good-token"})[0] == 401
+    assert call(server + "/v1/answer", "POST", q, {"Authorization": "Bearer "})[0] == 401
+    assert call(server + "/v1/answer", "POST", q, {"Authorization": "Bearer good-token-and-more"})[0] == 401

@@ -50,3 +50,4 @@ A dict of `path -> allowed methods` makes steps 2 and 3 one lookup each.
 | `test_too_large` | Body read before the size check, or the 413 sent without draining the request |
 | `test_method_and_path` | 404 and 405 confused: a known path with the wrong method must be 405 |
 | `test_internal_error_does_not_leak` | Exception text included in the 500 body |
+| `test_auth_checked_before_body_is_parsed` | Size or JSON checks run before auth, or the token matched by prefix instead of exactly |

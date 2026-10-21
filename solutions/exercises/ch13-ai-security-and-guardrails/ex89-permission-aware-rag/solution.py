@@ -35,35 +35,46 @@ def _sign(signing_input: str, secret: str) -> str:
     return _b64e(hmac.new(secret.encode(), signing_input.encode(), hashlib.sha256).digest())
 
 
-def make_token(claims: dict, secret: str) -> str:
-    head = _b64e(json.dumps({"alg": "HS256", "typ": "JWT"}).encode())
+def make_token(claims: dict, secret: str, kid: str | None = None) -> str:
+    header = {"alg": "HS256", "typ": "JWT"} | ({"kid": kid} if kid is not None else {})
+    head = _b64e(json.dumps(header).encode())
     body = _b64e(json.dumps(claims).encode())
     return f"{head}.{body}.{_sign(f'{head}.{body}', secret)}"
 
 
-def verify_id_token(token: str, secret: str, issuer: str, audience: str, now: int) -> dict:
+def verify_id_token(token: str, secret: str | dict[str, str], issuer: str, audience: str, now: int) -> dict:
     try:
         head_s, body_s, sig = token.split(".")
         header, claims = json.loads(_b64d(head_s)), json.loads(_b64d(body_s))
     except (ValueError, json.JSONDecodeError):
         raise AuthError("malformed token") from None
+    if not (isinstance(header, dict) and isinstance(claims, dict)):
+        raise AuthError("malformed token")
     if header.get("alg") != "HS256":
         raise AuthError(f"unsupported alg {header.get('alg')!r}")
-    if not hmac.compare_digest(sig, _sign(f"{head_s}.{body_s}", secret)):
+    if isinstance(secret, dict):                      # a key set during rotation: the kid picks the key
+        if header.get("kid") not in secret:
+            raise AuthError(f"unknown kid {header.get('kid')!r}")
+        secret = secret[header["kid"]]
+    if not hmac.compare_digest(sig.encode(), _sign(f"{head_s}.{body_s}", secret).encode()):
         raise AuthError("bad signature")
     if claims.get("iss") != issuer:
         raise AuthError("wrong issuer")
     aud = claims.get("aud")
     if audience not in (aud if isinstance(aud, list) else [aud]):
         raise AuthError("wrong audience")
-    if claims.get("exp", 0) <= now:
-        raise AuthError("token expired")
-    if "nbf" in claims and claims["nbf"] > now:
+    exp = claims.get("exp")
+    if not isinstance(exp, (int, float)) or exp <= now:     # a missing exp fails closed
+        raise AuthError("token expired or missing exp")
+    nbf = claims.get("nbf")
+    if nbf is not None and (not isinstance(nbf, (int, float)) or nbf > now):
         raise AuthError("token not yet valid")
     return claims
 
 
 def allowed(doc_acl: dict, principal: Principal) -> bool:
+    if not isinstance(doc_acl, dict):                 # a missing ACL denies: fail closed
+        return False
     groups = set(principal.groups)
     if groups & set(doc_acl.get("deny_groups", [])):
         return False
@@ -74,7 +85,7 @@ def allowed(doc_acl: dict, principal: Principal) -> bool:
 
 
 def secure_search(principal: Principal, query: str, docs: list[dict], search_fn, k: int):
-    permitted = [d for d in docs if allowed(d.get("acl", {}), principal)]   # filter BEFORE ranking
+    permitted = [d for d in docs if allowed(d.get("acl"), principal)]   # filter BEFORE ranking
     results = search_fn(query, permitted, k)
     audit = {"user": principal.user, "query": query, "candidates": len(docs), "permitted": len(permitted),
              "denied": len(docs) - len(permitted)}

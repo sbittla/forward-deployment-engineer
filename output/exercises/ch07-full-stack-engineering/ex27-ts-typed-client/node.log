@@ -1,9 +1,9 @@
 $ node --test exercises/ch07-full-stack-engineering/ex27-ts-typed-client/client.test.ts
-✔ primitives (5.155838ms)
-✔ nested paths (0.935214ms)
-✔ extra keys dropped, optional, literal (1.515162ms)
-✔ client validates and sends headers (0.973123ms)
-✔ client rejects drifted schema and http errors (0.910205ms)
+✔ primitives (2.304752ms)
+✔ nested paths (0.627939ms)
+✔ extra keys dropped, optional, literal (1.095006ms)
+✔ client validates and sends headers (0.902675ms)
+✔ client rejects drifted schema and http errors (1.331734ms)
 ℹ tests 5
 ℹ suites 0
 ℹ pass 5
@@ -11,4 +11,4 @@ $ node --test exercises/ch07-full-stack-engineering/ex27-ts-typed-client/client.
 ℹ cancelled 0
 ℹ skipped 0
 ℹ todo 0
-ℹ duration_ms 503.896226
+ℹ duration_ms 411.74431

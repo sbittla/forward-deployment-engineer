@@ -45,3 +45,7 @@ returns: unknown tool, side-effect replay, invalid arguments, exception, success
 | `test_exception_sanitised` | Exception message leaked into the result |
 | `test_truncation` | Truncation count wrong, or the suffix format differs |
 | `test_side_effect_once_per_call_id` | Replay cache keyed by tool name or arguments instead of `call_id` |
+| `test_malformed_arguments_rejected` | `args` assumed to be a dict, so a string or `None` crashes instead of failing validation |
+| `test_least_privilege_dispatch_as` | Allow by default when `roles` is missing; unknown tool reported as unknown instead of not permitted; `specs_for` lists every tool |
+| `test_idempotency_key_runs_once_across_call_ids` | Key checked before validation or ignored; replayed result keeps the first `call_id` |
+| `test_audit_entry_per_call_including_denied` | Refused, invalid or replayed calls not logged; `audit_log` returns the internal list instead of a copy |

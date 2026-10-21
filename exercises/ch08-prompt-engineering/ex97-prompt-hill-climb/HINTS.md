@@ -46,3 +46,8 @@ off the test set first. Run the exact test case (seed 7) to confirm your slicing
 | `test_test_split_scored_once` | Test cases evaluated during the search |
 | `test_overfit_gap` | Gap computed as test minus train, or not rounded |
 | `test_mcnemar` | One-sided tail; concordant pairs counted; length mismatch not rejected |
+| `test_prompt_version_and_dataset_hash` | Hash taken over `str(cases)` or without `sort_keys=True`; digest not cut to 12 characters |
+| `test_repeat_evaluate_reports_spread` | The model reset or re-seeded between runs; `spread` computed as a standard deviation |
+| `test_wilson_interval` | The plain normal interval `p ± z·√(p(1−p)/n)`, which collapses to a point at 0% and 100% |
+| `test_regression_gate` | Protected cases checked only when the pass rate drops; `max_drop` ignored |
+| `test_experiment_record` | Scored on the whole set or the train split instead of the held-out test split |

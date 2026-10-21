@@ -60,13 +60,24 @@ Copy this into `starter/deliverables/scorecard.md` and fill it in.
 
 ## 4. Per-capstone criteria
 
-### C1 · Enterprise support copilot
-- **Required artefacts:** the `copilot/` modules, `discovery_brief.md`, `runbook.md`, a generated readout.
-- **Acceptance criteria:** golden-set pass rate ≥ 90%; citation precision ≥ 95%; zero answers to unanswerable
-  questions; per-question model spend within $0.02.
+### C1 · Enterprise support copilot (signature capstone)
+- **Required artefacts:** the `copilot/` modules; `discovery_brief.md`, `engagement_charter.md`, `architecture.md`,
+  `threat_model.md`, `evaluation_report.md`, `test_report.md`, `runbook.md` and `final_readout.md`; a generated
+  readout and a generated go/no-go (`golive.render_decision`).
+- **Acceptance criteria:** set in the charter and carried unchanged to the readout. Objective gates, computed by
+  `golive.check_gates` (a missing measurement fails): golden-set pass rate ≥ 90%; intent accuracy ≥ 90%; citation
+  precision ≥ 95%; retrieval recall ≥ 90%; zero answers to unanswerable questions; over-refusal ≤ 10%; zero
+  permission leaks across the security probes; simulated p95 ≤ 4 s; cost per successful answer ≤ $0.025; worst-case
+  spend per question within $0.02. Value: handle time against the 11-minute baseline and the 7-minute target,
+  measured against a control group.
 - **Capstone gates:** no PII in any prompt sent to the model (negative test with PII in the question); the copilot
-  abstains rather than answers when retrieval is weak; API errors never leak internals.
-- **Test evidence:** `test_c1_ingest_retrieval.py`, `test_c1_copilot.py`; the eval report.
+  abstains rather than answers when retrieval is weak; no chunk from another tenant, a restricted group or a document
+  without an ACL reaches the caller, and no principal means no retrieval; no claim review opens without another
+  supervisor's approval, twice for one key, or beyond the execution budget; a model timeout or index outage degrades
+  safely; the canary rolls back on any leak or false answer; v0 (`naive=True`) fails the gates; API errors never
+  leak internals.
+- **Test evidence:** all eight `tests/test_c1_*.py` files; the evaluation report with v0 against v1; the test report
+  with failure injection and the load model; the computed go/no-go.
 
 ### C2 · Agentic order operations over MCP
 - **Required artefacts:** the `opsagent/` modules, `design_doc.md`, `runbook.md`, `product_feedback.md`.

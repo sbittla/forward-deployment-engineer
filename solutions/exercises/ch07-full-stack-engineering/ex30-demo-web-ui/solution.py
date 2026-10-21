@@ -1,3 +1,4 @@
+import hmac
 import json
 import re
 import time
@@ -71,6 +72,7 @@ BANNER = ('<p id="demo-banner" style="background:#fff3cd;border:1px solid #e0c06
 
 
 UNAVAILABLE = "The assistant is unavailable."
+MAX_BODY_BYTES = 64 * 1024
 
 
 def sse(event: str, data: dict) -> bytes:
@@ -106,7 +108,7 @@ def _valid_history(h):
         isinstance(m, dict) and m.get("role") in ("user", "assistant") and isinstance(m.get("content"), str) for m in h)
 
 
-def make_app(llm, demo_mode: bool = True) -> ThreadingHTTPServer:
+def make_app(llm, demo_mode: bool = True, api_token: str | None = None) -> ThreadingHTTPServer:
     page = PAGE.replace("__BANNER__", BANNER if demo_mode else "").encode()
 
     class Handler(BaseHTTPRequestHandler):
@@ -132,7 +134,19 @@ def make_app(llm, demo_mode: bool = True) -> ThreadingHTTPServer:
             if self.path not in ("/api/chat", "/api/chat/stream"):
                 return self._json(404, {"error": "not found"})
             try:
-                body = json.loads(self.rfile.read(int(self.headers.get("Content-Length") or 0)))
+                length = int(self.headers.get("Content-Length") or 0)
+            except ValueError:
+                length = -1
+            if not 0 <= length <= MAX_BODY_BYTES:  # refused before reading: the size is the client's claim
+                self.close_connection = True
+                return self._json(413, {"error": "body too large"})
+            raw = self.rfile.read(length)
+            if api_token is not None:  # checked before the body is parsed or any tokens are spent
+                given = self.headers.get("Authorization", "")
+                if not hmac.compare_digest(given.encode(), f"Bearer {api_token}".encode()):
+                    return self._json(401, {"error": "unauthorized"})
+            try:
+                body = json.loads(raw)
             except (json.JSONDecodeError, UnicodeDecodeError):
                 return self._json(400, {"error": "body must be JSON"})
             q = body.get("q") if isinstance(body, dict) else None

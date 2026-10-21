@@ -3,14 +3,14 @@
   "status": "PASS",
   "problems": [],
   "tests": {
-    "passed": 7,
+    "passed": 9,
     "failed": 0,
     "error": 0,
     "skipped": 0
   },
-  "declared": 7,
-  "ran": 7,
-  "starter_failing": 7,
+  "declared": 9,
+  "ran": 9,
+  "starter_failing": 9,
   "cases": [
     {
       "test": "py:test_rules_inv1",
@@ -38,6 +38,14 @@
     },
     {
       "test": "py:test_readout",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_injected_reply_cannot_add_or_override",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_exit_gate",
       "status": "passed"
     }
   ]

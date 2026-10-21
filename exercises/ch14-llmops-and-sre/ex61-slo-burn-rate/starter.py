@@ -23,3 +23,6 @@ class SLO:
 
     def budget_remaining(self, requests, now, period_s=30 * 86400) -> float:
         raise NotImplementedError
+
+    def canary_action(self, canary_requests, now, window_s=HOUR, max_burn=2.0, min_requests=500) -> str:
+        raise NotImplementedError

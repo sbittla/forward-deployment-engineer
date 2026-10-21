@@ -23,6 +23,13 @@ request-rate limit.
 
 **Errors:** `TokenBucket` raises `ValueError` when `rate <= 0` or `capacity < 1`; `gather_limited` raises `ValueError` when `concurrency < 1` (a zero-size semaphore would wait forever).
 
+### Fault-injection tests
+The `test_fault_*` tests inject faults into a batch: two calls that hang forever, each bounded by `asyncio.timeout()`
+inside its factory (the `TimeoutError` lands in its slot and the semaphore slot is released, so the batch still
+finishes); a seeded 25% of calls failing under a `TokenBucket` (every other slot keeps its own result, in order);
+and a batch canceled mid-flight (every started call sees the cancellation and runs its cleanup, and no new call
+starts).
+
 ## Field notes
 Measure the provider's actual limits (requests *and* tokens per minute) in the customer's tenant; they are often
 lower than the docs because of org-level quotas.
@@ -34,10 +41,10 @@ Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each
 - **Prerequisites:** Python 3.11 or later and `pip install -r requirements.txt`, run once from the repository root.
   No API key or network access is needed.
 - **Run your work:** from the repository root, `pytest exercises/ch04-production-grade-python/ex12-async-rate-limit`.
-- **Expected output:** all 6 tests fail against the starter; when you're done, all 6 pass.
+- **Expected output:** all 9 tests fail against the starter; when you're done, all 9 pass.
 - **Check the reference solution:**
-  `pytest --solutions exercises/ch04-production-grade-python/ex12-async-rate-limit`: all 6 pass.
-- **Tests:** `test_async.py` (6 tests).
+  `pytest --solutions exercises/ch04-production-grade-python/ex12-async-rate-limit`: all 9 pass.
+- **Tests:** `test_async.py` (9 tests).
 - **Common failures:** `ModuleNotFoundError: No module named 'fde_kit'` means the command didn't run from the
   repository root. For a failing test, [HINTS.md](HINTS.md) says what it usually means.
 - **Whose failure is it?** If your run fails but the reference run passes, it's your code. If the reference run fails

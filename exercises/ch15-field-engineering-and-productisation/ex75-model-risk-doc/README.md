@@ -23,16 +23,39 @@ automated_decision (bool), regulated_domain (bool), data_sources (list), model_p
    `"monitoring dashboard", "human review of samples"`; tier 1 adds `"independent validation", "MRM approval",
    "kill switch"` (cumulative, in that order).
 3. `validate(meta) -> list[str]` — `"missing:<key>"` for each absent/empty required key (all keys above except the
-   three booleans, which must be present but may be False); `"eval_below_threshold:<name>"` for evals whose
-   `value < threshold`; for tier 1, `"tier1_requires_human_oversight"` if `human_oversight` doesn't mention
+   three booleans, which must be present but may be False); `"eval_incomplete:<name>"` for an eval whose `value` or
+   `threshold` is missing or not a number (it fails closed: never a pass); `"eval_below_threshold:<name>"` for
+   complete evals whose `value < threshold`; for tier 1, `"tier1_requires_human_oversight"` if `human_oversight` doesn't mention
    `review` or `approve`.
 4. `render(meta) -> str` — markdown with headings, in order: `# Model risk document: <name> v<version>`,
    `## Summary` (owner, purpose, risk tier), `## Intended use`, `## Out of scope`, `## Data`, `## Evaluation`
-   (table `| Eval | Metric | Value | Threshold | Status |` with `PASS`/`FAIL`), `## Limitations`,
+   (table `| Eval | Metric | Value | Threshold | Status |` with `PASS`/`FAIL`; a missing value or threshold prints as
+   `None` and the row is `FAIL`), `## Limitations`,
    `## Monitoring`, `## Human oversight`, `## Required controls`, `## Approval` (a line
    `Status: BLOCKED (<n> issues)` if `validate` finds issues else `Status: READY FOR REVIEW`).
 
 Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
+
+## Compliance evidence map
+
+Chapter 15's Table 15.1 points here. A reviewer asks "show me"; answer with an artifact that a rerun reproduces, not a
+statement. Run each test from the repository root with `--solutions` to regenerate the evidence.
+
+| Control | Artifact that proves it | Exercise |
+|---|---|---|
+| Direct identifiers removed; dates, ages and ZIP codes generalized | `test_deidentify`, `test_elderly_and_restricted_zip` | ex72 |
+| The limit of free-text scrubbing is known and written down | `test_boundary_other_names_not_scrubbed`; the Production readiness panel in Section 15.3 | ex72 |
+| Retention purges old records; legal holds win | `test_retention` | ex72 |
+| Access is logged by purpose and identity, never contents; anonymous access fails | `test_access_log`, `test_access_log_fails_closed` | ex72 |
+| The model risk document is generated, tiered and blocks on a failed or incomplete evaluation | `render` output with its `Status:` line; `test_validate`, `test_validate_fails_closed` | ex75 |
+| Model output can't override or add fields, even from an injected document | `test_llm_fills_only_missing`, `test_injected_reply_cannot_add_or_override` | ex70 |
+| An accuracy claim carries its sample size and a decision rule | `exit_decision` output; `test_exit_gate` | ex70 |
+| Fine-tuning data has contact details redacted and no train/validation leakage | `test_to_example_merge_redact_trailing`, `test_split_stratified_no_overlap` | ex71 |
+| Agent-written code has no string-built SQL, path escape or logged token | `REVIEW.md`; `test_sql_injection`, `test_export_safe_and_quoted`, `test_token_not_logged` | ex87 |
+| One customer's names and contacts never reach another's output | `test_no_customer_names_in_library_code`, `test_other_customer` | ex67 |
+
+Tests prove the code does what it says; they don't prove the rule is the right one. Privacy, legal and MRM sign-off
+stay with the customer's people.
 
 ## Run and verify
 
@@ -40,10 +63,10 @@ Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each
   No API key or network access is needed.
 - **Run your work:** from the repository root,
   `pytest exercises/ch15-field-engineering-and-productisation/ex75-model-risk-doc`.
-- **Expected output:** all 4 tests fail against the starter; when you're done, all 4 pass.
+- **Expected output:** all 5 tests fail against the starter; when you're done, all 5 pass.
 - **Check the reference solution:**
-  `pytest --solutions exercises/ch15-field-engineering-and-productisation/ex75-model-risk-doc`: all 4 pass.
-- **Tests:** `test_model_risk.py` (4 tests).
+  `pytest --solutions exercises/ch15-field-engineering-and-productisation/ex75-model-risk-doc`: all 5 pass.
+- **Tests:** `test_model_risk.py` (5 tests).
 - **Common failures:** `ModuleNotFoundError: No module named 'fde_kit'` means the command didn't run from the
   repository root. For a failing test, [HINTS.md](HINTS.md) says what it usually means.
 - **Whose failure is it?** If your run fails but the reference run passes, it's your code. If the reference run fails

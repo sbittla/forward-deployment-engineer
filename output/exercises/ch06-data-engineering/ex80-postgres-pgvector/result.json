@@ -3,14 +3,14 @@
   "status": "PASS",
   "problems": [],
   "tests": {
-    "passed": 9,
+    "passed": 10,
     "failed": 0,
     "error": 0,
     "skipped": 0
   },
-  "declared": 4,
-  "ran": 9,
-  "starter_failing": 9,
+  "declared": 5,
+  "ran": 10,
+  "starter_failing": 10,
   "cases": [
     {
       "test": "py:test_ddl",
@@ -46,6 +46,10 @@
     },
     {
       "test": "py:test_knn",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_table_name_is_validated",
       "status": "passed"
     }
   ]

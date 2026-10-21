@@ -14,7 +14,7 @@ customer's locked-down Windows machine. You need a single-file web app: Python s
 HTML/JS frontend, a fake model by default so the demo **cannot** fail on Wi-Fi, and a visible banner saying so.
 
 ## Your task
-`make_app(llm, demo_mode: bool) -> ThreadingHTTPServer` (bind `127.0.0.1`, port 0):
+`make_app(llm, demo_mode: bool, api_token: str | None = None) -> ThreadingHTTPServer` (bind `127.0.0.1`, port 0):
 
 - `GET /` → `text/html; charset=utf-8` page containing:
   - `<form id="chat-form">` with an `<input name="q">` and a submit button
@@ -31,6 +31,13 @@ HTML/JS frontend, a fake model by default so the demo **cannot** fail on Wi-Fi, 
   answer, e.g. split after each word's trailing whitespace; the pieces concatenate to exactly `response.text`),
   then a `done` event. The connection closes after the stream.
 - Anything else → 404.
+- Both POST paths treat the request as untrusted, in this order, before any model call:
+  1. **Size.** If `Content-Length` isn't an integer from 0 to `MAX_BODY_BYTES` (module constant, `64 * 1024`), answer
+     `413 {"error": "body too large"}` without reading the body, and close the connection.
+  2. **Authentication on the stream.** When `api_token` is set, the `Authorization` header must equal
+     `Bearer <api_token>` (compare with `hmac.compare_digest`); otherwise answer `401 {"error": "unauthorized"}`.
+     With `api_token=None` (the local demo) no header is needed.
+  3. Then the JSON and 400 validation above.
 
 Two module-level helpers do the streaming, so they can be tested without a socket:
 
@@ -52,7 +59,7 @@ when it does not know.
 
 ## Field notes
 Demo with the fake model. `make_app` takes the model as a parameter, so a launcher can pass `fde_kit.get_llm()`,
-which returns the real client when `FDE_LIVE=1` is set, to show live behaviour if the network allows. Rehearse the
+which returns the real client when `FDE_LIVE=1` is set, to show live behavior if the network allows. Rehearse the
 failure path: what do you say if the real model is slow? A fake model scripted to raise shows the page's error
 message, and on the streaming endpoint the generic `error` event.
 
@@ -63,20 +70,21 @@ Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each
 - **Prerequisites:** Python 3.11 or later and `pip install -r requirements.txt`, run once from the repository root.
   No API key or network access is needed.
 - **Run your work:** from the repository root, `pytest exercises/ch07-full-stack-engineering/ex30-demo-web-ui`.
-- **Expected output:** all 13 tests fail against the starter; when you're done, all 13 pass.
+- **Expected output:** all 15 tests fail against the starter; when you're done, all 15 pass.
 - **Check the reference solution:** `pytest --solutions exercises/ch07-full-stack-engineering/ex30-demo-web-ui`: all
-  13 pass.
-- **Tests:** `test_demo_ui.py` (13 tests).
+  15 pass.
+- **Tests:** `test_demo_ui.py` (15 tests).
 - **Common failures:** `ModuleNotFoundError: No module named 'fde_kit'` means the command didn't run from the
   repository root. For a failing test, [HINTS.md](HINTS.md) says what it usually means.
 - **Whose failure is it?** If your run fails but the reference run passes, it's your code. If the reference run fails
   too, check the prerequisites (`python --version`, `node --version`); if they're met, it's a defect in the published
   solution, so report it with the repository's Errata issue template.
 - **Cleanup:** none. The tests write only to temporary directories, and `__pycache__` folders are ignored by git.
-- **Production caveats:** The demo server has no authentication, rate limits or per-user cost attribution, which is
-  why it binds to `127.0.0.1` only. A production backend for frontend authenticates the user's existing session,
-  reads the provider key from a secret store, enforces limits and request ids before any tokens are spent, and logs
-  upstream errors server-side while the browser gets only the generic message.
+- **Production caveats:** The optional `api_token` is one shared secret, not per-user authentication, and the server
+  has no rate limits or per-user cost attribution, which is why it binds to `127.0.0.1` only. A production backend
+  for frontend authenticates the user's existing session, reads the provider key from a secret store, enforces limits
+  and request ids before any tokens are spent, and logs upstream errors server-side while the browser gets only the
+  generic message.
 
 ## Prompt kit
 **Learn (tutor prompt)**

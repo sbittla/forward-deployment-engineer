@@ -46,6 +46,16 @@ def test_access_log(impl):
         impl.access_log_entry("analyst", "curiosity", ["a"], TODAY)
 
 
+def test_access_log_fails_closed(impl):
+    for user in ("", "   ", None):
+        with pytest.raises(ValueError):
+            impl.access_log_entry(user, "treatment", ["a"], TODAY)      # anonymous access is refused
+    with pytest.raises(ValueError):
+        impl.access_log_entry("dr.k", "Treatment ", ["a"], TODAY)       # purposes match exactly
+    e = impl.access_log_entry("dr.k", "operations", [REC["mrn"]], TODAY)
+    assert set(e) == {"user", "purpose", "record_count", "date"} and REC["mrn"] not in str(e)
+
+
 def test_boundary_other_names_not_scrubbed(impl):
     # Documented limit of the teaching subset: only the patient's own name parts are replaced.
     note = "Maria Lopez seen by Dr. Chen; her son Daniel will call back."

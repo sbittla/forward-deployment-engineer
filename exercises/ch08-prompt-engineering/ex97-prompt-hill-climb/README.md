@@ -32,6 +32,28 @@ A **model** is `(prompt, input) -> output`; a **grader** is `(output, expected) 
   passed and `c` = cases only the candidate passed, return `min(1, 2 × P(X ≤ min(b, c)))` for `X ~ Binomial(b + c, 0.5)`,
   rounded to 6 places; `1.0` when there are no discordant pairs; `ValueError` on length mismatch.
 
+### The experiment record
+These make a run reproducible and reviewable (Section 8.4). Hashes are the first 12 hex characters of a SHA-256.
+
+- `prompt_version(prompt) -> str`: hash of the prompt's UTF-8 text.
+- `dataset_hash(cases) -> str`: hash of `json.dumps(cases, sort_keys=True, ensure_ascii=False)`, so editing,
+  adding, removing or reordering a case changes it.
+- `repeat_evaluate(prompt, cases, model, grader, runs=3) -> dict`: call `evaluate` `runs` times and return
+  `{"runs", "scores", "mean", "spread"}` (`spread` = max − min; both rounded to 4 places). `ValueError` if `runs < 1`.
+  With a sampled model the spread is the noise floor `min_gain` must exceed.
+- `wilson_interval(passes, n, z=1.96) -> (low, high)`: the Wilson score interval for a pass rate, clipped to
+  `[0, 1]` and rounded to 4 places. `ValueError` unless `n >= 1` and `0 <= passes <= n`.
+- `regression_gate(base, cand, protected=frozenset(), max_drop=0.0) -> dict`: paired results in, `{"passed",
+  "broken", "reasons"}` out. `broken` lists the indices the baseline passed and the candidate failed. Add a reason
+  containing `below baseline` when the candidate's pass rate is less than the baseline's minus `max_drop`, and
+  `protected case <i> regressed` for each broken index in `protected`. `passed` is true when there are no reasons.
+  `ValueError` on length mismatch.
+- `experiment_record(name, base_prompt, cand_prompt, cases, model, grader, seed=0, test_frac=0.3,
+  protected=frozenset()) -> dict`: take the test half of `split(cases, test_frac, seed)`, `run` each prompt on it once,
+  and return `{"experiment", "dataset", "seed", "n_test", "baseline", "candidate", "mcnemar_p", "gate"}`. `baseline`
+  and `candidate` are `{"prompt" (its version), "passes", "rate", "ci95"}`; `gate` is `regression_gate` on the two
+  test-split result lists, with `protected` as indices into the test split.
+
 ## Field notes
 Greedy search over hand-written edits is crude, but it makes the team write their hypotheses down as edits. That
 habit matters more than the optimiser. With a live model, run each prompt several times: sampling noise can be larger
@@ -44,10 +66,10 @@ Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each
 - **Prerequisites:** Python 3.11 or later and `pip install -r requirements.txt`, run once from the repository root.
   No API key or network access is needed.
 - **Run your work:** from the repository root, `pytest exercises/ch08-prompt-engineering/ex97-prompt-hill-climb`.
-- **Expected output:** all 7 tests fail against the starter; when you're done, all 7 pass.
+- **Expected output:** all 12 tests fail against the starter; when you're done, all 12 pass.
 - **Check the reference solution:** `pytest --solutions exercises/ch08-prompt-engineering/ex97-prompt-hill-climb`:
-  all 7 pass.
-- **Tests:** `test_hill_climb.py` (7 tests).
+  all 12 pass.
+- **Tests:** `test_hill_climb.py` (12 tests).
 - **Common failures:** `ModuleNotFoundError: No module named 'fde_kit'` means the command didn't run from the
   repository root. For a failing test, [HINTS.md](HINTS.md) says what it usually means.
 - **Whose failure is it?** If your run fails but the reference run passes, it's your code. If the reference run fails
@@ -55,9 +77,11 @@ Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each
   solution, so report it with the repository's Errata issue template.
 - **Cleanup:** none. The tests write only to temporary directories, and `__pycache__` folders are ignored by git.
 - **Production caveats:** The model is a deterministic stub, so one run per case is enough and `min_gain=0.0` is
-  safe. With a live model, pin the model id, repeat runs per case, set `min_gain` above the run-to-run noise, freeze
-  the evaluation set by content hash, and keep an experiment record (Section 8.4) for every change that ships; a
-  p-value of 0.05 or more means no gain is claimed.
+  safe. With a live model, pin the model id, repeat runs per case (`repeat_evaluate`), set `min_gain` above the
+  run-to-run spread, freeze the evaluation set by content hash (`dataset_hash`), and keep an experiment record
+  (`experiment_record`, Section 8.4) for every change that ships; a p-value of 0.05 or more means no gain is claimed.
+  The held-out split here has 6 cases, so its 95% intervals are about 0.4 wide: enough to teach the method, far too
+  few to ship on.
 
 ## Prompt kit
 **Learn (tutor prompt)**

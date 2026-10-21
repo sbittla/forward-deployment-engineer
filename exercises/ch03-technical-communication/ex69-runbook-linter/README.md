@@ -29,6 +29,11 @@ variables in order of first use).
 
 Then write `RUNBOOK.md` for the answer service (ex20/ex57/ex58) that passes the linter.
 
+The runbook is one page of the handover. [`examples/`](examples/) holds two more, filled in for the Northwind
+reference engagement (Section 3.6, Table 3.6; fictional, illustrative numbers): a handover document built on the
+playbook's operational readiness review, and an architecture decision record that passes ex90's `lint_adr`. They're
+reading material; no test depends on them.
+
 Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
 
 ## Run and verify

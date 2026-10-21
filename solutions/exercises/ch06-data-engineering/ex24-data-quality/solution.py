@@ -96,6 +96,8 @@ def run_checks(rows: list[dict], checks: list[Check]) -> Report:
 
 def pseudonymise(value: str, key: bytes) -> str:
     """Stable token for joins and counts; can't be reversed without the key."""
+    if not isinstance(key, bytes) or len(key) < 16:
+        raise ValueError("key must be at least 16 bytes")
     normalised = value.strip().lower().encode()
     return hmac.new(key, normalised, hashlib.sha256).hexdigest()[:32]
 

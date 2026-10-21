@@ -3,14 +3,14 @@
   "status": "PASS",
   "problems": [],
   "tests": {
-    "passed": 5,
+    "passed": 7,
     "failed": 0,
     "error": 0,
     "skipped": 0
   },
-  "declared": 5,
-  "ran": 5,
-  "starter_failing": 5,
+  "declared": 7,
+  "ran": 7,
+  "starter_failing": 7,
   "cases": [
     {
       "test": "py:test_vector_index",
@@ -30,6 +30,14 @@
     },
     {
       "test": "py:test_hybrid_calls_with_depth",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_search_as_never_crosses_tenants",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_search_as_fails_closed",
       "status": "passed"
     }
   ]

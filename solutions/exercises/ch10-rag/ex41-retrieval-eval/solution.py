@@ -53,3 +53,21 @@ def compare(a: dict, b: dict, names=("A", "B")) -> str:
         x, y = a["mean"][m], b["mean"][m]
         lines.append(f"| {m} | {x:.4f} | {y:.4f} | {y - x:+.4f} |")
     return "\n".join(lines) + "\n"
+
+
+def citation_precision(answers: list[dict]) -> float:
+    cited = [(d, set(a["supporting"])) for a in answers for d in a["citations"]]
+    if not cited:
+        return 0.0
+    return round(sum(1 for d, ok in cited if d in ok) / len(cited), 4)
+
+
+def abstention_report(results: list[dict]) -> dict:
+    answerable = [r for r in results if r["answerable"]]
+    unanswerable = [r for r in results if not r["answerable"]]
+    return {
+        "answerable": len(answerable),
+        "abstained_answerable": sum(1 for r in answerable if r["abstained"]),
+        "unanswerable": len(unanswerable),
+        "answered_unanswerable": sum(1 for r in unanswerable if not r["abstained"]),
+    }

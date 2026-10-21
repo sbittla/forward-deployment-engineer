@@ -46,3 +46,4 @@ has a count above 1.
 | `test_checks_from_contract` | Checks built in a different order; severity left at `error` for unlisted checks |
 | `test_contract_rejects_unknown_blocking_check` | Unknown names silently ignored instead of raising `ValueError` |
 | `test_markdown` | Header or row spacing differs from `\| name \| severity \| PASS/FAIL \| n \|` |
+| `test_pseudonymise_rejects_weak_key` | No key check, so an empty key quietly yields a guessable token; or the message differs |

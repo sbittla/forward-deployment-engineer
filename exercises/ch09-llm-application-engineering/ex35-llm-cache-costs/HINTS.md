@@ -53,3 +53,4 @@ as a test first ($0.0276 and $0.0195 per request) and make the numbers come out.
 | `test_unknown_model` | Unknown model priced at 0 instead of raising |
 | `test_cost_per_request_worked_example` | Cache-read price applied to documents too, or applied when `cached_prefix` is False; no `ValueError` for negative tokens |
 | `test_monthly_projection` | Hit rate not subtracted, total not rounded to 2 dp, or an out-of-range hit rate accepted |
+| `test_cross_tenant_requests_do_not_share_entries` | System prompt left out of the cache key, so one tenant receives another's cached answer |

@@ -54,3 +54,6 @@ Keep a dict of `event_id -> time first seen` for deduplication, and purge old en
 | `test_receiver_ignores_stale_redelivery` | `store` ignored, or `event["data"]` stored directly instead of through `apply_update` |
 | `test_boundary_replay_outside_window_is_stale` | Staleness not checked, or checked with the wrong sign, so a replay is accepted once its seen id expires |
 | `test_boundary_dedupe_is_per_process` | Seen ids kept in a class-level or module-level dict shared between receivers instead of per instance |
+| `test_rewritten_timestamp_is_rejected` | The MAC computed without `t`, or the timestamp checked before the signature |
+| `test_future_timestamp_is_stale` | `now - t > tolerance` without `abs`, so a future timestamp passes |
+| `test_rotation_accepts_either_secret_during_overlap` | A list of secrets treated as one string, or only the first secret checked |

@@ -3,14 +3,14 @@
   "status": "PASS",
   "problems": [],
   "tests": {
-    "passed": 6,
+    "passed": 9,
     "failed": 0,
     "error": 0,
     "skipped": 0
   },
-  "declared": 6,
-  "ran": 6,
-  "starter_failing": 6,
+  "declared": 9,
+  "ran": 9,
+  "starter_failing": 9,
   "cases": [
     {
       "test": "py:test_order_and_concurrency_bound",
@@ -34,6 +34,18 @@
     },
     {
       "test": "py:test_boundary_cancellation_propagates",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_fault_hung_calls_time_out_and_free_their_slots",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_fault_partial_failures_isolated_under_rate_limit",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_fault_cancel_midflight_cleans_up_every_started_call",
       "status": "passed"
     }
   ]

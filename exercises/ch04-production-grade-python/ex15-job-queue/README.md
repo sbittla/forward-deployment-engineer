@@ -28,6 +28,13 @@ Implement an in-memory `JobQueue(clock, max_attempts=3, base_backoff=2.0)`:
   `handlers[job.kind](job.payload)`, acks on success, fails on exception (unknown kinds fail with
   `"no handler for <kind>"`). Returns the number of jobs processed (successes + failures).
 
+### Fault-injection tests
+The `test_fault_*` tests inject three faults: a producer retry storm (50 enqueues over 5 idempotency keys make 5
+jobs); a handler that fails a seeded 50% of calls (every job ends done or dead, none runs more than `max_attempts`
+times, and each dead letter shows `attempts == max_attempts`); and a worker that performs the side effect and dies
+before `ack` (the job is redelivered after the lease expires, an idempotent handler keyed by job id sends nothing
+twice, and the dead worker's late `ack` raises `LeaseError`).
+
 ## Field notes
 Show the customer the dead-letter queue on day one. It is the difference between "the AI lost my email" and
 "three emails need a human — here they are".
@@ -39,10 +46,10 @@ Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each
 - **Prerequisites:** Python 3.11 or later and `pip install -r requirements.txt`, run once from the repository root.
   No API key or network access is needed.
 - **Run your work:** from the repository root, `pytest exercises/ch04-production-grade-python/ex15-job-queue`.
-- **Expected output:** all 6 tests fail against the starter; when you're done, all 6 pass.
-- **Check the reference solution:** `pytest --solutions exercises/ch04-production-grade-python/ex15-job-queue`: all 6
+- **Expected output:** all 9 tests fail against the starter; when you're done, all 9 pass.
+- **Check the reference solution:** `pytest --solutions exercises/ch04-production-grade-python/ex15-job-queue`: all 9
   pass.
-- **Tests:** `test_queue.py` (6 tests).
+- **Tests:** `test_queue.py` (9 tests).
 - **Common failures:** `ModuleNotFoundError: No module named 'fde_kit'` means the command didn't run from the
   repository root. For a failing test, [HINTS.md](HINTS.md) says what it usually means.
 - **Whose failure is it?** If your run fails but the reference run passes, it's your code. If the reference run fails

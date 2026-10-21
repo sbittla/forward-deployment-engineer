@@ -8,6 +8,10 @@ class Case:
     expected: object
     grader: str
     tags: list[str] = field(default_factory=list)
+    source: str = ""
+
+
+SOURCES = ("production", "expert", "red_team", "synthetic")
 
 
 @dataclass
@@ -62,4 +66,12 @@ def cost_per_success(cost_per_request: float, pass_rate: float) -> float:
 
 
 def find_leakage(cases: list[Case], examples: list[str]) -> list[str]:
+    raise NotImplementedError
+
+
+def provenance(cases: list[Case]) -> dict[str, int]:
+    raise NotImplementedError
+
+
+def mcnemar_exact(fixed: int, broken: int) -> float:
     raise NotImplementedError

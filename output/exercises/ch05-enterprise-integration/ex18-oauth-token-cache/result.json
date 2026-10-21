@@ -3,14 +3,14 @@
   "status": "PASS",
   "problems": [],
   "tests": {
-    "passed": 6,
+    "passed": 10,
     "failed": 0,
     "error": 0,
     "skipped": 0
   },
-  "declared": 6,
-  "ran": 6,
-  "starter_failing": 6,
+  "declared": 10,
+  "ran": 10,
+  "starter_failing": 10,
   "cases": [
     {
       "test": "py:test_caches_until_skew",
@@ -34,6 +34,22 @@
     },
     {
       "test": "py:test_boundary_persistent_401_costs_two_token_calls",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_invalid_client_fails_closed",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_idp_unreachable_fails_closed",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_token_endpoint_429_is_honored",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_rotated_secret_is_read_at_each_refresh",
       "status": "passed"
     }
   ]

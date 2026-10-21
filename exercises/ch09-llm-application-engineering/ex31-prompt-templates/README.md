@@ -19,9 +19,11 @@ produced which answer. Treat prompts like code: named, versioned, validated and 
 - `variables(name, version=None) -> set[str]`.
 - `render(name, version=None, **vars) -> Rendered` — `version=None` means highest semver (compare numerically:
   `1.10.0 > 1.9.0`). Missing variables → `KeyError` listing **all** missing names; unexpected variables →
-  `TypeError`. Values are inserted with `str()`.
+  `TypeError`. Values are inserted with `str()` in a single pass, so a value containing `{{language}}` stays
+  literal text and can't pull in another variable.
 - `Rendered(text, name, version, sha)` — `sha` is the first 12 hex chars of SHA-256 of the **template**
-  (not the rendered text) so logs can join answers to exact prompt versions.
+  (not the rendered text) so logs can join answers to exact prompt versions, and a log line of name, version and
+  sha carries no user data.
 - `diff(name, v1, v2) -> list[str]` — `difflib.unified_diff` of the two templates' lines (no line endings),
   with `fromfile=f"{name}@{v1}"`, `tofile=f"{name}@{v2}"`.
 
@@ -33,10 +35,10 @@ Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each
   No API key or network access is needed.
 - **Run your work:** from the repository root,
   `pytest exercises/ch09-llm-application-engineering/ex31-prompt-templates`.
-- **Expected output:** all 6 tests fail against the starter; when you're done, all 6 pass.
+- **Expected output:** all 8 tests fail against the starter; when you're done, all 8 pass.
 - **Check the reference solution:**
-  `pytest --solutions exercises/ch09-llm-application-engineering/ex31-prompt-templates`: all 6 pass.
-- **Tests:** `test_prompts.py` (6 tests).
+  `pytest --solutions exercises/ch09-llm-application-engineering/ex31-prompt-templates`: all 8 pass.
+- **Tests:** `test_prompts.py` (8 tests).
 - **Common failures:** `ModuleNotFoundError: No module named 'fde_kit'` means the command didn't run from the
   repository root. For a failing test, [HINTS.md](HINTS.md) says what it usually means.
 - **Whose failure is it?** If your run fails but the reference run passes, it's your code. If the reference run fails

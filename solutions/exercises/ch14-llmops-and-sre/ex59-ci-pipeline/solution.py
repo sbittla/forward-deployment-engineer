@@ -2,6 +2,9 @@ import re
 
 import yaml
 
+CLOUD_KEY = re.compile(r"secrets\.(AWS_ACCESS_KEY_ID|AWS_SECRET_ACCESS_KEY|AZURE_CLIENT_SECRET|AZURE_CREDENTIALS"
+                       r"|GCP_SA_KEY|GOOGLE_CREDENTIALS)\b")
+
 
 def _triggers(doc: dict) -> set[str]:
     on = doc.get("on", doc.get(True))
@@ -45,6 +48,8 @@ def lint_workflow(doc: dict) -> list[str]:
         if any(re.search(r"echo.*\$\{\{\s*secrets\.", line)
                for s in steps for line in str(s.get("run", "")).splitlines()):
             issues.append(f"secret-echo:{name}")
+        if CLOUD_KEY.search(str(job)):
+            issues.append(f"static-cloud-key:{name}")
         versions = job.get("strategy", {}).get("matrix", {}).get("python-version", [])
         if isinstance(versions, list) and len(versions) >= 2:
             has_matrix = True

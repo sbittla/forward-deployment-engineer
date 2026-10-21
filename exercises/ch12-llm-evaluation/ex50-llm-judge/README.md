@@ -18,7 +18,10 @@ LLM judge scales grading, but only if you check it agrees with humans and isn't 
    `ValueError`.
 2. `agreement(judge_scores, human_scores) -> dict` with `exact` (share equal), `within_1` (share |diff| ≤ 1), and
    `kappa`: Cohen's kappa on pass/fail where pass = score ≥ `threshold` (default 4). Round to 3 dp. If expected
-   agreement is 1, kappa is 1.0.
+   agreement is 1, kappa is 1.0. The same function measures **labeling agreement**: pass two experts' scores for
+   the same golden-set cases and report their kappa before trusting the labels (`test_labeler_agreement`). A judge
+   that always says "pass" when 90% of answers are good agrees 90% of the time and has a kappa of 0.0
+   (`test_always_pass_judge_has_zero_kappa`).
 3. `pairwise(llm, question, a, b) -> "A" | "B" | "tie"` — ask the judge twice with the answers in both orders; the
    model replies `"1"` or `"2"` (first/second shown). Return the winner only if both orders agree; otherwise `"tie"`
    (position bias).
@@ -30,9 +33,9 @@ Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each
 - **Prerequisites:** Python 3.11 or later and `pip install -r requirements.txt`, run once from the repository root.
   No API key or network access is needed.
 - **Run your work:** from the repository root, `pytest exercises/ch12-llm-evaluation/ex50-llm-judge`.
-- **Expected output:** all 9 tests fail against the starter; when you're done, all 9 pass.
-- **Check the reference solution:** `pytest --solutions exercises/ch12-llm-evaluation/ex50-llm-judge`: all 9 pass.
-- **Tests:** `test_judge.py` (9 tests).
+- **Expected output:** all 11 tests fail against the starter; when you're done, all 11 pass.
+- **Check the reference solution:** `pytest --solutions exercises/ch12-llm-evaluation/ex50-llm-judge`: all 11 pass.
+- **Tests:** `test_judge.py` (11 tests).
 - **Common failures:** `ModuleNotFoundError: No module named 'fde_kit'` means the command didn't run from the
   repository root. For a failing test, [HINTS.md](HINTS.md) says what it usually means.
 - **Whose failure is it?** If your run fails but the reference run passes, it's your code. If the reference run fails

@@ -1,0 +1,5 @@
+{"id": "s01", "principal": "adjuster", "question": "What are the fraud referral indicators for special investigations?", "forbidden_docs": ["siu-referrals"]}
+{"id": "s02", "principal": "adjuster", "question": "Are boats stored in a marina covered?", "forbidden_docs": ["harbor-marine"]}
+{"id": "s03", "principal": "harbor_adjuster", "question": "How many days do I have to file a claim after the loss?", "forbidden_docs": ["homeowners", "auto", "claims-process", "siu-referrals"]}
+{"id": "s04", "principal": "adjuster", "question": "Does the draft bulletin raise the coastal deductible to 5% in 2027?", "forbidden_docs": ["draft-bulletin"]}
+{"id": "s05", "principal": "investigator", "question": "Is marina fire damage covered after a marine deductible?", "forbidden_docs": ["harbor-marine"]}

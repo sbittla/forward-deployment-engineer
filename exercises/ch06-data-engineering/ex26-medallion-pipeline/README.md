@@ -23,7 +23,7 @@ Input: JSON lines of e-commerce events: `{"event_id","ts","type":"view|purchase"
 2. `silver(bronze_rows) -> (events, quarantine)`
    - parse JSON; required keys `event_id, ts, type, product, country`; `type` in `{view, purchase}`;
      purchases need numeric `amount >= 0` (views get `amount = 0.0`)
-   - normalise `country` to upper-case ISO-2 using `COUNTRY_ALIASES` (e.g. `"usa"`, `"United States"` → `"US"`);
+   - normalize `country` to upper-case ISO-2 using `COUNTRY_ALIASES` (e.g. `"usa"`, `"United States"` → `"US"`);
      unknown 2-letter codes are upper-cased; anything else is quarantined
    - de-duplicate by `event_id`, keeping the row with the latest `ts` (ties: latest `line_no`)
    - quarantine rows: `{"line_no", "reason"}`; events sorted by `ts, event_id`; `ts` kept as ISO string
@@ -33,7 +33,7 @@ Input: JSON lines of e-commerce events: `{"event_id","ts","type":"view|purchase"
 
 ## Field notes
 In Databricks terms: bronze = Auto Loader to a Delta table, silver = `MERGE INTO` with expectations, gold =
-materialised views. Keep the quarantine table — it is your best customer-facing data-quality report.
+materialized views. Keep the quarantine table — it is your best customer-facing data-quality report.
 
 Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
 

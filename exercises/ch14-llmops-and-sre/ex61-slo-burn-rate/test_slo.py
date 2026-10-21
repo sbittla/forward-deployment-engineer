@@ -63,3 +63,26 @@ def test_budget_remaining(impl):
     reqs = traffic(NOW - 1000, NOW, 1, bad_every=200)  # 5 bad / 1000 -> half budget used
     assert slo.budget_remaining(reqs, NOW) == 0.5
     assert slo.budget_remaining([], NOW) == 1.0
+
+
+def test_page_fires_at_exactly_14_4(impl):
+    slo = impl.SLO(target=0.99)
+
+    def batch(ts, n, bad):
+        return [(ts, 503 if i < bad else 200, 100) for i in range(n)]
+
+    at = batch(NOW - 3000, 250, 36) + batch(NOW - 60, 250, 36)        # 72 / 500 bad: burn 14.4 on 1 h and 5 min
+    assert slo.burn_rate(at, NOW, 3600) == 14.4 and slo.alerts(at, NOW) == ["page"]
+    below = batch(NOW - 3000, 250, 36) + batch(NOW - 60, 250, 35)     # 1 h burn 14.2: a ticket, not a page
+    assert slo.alerts(below, NOW) == ["ticket"]
+
+
+def test_canary_rollback_on_burn(impl):
+    slo = impl.SLO(target=0.995)                                      # budget 0.5%
+    healthy = traffic(NOW - 3600, NOW, 6, bad_every=500)              # 600 requests, 2 bad: burn 0.67
+    assert slo.canary_action(healthy, NOW) == "promote"
+    burning = traffic(NOW - 3600, NOW, 6, bad_every=50)               # 12 bad: burn 4.0 > 2.0
+    assert slo.canary_action(burning, NOW) == "rollback"
+    assert slo.canary_action(traffic(NOW - 600, NOW, 6), NOW) == "wait"   # 100 requests, all good
+    early_bad = traffic(NOW - 600, NOW, 6, bad_every=10)              # 10 bad > 2.0 x 0.005 x 500 = 5
+    assert slo.canary_action(early_bad, NOW) == "rollback"

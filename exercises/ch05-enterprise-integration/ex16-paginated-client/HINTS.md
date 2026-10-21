@@ -43,3 +43,4 @@ around `get`, so leave it until `get` works.
 | `test_client_error` | `ApiError` doesn't keep `status` and `body` as attributes |
 | `test_proactive_rate_limit_wait` | Sleeping right after the response (and after the last page), or not using the injected clock |
 | `test_cursor_loop_guard` | No page limit, so a repeating cursor loops forever |
+| `test_invalid_or_expired_token_is_not_retried` | Every status ≥ 400 retried like `429`, so a bad token is sent again |

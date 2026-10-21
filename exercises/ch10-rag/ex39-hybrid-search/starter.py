@@ -5,10 +5,13 @@ class VectorIndex:
     def __init__(self, dim: int = 256):
         self.dim = dim
 
-    def add(self, doc_id: str, text: str) -> None:
+    def add(self, doc_id: str, text: str, acl: dict | None = None) -> None:
         raise NotImplementedError
 
     def search(self, query: str, k: int = 10) -> list[tuple[str, float]]:
+        raise NotImplementedError
+
+    def search_as(self, user: dict, query: str, k: int = 10) -> list[tuple[str, float]]:
         raise NotImplementedError
 
 

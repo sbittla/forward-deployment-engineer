@@ -40,3 +40,5 @@ everything uses it: `findall` gives the variables and `sub` with a function does
 | `test_missing_and_unexpected` | Only the first missing name reported; unexpected variables silently ignored |
 | `test_immutability` | Identical re-registration raises, or a changed template overwrites silently |
 | `test_diff` | Header lines carry trailing newlines (missing `lineterm=""`) |
+| `test_value_cannot_inject_template_variables` | Substitution repeated until no placeholders remain, so a value can expand another variable |
+| `test_log_fields_carry_no_user_data` | `sha` computed over the rendered text, which changes per request and embeds user data |

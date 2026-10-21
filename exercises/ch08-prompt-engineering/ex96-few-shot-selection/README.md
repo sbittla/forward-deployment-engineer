@@ -34,7 +34,8 @@ Examples are `{"input": str, "output": str}`. Similarity is `cosine(hash_embed(a
   newline-separated (see tests), HTML-escaping `<`, `>`, `&` in the text.
 - `build_messages(query, pool, k=3) -> list[dict]`: one user message: the formatted examples, a blank line, the
   instruction `Classify the ticket below the same way as the examples. Reply with the label only.`, then the escaped
-  query inside `<ticket>...</ticket>` on its own line at the end.
+  query inside `<ticket>...</ticket>` on its own line at the end. Escaping is the prompt-injection defense here: a
+  ticket containing `</ticket>` or `<policies>` arrives as text, so the message holds exactly one ticket block.
 
 ## Field notes
 Few-shot examples are the strongest steering signal in a prompt, so models copy their quirks: length, phrasing,
@@ -47,10 +48,10 @@ Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each
 - **Prerequisites:** Python 3.11 or later and `pip install -r requirements.txt`, run once from the repository root.
   No API key or network access is needed.
 - **Run your work:** from the repository root, `pytest exercises/ch08-prompt-engineering/ex96-few-shot-selection`.
-- **Expected output:** all 7 tests fail against the starter; when you're done, all 7 pass.
+- **Expected output:** all 8 tests fail against the starter; when you're done, all 8 pass.
 - **Check the reference solution:** `pytest --solutions exercises/ch08-prompt-engineering/ex96-few-shot-selection`:
-  all 7 pass.
-- **Tests:** `test_few_shot.py` (7 tests).
+  all 8 pass.
+- **Tests:** `test_few_shot.py` (8 tests).
 - **Common failures:** `ModuleNotFoundError: No module named 'fde_kit'` means the command didn't run from the
   repository root. For a failing test, [HINTS.md](HINTS.md) says what it usually means.
 - **Whose failure is it?** If your run fails but the reference run passes, it's your code. If the reference run fails

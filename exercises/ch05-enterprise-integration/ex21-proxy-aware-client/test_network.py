@@ -59,3 +59,39 @@ def test_opener(impl):
     ph = [h for h in op.handlers if isinstance(h, urllib.request.ProxyHandler)]
     assert ph and ph[0].proxies["https"] == "http://proxy.bank.local:3128"
     assert "corp.local" in ph[0].proxies.get("no", "")
+
+
+# Offline and air-gap tests: the tool works with no network at all, and an internal-only allowlist fails closed
+
+@pytest.fixture
+def no_network(monkeypatch):
+    import socket
+
+    def refuse(*args, **kwargs):
+        raise OSError("network disabled by test")
+
+    monkeypatch.setattr(socket, "getaddrinfo", refuse)
+    monkeypatch.setattr(socket, "create_connection", refuse)
+    monkeypatch.setattr(socket.socket, "connect", refuse)
+
+
+AIR_GAP = {"FDE_EGRESS_ALLOWLIST": "*.bank.internal, pypi-mirror.bank.internal",
+           "REQUESTS_CA_BUNDLE": "/etc/ssl/bank-root.pem", "NO_PROXY": ".bank.internal"}
+
+
+def test_offline_policy_makes_no_network_calls(impl, no_network):
+    p = impl.NetworkPolicy.from_env(AIR_GAP)
+    assert p.diagnose("https://idp.bank.internal/token") == [
+        "egress: allowed", "proxy: direct", "ca_bundle: /etc/ssl/bank-root.pem"]
+    p.check_egress("https://pypi-mirror.bank.internal/simple/")
+    assert p.proxy_for("https://idp.bank.internal/token") is None
+    p.opener()
+
+
+def test_air_gap_allowlist_fails_closed(impl, no_network):
+    p = impl.NetworkPolicy.from_env(AIR_GAP)
+    for url in ("https://api.anthropic.com/v1/messages", "https://pypi.org/simple/", "https://8.8.8.8/",
+                "https://idp.bank.internal@evil.com/", "https://bank.internal/"):
+        with pytest.raises(impl.EgressDenied):
+            p.check_egress(url)
+    assert p.diagnose("https://pypi.org/simple/")[0] == "egress: DENIED by allowlist"

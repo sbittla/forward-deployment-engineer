@@ -74,3 +74,40 @@ test("boundary: connection lost mid-stream", () => {
   assert.equal(s.pending, true);
   assert.equal(s.messages.length, 3);
 });
+
+test("cancel keeps the partial answer, marks it stopped and ignores late deltas", () => {
+  let s = run([
+    { type: "send", id: "u1", text: "Is flood damage covered?" },
+    { type: "stream_start", id: "a1" },
+    { type: "delta", id: "a1", text: "Flood damage is " },
+    { type: "cancel" },
+  ]);
+  assert.equal(s.pending, false);
+  assert.equal(s.error, null);                     // the user stopped it: not an error, no alert
+  assert.deepEqual(s.messages[1], { id: "a1", role: "assistant", text: "Flood damage is ", status: "stopped" });
+  s = m.reduce(s, { type: "delta", id: "a1", text: "covered." });   // a delta already in flight
+  assert.equal(s.messages[1].text, "Flood damage is ");
+  assert.equal(m.transcript(s), "user: Is flood damage covered?");
+  assert.equal(m.reduce(s, { type: "retry" }), s);  // nothing failed, so nothing to retry
+  assert.equal(m.reduce(m.initialState, { type: "cancel" }), m.initialState);
+});
+
+test("session expiry stops the spinner and offers sign-in, not retry", () => {
+  let s = run([
+    { type: "send", id: "u1", text: "Is flood damage covered?" },
+    { type: "auth_expired" },
+  ]);
+  assert.equal(s.pending, false);
+  assert.equal(s.error, m.SESSION_EXPIRED);
+  assert.equal(s.messages.length, 1);              // the question is kept
+  assert.equal(m.reduce(s, { type: "retry" }), s); // retrying only earns a second 401
+  s = run([
+    { type: "send", id: "u1", text: "Is flood damage covered?" },
+    { type: "stream_start", id: "a1" },
+    { type: "delta", id: "a1", text: "Flood" },
+    { type: "auth_expired" },
+  ]);
+  assert.equal(s.messages[1].status, "error");
+  assert.equal(m.reduce(s, { type: "retry" }), s);
+  assert.equal(m.transcript(s), "user: Is flood damage covered?");
+});

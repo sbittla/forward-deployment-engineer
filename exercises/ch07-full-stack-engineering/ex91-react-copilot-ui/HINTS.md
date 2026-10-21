@@ -41,3 +41,6 @@ test checks identity with `assert.equal`.
 | `reducer` | State changed in place; an ignored `send` returns a copy instead of the same object; draft not trimmed |
 | `hook sends, replies and retries` | Counter inside `useChat` (ids restart); id taken before the API call fails; retry doesn't reuse the last user text |
 | `panel renders accessible, safe markup` | Text set with `dangerouslySetInnerHTML`; missing `role`/`aria-*` props; `preventDefault` not called; Send not disabled while pending |
+| `hook: stop aborts the request and shows Stopped, not an error` | No `signal` passed to `sendToApi`; the controller kept inside `useChat` (lost on re-render); the abort rejection dispatched as `fail` |
+| `hook: a 401 asks the user to sign in and never retries` | 401 dispatched as `fail`, so Retry is offered; `retry()` or the reducer's `retry` not guarded on `authExpired` |
+| `panel: every failure state is announced with plain text and one labeled action` | Retry shown for an expired session; Stopped rendered as an alert; a button without `type: "button"`; Stop shown when idle |

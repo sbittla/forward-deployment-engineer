@@ -40,7 +40,14 @@ def _unsafe(m: tarfile.TarInfo) -> bool:
     return p.is_absolute() or ".." in p.parts or m.issym() or m.islnk() or m.name.startswith("\\")
 
 
-def verify_bundle(path, key: bytes) -> list[str]:
+def _version(v: str) -> tuple[int, ...] | None:
+    try:
+        return tuple(int(p) for p in str(v).split("."))
+    except ValueError:
+        return None
+
+
+def verify_bundle(path, key: bytes, installed_version: str | None = None) -> list[str]:
     problems = []
     with tarfile.open(path) as tf:
         members = tf.getmembers()
@@ -51,6 +58,12 @@ def verify_bundle(path, key: bytes) -> list[str]:
         manifest = json.loads(tf.extractfile(names[MANIFEST]).read())
         if not hmac.compare_digest(manifest.get("signature", ""), _sign(key, manifest)):
             return problems + ["bad signature"]
+        if installed_version is not None:
+            have, new = _version(installed_version), _version(manifest.get("version", ""))
+            if have is None or new is None:
+                problems.append(f"unparseable version: {manifest.get('version')}")
+            elif new < have:
+                problems.append(f"downgrade: {manifest['version']} < {installed_version}")
         expected = manifest["files"]
         for rel in sorted(expected):
             if rel not in names:
@@ -63,8 +76,8 @@ def verify_bundle(path, key: bytes) -> list[str]:
     return problems
 
 
-def safe_extract(path, dest, key: bytes) -> None:
-    problems = verify_bundle(path, key)
+def safe_extract(path, dest, key: bytes, installed_version: str | None = None) -> None:
+    problems = verify_bundle(path, key, installed_version)
     if problems:
         raise ValueError("refusing to extract: " + "; ".join(problems))
     dest = Path(dest)

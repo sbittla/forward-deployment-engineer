@@ -37,3 +37,4 @@ tier *adds*, then build the list by walking tiers 3, 2, 1 and including each lev
 | `test_controls` | Controls not cumulative, or out of order |
 | `test_validate` | `False` flags reported as missing; empty list `limitations` not reported |
 | `test_render` | A heading missing or out of order; status line wording differs |
+| `test_validate_fails_closed` | `KeyError` on an eval with no threshold; a `None` value compared or treated as a pass |

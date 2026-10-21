@@ -234,6 +234,8 @@ def main(argv: list[str]) -> int:
         return 0 if ok else 1
     lints = [run_lint(s) for s in ("spec_lint", "hints_lint", "contract_lint")]
     ok = write_report(results, lints, time.monotonic() - start, not args.no_starters)
+    # the book-to-repository map quotes each suite's recorded result, so regenerate it from this run
+    subprocess.call([sys.executable, str(ROOT / "scripts" / "traceability.py")], cwd=ROOT)
     print(f"\n{'ALL PASS' if ok else 'NOT ALL PASSING'}: report in output/summary.md")
     return 0 if ok else 1
 

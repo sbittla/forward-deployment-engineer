@@ -1,4 +1,6 @@
 """Greedy prompt optimisation against a train split, judged once on a held-out test split."""
+import hashlib
+import json
 import math
 import random
 from dataclasses import dataclass, field
@@ -68,3 +70,73 @@ def mcnemar_p(base: list[bool], cand: list[bool]) -> float:
         return 1.0
     tail = sum(math.comb(n, i) for i in range(0, min(b, c) + 1)) / 2 ** n
     return min(1.0, round(2 * tail, 6))
+
+
+# --- Experiment record: versions, repeated runs, an interval and a regression gate -------------------------------
+
+def _sha12(text: str) -> str:
+    return hashlib.sha256(text.encode("utf-8")).hexdigest()[:12]
+
+
+def prompt_version(prompt: str) -> str:
+    """First 12 hex characters of the SHA-256 of the prompt text: the version a record and a log line cite."""
+    return _sha12(prompt)
+
+
+def dataset_hash(cases: list[dict]) -> str:
+    """Freeze an evaluation set by content: any edited, added, removed or reordered case changes the hash."""
+    return _sha12(json.dumps(cases, sort_keys=True, ensure_ascii=False))
+
+
+def repeat_evaluate(prompt: str, cases: list[dict], model: Model, grader: Grader, runs: int = 3) -> dict:
+    """Score the same prompt `runs` times. A sampled model gives different scores; the spread is the noise floor."""
+    if runs < 1:
+        raise ValueError("runs must be at least 1")
+    scores = [evaluate(prompt, cases, model, grader) for _ in range(runs)]
+    return {"runs": runs, "scores": scores, "mean": round(sum(scores) / runs, 4),
+            "spread": round(max(scores) - min(scores), 4)}
+
+
+def wilson_interval(passes: int, n: int, z: float = 1.96) -> tuple[float, float]:
+    """95% Wilson score interval for a pass rate; honest at small n and at 0% or 100%."""
+    if n < 1 or not 0 <= passes <= n:
+        raise ValueError("need 0 <= passes <= n and n >= 1")
+    p = passes / n
+    centre = (p + z * z / (2 * n)) / (1 + z * z / n)
+    half = z * math.sqrt(p * (1 - p) / n + z * z / (4 * n * n)) / (1 + z * z / n)
+    return round(max(0.0, centre - half), 4), round(min(1.0, centre + half), 4)
+
+
+def regression_gate(base: list[bool], cand: list[bool], protected: frozenset[int] = frozenset(),
+                    max_drop: float = 0.0) -> dict:
+    """Block a candidate whose pass rate falls more than `max_drop` below the baseline, or that breaks any
+    protected (for example safety-tagged) case the baseline passed."""
+    if len(base) != len(cand):
+        raise ValueError("paired results must have equal length")
+    broken = [i for i, (x, y) in enumerate(zip(base, cand)) if x and not y]
+    reasons = []
+    if base:
+        b_rate, c_rate = sum(base) / len(base), sum(cand) / len(cand)
+        if c_rate < b_rate - max_drop - 1e-12:
+            reasons.append(f"pass rate {c_rate:.4f} is below baseline {b_rate:.4f} - {max_drop}")
+    reasons += [f"protected case {i} regressed" for i in broken if i in protected]
+    return {"passed": not reasons, "broken": broken, "reasons": reasons}
+
+
+def experiment_record(name: str, base_prompt: str, cand_prompt: str, cases: list[dict], model: Model,
+                      grader: Grader, seed: int = 0, test_frac: float = 0.3,
+                      protected: frozenset[int] = frozenset()) -> dict:
+    """Score baseline and candidate once each on the held-out split and return the fields a reviewer needs.
+    `protected` holds indices into the test split."""
+    _, test = split(cases, test_frac, seed)
+    base, cand = run(base_prompt, test, model, grader), run(cand_prompt, test, model, grader)
+    n = len(test)
+    return {
+        "experiment": name, "dataset": dataset_hash(cases), "seed": seed, "n_test": n,
+        "baseline": {"prompt": prompt_version(base_prompt), "passes": sum(base),
+                     "rate": round(sum(base) / n, 4), "ci95": wilson_interval(sum(base), n)},
+        "candidate": {"prompt": prompt_version(cand_prompt), "passes": sum(cand),
+                      "rate": round(sum(cand) / n, 4), "ci95": wilson_interval(sum(cand), n)},
+        "mcnemar_p": mcnemar_p(base, cand),
+        "gate": regression_gate(base, cand, protected),
+    }

@@ -3,13 +3,15 @@
 Clones the public repository over HTTPS with no credentials, checks out the given ref (a tag or commit), installs the
 documented requirements into a fresh virtual environment, and runs the documented checks: every reference solution
 and the three linters (`check.py --solutions`), every starter red (`starters_red.py`), and, with `--docker`, every
-suite one at a time in the Docker runner (`run_all.py --docker`). The report records the commit, OS, tool versions,
-each command, its exit code and the summary line it printed.
+suite one at a time in the Docker runner (`run_all.py --docker`), and with `--offline`, an install from a wheelhouse
+inside a container with no network, as an air-gapped customer would. The report records the commit, OS, tool versions,
+each command, its exit code and the summary line it printed, as Markdown and as JSON (same path, .json).
 
-usage: python scripts/verify_release.py <ref> [--docker] [--repo URL] [--report PATH]
+usage: python scripts/verify_release.py <ref> [--docker] [--offline] [--repo URL] [--report PATH]
 """
 import argparse
 import datetime
+import json
 import os
 import platform
 import re
@@ -55,6 +57,7 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("ref")
     ap.add_argument("--docker", action="store_true")
+    ap.add_argument("--offline", action="store_true", help="also install the requirements with no network (Docker)")
     ap.add_argument("--repo", default=REPO)
     ap.add_argument("--report", default="release-verification.md")
     args = ap.parse_args()
@@ -89,6 +92,17 @@ def main() -> int:
     ]
     if args.docker:
         checks.append(("Every suite in Docker, checked one at a time", [py, "scripts/run_all.py", "--docker"]))
+    if args.offline:
+        # an air-gapped customer installs from a wheelhouse: download it with network, install it with none
+        wheels, image = work / "wheelhouse", "python:3.12-slim"
+        wheels.mkdir()
+        mounts = ["-e", "PIP_ROOT_USER_ACTION=ignore", "-v", f"{src}:/repo:ro", "-v", f"{wheels}:/wh"]
+        pip = "pip --disable-pip-version-check --quiet"
+        checks.append(("Build a wheelhouse from the requirements", ["docker", "run", "--rm", *mounts, image, "sh", "-c",
+                       f"{pip} download -r /repo/requirements.txt -d /wh && ls /wh | wc -l"]))
+        checks.append(("Install from the wheelhouse with no network", ["docker", "run", "--rm", "--network", "none",
+                       *mounts, image, "sh", "-c", f"{pip} install --no-index --find-links /wh -r /repo/requirements.txt"
+                       " && python -c 'import pytest, yaml; print(\"offline install: ok\")'"]))
     for title, cmd in checks:
         rc, line = run(cmd, src, env, logs / f"{len(steps)}.log")
         shown = " ".join(["python"] + cmd[1:]) if cmd[0] == py else " ".join(cmd)
@@ -123,6 +137,15 @@ def report(args, work: Path, steps: list, commit: str, fail: bool) -> int:
         lines += container.read_text(encoding="utf-8").strip().splitlines()[:12] + ["```"]
     lines += ["", f"Logs: `{work / 'logs'}`"]
     Path(args.report).write_text("\n".join(lines) + "\n", encoding="utf-8")
+    # the same facts, machine-readable, next to the Markdown report
+    summary = docker_summary.read_text(encoding="utf-8").splitlines()[:3] if docker_summary.exists() else []
+    Path(args.report).with_suffix(".json").write_text(json.dumps({
+        "result": "FAIL" if fail else "PASS", "date_utc": when, "repository": args.repo, "ref": args.ref,
+        "commit": commit, "os": platform.platform(), "python": sys.version.split()[0],
+        "node": version(["node", "--version"]), "docker": version(["docker", "--version"]) if args.docker else None,
+        "steps": [{"title": t, "command": c, "exit": rc, "result": r} for t, c, rc, r in steps],
+        "docker_summary": [s for s in summary if s.strip()],
+    }, indent=2) + "\n", encoding="utf-8")
     print("\n".join(lines))
     return 1 if fail else 0
 

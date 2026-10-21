@@ -24,6 +24,13 @@ Requests: `(ts_seconds, status_code, latency_ms)`. A request is **good** if `sta
   - `"ticket"` if burn ≥ 6 over **both** 6 h and 30 min (and not already paging)
 - `budget_remaining(requests, now, period_s=30*86400)` → `1 - (bad / (total * error_budget))` over the period,
   rounded to 4 dp (can go negative; 1.0 when there are no requests)
+- `canary_action(canary_requests, now, window_s=HOUR, max_burn=2.0, min_requests=500)` → the release decision for a
+  canary from its own error-budget burn over the window: `"rollback"` as soon as its bad requests exceed
+  `max_burn * error_budget * min_requests` (it has already overspent what its minimum sample may, so don't wait);
+  otherwise `"wait"` while it has fewer than `min_requests` requests; then `"rollback"` if its burn rate is above
+  `max_burn`, else `"promote"`.
+
+**Thresholds are inclusive:** a burn rate of exactly 14.4 on both windows pages (`>=`, after rounding to 2 dp).
 
 Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
 
@@ -32,10 +39,10 @@ Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each
 - **Prerequisites:** Python 3.11 or later and `pip install -r requirements.txt`, run once from the repository root.
   No API key or network access is needed.
 - **Run your work:** from the repository root, `pytest exercises/ch14-llmops-and-sre/ex61-slo-burn-rate`.
-- **Expected output:** all 7 tests fail against the starter; when you're done, all 7 pass.
-- **Check the reference solution:** `pytest --solutions exercises/ch14-llmops-and-sre/ex61-slo-burn-rate`: all 7
+- **Expected output:** all 9 tests fail against the starter; when you're done, all 9 pass.
+- **Check the reference solution:** `pytest --solutions exercises/ch14-llmops-and-sre/ex61-slo-burn-rate`: all 9
   pass.
-- **Tests:** `test_slo.py` (7 tests).
+- **Tests:** `test_slo.py` (9 tests).
 - **Common failures:** `ModuleNotFoundError: No module named 'fde_kit'` means the command didn't run from the
   repository root. For a failing test, [HINTS.md](HINTS.md) says what it usually means.
 - **Whose failure is it?** If your run fails but the reference run passes, it's your code. If the reference run fails

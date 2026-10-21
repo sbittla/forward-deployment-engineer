@@ -39,3 +39,7 @@ each against the numbers in the tests before you write `evaluate`, which only lo
 | `test_ndcg` | Linear gain instead of `2**g - 1`; ideal not sorted descending; discount off by one |
 | `test_evaluate_and_compare` | Delta sign reversed; metric rows in the wrong order; values not formatted to 4 dp |
 | `test_no_relevant_documents` | Division by zero when nothing is relevant or the ranking is empty |
+| `test_citation_precision_and_abstention_report` | Precision averaged per answer instead of pooled over all citations; an answer with no citations counted as 0 or 1 |
+| `test_benchmark_baseline_vs_candidate` | One of the four metrics is off; check the unit tests above first, since the benchmark only reuses them |
+| `test_benchmark_stale_and_foreign_never_cited` | `citation_precision` not pooled or not rounded to 4 dp |
+| `test_benchmark_abstention` | `answered_unanswerable` counts abstentions instead of answers, or the keys differ |

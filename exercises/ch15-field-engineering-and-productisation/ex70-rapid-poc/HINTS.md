@@ -44,3 +44,5 @@ ISO or `None`, and `parse_amount(s)`, which handles currency symbols and both de
 | `test_evaluate` | LLM date not normalised before comparing; `llm_fields` miscounted |
 | `test_evaluate_without_llm` | Overall accuracy averaged per sample instead of per field |
 | `test_readout` | Threshold direction reversed (improve the fields *under* 0.9); standing next step missing |
+| `test_injected_reply_cannot_add_or_override` | Every key in the reply merged, not only the missing fields; `json.loads` error not caught |
+| `test_exit_gate` | Gates checked before the sample size; point estimate used where the Wilson lower bound is needed |

@@ -10,7 +10,8 @@
 
 - **Golden set:** version ______, ______ cases; sources (production samples, expert-written, red team, synthetic)
 - **Splits:** development ______ cases; held-out ______ cases; refreshed every ______
-- **Labelling protocol:** two labellers per case; agreement (kappa) target ______
+- **Provenance by source:** where each case came from (production log, SME-written, synthetic) and its share ______
+- **Labeling protocol:** two labelers per case; agreement (kappa) target ______
 
 ## Slices
 | Slice | Cases | Critical? | Grader | Launch bar |

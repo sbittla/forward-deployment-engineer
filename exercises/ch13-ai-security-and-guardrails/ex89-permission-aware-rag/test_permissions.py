@@ -80,3 +80,65 @@ def test_obo(impl):
                     "subject_token_type": "urn:ietf:params:oauth:token-type:access_token",
                     "requested_token_type": "urn:ietf:params:oauth:token-type:access_token",
                     "scope": "https://graph.example/.default", "client_id": "copilot", "client_secret": "s3cr3t"}
+
+
+def _signed(header, claims, secret=SECRET):
+    import hashlib
+    import hmac
+    head, body = b64(header), b64(claims)
+    sig = base64.urlsafe_b64encode(hmac.new(secret.encode(), f"{head}.{body}".encode(), hashlib.sha256).digest())
+    return f"{head}.{body}.{sig.rstrip(b'=').decode()}"
+
+
+@pytest.mark.parametrize("alg", ["none", "None", "NONE", "RS256", "ES256", "HS512", "", None])
+def test_alg_confusion_rejected(impl, alg):
+    # Correctly HMAC-signed with the right secret, but the header names another algorithm: the allowlist decides,
+    # never the token. (Algorithm confusion: an RS256 verifier tricked into HMAC with its public key.)
+    header = {"typ": "JWT"} if alg is None else {"alg": alg, "typ": "JWT"}
+    with pytest.raises(impl.AuthError) as e:
+        impl.verify_id_token(_signed(header, CLAIMS), SECRET, ISS, AUD, NOW)
+    assert "alg" in str(e.value).lower()
+
+
+def test_expired_wrong_audience_issuer_and_malformed_rejected(impl):
+    no_exp = {k: v for k, v in CLAIMS.items() if k != "exp"}
+    for claims, word in [(no_exp, "exp"), ({**CLAIMS, "exp": NOW}, "expired"),
+                         ({**CLAIMS, "aud": ["other-app"]}, "audience"), ({**CLAIMS, "aud": []}, "audience"),
+                         ({**CLAIMS, "iss": ISS + "/"}, "issuer")]:
+        with pytest.raises(impl.AuthError) as e:
+            impl.verify_id_token(impl.make_token(claims, SECRET), SECRET, ISS, AUD, NOW)
+        assert word in str(e.value).lower()
+    for bad in ["", "abc", "a.b", "a.b.c.d", "!!.@@.##", f"{b64([1])}.{b64(CLAIMS)}.x"]:
+        with pytest.raises(impl.AuthError) as e:
+            impl.verify_id_token(bad, SECRET, ISS, AUD, NOW)
+        assert "malformed" in str(e.value).lower()
+
+
+def test_tampered_signature_rejected(impl):
+    h, p, s = impl.make_token(CLAIMS, SECRET).split(".")
+    flipped = ("A" if s[0] != "A" else "B") + s[1:]
+    for tok in [f"{h}.{p}.{flipped}", f"{h}.{p}.", f"{h}.{p}.{s}x"]:
+        with pytest.raises(impl.AuthError) as e:
+            impl.verify_id_token(tok, SECRET, ISS, AUD, NOW)
+        assert "signature" in str(e.value).lower()
+
+
+def test_kid_selects_key_during_rotation(impl):
+    keys = {"2026-09": "old-key", "2026-10": "new-key"}   # both published while tokens signed with the old key expire
+    for kid, key in keys.items():
+        assert impl.verify_id_token(impl.make_token(CLAIMS, key, kid=kid), keys, ISS, AUD, NOW)["sub"] == "u-123"
+    with pytest.raises(impl.AuthError, match="kid"):
+        impl.verify_id_token(impl.make_token(CLAIMS, "old-key", kid="2026-08"), keys, ISS, AUD, NOW)
+    with pytest.raises(impl.AuthError, match="kid"):
+        impl.verify_id_token(impl.make_token(CLAIMS, "old-key"), keys, ISS, AUD, NOW)    # no kid header
+    with pytest.raises(impl.AuthError, match="signature"):
+        impl.verify_id_token(impl.make_token(CLAIMS, "old-key", kid="2026-10"), keys, ISS, AUD, NOW)
+
+
+def test_missing_acl_fails_closed(impl):
+    lee = impl.Principal.from_claims(CLAIMS)
+    assert not impl.allowed({}, lee) and not impl.allowed(None, lee)
+    docs = DOCS + [{"id": "no-acl", "text": "flood notes"}, {"id": "null-acl", "text": "flood", "acl": None}]
+    results, audit = impl.secure_search(lee, "flood", docs, lambda q, ds, k: [d["id"] for d in ds][:k], k=10)
+    assert "no-acl" not in results and "null-acl" not in results
+    assert audit["denied"] == 3

@@ -38,3 +38,5 @@ matches nothing, so the array comes back with the same contents. Adding a messag
 | `error then retry` | Retry removes the user message too; or the no-op retry returns a copy instead of the same object |
 | `immutability and unknown ids` | A message changed in place (for example `msg.text += ...`) instead of copied |
 | `boundary: connection lost mid-stream` | `stream_error` leaves `pending` set, so the next `send` is ignored; or the partial answer is marked `done` and leaks into the transcript |
+| `cancel keeps the partial answer, marks it stopped and ignores late deltas` | Cancel sets `error` (the user stopped it; nothing failed); `delta` still appends to a stopped message; cancel when idle returns a copy |
+| `session expiry stops the spinner and offers sign-in, not retry` | `retry` not guarded on `SESSION_EXPIRED`; the question removed; a streaming message left `streaming` |

@@ -76,13 +76,49 @@ def validate(obj, schema: dict, path: str = "$") -> list[str]:
     return errs
 
 
+class RefusalError(ValueError):
+    """The provider's safety layer declined (stop_reason "refusal"). Never repaired: route to a fallback or a person."""
+
+
+class TruncatedError(ValueError):
+    """The reply hit max_tokens. Repairing under the same limit truncates it again."""
+
+
+DECLINE = {"status": "cannot_extract"}
+
+
+def classify_reply(response) -> str:
+    """Why did the model stop, and what kind of reply is this? -> "refusal" | "truncated" | "declined" | "answer"."""
+    if response.stop_reason == "refusal":
+        return "refusal"
+    if response.stop_reason == "max_tokens":
+        return "truncated"
+    try:
+        if extract_json(response.text) == DECLINE:
+            return "declined"
+    except ValueError:
+        pass
+    return "answer"
+
+
 def complete_structured(llm, prompt: str, schema: dict, max_repairs: int = 2):
     system = ("Extract the requested data. Reply with a single JSON value that validates against this JSON "
-              f"Schema, and nothing else:\n{json.dumps(schema, indent=1)}")
+              f"Schema, and nothing else:\n{json.dumps(schema, indent=1)}\n"
+              'If the text holds no such data, reply {"status": "cannot_extract"}.')
     messages = [{"role": "user", "content": prompt}]
     errors: list[str] = []
+    if max_repairs < 0:
+        raise ValueError("max_repairs must be >= 0")
     for attempt in range(1, max_repairs + 2):
-        reply = llm.complete(messages, system=system).text
+        response = llm.complete(messages, system=system)
+        kind = classify_reply(response)
+        if kind == "refusal":
+            raise RefusalError("provider refused the request; not repaired")
+        if kind == "truncated":
+            raise TruncatedError("reply hit max_tokens; raise the limit or ask for less")
+        if kind == "declined":
+            return dict(DECLINE), attempt
+        reply = response.text
         try:
             obj = extract_json(reply)
             errors = validate(obj, schema)

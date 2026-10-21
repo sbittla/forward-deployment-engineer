@@ -6,7 +6,7 @@
 - Express data-quality rules declaratively and run them before every refresh.
 - Separate blocking errors from warnings.
 - Report failures with samples so owners can fix the source.
-- Pseudonymise identifiers with a keyed hash, and derive checks from a data contract.
+- Pseudonymize identifiers with a keyed hash, and derive checks from a data contract.
 
 ## Scenario
 Your RAG answers went wrong for a week because an upstream job started writing empty `policy_number`s. Nobody
@@ -34,11 +34,12 @@ Check factories (each returns a `Check` with `name`, `severity` ("error" default
 All factories accept `severity="warn"`. Check names: `not_null(policy_number)`, `in_range(premium,0,100000)` etc.
 — i.e. `factory(arg1,arg2)` with no spaces.
 
-### Part B · Pseudonymisation and data contracts
-`pseudonymise(value, key) -> str` — a keyed, stable token for joins and counts: normalise with
+### Part B · Pseudonymization and data contracts
+`pseudonymise(value, key) -> str` — a keyed, stable token for joins and counts: normalize with
 `value.strip().lower()`, then return the first 32 hex characters of HMAC-SHA256 under `key` (bytes). A plain hash of
 an email isn't anonymous: anyone with a list of emails can hash them and match. The same value and key always give the
-same token; a different key gives a different one.
+same token; a different key gives a different one. Fail closed on a weak key: if `key` isn't `bytes` of at least 16
+bytes (empty, short or `None`), raise `ValueError("key must be at least 16 bytes")` rather than return a token.
 
 `checks_from_contract(contract) -> list[Check]` turns a data contract (the dict you get from its YAML) into checks:
 - for each column in `contract["schema"]`, in order: `nullable: false` → `not_null(col)`; `pattern` →
@@ -54,10 +55,10 @@ Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each
 - **Prerequisites:** Python 3.11 or later and `pip install -r requirements.txt`, run once from the repository root.
   No API key or network access is needed.
 - **Run your work:** from the repository root, `pytest exercises/ch06-data-engineering/ex24-data-quality`.
-- **Expected output:** all 8 tests fail against the starter; when you're done, all 8 pass.
-- **Check the reference solution:** `pytest --solutions exercises/ch06-data-engineering/ex24-data-quality`: all 8
+- **Expected output:** all 9 tests fail against the starter; when you're done, all 9 pass.
+- **Check the reference solution:** `pytest --solutions exercises/ch06-data-engineering/ex24-data-quality`: all 9
   pass.
-- **Tests:** `test_dq.py` (8 tests).
+- **Tests:** `test_dq.py` (9 tests).
 - **Common failures:** `ModuleNotFoundError: No module named 'fde_kit'` means the command didn't run from the
   repository root. For a failing test, [HINTS.md](HINTS.md) says what it usually means.
 - **Whose failure is it?** If your run fails but the reference run passes, it's your code. If the reference run fails

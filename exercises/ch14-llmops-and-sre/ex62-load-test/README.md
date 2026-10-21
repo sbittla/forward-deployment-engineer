@@ -12,14 +12,22 @@ Go-live is Monday with 400 agents. Will the service hold? You'll write a small l
 Law and per-stage timings to explain capacity to the customer's platform team in numbers.
 
 ## Your task
-1. `run_load(fn, total, concurrency) -> LoadReport` — call `fn()` `total` times using a thread pool of
-   `concurrency` workers. Record per-call latency (ms, `time.perf_counter`) and count exceptions as errors (errors
-   still record latency). Report: `count`, `errors`, `error_rate` (4 dp), `rps` (count / wall seconds, 1 dp),
-   `p50`, `p95`, `p99`, `max` (ms, nearest-rank, 1 dp).
+1. `run_load(fn, total, concurrency, think_time_s=0.0) -> LoadReport` — call `fn()` `total` times using a thread
+   pool of `concurrency` workers; after each call the worker sleeps `think_time_s` (a simulated user's pause, not
+   counted in the call's latency). Record per-call latency (ms, `time.perf_counter`) and count exceptions as errors
+   (errors still record latency). Report: `count`, `errors`, `error_rate` (4 dp), `rps` (count / wall seconds, 1
+   dp), `p50`, `p95`, `p99`, `max` (ms, nearest-rank, 1 dp), and the load model used: `concurrency` and
+   `think_time_s`.
 2. `littles_law_concurrency(target_rps, avg_latency_s) -> int` — `ceil(target_rps * avg_latency_s)`.
 3. `max_rps(concurrency, avg_latency_s) -> float` — `concurrency / avg_latency_s`, 1 dp.
 4. `stage_breakdown(traces) -> list[(stage, share)]` — `traces` is a list of `{stage: ms}` dicts; return each
    stage's share of total time across all traces (3 dp), sorted by share desc. The first item is your bottleneck.
+5. `report_line(rep, label, arrival_rps=None) -> str` — one line that never separates a percentile from the load
+   that produced it: `p50 <p50> ms, p95 <p95> ms, p99 <p99> ms, max <max> ms (n=<count>, error rate <error_rate>) |
+   load model: <model>, concurrency <concurrency>, think time <think_time_s> s | <label>`, where `<model>` is
+   `closed loop` when `arrival_rps` is `None`, otherwise `open arrivals <arrival_rps> req/s`. `label` must be
+   `measured` (a run against the real service) or `simulated` (a fake model or synthetic load); anything else
+   raises `ValueError`.
 
 **Errors:** `littles_law_concurrency` raises `ValueError` for negative inputs; `max_rps` raises `ValueError` unless `avg_latency_s > 0` and `concurrency >= 1`.
 
@@ -30,9 +38,9 @@ Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each
 - **Prerequisites:** Python 3.11 or later and `pip install -r requirements.txt`, run once from the repository root.
   No API key or network access is needed.
 - **Run your work:** from the repository root, `pytest exercises/ch14-llmops-and-sre/ex62-load-test`.
-- **Expected output:** all 5 tests fail against the starter; when you're done, all 5 pass.
-- **Check the reference solution:** `pytest --solutions exercises/ch14-llmops-and-sre/ex62-load-test`: all 5 pass.
-- **Tests:** `test_load.py` (5 tests).
+- **Expected output:** all 6 tests fail against the starter; when you're done, all 6 pass.
+- **Check the reference solution:** `pytest --solutions exercises/ch14-llmops-and-sre/ex62-load-test`: all 6 pass.
+- **Tests:** `test_load.py` (6 tests).
 - **Common failures:** `ModuleNotFoundError: No module named 'fde_kit'` means the command didn't run from the
   repository root. For a failing test, [HINTS.md](HINTS.md) says what it usually means.
 - **Whose failure is it?** If your run fails but the reference run passes, it's your code. If the reference run fails

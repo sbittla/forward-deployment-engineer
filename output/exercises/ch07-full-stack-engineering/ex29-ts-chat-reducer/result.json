@@ -3,14 +3,14 @@
   "status": "PASS",
   "problems": [],
   "tests": {
-    "passed": 5,
+    "passed": 7,
     "failed": 0,
     "error": 0,
     "skipped": 0
   },
-  "declared": 5,
-  "ran": 5,
-  "starter_failing": 5,
+  "declared": 7,
+  "ran": 7,
+  "starter_failing": 7,
   "cases": [
     {
       "test": "ts:happy path streaming",
@@ -30,6 +30,14 @@
     },
     {
       "test": "ts:boundary: connection lost mid-stream",
+      "status": "passed"
+    },
+    {
+      "test": "ts:cancel keeps the partial answer, marks it stopped and ignores late deltas",
+      "status": "passed"
+    },
+    {
+      "test": "ts:session expiry stops the spinner and offers sign-in, not retry",
       "status": "passed"
     }
   ]

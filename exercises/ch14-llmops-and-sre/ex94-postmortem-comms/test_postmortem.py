@@ -53,3 +53,15 @@ def test_postmortem(impl):
         impl.render_postmortem("t", EVENTS, "Sam broke the config.", [], [], actions)
     with pytest.raises(ValueError):
         impl.render_postmortem("t", EVENTS, "Config default.", [], [], [{"action": "x", "owner": "", "due": "2026-11-01", "priority": "P3"}])
+
+
+def test_postmortem_requires_fields(impl):
+    actions = [{"action": "Alert on upstream 529 rate", "owner": "SRE", "due": "2026-10-28", "priority": "P2"}]
+    unresolved = [e for e in EVENTS if e["type"] != "resolved"]
+    with pytest.raises(ValueError):
+        impl.render_postmortem("t", unresolved, "Config default.", [], [], actions)   # no resolved event
+    with pytest.raises(ValueError):
+        impl.render_postmortem("t", EVENTS, "  ", [], [], actions)                    # no root cause
+    with pytest.raises(ValueError):
+        impl.render_postmortem("t", EVENTS, "Config default.", [], [], [])            # no action items
+    assert "## Action items" in impl.render_postmortem("t", EVENTS, "Config default.", [], [], actions)

@@ -22,6 +22,12 @@ services. You cannot reconstruct one request end-to-end. Fix that for the next i
 4. `get_logger(name, stream)` — returns a logger writing JSON to `stream` at INFO, without duplicate handlers if
    called twice.
 
+### Fault-injection tests
+The `test_fault_*` tests inject failures and check the logs explain them: a fake dependency fails requests 2, 5 and
+7 of ten, and each `ERROR` line must carry that request's correlation id and `exc_type`; 20 interleaved `asyncio`
+requests, every third one failing, must never log under another request's id; and an exception raised inside a
+nested `correlation` block must still restore the outer id.
+
 Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
 
 ## Run and verify
@@ -30,10 +36,10 @@ Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each
   No API key or network access is needed.
 - **Run your work:** from the repository root,
   `pytest exercises/ch04-production-grade-python/ex11-structured-logging`.
-- **Expected output:** all 4 tests fail against the starter; when you're done, all 4 pass.
+- **Expected output:** all 7 tests fail against the starter; when you're done, all 7 pass.
 - **Check the reference solution:**
-  `pytest --solutions exercises/ch04-production-grade-python/ex11-structured-logging`: all 4 pass.
-- **Tests:** `test_logging.py` (4 tests).
+  `pytest --solutions exercises/ch04-production-grade-python/ex11-structured-logging`: all 7 pass.
+- **Tests:** `test_logging.py` (7 tests).
 - **Common failures:** `ModuleNotFoundError: No module named 'fde_kit'` means the command didn't run from the
   repository root. For a failing test, [HINTS.md](HINTS.md) says what it usually means.
 - **Whose failure is it?** If your run fails but the reference run passes, it's your code. If the reference run fails

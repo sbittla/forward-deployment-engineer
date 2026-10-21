@@ -42,3 +42,4 @@ dict.
 | `test_bad` | `permissions: write-all` (a string) not handled; one issue reported per step instead of per job |
 | `test_write_scope_and_unpinned` | `uses` with no `@` treated as pinned; `if` condition not checked for `refs/heads/main` |
 | `test_your_workflow` | Your `ci.yml` breaks a rule, lacks a `deploy` job, or the test job doesn't run `pytest` |
+| `test_long_lived_cloud_key_flagged` | Only step `env` searched, not job-level `env`; secret names matched without the `secrets.` prefix |

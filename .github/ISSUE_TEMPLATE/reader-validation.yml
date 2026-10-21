@@ -1,0 +1,43 @@
+name: Reader validation session
+description: Record one reader-validation session (see reader-validation/README.md)
+labels: [reader-validation]
+body:
+  - type: dropdown
+    id: session
+    attributes:
+      label: Session
+      options:
+        - 1. Setup
+        - 2. Foundations (ex10)
+        - 3. Retrieval (ex37, ex39)
+        - 4. Agents and security (ex42, ex54)
+        - 5. Signature capstone, first stage (C1 milestone 1)
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Environment
+      description: OS, Python and Node versions, and the release tag
+      placeholder: "Ubuntu 24.04, Python 3.12.3, Node 24, v1.1.0"
+    validations:
+      required: true
+  - type: input
+    id: outcome
+    attributes:
+      label: Outcome
+      description: Minutes taken, and whether "done when" was reached without help
+      placeholder: "75 min; done without help"
+    validations:
+      required: true
+  - type: textarea
+    id: friction
+    attributes:
+      label: Friction points
+      description: One per line. File and line, what the reader expected, what happened, any hint given (word for word).
+    validations:
+      required: true
+  - type: textarea
+    id: change
+    attributes:
+      label: What the reader would change

@@ -89,3 +89,13 @@ def test_monthly_projection(impl):
     for bad in (-0.1, 1.5):
         with pytest.raises(ValueError):
             impl.monthly_cost(cached, 2_000_000, response_hit_rate=bad)
+
+
+def test_cross_tenant_requests_do_not_share_entries(impl):
+    # Cross-tenant leak check: the same question under each tenant's own system prompt must not hit the other's entry.
+    llm = FakeLLM(lambda m, s, t: f"{s} says: your limit is private")
+    c = impl.CachedLLM(llm, ttl_s=60, clock=Clock())
+    acme = c.complete(msgs("What is my claim limit?"), system="Tenant: acme", model="m")
+    globex = c.complete(msgs("What is my claim limit?"), system="Tenant: globex", model="m")
+    assert "acme" not in globex.text and len(llm.calls) == 2
+    assert c.complete(msgs("What is my claim limit?"), system="Tenant: acme", model="m").text == acme.text

@@ -30,7 +30,9 @@ programmes need the full 18 identifiers, an expert review, and legal sign-off) p
 `created` (ISO date). Purge records older than `retention_days` unless their id is on legal hold. `purged_ids` sorted.
 
 `access_log_entry(user, purpose, record_ids, today) -> dict` — `{"user", "purpose", "record_count", "date"}`
-(never the record contents); raise `ValueError` if `purpose` is not in `ALLOWED_PURPOSES`.
+(never the record contents or ids, only their count); raise `ValueError` if `purpose` is not exactly one of
+`ALLOWED_PURPOSES` (no case folding or trimming), or if `user` is missing, empty or blank (anonymous access fails
+closed).
 
 Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
 
@@ -40,10 +42,10 @@ Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each
   No API key or network access is needed.
 - **Run your work:** from the repository root,
   `pytest exercises/ch15-field-engineering-and-productisation/ex72-phi-deidentify`.
-- **Expected output:** all 5 tests fail against the starter; when you're done, all 5 pass.
+- **Expected output:** all 6 tests fail against the starter; when you're done, all 6 pass.
 - **Check the reference solution:**
-  `pytest --solutions exercises/ch15-field-engineering-and-productisation/ex72-phi-deidentify`: all 5 pass.
-- **Tests:** `test_phi.py` (5 tests).
+  `pytest --solutions exercises/ch15-field-engineering-and-productisation/ex72-phi-deidentify`: all 6 pass.
+- **Tests:** `test_phi.py` (6 tests).
 - **Common failures:** `ModuleNotFoundError: No module named 'fde_kit'` means the command didn't run from the
   repository root. For a failing test, [HINTS.md](HINTS.md) says what it usually means.
 - **Whose failure is it?** If your run fails but the reference run passes, it's your code. If the reference run fails

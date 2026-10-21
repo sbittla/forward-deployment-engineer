@@ -22,10 +22,18 @@ class RunReport:
 
 
 class Orchestrator:
-    def __init__(self, planner_llm, workers: dict[str, Callable[[str, dict], str]], approve: Callable[[Step], bool]):
+    def __init__(self, planner_llm, workers: dict[str, Callable[[str, dict], str]], approve: Callable[[Step], bool],
+                 always_approve=frozenset()):
         self.planner_llm = planner_llm
         self.workers = workers
         self.approve = approve
+        self.always_approve = frozenset(always_approve)  # policy in code: the plan can't switch these off
+
+    def _approved(self, step: Step) -> bool:
+        try:
+            return self.approve(step) is True  # fail closed: errors and anything but True mean "no"
+        except Exception:
+            return False
 
     def _system(self) -> str:
         return ("You are a planner. Break the goal into steps for these workers: "
@@ -61,9 +69,9 @@ class Orchestrator:
         for s in steps:
             approved = True
             blocked = any(statuses.get(d) != "done" for d in s.depends_on)
-            if not blocked and s.requires_approval:
+            if not blocked and (s.requires_approval or s.worker in self.always_approve):
                 audit.append(f"{s.id}: approval requested")
-                approved = self.approve(s)
+                approved = self._approved(s)
             if blocked:
                 statuses[s.id] = "skipped"
             elif not approved:

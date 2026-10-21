@@ -6,6 +6,7 @@
 - Fuse keyword and vector rankings with reciprocal rank fusion.
 - Explain why RRF avoids calibrating incomparable scores.
 - Debug fused results by inspecting each retriever's rank.
+- Enforce tenant isolation inside retrieval, failing closed on missing metadata.
 
 ## Scenario
 Keyword search nails identifiers; vector search handles paraphrases. Customers want both. Reciprocal Rank Fusion
@@ -21,6 +22,13 @@ Keyword search nails identifiers; vector search handles paraphrases. Customers w
 4. `explain_fusion(query, keyword_fn, vector_fn, doc_id, depth=20)` →
    `{"keyword_rank": int | None, "vector_rank": int | None}` (1-based).
 
+5. Tenant isolation that fails closed. `VectorIndex.add(doc_id, text, acl=None)` stores an optional ACL
+   `{"tenant": str, "groups": [str, ...]}`. `search_as(user, query, k=10)` takes `user = {"tenant": str, "groups":
+   [...]}` and returns what `search` would, with the same scores and order, but computed over only the chunks the
+   user may see: the chunk has an ACL, its `tenant` equals the user's, and it shares at least one group with the
+   user. Filter **before** scoring, so another tenant's best match never enters the ranking. A chunk with no ACL, no
+   tenant or no groups is never returned, and a user with a missing or empty tenant raises `PermissionError`.
+
 In production you would plug real embeddings (and a real vector DB) into the same interfaces.
 
 Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
@@ -30,9 +38,9 @@ Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each
 - **Prerequisites:** Python 3.11 or later and `pip install -r requirements.txt`, run once from the repository root.
   No API key or network access is needed.
 - **Run your work:** from the repository root, `pytest exercises/ch10-rag/ex39-hybrid-search`.
-- **Expected output:** all 5 tests fail against the starter; when you're done, all 5 pass.
-- **Check the reference solution:** `pytest --solutions exercises/ch10-rag/ex39-hybrid-search`: all 5 pass.
-- **Tests:** `test_hybrid.py` (5 tests).
+- **Expected output:** all 7 tests fail against the starter; when you're done, all 7 pass.
+- **Check the reference solution:** `pytest --solutions exercises/ch10-rag/ex39-hybrid-search`: all 7 pass.
+- **Tests:** `test_hybrid.py` (7 tests).
 - **Common failures:** `ModuleNotFoundError: No module named 'fde_kit'` means the command didn't run from the
   repository root. For a failing test, [HINTS.md](HINTS.md) says what it usually means.
 - **Whose failure is it?** If your run fails but the reference run passes, it's your code. If the reference run fails

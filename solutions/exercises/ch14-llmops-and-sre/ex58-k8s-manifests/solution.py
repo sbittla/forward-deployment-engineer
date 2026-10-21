@@ -41,6 +41,9 @@ def _lint_deployment(d: dict) -> list[str]:
             issues.append(f"secret-literal:{cn}")
         if not c.get("securityContext", {}).get("readOnlyRootFilesystem"):
             issues.append(f"readonly-fs:{cn}")
+        sc = c.get("securityContext", {})
+        if sc.get("privileged") or sc.get("allowPrivilegeEscalation"):
+            issues.append(f"privileged:{cn}")
     return [f"Deployment/{name}: {i}" for i in issues]
 
 

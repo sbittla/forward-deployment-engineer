@@ -21,8 +21,14 @@ in transit, and their install script must refuse anything that would write outsi
 2. `verify_bundle(path, key) -> list[str]` — problems found (empty = OK):
    `"bad signature"`, `"missing: <f>"`, `"unexpected: <f>"`, `"checksum mismatch: <f>"`, `"unsafe path: <f>"` (any
    member that is absolute, contains `..`, or is a symlink/hardlink), `"no manifest"`.
-3. `safe_extract(path, dest, key)` — verify first; raise `ValueError` listing problems if any; otherwise extract all
-   files except the manifest into `dest`.
+   `verify_bundle(path, key, installed_version=None)`: when `installed_version` is given and the signature is valid,
+   compare versions numerically, part by part (`1.10.0` is newer than `1.9.2`). A bundle older than the installed
+   version adds `"downgrade: <bundle version> < <installed version>"` (a replayed old bundle); the same version is
+   allowed. If either version isn't dot-separated integers, add `"unparseable version: <bundle version>"`.
+   A deliberate rollback is also a downgrade: the operator either re-signs the previous release with a higher version
+   number or runs the install without `installed_version`, recording who approved it in the change record.
+3. `safe_extract(path, dest, key, installed_version=None)` — verify first (passing `installed_version` on); raise
+   `ValueError` listing problems if any; otherwise extract all files except the manifest into `dest`.
 
 Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
 
@@ -31,10 +37,10 @@ Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each
 - **Prerequisites:** Python 3.11 or later and `pip install -r requirements.txt`, run once from the repository root.
   No API key or network access is needed.
 - **Run your work:** from the repository root, `pytest exercises/ch14-llmops-and-sre/ex64-airgap-bundle`.
-- **Expected output:** all 4 tests fail against the starter; when you're done, all 4 pass.
-- **Check the reference solution:** `pytest --solutions exercises/ch14-llmops-and-sre/ex64-airgap-bundle`: all 4
+- **Expected output:** all 5 tests fail against the starter; when you're done, all 5 pass.
+- **Check the reference solution:** `pytest --solutions exercises/ch14-llmops-and-sre/ex64-airgap-bundle`: all 5
   pass.
-- **Tests:** `test_bundle.py` (4 tests).
+- **Tests:** `test_bundle.py` (5 tests).
 - **Common failures:** `ModuleNotFoundError: No module named 'fde_kit'` means the command didn't run from the
   repository root. For a failing test, [HINTS.md](HINTS.md) says what it usually means.
 - **Whose failure is it?** If your run fails but the reference run passes, it's your code. If the reference run fails

@@ -48,3 +48,12 @@ class SLO:
             return 1.0
         bad = sum(not self._good(r) for r in w)
         return round(1 - bad / (len(w) * self.error_budget), 4)
+
+    def canary_action(self, canary_requests, now, window_s=HOUR, max_burn=2.0, min_requests=500) -> str:
+        w = self._window(canary_requests, now, window_s)
+        bad = sum(not self._good(r) for r in w)
+        if bad > max_burn * self.error_budget * min_requests:
+            return "rollback"          # the canary has already spent more than its minimum sample may
+        if len(w) < min_requests:
+            return "wait"
+        return "rollback" if self.burn_rate(canary_requests, now, window_s) > max_burn else "promote"

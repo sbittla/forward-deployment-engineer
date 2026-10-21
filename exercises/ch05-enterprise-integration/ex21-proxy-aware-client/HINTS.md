@@ -42,3 +42,5 @@ URLs with `urllib.parse.urlsplit`, which gives you `.scheme`, `.hostname` and `.
 | `test_egress` | Suffix match without a dot boundary; wildcard matching the bare domain; empty allowlist denying everything |
 | `test_diagnose` | Lines out of order, or wording differs from the README exactly |
 | `test_opener` | Bypass list not passed under the `no` key |
+| `test_offline_policy_makes_no_network_calls` | A method resolves the host or opens a connection (for example `socket.gethostbyname`) instead of only reading settings |
+| `test_air_gap_allowlist_fails_closed` | Allowlist matched against the raw URL string (the userinfo trick passes), or a wildcard matching the bare domain |

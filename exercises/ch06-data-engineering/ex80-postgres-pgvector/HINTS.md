@@ -40,3 +40,4 @@ column keeps rules like "a TEXT column whose name ends in `_at`" simple.
 | `test_queries` | `?` inside a string literal replaced; julianday pattern not converted to EXTRACT; ON CONFLICT not appended |
 | `test_vector_schema` | Wrong operator class for the metric; ivfflat suffix missing; unknown index not rejected |
 | `test_knn` | Wrong distance operator; `k=0` accepted |
+| `test_table_name_is_validated` | Table name interpolated unchecked; `match` instead of `fullmatch` lets `chunks; DROP ...` through; 64-character name accepted |

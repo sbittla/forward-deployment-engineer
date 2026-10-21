@@ -49,3 +49,8 @@ Handle each line like this:
 | `multi-line data, default event, leading space, no-data events` | Data lines not joined with `\n`; an event with no data dispatched |
 | `end flushes final event` | `end()` ignores the leftover buffer |
 | `error event throws` | Error events skipped instead of thrown, or the wrong message field used |
+| `parser tracks the last event id` | `lastEventId` set when the `id` line is read instead of at dispatch; reset when an event has no `id`; NUL not rejected |
+| `stream: sends the bearer token and fails closed on 401 without retrying` | Header name or `Bearer ` prefix wrong; 401 treated as a dropped connection and retried; empty token still sent |
+| `stream: user cancellation stops reading and keeps the partial text` | `signal` not passed to `fetchFn`; abort not checked before each chunk; an abort counted as a dropped connection |
+| `stream: reconnects with Last-Event-ID and resumes without duplicates` | `Last-Event-ID` missing on the retry, or the text reset on reconnect; a new parser not used per attempt |
+| `stream: reconnects are bounded, and provider errors are not retried` | No reconnect limit; an `error` event or a 503 retried; a body ending without `done` returned as success |

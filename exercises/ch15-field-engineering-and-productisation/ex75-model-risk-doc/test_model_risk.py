@@ -52,3 +52,13 @@ def test_render(impl):
     bad = {**META, "evals": [{"name": "groundedness", "metric": "pass rate", "value": 0.5, "threshold": 0.95}]}
     out = impl.render(bad)
     assert "| groundedness | pass rate | 0.5 | 0.95 | FAIL |" in out and "Status: BLOCKED (1 issues)" in out
+
+
+def test_validate_fails_closed(impl):
+    m = copy.deepcopy(META)
+    del m["evals"][0]["threshold"]
+    m["evals"][1]["value"] = None
+    assert set(impl.validate(m)) == {"eval_incomplete:groundedness", "eval_incomplete:safety"}
+    out = impl.render(m)
+    assert "| groundedness | pass rate | 0.96 | None | FAIL |" in out and "Status: BLOCKED (2 issues)" in out
+    assert impl.validate({**META, "evals": []}) == ["missing:evals"]

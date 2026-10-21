@@ -47,3 +47,4 @@ the query.
 | `test_label_coverage` | Replacing the wrong example; labels with no pool examples cause an error |
 | `test_format_escapes_and_wraps` | Newline layout differs from the expected string; quotes escaped too |
 | `test_build_messages` | Ticket not escaped or not at the end; more than one message |
+| `test_injected_ticket_cannot_close_its_tag` | The ticket inserted raw, so a `</ticket>` inside it ends the block early and the text after it reads as instructions |

@@ -43,3 +43,4 @@ so you need them all first. Then dispatch on `kind`, with one helper for Deploym
 | `test_untagged_image` | Image without a colon treated as tagged |
 | `test_selector_subset_ok` | Same as above: the selector must match as a subset |
 | `test_your_manifests` | Your `deploy.yaml` is missing a kind, isn't named `answer-svc`, or has no `secretKeyRef` |
+| `test_privileged_container_rejected` | Only `privileged` checked, not `allowPrivilegeEscalation`; checked on the pod instead of the container |

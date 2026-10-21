@@ -59,3 +59,16 @@ def check_audience(claims: dict, server_audience: str) -> None:
 
 def upstream_headers(inbound_token: str, claims: dict, server_audience: str, exchange) -> dict:
     raise NotImplementedError
+
+
+@dataclass
+class RiskAcceptance:
+    attack_id: str
+    owner: str
+    rationale: str
+    compensating_control: str
+    review_by: str
+
+
+def residual_risk(report: Report, acceptances: list[RiskAcceptance], today: str) -> dict:
+    raise NotImplementedError

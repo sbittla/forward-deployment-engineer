@@ -44,3 +44,6 @@ plus a second dict from idempotency key to job id.
 | `test_extend_requires_live_lease` | `extend` skips the lease check, so a non-owner or an expired worker revives the lease |
 | `test_backoff_then_dead_letter` | Backoff exponent off by one, or the job dead-lettered one attempt late |
 | `test_run_worker` | Unknown kind raises out of `run_worker` instead of being failed, or failures aren't counted as processed |
+| `test_fault_enqueue_retry_storm_creates_one_job_per_key` | Idempotency key looked up after the job is created, or not stored |
+| `test_fault_flaky_handler_attempts_are_bounded` | `fail` re-queues a job that has reached `max_attempts`, or `claim` ignores `available_at` |
+| `test_fault_worker_crash_midjob_redelivers_without_duplicate_effect` | Expired lease still blocks `claim`, or the late `ack` from the dead worker is accepted |

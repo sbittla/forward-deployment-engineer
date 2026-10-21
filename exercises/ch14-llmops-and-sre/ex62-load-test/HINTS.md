@@ -39,3 +39,4 @@ Write a helper that times **one** call: start `time.perf_counter()`, call `fn()`
 | `test_littles_law` | Floating-point error makes `ceil` return 121 |
 | `test_stage_breakdown` | Shares computed per trace instead of over the totals; not sorted descending |
 | `test_invalid_capacity_inputs` | Validation missing; empty traces divide by zero |
+| `test_report_states_load_model` | Think time not applied between a worker's calls, or counted in latency; label not validated |

@@ -45,3 +45,5 @@ you.
 | `test_half_open_failure_reopens_and_restarts_timer` | Failed trial keeps the original open time, or only increments the counter |
 | `test_bulkhead` | Slot not released on exit, or entering blocks instead of raising `BulkheadFull` |
 | `test_bulkhead_threads` | A plain integer counter without a lock, so threads race past the limit |
+| `test_fault_outage_load_on_dependency_is_bounded` | A failed half-open trial doesn't restart the timer, so the dependency is called every second |
+| `test_fault_half_open_admits_one_trial_under_concurrency` | No "trial in flight" flag, so every caller in the half-open window reaches the dependency |

@@ -83,6 +83,14 @@ def test_selector_subset_ok(impl):
     assert impl.lint_manifests(GOOD) == []
 
 
+def test_privileged_container_rejected(impl):
+    for sc in ({"readOnlyRootFilesystem": True, "privileged": True},
+               {"readOnlyRootFilesystem": True, "allowPrivilegeEscalation": True}):
+        docs = copy.deepcopy(GOOD)
+        docs[0]["spec"]["template"]["spec"]["containers"][0]["securityContext"] = sc
+        assert impl.lint_manifests(docs) == ["Deployment/web: privileged:app"]
+
+
 def test_your_manifests(impl, exercise_dir):
     docs = impl.load(exercise_dir / "deploy.yaml")
     kinds = sorted(d["kind"] for d in docs)

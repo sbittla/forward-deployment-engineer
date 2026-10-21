@@ -23,3 +23,11 @@ def evaluate(retrieve, qrels: dict, k: int) -> dict:
 
 def compare(a: dict, b: dict, names=("A", "B")) -> str:
     raise NotImplementedError
+
+
+def citation_precision(answers: list[dict]) -> float:
+    raise NotImplementedError
+
+
+def abstention_report(results: list[dict]) -> dict:
+    raise NotImplementedError

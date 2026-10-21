@@ -1,0 +1,5 @@
+{
+  "CL-20931": {"tenant": "northwind", "adjuster": "u-lee"},
+  "CL-30112": {"tenant": "northwind", "adjuster": "u-kim"},
+  "HM-55210": {"tenant": "harbor-mutual", "adjuster": "u-hm1"}
+}

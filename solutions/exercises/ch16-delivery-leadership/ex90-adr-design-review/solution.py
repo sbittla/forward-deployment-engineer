@@ -1,4 +1,5 @@
 import re
+from datetime import date
 from dataclasses import dataclass, field
 
 DOWNSIDE_WORDS = {"cost", "risk", "trade-off", "tradeoff", "downside", "slower", "lock-in", "complexity"}
@@ -7,6 +8,8 @@ CHECKLIST = {
     "evals": "major", "observability": "major", "threat_model": "major",
     "slo": "minor", "cost_estimate": "minor",
 }
+RISK_FIELDS = ("risk", "owner", "owner_org", "rationale", "compensating_control", "decided_on", "expires")
+MAX_ACCEPTANCE_DAYS = 90
 REQUIRED = ("context", "decision", "consequences", "alternatives considered")
 SEVERITY_ORDER = {"blocker": 0, "major": 1, "minor": 2}
 
@@ -82,3 +85,20 @@ def gate(findings: list[Finding], evidence: dict) -> tuple[str, list[str]]:
     if conditional:
         return "conditional", conditional
     return "accept", []
+
+
+def lint_risk_acceptance(record: dict) -> list[str]:
+    issues = [f"missing:{f}" for f in RISK_FIELDS if not str(record.get(f, "")).strip()]
+    if issues:
+        return issues
+    if str(record["owner_org"]).strip().lower() != "customer":
+        issues.append("owner:not-customer")
+    try:
+        decided, expires = date.fromisoformat(record["decided_on"]), date.fromisoformat(record["expires"])
+    except ValueError:
+        return issues + ["dates:invalid"]
+    if expires <= decided:
+        issues.append("expires:not-after-decision")
+    elif (expires - decided).days > MAX_ACCEPTANCE_DAYS:
+        issues.append(f"expires:over-{MAX_ACCEPTANCE_DAYS}-days")
+    return issues

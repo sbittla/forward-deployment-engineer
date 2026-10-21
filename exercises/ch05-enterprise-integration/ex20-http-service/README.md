@@ -29,6 +29,11 @@ their checklist using only the standard library, so it runs in their locked-down
 Every response is JSON and carries an `X-Request-ID` header: echo the client's `X-Request-ID` if sent, otherwise
 generate one. Use `uuid4().hex`.
 
+Check the token before anything else on `/v1/answer`: an unauthenticated request gets `401` even when its body is
+not JSON or over the size limit. Only `Bearer <t>` with `t` exactly in `tokens` passes;
+`test_auth_checked_before_body_is_parsed` also sends a `Basic` scheme, an empty token and a token with extra
+characters.
+
 Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
 
 ## Run and verify
@@ -36,10 +41,10 @@ Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each
 - **Prerequisites:** Python 3.11 or later and `pip install -r requirements.txt`, run once from the repository root.
   No API key or network access is needed.
 - **Run your work:** from the repository root, `pytest exercises/ch05-enterprise-integration/ex20-http-service`.
-- **Expected output:** all 11 tests fail against the starter; when you're done, all 11 pass.
+- **Expected output:** all 12 tests fail against the starter; when you're done, all 12 pass.
 - **Check the reference solution:** `pytest --solutions exercises/ch05-enterprise-integration/ex20-http-service`: all
-  11 pass.
-- **Tests:** `test_service.py` (11 tests).
+  12 pass.
+- **Tests:** `test_service.py` (12 tests).
 - **Common failures:** `ModuleNotFoundError: No module named 'fde_kit'` means the command didn't run from the
   repository root. For a failing test, [HINTS.md](HINTS.md) says what it usually means.
 - **Whose failure is it?** If your run fails but the reference run passes, it's your code. If the reference run fails

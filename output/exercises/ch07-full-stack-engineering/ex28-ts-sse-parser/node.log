@@ -1,14 +1,19 @@
 $ node --test exercises/ch07-full-stack-engineering/ex28-ts-sse-parser/sse.test.ts
-✔ whole stream (3.305213ms)
-✔ arbitrary byte chunking incl. split emoji and CRLF (7.086103ms)
-✔ multi-line data, default event, leading space, no-data events (1.52928ms)
-✔ end flushes final event (0.391783ms)
-✔ error event throws (0.994966ms)
-ℹ tests 5
+✔ whole stream (1.706952ms)
+✔ arbitrary byte chunking incl. split emoji and CRLF (4.18186ms)
+✔ multi-line data, default event, leading space, no-data events (1.130818ms)
+✔ end flushes final event (0.37828ms)
+✔ error event throws (0.672766ms)
+✔ parser tracks the last event id (0.207318ms)
+✔ stream: sends the bearer token and fails closed on 401 without retrying (1.129064ms)
+✔ stream: user cancellation stops reading and keeps the partial text (0.828037ms)
+✔ stream: reconnects with Last-Event-ID and resumes without duplicates (0.65299ms)
+✔ stream: reconnects are bounded, and provider errors are not retried (1.794143ms)
+ℹ tests 10
 ℹ suites 0
-ℹ pass 5
+ℹ pass 10
 ℹ fail 0
 ℹ cancelled 0
 ℹ skipped 0
 ℹ todo 0
-ℹ duration_ms 503.869665
+ℹ duration_ms 418.343636

@@ -3,14 +3,14 @@
   "status": "PASS",
   "problems": [],
   "tests": {
-    "passed": 5,
+    "passed": 9,
     "failed": 0,
     "error": 0,
     "skipped": 0
   },
-  "declared": 5,
-  "ran": 5,
-  "starter_failing": 5,
+  "declared": 9,
+  "ran": 9,
+  "starter_failing": 9,
   "cases": [
     {
       "test": "py:test_initial_and_idempotent",
@@ -30,6 +30,22 @@
     },
     {
       "test": "py:test_boundary_replay_after_watermark_reset",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_duplicate_source_rows_keep_latest",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_reconcile_deletes_removes_hard_deleted_rows",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_boundary_reconcile_refuses_mass_delete",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_backfill_100k_rows",
       "status": "passed"
     }
   ]

@@ -55,6 +55,8 @@ def apply_retention(records: list[dict], today: date, retention_days: int, legal
 
 
 def access_log_entry(user: str, purpose: str, record_ids: list, today: date) -> dict:
+    if not isinstance(user, str) or not user.strip():
+        raise ValueError("every access needs an identified user")
     if purpose not in ALLOWED_PURPOSES:
         raise ValueError(f"purpose {purpose!r} is not an allowed use of this data")
     return {"user": user, "purpose": purpose, "record_count": len(record_ids), "date": today.isoformat()}

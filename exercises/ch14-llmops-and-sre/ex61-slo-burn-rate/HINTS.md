@@ -42,3 +42,5 @@ top of them.
 | `test_ticket_not_page` | Ticket thresholds or windows wrong (6 over 6 h and 30 min) |
 | `test_short_spike_no_page` | Paging on the short window alone |
 | `test_budget_remaining` | Formula inverted, or no requests returns 0 instead of 1.0 |
+| `test_page_fires_at_exactly_14_4` | `>` used instead of `>=`, or the burn rate compared before rounding to 2 dp |
+| `test_canary_rollback_on_burn` | No early rollback for a canary that has already overspent; `wait` checked first |

@@ -45,3 +45,7 @@ without calling the transport.
 | `test_401_twice_propagates_and_other_errors` | Retry loops on repeated 401s, or non-401 errors are swallowed |
 | `test_invalidate` | `invalidate` clears the token but leaves the expiry, or vice versa |
 | `test_boundary_persistent_401_costs_two_token_calls` | The retry loops, or fetches more than one fresh token, when every call returns 401 |
+| `test_invalid_client_fails_closed` | `get_token` called inside the `try`, so the token endpoint's 401 is retried like the API's; or a failed call cached |
+| `test_idp_unreachable_fails_closed` | Connection errors swallowed and `fn` called with a stale or empty token |
+| `test_token_endpoint_429_is_honored` | The throttle isn't checked inside the lock, so each waiting thread calls the token endpoint |
+| `test_rotated_secret_is_read_at_each_refresh` | The callable called once in `__init__` instead of at each refresh |

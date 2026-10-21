@@ -14,8 +14,8 @@
 fixed golden set, broken down by category, re-run on every change. You'll build the harness.
 
 ## Your task
-- `load_cases(path)` — JSONL, one case per line: `{"id", "input", "expected", "grader", "tags": [...]}` (`tags`
-  optional). Blank lines ignored.
+- `load_cases(path)` — JSONL, one case per line: `{"id", "input", "expected", "grader", "tags": [...], "source"}`
+  (`tags` and `source` optional; `Case.source` defaults to `""`). Blank lines ignored.
 - Graders (`GRADERS[name](output: str, expected) -> bool`):
   | name | passes when |
   |---|---|
@@ -42,6 +42,14 @@ fixed golden set, broken down by category, re-run on every change. You'll build 
   `[(cause, count)]` sorted by count descending, then cause.
 - `cost_per_success(cost_per_request, pass_rate)` — `cost_per_request / pass_rate` (unrounded); `ValueError` if
   `pass_rate <= 0`. A cheap wrong answer has to be paid for again by a person.
+- `provenance(cases)` → `{source: count}` with sorted keys, where a case's `source` says where it came from: one of
+  `SOURCES` (`production`, `expert`, `red_team`, `synthetic`). A case without a source counts as `"unspecified"`;
+  any other value raises `ValueError`. The governance board asks where the cases came from; this is the answer.
+- `mcnemar_exact(fixed, broken)` — the paired comparison of a baseline and a candidate on the same cases. `fixed`
+  is the number of cases the candidate fixes, `broken` the number it breaks (the discordant pairs; cases both pass or
+  both fail carry no information). Return the two-sided exact binomial p-value,
+  `min(1, 2 · Σ_{i ≤ min(fixed, broken)} C(n, i) / 2ⁿ)` with `n = fixed + broken`, unrounded; `1.0` when `n == 0`;
+  `ValueError` for a negative count. The worked decision's 24 fixed and 14 broken give p ≈ 0.14.
 - `find_leakage(cases, examples)` — ids (in case order) of cases whose input appears in any few-shot or training
   example after normalising both: lower-case, replace every run of characters other than `a-z` and `0-9` with one
   space, collapse and strip spaces. The normalised input must appear as whole words (`"extract"` doesn't leak into
@@ -54,10 +62,10 @@ Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each
 - **Prerequisites:** Python 3.11 or later and `pip install -r requirements.txt`, run once from the repository root.
   No API key or network access is needed.
 - **Run your work:** from the repository root, `pytest exercises/ch12-llm-evaluation/ex49-eval-harness`.
-- **Expected output:** all 22 tests fail against the starter; when you're done, all 22 pass.
-- **Check the reference solution:** `pytest --solutions exercises/ch12-llm-evaluation/ex49-eval-harness`: all 22
+- **Expected output:** all 29 tests fail against the starter; when you're done, all 29 pass.
+- **Check the reference solution:** `pytest --solutions exercises/ch12-llm-evaluation/ex49-eval-harness`: all 29
   pass.
-- **Tests:** `test_eval_harness.py` (22 tests).
+- **Tests:** `test_eval_harness.py` (29 tests).
 - **Common failures:** `ModuleNotFoundError: No module named 'fde_kit'` means the command didn't run from the
   repository root. For a failing test, [HINTS.md](HINTS.md) says what it usually means.
 - **Whose failure is it?** If your run fails but the reference run passes, it's your code. If the reference run fails
@@ -81,7 +89,8 @@ three questions to check my understanding, one at a time, and tell me what to re
 ```text
 Implement exercises/ch12-llm-evaluation/ex49-eval-harness/starter.py so that test_eval_harness.py passes. README.md in
 that folder is the spec: follow its names, formats, ordering and error messages exactly. Public API: `Case`,
-`CaseResult`, `EvalReport`, `load_cases`, `run_eval`, `wilson_interval`, `cost_per_success`, `find_leakage`.
+`CaseResult`, `EvalReport`, `load_cases`, `run_eval`, `wilson_interval`, `cost_per_success`, `find_leakage`,
+`provenance`, `mcnemar_exact`, `SOURCES`.
 Constraints: Python 3.11+, the standard library and the repo's fde_kit package only (pyyaml is allowed where the
 README uses YAML). Do not modify the tests or fde_kit. When you're done, run
 `pytest exercises/ch12-llm-evaluation/ex49-eval-harness` and show me the output. If the README and the tests disagree, stop

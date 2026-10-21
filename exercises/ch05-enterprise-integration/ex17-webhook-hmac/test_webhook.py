@@ -141,3 +141,36 @@ def test_boundary_dedupe_is_per_process(impl):
     assert first.handle(captured, body) == (202, "accepted")
     restarted = impl.WebhookReceiver(SECRET, clock=clk)  # a restart or another replica
     assert restarted.handle(captured, body) == (202, "accepted")
+
+
+# Negative tests: rewritten timestamps, future timestamps and secret rotation
+
+def test_rewritten_timestamp_is_rejected(impl):
+    # An attacker replays a captured delivery but rewrites t to "now" to pass the window: t is signed, so 401.
+    clk = Clock()
+    r = impl.WebhookReceiver(SECRET, clock=clk, tolerance=300)
+    body = '{"id":"evt_old"}'
+    captured_sig = impl.sign(body, SECRET, clk.t - 3600).split(",v1=")[1]
+    assert r.handle({"X-Signature": f"t={clk.t},v1={captured_sig}"}, body) == (401, "bad signature")
+    assert r.processed == []
+
+
+def test_future_timestamp_is_stale(impl):
+    clk = Clock()
+    r = impl.WebhookReceiver(SECRET, clock=clk, tolerance=300)
+    body = '{"id":"evt_future"}'
+    assert r.handle({"X-Signature": impl.sign(body, SECRET, clk.t + 301)}, body) == (400, "stale")
+    assert r.processed == []
+
+
+def test_rotation_accepts_either_secret_during_overlap(impl):
+    clk = Clock()
+    new, old = "whsec_new", SECRET
+    during = impl.WebhookReceiver([new, old], clock=clk)
+    for i, secret in enumerate((new, old)):
+        body = json.dumps({"id": f"evt_{i}"})
+        assert during.handle({"X-Signature": impl.sign(body, secret, clk.t)}, body) == (202, "accepted")
+    after = impl.WebhookReceiver([new], clock=clk)  # old secret dropped once the redelivery horizon has passed
+    body = '{"id":"evt_late"}'
+    assert after.handle({"X-Signature": impl.sign(body, old, clk.t)}, body)[0] == 401
+    assert impl.WebhookReceiver([], clock=clk).handle({"X-Signature": impl.sign(body, old, clk.t)}, body)[0] == 401

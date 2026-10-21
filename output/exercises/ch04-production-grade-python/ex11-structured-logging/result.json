@@ -3,14 +3,14 @@
   "status": "PASS",
   "problems": [],
   "tests": {
-    "passed": 4,
+    "passed": 7,
     "failed": 0,
     "error": 0,
     "skipped": 0
   },
-  "declared": 4,
-  "ran": 4,
-  "starter_failing": 4,
+  "declared": 7,
+  "ran": 7,
+  "starter_failing": 7,
   "cases": [
     {
       "test": "py:test_json_line_and_correlation",
@@ -26,6 +26,18 @@
     },
     {
       "test": "py:test_exception_and_no_duplicate_handlers",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_fault_each_injected_failure_logged_with_correlation_id",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_fault_concurrent_failures_keep_their_own_correlation_id",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_fault_exception_inside_block_restores_outer_id",
       "status": "passed"
     }
   ]

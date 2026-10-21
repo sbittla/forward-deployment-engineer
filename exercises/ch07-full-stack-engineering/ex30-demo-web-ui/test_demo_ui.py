@@ -153,3 +153,54 @@ def test_stream_endpoint(app, impl):
     assert events[-1] == "event: done\ndata: {}"
     assert llm.calls[-1]["system"] == impl.SYSTEM_PROMPT
     assert post(url + "/api/chat/stream", {"q": ""})[0] == 400
+
+
+def _post_raw(url, data, headers):
+    req = urllib.request.Request(url, data=data, method="POST", headers={"Content-Type": "application/json", **headers})
+    try:
+        with urllib.request.urlopen(req, timeout=5) as r:
+            return r.status, r.read()
+    except urllib.error.HTTPError as e:
+        return e.code, e.read()
+
+
+def test_stream_requires_token_when_configured(impl):
+    # Auth on the stream: with api_token set, a missing or wrong bearer token gets 401 before any tokens are spent.
+    llm = FakeLLM(lambda msgs, system, tools: "ok")
+    srv = impl.make_app(llm, demo_mode=True, api_token="s3cret-token")
+    threading.Thread(target=srv.serve_forever, daemon=True).start()
+    url = f"http://127.0.0.1:{srv.server_address[1]}"
+    body = json.dumps({"q": "deductible?"}).encode()
+    try:
+        for path in ("/api/chat/stream", "/api/chat"):
+            for headers in ({}, {"Authorization": "Bearer wrong-token"}, {"Authorization": "s3cret-token"}):
+                status, raw = _post_raw(url + path, body, headers)
+                assert (status, json.loads(raw)) == (401, {"error": "unauthorized"}), (path, headers)
+        assert llm.calls == []                                     # no model call for a rejected request
+        status, raw = _post_raw(url + "/api/chat/stream", body, {"Authorization": "Bearer s3cret-token"})
+        assert status == 200 and raw.decode().endswith("event: done\ndata: {}\n\n")
+        assert len(llm.calls) == 1
+    finally:
+        srv.shutdown()
+        srv.server_close()
+
+
+def test_oversized_body_rejected(app, impl):
+    # Untrusted input at the boundary: a declared body over MAX_BODY_BYTES gets 413 before it is read, and never
+    # reaches the model. Only the headers are sent, so the test can't race the server closing the socket.
+    import http.client
+    url, llm = app
+    before = len(llm.calls)
+    port = int(url.rsplit(":", 1)[1])
+    for path in ("/api/chat", "/api/chat/stream"):
+        conn = http.client.HTTPConnection("127.0.0.1", port, timeout=5)
+        try:
+            conn.putrequest("POST", path)
+            conn.putheader("Content-Type", "application/json")
+            conn.putheader("Content-Length", str(impl.MAX_BODY_BYTES + 1))
+            conn.endheaders()
+            r = conn.getresponse()
+            assert (r.status, json.loads(r.read())) == (413, {"error": "body too large"})
+        finally:
+            conn.close()
+    assert len(llm.calls) == before

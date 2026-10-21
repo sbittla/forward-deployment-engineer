@@ -102,3 +102,120 @@ def test_boundary_retry_after_is_not_capped_by_a_deadline(impl):
     op, sleeps, calls = make(impl, [HTTPError(503, retry_after=3600)])
     assert op() == "ok"
     assert sleeps == [3600] and calls["n"] == 2
+
+
+# Fault injection: a fake dependency that fails a fraction of calls, runs slowly, or loses its response
+
+class FakeClock:
+    def __init__(self):
+        self.t = 0.0
+
+    def __call__(self):
+        return self.t
+
+    def sleep(self, s):
+        self.t += s
+
+
+def test_fault_partial_failures_bounded_retries(impl):
+    # 200 clients against a dependency that fails a seeded 30% of calls: retries are bounded per client
+    import random
+    rng = random.Random(7)
+    calls, sleeps, outcomes = [], [], []
+
+    @impl.retry(max_attempts=4, sleep=sleeps.append, rng=rng.random)
+    def flaky(client):
+        calls.append(client)
+        if rng.random() < 0.3:
+            raise HTTPError(503)
+        return "ok"
+
+    for client in range(200):
+        try:
+            outcomes.append(flaky(client))
+        except HTTPError:
+            outcomes.append("failed")
+    assert len(calls) <= 200 * 4 and len(sleeps) == len(calls) - 200
+    assert all(calls.count(c) == 4 for c, o in enumerate(outcomes) if o == "failed")
+    assert all(0 <= s <= 8.0 for s in sleeps)
+    assert outcomes.count("ok") >= 190
+
+
+def test_fault_retry_storm_is_bounded_during_outage(impl):
+    # Full outage: every call fails. Total load is exactly clients x max_attempts, and jitter spreads the waits.
+    import random
+    rng = random.Random(1)
+    calls, sleeps = [], []
+
+    @impl.retry(max_attempts=3, base_delay=1, sleep=sleeps.append, rng=rng.random)
+    def down():
+        calls.append(1)
+        raise ConnectionError("down")
+
+    for _ in range(100):
+        with pytest.raises(ConnectionError):
+            down()
+    assert len(calls) == 300 and len(sleeps) == 200
+    assert len({round(s, 6) for s in sleeps}) > 150  # no synchronized wave
+
+
+def test_fault_slow_dependency_respects_deadline(impl):
+    # Each call hangs for 3 s before timing out; a 10 s budget stops the loop before the backoff would pass it
+    clk = FakeClock()
+    calls = []
+
+    @impl.retry(max_attempts=10, sleep=clk.sleep, rng=lambda: 1.0, deadline=10, clock=clk)
+    def slow():
+        calls.append(clk.t)
+        clk.t += 3
+        raise TimeoutError()
+
+    with pytest.raises(TimeoutError):
+        slow()
+    assert calls == [0.0, 3.5, 7.5] and clk.t == 10.5  # third backoff (2 s) would end at 12.5 > 10
+
+
+def test_fault_retry_after_beyond_deadline_fails_fast(impl):
+    clk = FakeClock()
+    sleeps = []
+
+    @impl.retry(sleep=sleeps.append, deadline=60, clock=clk)
+    def throttled():
+        raise HTTPError(429, retry_after=3600)
+
+    with pytest.raises(HTTPError):
+        throttled()
+    assert sleeps == []
+
+
+def test_fault_lost_response_retry_pays_once(impl):
+    # The server applies the refund, then the network drops the response twice. The client retries with the same
+    # idempotency key; the server-side store returns the stored result, so the customer is paid once.
+    server = impl.IdempotencyStore()
+    paid, drops = [], [ConnectionError("reset"), ConnectionError("reset")]
+
+    def refund(p):
+        paid.append(p["amount"])
+        return {"refund_id": len(paid)}
+
+    @impl.retry(sleep=lambda s: None)
+    def post_refund():
+        result = server.run("refund-A-10", {"order": "A", "amount": 10}, refund)
+        if drops:
+            raise drops.pop(0)
+        return result
+
+    assert post_refund() == {"refund_id": 1} and paid == [10]
+
+
+def test_fault_each_retry_emits_one_event(impl):
+    events = []
+
+    @impl.retry(sleep=lambda s: None, rng=lambda: 1.0,
+                on_retry=lambda attempt, delay, exc: events.append((attempt, delay, getattr(exc, "status", None))))
+    def op(_state=[HTTPError(503), HTTPError(429, retry_after=2), HTTPError(400)]):
+        raise _state.pop(0)
+
+    with pytest.raises(HTTPError):
+        op()
+    assert events == [(0, 0.5, 503), (1, 2, 429)]  # no event for the non-retryable 400 that ended the loop
