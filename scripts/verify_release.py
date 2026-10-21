@@ -50,6 +50,8 @@ def version(cmd: list[str]) -> str:
 
 
 def main() -> int:
+    if hasattr(sys.stdout, "reconfigure"):      # the report has non-ASCII; don't fail on a cp1252 console
+        sys.stdout.reconfigure(encoding="utf-8", errors="replace")
     ap = argparse.ArgumentParser()
     ap.add_argument("ref")
     ap.add_argument("--docker", action="store_true")
