@@ -31,6 +31,8 @@ the tool that plans a hands-on enablement day and measures whether knowledge tra
    nobody is ready], "can_operate_without_fde": bool}`. The last is True when every objective has at least **two**
    ready people (no single points of failure).
 
+Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
+
 ## Prompt kit
 **Learn (tutor prompt)**
 ```text

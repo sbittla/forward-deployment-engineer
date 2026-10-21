@@ -31,6 +31,8 @@ validate **all** configuration up front, report every problem at once, and never
 ## Field notes
 Fail fast at start-up, not at 2 a.m. on the first request that touches the missing setting.
 
+Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
+
 ## Prompt kit
 **Learn (tutor prompt)**
 ```text

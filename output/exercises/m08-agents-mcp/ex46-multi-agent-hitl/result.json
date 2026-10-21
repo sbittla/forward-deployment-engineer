@@ -1,0 +1,40 @@
+{
+  "path": "exercises/m08-agents-mcp/ex46-multi-agent-hitl",
+  "status": "PASS",
+  "problems": [],
+  "tests": {
+    "passed": 6,
+    "failed": 0,
+    "error": 0,
+    "skipped": 0
+  },
+  "declared": 4,
+  "ran": 6,
+  "starter_failing": 6,
+  "cases": [
+    {
+      "test": "py:test_plan_topological_and_prompt",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_plan_validation[bad0]",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_plan_validation[bad1]",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_plan_validation[bad2]",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_run_approved",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_run_rejected_and_failure_cascade",
+      "status": "passed"
+    }
+  ]
+}

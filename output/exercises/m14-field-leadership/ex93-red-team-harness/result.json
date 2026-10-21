@@ -1,0 +1,40 @@
+{
+  "path": "exercises/m14-field-leadership/ex93-red-team-harness",
+  "status": "PASS",
+  "problems": [],
+  "tests": {
+    "passed": 6,
+    "failed": 0,
+    "error": 0,
+    "skipped": 0
+  },
+  "declared": 6,
+  "ran": 6,
+  "starter_failing": 6,
+  "cases": [
+    {
+      "test": "py:test_detectors",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_suite_and_report",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_retest",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_invalid_attacks_rejected",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_tool_poisoning",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_token_audience_and_no_passthrough",
+      "status": "passed"
+    }
+  ]
+}

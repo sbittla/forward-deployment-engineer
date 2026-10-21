@@ -29,6 +29,8 @@ variables in order of first use).
 
 Then write `RUNBOOK.md` for the answer service (ex20/ex57/ex58) that passes the linter.
 
+Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
+
 ## Prompt kit
 **Learn (tutor prompt)**
 ```text

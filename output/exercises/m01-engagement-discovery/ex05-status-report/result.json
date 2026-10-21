@@ -1,0 +1,48 @@
+{
+  "path": "exercises/m01-engagement-discovery/ex05-status-report",
+  "status": "PASS",
+  "problems": [],
+  "tests": {
+    "passed": 8,
+    "failed": 0,
+    "error": 0,
+    "skipped": 0
+  },
+  "declared": 8,
+  "ran": 8,
+  "starter_failing": 8,
+  "cases": [
+    {
+      "test": "py:test_green",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_amber_blocked_far_out",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_amber_one_overdue",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_red_blocked_soon",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_red_three_overdue",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_render",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_render_empty_sections",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_no_tasks_is_green",
+      "status": "passed"
+    }
+  ]
+}

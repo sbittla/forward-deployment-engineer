@@ -57,6 +57,10 @@ class JobQueue:
             raise LeaseError(f"{worker} does not hold the lease on job {job_id}")
         return j
 
+    def extend(self, job_id: int, worker: str, lease_s: float) -> None:
+        j = self._owned(job_id, worker)
+        j.lease_until = self.clock() + lease_s
+
     def ack(self, job_id: int, worker: str) -> None:
         j = self._owned(job_id, worker)
         j.status, j.lease_owner = "done", None

@@ -40,6 +40,8 @@ the spec into the prompt, trace every rule, and run a conformance suite generate
 Explaining *why* in the prompt ("reserves are confidential") makes models generalise a rule to cases the rule's
 wording didn't anticipate. Version the spec, not the prompt: the prompt is a build artifact.
 
+Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
+
 ## Prompt kit
 **Learn (tutor prompt)**
 ```text
@@ -52,7 +54,8 @@ write for it. Point out which rules a prompt alone cannot enforce and need code 
 ```text
 Implement exercises/m15-prompt-engineering/ex98-prompt-from-spec/starter.py so test_prompt_from_spec.py passes.
 The prompt layout must match the EXPECTED string in the test byte for byte. Use html.escape(quote=False) for rules
-and reasons. Use fde_kit.llm.FakeLLM only through its complete() method. Don't edit tests; show pytest output.
+and reasons. Use fde_kit.llm.FakeLLM only through its complete() method. Don't edit tests; show pytest output. If
+the README and the tests disagree, stop and tell me instead of guessing.
 ```
 **Review**
 ```text

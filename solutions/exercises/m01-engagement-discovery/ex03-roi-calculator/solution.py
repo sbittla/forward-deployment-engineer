@@ -36,9 +36,10 @@ def roi_summary(**i) -> dict:
     }
 
 
-def sensitivity(inputs: dict, param: str, multipliers) -> list[tuple[float, float]]:
+def sensitivity(inputs: dict, param, multipliers) -> list[tuple[float, float]]:
+    params = (param,) if isinstance(param, str) else tuple(param)
     rows = []
     for m in multipliers:
-        varied = {**inputs, param: inputs[param] * m}
+        varied = {**inputs, **{p: inputs[p] * m for p in params}}
         rows.append((m, roi_summary(**varied)["annual_net"]))
     return rows

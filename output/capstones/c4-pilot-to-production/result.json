@@ -1,0 +1,104 @@
+{
+  "path": "capstones/c4-pilot-to-production",
+  "status": "PASS",
+  "problems": [],
+  "tests": {
+    "passed": 22,
+    "failed": 0,
+    "error": 0,
+    "skipped": 0
+  },
+  "declared": 20,
+  "ran": 22,
+  "starter_failing": 22,
+  "cases": [
+    {
+      "test": "py:test_settings",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_settings_errors_aggregated",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_retry_then_fallback",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_retry_after_and_non_retryable",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_breaker_opens_and_recovers",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_policy_catches_the_legacy_setup",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_your_deploy_artifacts_pass",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_deliverables[performance_test_plan.md]",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_deliverables[production_readiness_review.md]",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_deliverables[runbook.md]",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_readiness_review_gates_before_score",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_performance_plan_labels_numbers",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_incident_diagnosis",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_preflight_pass_warn_fail",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_slo_alerts",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_load_and_capacity",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_canary_decision",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_probes",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_summarize_and_errors",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_degrades_gracefully",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_metrics_exposition",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_metrics_unit",
+      "status": "passed"
+    }
+  ]
+}

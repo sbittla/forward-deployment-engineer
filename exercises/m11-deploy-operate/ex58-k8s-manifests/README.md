@@ -27,6 +27,8 @@ rejected twice last week. Encode the standards as a linter and ship manifests th
 2. `load(path) -> list[dict]` reads a multi-document YAML file (skip empty documents).
 3. Write `deploy.yaml` (Deployment `answer-svc`, Service, HPA) that has **no** issues. Use `secretKeyRef` for the API key.
 
+Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
+
 ## Prompt kit
 **Learn (tutor prompt)**
 ```text

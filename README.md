@@ -9,21 +9,37 @@ deterministic fake model stands in for the LLM, so no API key is needed.
 ```bash
 pip install -r requirements.txt
 python scripts/check.py --solutions          # all reference solutions: green
+python scripts/run_all.py --docker           # the same in Docker, with a per-exercise report in output/
 pytest exercises/m01-engagement-discovery/ex01-engagement-charter   # one exercise: starts red, make it green
 ```
-Requirements: Python 3.11+, Node 23.6+ (for the TypeScript exercises; native type stripping, no npm install).
+Requirements: Python 3.11+, and Node 22.18+ for the TypeScript exercises (Node 24 LTS recommended; native type
+stripping, no npm install).
+
+Run the exercises for one chapter of the book with `python scripts/check.py --chapter 10` (add `--solutions` for the
+reference solutions).
+
+`scripts/run_all.py` runs every exercise and capstone solution one suite at a time and checks the results: every
+test declared in a suite ran and passed, and the starter fails at least one of them. With `--docker` it builds
+`docker/runner.Dockerfile` (CUDA base, Python 3.12, Node 24) and runs inside it with `--gpus all`; the exercises are
+CPU-only, so the GPU is reported in `output/environment.txt` but not needed. Results go to `output/`, laid out like
+`exercises/` and `capstones/`, with `output/summary.md` on top.
 
 ## How it works
-- `exercises/<module>/<exercise>/`: `README.md` (scenario + task), `starter.*`, tests, `meta.json`.
-- `solutions/` mirrors the tree with reference implementations. Peek only after you've tried.
+- `exercises/<module>/<exercise>/`: `README.md` (scenario + task), `starter.*`, tests, `meta.json`, and
+  `HINTS.md`: three progressive hints plus a table mapping each test to its most likely cause of failure.
+- `solutions/` mirrors the tree with reference implementations. Peek only after you've tried the hints.
 - `pytest --solutions <path>` runs the same tests against the reference solution.
 - `capstones/<cN>/`: multi-day engagements with `starter/` packages, deliverable templates, shared `data/` and tests.
+  All six are assessed with one [rubric](capstones/RUBRIC.md): gates first, then a weighted score.
+- `playbook/`: [copyable templates](playbook/README.md) for the engagement artefacts the book teaches, in five packs
+  (discovery, solution design, delivery, production readiness, handover).
 - `fde_kit/`: the offline `FakeLLM`, an optional `AnthropicLLM` adapter (`FDE_LIVE=1`), and text utilities.
+- `scripts/`: `check.py` (all tests, or `--chapter N`), `run_all.py` (every suite, checked, report in `output/`), `starters_red.py` (every suite starts red), `spec_lint.py`,
+  `hints_lint.py` and `export_learner.py`.
 
 ## Recommended order (the book's five parts)
 The module folders group exercises by topic; the book teaches them in this order so that every capstone comes after
-the exercises it builds on. Each exercise takes 40–90 minutes and each capstone 2–3 days: about 90 hours of
-exercises plus 15 capstone days. Full-time (about 20 h/week), that's 10 weeks; part-time (8 h/week), about 25 weeks.
+the exercises it builds on. Go at your own pace: the order matters more than the speed.
 
 | Part | Exercises | Then |
 |---|---|---|
@@ -43,7 +59,7 @@ and a review prompt. Use the agent the way you would on a customer site: you own
 |---|---|
 | ex01 | [Engagement charter from discovery notes](exercises/m01-engagement-discovery/ex01-engagement-charter/README.md) |
 | ex02 | [Discovery interview to user stories](exercises/m01-engagement-discovery/ex02-requirements-extractor/README.md) |
-| ex03 | [ROI and payback model for an AI deployment](exercises/m01-engagement-discovery/ex03-roi-calculator/README.md) |
+| ex03 | [ROI and payback model for an AI deployment, with multi-parameter sensitivity](exercises/m01-engagement-discovery/ex03-roi-calculator/README.md) |
 | ex04 | [Stakeholder map, RACI and comms plan](exercises/m01-engagement-discovery/ex04-stakeholder-map/README.md) |
 | ex05 | [Weekly status report generator](exercises/m01-engagement-discovery/ex05-status-report/README.md) |
 | ex06 | [Ambiguous request to clarifying questions and assumptions](exercises/m01-engagement-discovery/ex06-ambiguous-request/README.md) |
@@ -59,13 +75,13 @@ and a review prompt. Use the agent the way you would on a customer site: you own
 | ex12 | [Async fan-out with rate limiting](exercises/m02-production-python/ex12-async-rate-limit/README.md) |
 | ex13 | [Triage and fix a broken customer script](exercises/m02-production-python/ex13-debug-customer-script/README.md) |
 | ex14 | [Circuit breaker and bulkhead](exercises/m02-production-python/ex14-circuit-breaker/README.md) |
-| ex15 | [Idempotent job queue with dead-letter handling](exercises/m02-production-python/ex15-job-queue/README.md) |
+| ex15 | [Idempotent job queue with dead-letter handling and lease extension](exercises/m02-production-python/ex15-job-queue/README.md) |
 
 ### M03 · APIs & integration
 | # | Exercise |
 |---|---|
 | ex16 | [Paginated REST client with rate-limit headers](exercises/m03-apis-integration/ex16-paginated-client/README.md) |
-| ex17 | [Webhook receiver with HMAC and replay protection](exercises/m03-apis-integration/ex17-webhook-hmac/README.md) |
+| ex17 | [Webhook receiver with HMAC and replay protection; version-ordered updates and reconciliation](exercises/m03-apis-integration/ex17-webhook-hmac/README.md) |
 | ex18 | [OAuth2 client-credentials token cache](exercises/m03-apis-integration/ex18-oauth-token-cache/README.md) |
 | ex19 | [CRM to canonical schema mapper](exercises/m03-apis-integration/ex19-schema-mapper/README.md) |
 | ex20 | [Minimal HTTP service with auth and health](exercises/m03-apis-integration/ex20-http-service/README.md) |
@@ -76,7 +92,7 @@ and a review prompt. Use the agent the way you would on a customer site: you own
 |---|---|
 | ex22 | [SQL analytics on a support-ticket DB](exercises/m04-data-sql/ex22-sql-analytics/README.md) |
 | ex23 | [Incremental ETL with watermarks and upserts](exercises/m04-data-sql/ex23-incremental-etl/README.md) |
-| ex24 | [Data-quality checks framework](exercises/m04-data-sql/ex24-data-quality/README.md) |
+| ex24 | [Data-quality checks framework, data contracts and keyed pseudonymisation](exercises/m04-data-sql/ex24-data-quality/README.md) |
 | ex25 | [Schema drift detection](exercises/m04-data-sql/ex25-schema-drift/README.md) |
 | ex26 | [Bronze/silver/gold mini lakehouse](exercises/m04-data-sql/ex26-medallion-pipeline/README.md) |
 
@@ -86,7 +102,7 @@ and a review prompt. Use the agent the way you would on a customer site: you own
 | ex27 | [TypeScript: runtime-validated API client](exercises/m05-fullstack-typescript/ex27-ts-typed-client/README.md) |
 | ex28 | [TypeScript: SSE token-stream parser](exercises/m05-fullstack-typescript/ex28-ts-sse-parser/README.md) |
 | ex29 | [TypeScript: chat UI state reducer](exercises/m05-fullstack-typescript/ex29-ts-chat-reducer/README.md) |
-| ex30 | [Demo chat UI served from Python](exercises/m05-fullstack-typescript/ex30-demo-web-ui/README.md) |
+| ex30 | [Demo chat UI served from Python, with a streaming SSE relay](exercises/m05-fullstack-typescript/ex30-demo-web-ui/README.md) |
 
 ### M06 · LLM applications
 | # | Exercise |
@@ -95,13 +111,13 @@ and a review prompt. Use the agent the way you would on a customer site: you own
 | ex32 | [Structured output with validation and repair](exercises/m06-llm-apps/ex32-structured-output/README.md) |
 | ex33 | [Token budgeting and context packing](exercises/m06-llm-apps/ex33-context-packing/README.md) |
 | ex34 | [Cost/latency-aware model router with fallback](exercises/m06-llm-apps/ex34-model-router/README.md) |
-| ex35 | [Response cache and cost accounting](exercises/m06-llm-apps/ex35-llm-cache-costs/README.md) |
+| ex35 | [Response cache, cost accounting and a per-request cost model with prompt caching](exercises/m06-llm-apps/ex35-llm-cache-costs/README.md) |
 | ex36 | [Classical ML baseline vs LLM classifier](exercises/m06-llm-apps/ex36-ml-baseline/README.md) |
 
 ### M07 · Retrieval & RAG
 | # | Exercise |
 |---|---|
-| ex37 | [Chunking strategies](exercises/m07-retrieval-rag/ex37-chunking/README.md) |
+| ex37 | [Chunking strategies, incremental re-indexing and effective-date filtering](exercises/m07-retrieval-rag/ex37-chunking/README.md) |
 | ex38 | [BM25 from scratch](exercises/m07-retrieval-rag/ex38-bm25/README.md) |
 | ex39 | [Vector + keyword hybrid search with RRF](exercises/m07-retrieval-rag/ex39-hybrid-search/README.md) |
 | ex40 | [RAG answers with citations and abstention](exercises/m07-retrieval-rag/ex40-rag-citations/README.md) |
@@ -110,7 +126,7 @@ and a review prompt. Use the agent the way you would on a customer site: you own
 ### M08 · Agents, tools & MCP
 | # | Exercise |
 |---|---|
-| ex42 | [Tool-calling agent loop](exercises/m08-agents-mcp/ex42-tool-agent-loop/README.md) |
+| ex42 | [Tool-calling agent loop with run budgets, per-tool caps and repeated-call detection](exercises/m08-agents-mcp/ex42-tool-agent-loop/README.md) |
 | ex43 | [Tool input validation and error recovery](exercises/m08-agents-mcp/ex43-tool-validation/README.md) |
 | ex44 | [Build an MCP server](exercises/m08-agents-mcp/ex44-mcp-server/README.md) |
 | ex45 | [MCP client and DB connector](exercises/m08-agents-mcp/ex45-mcp-client-connector/README.md) |
@@ -121,7 +137,7 @@ and a review prompt. Use the agent the way you would on a customer site: you own
 ### M09 · Evaluation
 | # | Exercise |
 |---|---|
-| ex49 | [Golden-set eval harness](exercises/m09-evaluation/ex49-eval-harness/README.md) |
+| ex49 | [Golden-set eval harness with Wilson intervals, slices, failure taxonomy and leakage checks](exercises/m09-evaluation/ex49-eval-harness/README.md) |
 | ex50 | [LLM-as-judge with calibration](exercises/m09-evaluation/ex50-llm-judge/README.md) |
 | ex51 | [Prompt regression gate for CI](exercises/m09-evaluation/ex51-prompt-regression/README.md) |
 | ex52 | [A/B experiment analysis with bootstrap CIs](exercises/m09-evaluation/ex52-ab-analysis/README.md) |
@@ -167,7 +183,7 @@ and a review prompt. Use the agent the way you would on a customer site: you own
 | # | Exercise |
 |---|---|
 | ex76 | [One service spec rendered for AWS, GCP and Azure with data residency](exercises/m13-enterprise-stack/ex76-multi-cloud-deploy/README.md) |
-| ex77 | [Spark fundamentals: partitions, shuffles, skew, and a PySpark/Delta job](exercises/m13-enterprise-stack/ex77-spark-fundamentals/README.md) |
+| ex77 | [Spark fundamentals: partitions, shuffles, skew, and a guarded PySpark/Delta job](exercises/m13-enterprise-stack/ex77-spark-fundamentals/README.md) |
 | ex78 | [Port a customer's Java/Go/C++ request signer to Python](exercises/m13-enterprise-stack/ex78-polyglot-port/README.md) |
 | ex79 | [LangGraph-style state graph with checkpoints and interrupts](exercises/m13-enterprise-stack/ex79-graph-orchestration/README.md) |
 | ex80 | [SQLite to Postgres portability and pgvector](exercises/m13-enterprise-stack/ex80-postgres-pgvector/README.md) |
@@ -187,7 +203,7 @@ and a review prompt. Use the agent the way you would on a customer site: you own
 | ex90 | [Architecture decision records and partner design-review gate](exercises/m14-field-leadership/ex90-adr-design-review/README.md) |
 | ex91 | [React copilot UI component and hook without a build step](exercises/m14-field-leadership/ex91-react-copilot-ui/README.md) |
 | ex92 | [Ontology modelling: objects, links and governed actions](exercises/m14-field-leadership/ex92-ontology-modeling/README.md) |
-| ex93 | [AI red-team harness and security assessment report](exercises/m14-field-leadership/ex93-red-team-harness/README.md) |
+| ex93 | [AI red-team harness, MCP tool-poisoning and token-audience checks, and a security assessment report](exercises/m14-field-leadership/ex93-red-team-harness/README.md) |
 | ex94 | [Blameless postmortem and customer incident communications](exercises/m14-field-leadership/ex94-postmortem-comms/README.md) |
 
 ### M15 · Prompt engineering
@@ -204,7 +220,7 @@ and a review prompt. Use the agent the way you would on a customer site: you own
 | C1 | [Enterprise Support Copilot (insurance)](capstones/c1-support-copilot/README.md) |
 | C2 | [Agentic Order-Ops with MCP connectors (retail)](capstones/c2-ops-agent-mcp/README.md) |
 | C3 | [Lakehouse ETL + NL-to-SQL analyst (financial services)](capstones/c3-insights-analyst/README.md) |
-| C4 | [Pilot to production hardening in a constrained customer environment](capstones/c4-pilot-to-production/README.md) |
+| C4 | [Pilot to production hardening in a constrained customer environment: performance test plan, canary decision, gated readiness review](capstones/c4-pilot-to-production/README.md) |
 | C5 | [Embedded field engagement: healthcare intake from call transcripts](capstones/c5-field-engagement/README.md) |
 | C6 | [Deployment Lead: partner-delivered multi-workstream engagement](capstones/c6-deployment-lead/README.md) |
 

@@ -28,6 +28,8 @@ Eval run files are JSON: `{"run_id": str, "results": {case_id: {"passed": bool, 
 
 A sample GitHub Actions step lives in `ci-example.yml` (read it; no need to change it).
 
+Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
+
 ## Prompt kit
 **Learn (tutor prompt)**
 ```text

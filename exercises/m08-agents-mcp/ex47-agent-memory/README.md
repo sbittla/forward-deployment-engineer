@@ -27,6 +27,8 @@ facts that never get summarised away.
   - `messages` = the un-summarised messages as `{"role","content"}` dicts.
 - `summaries_made` counter.
 
+Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
+
 ## Prompt kit
 **Learn (tutor prompt)**
 ```text

@@ -34,6 +34,8 @@ transform.
      draft, `onChange(e)` → `onDraft(e.target.value)`, `aria-label` "Message") and a submit `button` "Send" with
      `disabled` = pending
 
+Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
+
 ## Prompt kit
 **Learn (tutor prompt)**
 ```text
@@ -47,7 +49,7 @@ and tell me what to re-read if I get one wrong.
 ```text
 Implement exercises/m14-field-leadership/ex91-react-copilot-ui/starter.ts so that panel.test.ts passes. README.md in
 that folder is the spec: follow its names, formats, ordering and error messages exactly. Public API: `initialState`,
-`chatReducer`, `makeUseChat`, `makeCopilotPanel`. Constraints: TypeScript executed directly by Node 23.6+ type
+`chatReducer`, `makeUseChat`, `makeCopilotPanel`. Constraints: TypeScript executed directly by Node 22.18+ type
 stripping: no npm packages, no build step, and only erasable type syntax (no enums, namespaces or parameter
 properties). Do not modify the tests. When you're done, run `node --test
 exercises/m14-field-leadership/ex91-react-copilot-ui/panel.test.ts` and show me the output. If the README and the

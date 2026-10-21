@@ -39,6 +39,8 @@ tool results are shaped differently by each API.
    `"tool_use"`.
 3. `PROVIDERS = {"anthropic": (to_anthropic, from_anthropic), "openai": (...), "gemini": (...)}`.
 
+Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
+
 ## Prompt kit
 **Learn (tutor prompt)**
 ```text

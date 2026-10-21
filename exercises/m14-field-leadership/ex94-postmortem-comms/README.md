@@ -32,6 +32,8 @@ customer's CIO reads on Monday. Both must be fast, accurate, jargon-free and bla
    Priority |`). Every action needs an owner and a due date, otherwise `ValueError`. Raise `ValueError` if
    `blame_lint` flags anything in the root cause or contributing factors.
 
+Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
+
 ## Prompt kit
 **Learn (tutor prompt)**
 ```text

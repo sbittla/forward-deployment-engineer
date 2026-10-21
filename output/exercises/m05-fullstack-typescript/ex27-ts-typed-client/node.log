@@ -1,0 +1,14 @@
+$ node --test exercises/m05-fullstack-typescript/ex27-ts-typed-client/client.test.ts
+✔ primitives (1.798199ms)
+✔ nested paths (0.739017ms)
+✔ extra keys dropped, optional, literal (0.84033ms)
+✔ client validates and sends headers (0.650383ms)
+✔ client rejects drifted schema and http errors (0.612266ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 5
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 399.231478

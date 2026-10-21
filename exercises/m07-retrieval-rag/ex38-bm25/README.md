@@ -22,6 +22,8 @@ its knobs lets you explain to a customer *why* a document ranked first.
 - `search(query, k=10) -> list[(doc_id, score)]` — only docs with score > 0, sorted by score desc then doc_id.
 - `explain(query, doc_id) -> dict[term, contribution]` — per-term contributions that sum to `score`.
 
+Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
+
 ## Prompt kit
 **Learn (tutor prompt)**
 ```text

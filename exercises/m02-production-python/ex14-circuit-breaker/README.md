@@ -28,6 +28,8 @@ pile up waiting on 30-second timeouts and the whole app goes down with it. Conta
 Pair breakers with a useful fallback: "Policy lookup is temporarily unavailable — here is the cached clause from
 yesterday" beats a spinner.
 
+Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
+
 ## Prompt kit
 **Learn (tutor prompt)**
 ```text

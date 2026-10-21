@@ -12,6 +12,11 @@ RECOMMENDATIONS = {
 }
 
 
+INSTRUCTION_MARKERS = ("ignore previous", "ignore all previous", "ignore prior", "disregard", "do not tell the user",
+                       "don't tell the user", "before answering", "before using this tool")
+SECRET_MARKERS = ("~/.ssh", "id_rsa", ".env", "api key", "api_key", "password", "secret", "credential")
+
+
 @dataclass
 class Attack:
     id: str
@@ -41,4 +46,16 @@ def retest_diff(before: Report, after: Report) -> dict:
 
 
 def render_assessment(report: Report, system_name: str) -> str:
+    raise NotImplementedError
+
+
+def scan_tools(tools: list[dict]) -> list[dict]:
+    raise NotImplementedError
+
+
+def check_audience(claims: dict, server_audience: str) -> None:
+    raise NotImplementedError
+
+
+def upstream_headers(inbound_token: str, claims: dict, server_audience: str, exchange) -> dict:
     raise NotImplementedError

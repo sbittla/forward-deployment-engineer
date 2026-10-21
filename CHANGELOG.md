@@ -1,7 +1,88 @@
 # Changelog
 
-This project follows [semantic versioning](https://semver.org/) for its exercise interfaces: a breaking change to
-a README spec or test contract bumps the minor version while the course is pre-1.0. Errata fixes are patch releases.
+This project follows [semantic versioning](https://semver.org/) for its exercise interfaces. From 1.0.0, a breaking
+change to a README spec or test contract bumps the major version, new exercises or templates bump the minor version,
+and errata fixes are patch releases. Exercise ids and directory names never change within an edition of the book.
+
+## [1.4.0] - 2026-10-20
+The release verified against *The Forward Deployed Engineer*, First Edition, revision 1.3. The book and the
+repository were checked against each other chapter by chapter, and new exercise parts now practise what the chapters
+teach. Exercise ids and directories are unchanged; existing functions keep their signatures, and new parts add
+functions or optional arguments. Three test contracts changed (ex05, Capstone 4 and Capstone 6, below). 780 tests
+(763 Python, 17 TypeScript), up from 734.
+
+### Added: new exercise parts
+Each part adds a spec section, tests that start red, hints and a reference solution.
+- **ex03:** `sensitivity()` also takes a tuple of parameters scaled together, which reproduces Chapter 2's
+  token-price column.
+- **ex15:** `extend(job_id, worker, lease_s)`, lease extension for long jobs (Chapter 4).
+- **ex17:** Part B, `apply_update` and `reconcile`: version-ordered updates that converge whatever order events arrive
+  in, and however often (Chapter 5).
+- **ex24:** Part B, `pseudonymise(value, key)` (keyed HMAC-SHA256) and `checks_from_contract`, data-quality checks
+  built from a data contract (Chapter 6).
+- **ex30:** a streaming relay: `sse()`, `relay()` and `POST /api/chat/stream`, with keep-alives and upstream
+  cancellation when the client disconnects (Chapter 7).
+- **ex35:** `cost_per_request` with prompt-cache read pricing and `monthly_cost`, reproducing Chapter 9's worked cost
+  model.
+- **ex37:** `chunk_key`, `plan_reindex` (incremental re-indexing) and `filter_effective` (effective-date filtering)
+  (Chapter 10).
+- **ex42:** `RunBudget` (steps, tokens, dollars, seconds), per-tool caps, repeated-call detection and "outcome
+  unknown" for tool timeouts, all as optional arguments to `run_agent` (Chapter 11).
+- **ex49:** `wilson_interval`, per-slice reports, a failure taxonomy, `cost_per_success` and `find_leakage`
+  (Chapter 12).
+- **ex77:** the Part B job must check its input (row count and freshness) before it overwrites the table (Chapter 6).
+- **ex93:** `scan_tools` (poisoned MCP tool descriptions), `check_audience` and `upstream_headers` (token audience
+  checks and no token passthrough) (Chapter 13).
+- **Capstone 4:** a `performance_test_plan.md` deliverable, `canary_decision` in `pilot/slo.py`, and a readiness
+  review with gates before the scorecard (Chapter 14).
+- **Capstone 6:** the statement of work needs support boundaries and exit criteria, as the rubric says.
+- `playbook/handover/integration-register.md`, the first page of the handover pack (Chapter 5); 26 templates.
+- `scripts/run_all.py`: runs every exercise and capstone solution one suite at a time and checks the results. A suite
+  passes only if every test it declares ran and passed, and its starter fails at least one of them. `--docker` builds
+  `docker/runner.Dockerfile` (CUDA base, Python 3.12, Node 24) and runs inside it with `--gpus all`.
+- `output/`: the latest run's report, laid out like `exercises/` and `capstones/`: a `result.json` and test log per
+  suite, plus `summary.md`, `summary.json` and `environment.txt` at the top.
+
+### Changed
+- **ex05:** the status note puts `## Asks` straight after the Overall line, as Chapter 3 and the exercise's own
+  field notes say ("lead with the ask"). The old order fails the new test.
+- **Capstone 4:** `test_c4_deploy_docs.py` requires a Gates section before a Scorecard section in the readiness
+  review, and the new performance test plan.
+- **Capstone 6:** the steering update leads with the decisions needed, as Chapter 16 describes;
+  `test_steering_update` checks the new section order.
+- Prompt kits for ex95 to ex100 end with "If the README and the tests disagree, stop and tell me instead of
+  guessing", like the other exercises.
+- Time estimates are gone. The README, the capstone READMEs and the book's exercise tables no longer say how long an
+  exercise or capstone takes.
+- Capstone 1's README lists the intent-accuracy bar (90%) that `evals.py` already enforces. Capstone 5's "Take after"
+  includes ex53.
+- `export_learner.py` leaves out `run_all.py`, which needs the solutions.
+
+## [1.0.0] - 2026-10-18
+The release verified against *The Forward Deployed Engineer*, First Edition, revision 1.2. Exercise ids,
+directories and test contracts are unchanged from 0.9.0.
+
+### Added
+- `capstones/RUBRIC.md`: one assessment for all six capstones. Gates first (tests, critical correctness, security and
+  privacy, honest reporting, plus each capstone's own gates), then nine weighted dimensions, with per-capstone
+  acceptance criteria and a strong and a borderline sample submission. Every capstone README links to it.
+- `playbook/`: 25 engagement templates in five packs (discovery, solution design, delivery, production readiness,
+  handover), each stating its owner, when to use it, its inputs and when it's done. Included in learner exports.
+- `scripts/starters_red.py` and a `starters` CI job: every exercise and capstone suite must fail against its starter.
+- `python scripts/check.py --chapter N` runs the exercises for one chapter of the book.
+- `HINTS.md` for all 100 exercises and 6 capstones: three progressive hints (where to start, the approach, the
+  tricky part) and a table mapping each test to its most likely cause of failure. Every README links to it.
+- `scripts/hints_lint.py`, run by `check.py --solutions`: every hints file has three levels, names only tests that
+  exist, and contains no code block longer than four lines.
+
+### Changed
+- Node.js requirement is now 22.18 or later (type stripping is on by default from 22.18), with Node 24 LTS
+  recommended; Node 23 is end-of-life. `package.json`, the README, `VERSIONS.md`, `check.py` and the TypeScript
+  exercise READMEs agree. The TypeScript solutions were verified on Node 22.18.0 and 23.11.1; CI uses 24.
+
+### Fixed
+- ex91 README now specifies the message-id counter the reference solution uses (one per `makeUseChat` call).
+- Capstone 6 starter documents the forecast method and the RAG thresholds that `test_rag` checks.
 
 ## [0.9.0] - 2026-10-18
 First public pre-release, for technical reviewers and beta readers.
@@ -30,4 +111,5 @@ First public pre-release, for technical reviewers and beta readers.
   specified and tested (ex36, ex52, ex62, ex66, ex71, ex78, ex82, ex93 and others).
 - Undocumented test dependencies in ex53 (`luhn_ok`) and ex91 (`initialState`).
 
+[1.4.0]: https://github.com/sbittla/forward-deployment-engineer/releases/tag/v1.4.0
 [0.9.0]: https://github.com/sbittla/forward-deployment-engineer/releases/tag/v0.9.0

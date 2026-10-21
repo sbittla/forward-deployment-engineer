@@ -23,6 +23,8 @@ Law and per-stage timings to explain capacity to the customer's platform team in
 
 **Errors:** `littles_law_concurrency` raises `ValueError` for negative inputs; `max_rps` raises `ValueError` unless `avg_latency_s > 0` and `concurrency >= 1`.
 
+Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
+
 ## Prompt kit
 **Learn (tutor prompt)**
 ```text

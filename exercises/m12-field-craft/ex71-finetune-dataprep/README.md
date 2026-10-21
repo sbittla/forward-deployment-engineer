@@ -33,6 +33,8 @@ Input conversations: `{"id", "intent", "csat" (1–5 or None), "resolved": bool,
 
 **Errors:** `to_example` raises `ValueError` when no assistant message remains (nothing to learn from).
 
+Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
+
 ## Prompt kit
 **Learn (tutor prompt)**
 ```text

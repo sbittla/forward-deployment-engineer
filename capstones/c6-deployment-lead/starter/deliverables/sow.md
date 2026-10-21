@@ -23,6 +23,12 @@ TODO
 ## Partner responsibilities
 TODO
 
+## Support boundaries
+TODO
+
+## Exit criteria
+TODO
+
 ## Change control
 TODO
 

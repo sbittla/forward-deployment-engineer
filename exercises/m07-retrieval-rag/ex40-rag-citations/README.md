@@ -26,6 +26,8 @@ came from, and when the documents don't contain the answer, the assistant must s
 - If the model replied with `ABSTAIN_TEXT`, return `abstained=True`.
 - `grounded` is True only when the answer has ≥ 1 valid citation and no invalid ones (or abstained).
 
+Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
+
 ## Prompt kit
 **Learn (tutor prompt)**
 ```text

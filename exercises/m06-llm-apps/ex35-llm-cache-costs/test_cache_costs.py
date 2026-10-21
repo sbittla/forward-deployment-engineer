@@ -68,3 +68,24 @@ def test_ledger(impl):
 def test_unknown_model(impl):
     with pytest.raises(KeyError):
         impl.CostLedger(PRICES).record("x", LLMResponse(model="mystery", input_tokens=1, output_tokens=1))
+
+
+def test_cost_per_request_worked_example(impl):
+    assert impl.cost_per_request(3000, 4000, 200, 400) == pytest.approx(0.0276)
+    assert impl.cost_per_request(3000, 4000, 200, 400, cached_prefix=True) == pytest.approx(0.0195)
+    assert impl.cost_per_request(3000, 4000, 200, 400, cached_prefix=True, cache_read=0.25) == pytest.approx(0.02085)
+    assert impl.cost_per_request(1000, 0, 0, 0, price_in=2.0, cache_read=0.0) == pytest.approx(0.002)
+    with pytest.raises(ValueError):
+        impl.cost_per_request(3000, -1, 200, 400)
+
+
+def test_monthly_projection(impl):
+    plain = impl.cost_per_request(3000, 4000, 200, 400)
+    cached = impl.cost_per_request(3000, 4000, 200, 400, cached_prefix=True)
+    assert impl.monthly_cost(plain, 2_000_000) == 55200.0
+    assert impl.monthly_cost(cached, 2_000_000) == 39000.0
+    assert impl.monthly_cost(cached, 2_000_000, response_hit_rate=0.3) == 27300.0
+    assert impl.monthly_cost(cached, 2_000_000, response_hit_rate=1.0) == 0.0
+    for bad in (-0.1, 1.5):
+        with pytest.raises(ValueError):
+            impl.monthly_cost(cached, 2_000_000, response_hit_rate=bad)

@@ -18,6 +18,8 @@ Implement an in-memory `JobQueue(clock, max_attempts=3, base_backoff=2.0)`:
 - `enqueue(kind, payload, idempotency_key=None) -> job_id` — duplicates (same key) return the existing id.
 - `claim(worker, lease_s=30) -> Job | None` — returns the oldest job whose `available_at <= now` and which is not
   leased (or whose lease expired). Sets `lease_owner`, `lease_until`, increments `attempts`.
+- `extend(job_id, worker, lease_s)` — heartbeat: sets `lease_until = now + lease_s` without touching `attempts`.
+  Raises `LeaseError` unless `worker` still holds a live lease, so a worker that lost its lease can't take it back.
 - `ack(job_id, worker)` — marks done. Raises `LeaseError` if `worker` no longer owns the lease.
 - `fail(job_id, worker, error)` — if `attempts >= max_attempts` move to the dead-letter list; otherwise make it
   available again at `now + base_backoff ** attempts`. Records `last_error`. Same lease check as `ack`.
@@ -29,6 +31,8 @@ Implement an in-memory `JobQueue(clock, max_attempts=3, base_backoff=2.0)`:
 ## Field notes
 Show the customer the dead-letter queue on day one. It is the difference between "the AI lost my email" and
 "three emails need a human — here they are".
+
+Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
 
 ## Prompt kit
 **Learn (tutor prompt)**

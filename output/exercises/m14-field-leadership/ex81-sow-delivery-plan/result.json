@@ -1,0 +1,44 @@
+{
+  "path": "exercises/m14-field-leadership/ex81-sow-delivery-plan",
+  "status": "PASS",
+  "problems": [],
+  "tests": {
+    "passed": 7,
+    "failed": 0,
+    "error": 0,
+    "skipped": 0
+  },
+  "declared": 7,
+  "ran": 7,
+  "starter_failing": 7,
+  "cases": [
+    {
+      "test": "py:test_pert",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_schedule_and_critical_path",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_estimate",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_cycles_and_unknown",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_working_days",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_render_sow",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_missing_acceptance",
+      "status": "passed"
+    }
+  ]
+}

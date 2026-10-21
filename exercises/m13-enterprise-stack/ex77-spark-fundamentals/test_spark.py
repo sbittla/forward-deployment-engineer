@@ -51,3 +51,18 @@ def test_spark_job_static(exercise_dir):
     assert "collect" not in calls and "toPandas" not in calls
     assert 'format("delta")' in src.replace("'", '"') and "bronze.transactions" in src and "gold.merchant_totals" in src
     assert "pyspark.sql" in src and ("F.sum" in src or "sum(" in src)
+
+
+def test_spark_job_guards_overwrite(exercise_dir):
+    src = (exercise_dir / "spark_job.py").read_text()
+    tree = ast.parse(src)
+    builds = [n for n in ast.walk(tree) if isinstance(n, ast.FunctionDef) and n.name == "build"]
+    assert builds, "define build(spark, min_rows, max_age_hours)"
+    params = [a.arg for a in builds[0].args.args]
+    assert params[:3] == ["spark", "min_rows", "max_age_hours"]
+    attr_calls = [n for n in ast.walk(tree) if isinstance(n, ast.Call) and isinstance(n.func, ast.Attribute)]
+    write_line = min(n.lineno for n in attr_calls if n.func.attr == "saveAsTable")
+    assert any(n.func.attr == "count" and n.lineno < write_line for n in attr_calls), "count the input before writing"
+    assert "ingested_at" in src, "check freshness on ingested_at"
+    assert any(isinstance(n, ast.Raise) and n.lineno < write_line for n in ast.walk(tree)), \
+        "a failed check must raise before the overwrite"

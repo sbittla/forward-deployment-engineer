@@ -68,3 +68,81 @@ def test_max_steps(impl):
     loop = lambda m, s, t: LLMResponse(tool_calls=[ToolCall("x", "get_order", {"order_id": "A"})])
     with pytest.raises(impl.AgentLoopError):
         impl.run_agent(FakeLLM(loop), make_tools(impl, []), "go", max_steps=3)
+
+
+def _calls(*pairs, tokens=(0, 0)):
+    """One scripted response per (name, args) pair, each with fixed token usage."""
+    return [LLMResponse(tool_calls=[ToolCall(f"t{i}", name, args)], input_tokens=tokens[0], output_tokens=tokens[1])
+            for i, (name, args) in enumerate(pairs)]
+
+
+def test_budget_tokens_stops_before_tools_run(impl):
+    log = []
+    script = _calls(("get_order", {"order_id": "A1"}), ("get_order", {"order_id": "A2"}), tokens=(1000, 500))
+    budget = impl.RunBudget(max_tokens=2500)
+    with pytest.raises(impl.BudgetExceeded, match="tokens"):
+        impl.run_agent(FakeLLM(script), make_tools(impl, log), "go", budget=budget)
+    assert log == [("get_order", "A1")]  # the over-budget turn's tools never ran
+    assert budget.tokens == 3000 and budget.steps == 2
+    assert issubclass(impl.BudgetExceeded, impl.AgentLoopError)
+
+
+def test_budget_usd(impl):
+    script = _calls(*[("get_order", {"order_id": f"A{i}"}) for i in range(5)], tokens=(100_000, 10_000))
+    budget = impl.RunBudget(max_tokens=1_000_000, max_usd=1.0)
+    with pytest.raises(impl.BudgetExceeded, match="usd"):
+        impl.run_agent(FakeLLM(script), make_tools(impl, []), "go", budget=budget, usd_per_mtok=(3.0, 15.0))
+    assert budget.steps == 3 and budget.usd == pytest.approx(1.35)  # 0.30 input + 0.15 output per call
+
+
+def test_budget_seconds_uses_clock(impl):
+    ticks = iter([0.0, 10.0, 200.0])
+    script = _calls(("get_order", {"order_id": "A1"}), ("get_order", {"order_id": "A2"}))
+    with pytest.raises(impl.BudgetExceeded, match="seconds"):
+        impl.run_agent(FakeLLM(script), make_tools(impl, []), "go", budget=impl.RunBudget(),
+                       clock=lambda: next(ticks))
+
+
+def test_budget_within_limits(impl):
+    script = _calls(("get_order", {"order_id": "A1"}), tokens=(40, 10))
+    script.append(LLMResponse(text="Delivered.", input_tokens=60, output_tokens=5))
+    budget = impl.RunBudget()
+    res = impl.run_agent(FakeLLM(script), make_tools(impl, []), "status?", budget=budget, usd_per_mtok=(1.0, 1.0))
+    assert res.final_text == "Delivered." and budget.steps == 2 and budget.tokens == 115
+    assert budget.usd == pytest.approx(115 / 1_000_000)
+
+
+def test_repeated_identical_call_detected(impl):
+    log = []
+    same = lambda m, s, t: LLMResponse(tool_calls=[ToolCall(f"x{len(m)}", "get_order", {"order_id": "A1"})])
+    with pytest.raises(impl.RepeatedCallError):
+        impl.run_agent(FakeLLM(same), make_tools(impl, log), "go", max_steps=10)
+    assert log == [("get_order", "A1")] * 2  # the third identical call is refused, not executed
+    assert issubclass(impl.RepeatedCallError, impl.AgentLoopError)
+    assert impl.call_fingerprint("f", {"a": 1, "b": 2}) == impl.call_fingerprint("f", {"b": 2, "a": 1})
+    assert impl.call_fingerprint("f", {"a": 1}) != impl.call_fingerprint("f", {"a": 2})
+
+
+def test_per_tool_cap(impl):
+    log = []
+    script = _calls(("issue_credit", {"order_id": "A1", "amount": 10}),
+                    ("issue_credit", {"order_id": "A1", "amount": 20}))
+    script.append(LLMResponse(text="One credit issued."))
+    llm = FakeLLM(script)
+    impl.run_agent(llm, make_tools(impl, log), "credit", tool_caps={"issue_credit": 1})
+    assert log == [("issue_credit", "A1", 10)]
+    refused = llm.calls[2]["messages"][-1]["content"][0]
+    assert refused["is_error"] is True
+    assert refused["content"] == "cap reached: issue_credit allows 1 call(s) per run"
+
+
+def test_timeout_is_outcome_unknown(impl):
+    def slow_refund(order_id):
+        raise TimeoutError("payment API did not answer in 30s")
+
+    tools = {"issue_refund": impl.Tool("Refund an order", {"type": "object"}, slow_refund)}
+    llm = FakeLLM(_calls(("issue_refund", {"order_id": "A1"})) + [LLMResponse(text="Checking status.")])
+    impl.run_agent(llm, tools, "refund A1")
+    result = llm.calls[1]["messages"][-1]["content"][0]
+    assert result["is_error"] is False
+    assert result["content"] == "outcome unknown: issue_refund timed out; check the current state before retrying"

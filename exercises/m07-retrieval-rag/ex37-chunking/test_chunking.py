@@ -1,3 +1,7 @@
+import hashlib
+import json
+from datetime import date
+
 import pytest
 
 DOC = """Intro text before headings.
@@ -56,3 +60,41 @@ def test_heading_paths(impl):
     assert excl.text.startswith("### Exclusions") and "Flood damage is excluded." in excl.text
     assert "File within" not in excl.text
     assert "".join(c.text for c in chunks) == DOC
+
+
+def test_chunk_key(impl):
+    expected = hashlib.sha256(json.dumps(["pol-7", "Policy > Coverage", "Flood is excluded."]).encode()).hexdigest()
+    assert impl.chunk_key("pol-7", "Policy > Coverage", "Flood is excluded.") == expected
+    assert impl.chunk_key("pol-7", "Policy", "x") != impl.chunk_key("pol-8", "Policy", "x")
+
+
+def test_plan_reindex_touches_only_changes(impl):
+    old = impl.heading_chunks(DOC)
+    current = {impl.chunk_key("pol-7", c.meta["path"], c.text): f"idx-{i}" for i, c in enumerate(old)}
+    new_doc = DOC.replace("File within 30 days.", "File within 14 days.")
+    to_add, to_delete = impl.plan_reindex("pol-7", current, impl.heading_chunks(new_doc))
+    assert [c.meta["path"] for c in to_add] == ["Policy > Claims"]
+    assert "14 days" in to_add[0].text
+    assert to_delete == ["idx-4"]
+    assert impl.plan_reindex("pol-7", current, old) == ([], [])
+
+
+def test_plan_reindex_document_removed(impl):
+    current = {impl.chunk_key("pol-7", c.meta["path"], c.text): f"idx-{i}"
+               for i, c in enumerate(impl.heading_chunks(DOC))}
+    to_add, to_delete = impl.plan_reindex("pol-7", current, [])
+    assert to_add == [] and to_delete == [f"idx-{i}" for i in range(6)]
+    added, _ = impl.plan_reindex("pol-7", {}, impl.fixed_chunks("abcdef", 4, 1))
+    assert [c.text for c in added] == ["abcd", "def"]
+
+
+def test_filter_effective(impl):
+    Chunk = impl.Chunk
+    chunks = [
+        Chunk("v1 wording", 0, 10, {"effective_from": "2026-01-01", "effective_to": "2026-03-01"}),
+        Chunk("v2 wording", 0, 10, {"effective_from": "2026-03-01"}),
+        Chunk("glossary", 0, 8, {}),
+    ]
+    assert [c.text for c in impl.filter_effective(chunks, date(2026, 2, 14))] == ["v1 wording", "glossary"]
+    assert [c.text for c in impl.filter_effective(chunks, date(2026, 3, 1))] == ["v2 wording", "glossary"]
+    assert [c.text for c in impl.filter_effective(chunks, date(2025, 12, 31))] == ["glossary"]

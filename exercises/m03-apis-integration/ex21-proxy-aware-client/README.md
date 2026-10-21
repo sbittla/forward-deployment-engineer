@@ -31,6 +31,8 @@ Methods:
 - `opener()` — a `urllib.request.OpenerDirector` with a `ProxyHandler` configured from the policy (proxies for
   http/https, plus `no` from NO_PROXY).
 
+Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
+
 ## Prompt kit
 **Learn (tutor prompt)**
 ```text

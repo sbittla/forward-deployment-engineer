@@ -29,6 +29,8 @@ token-counting endpoint).
   - `messages` = packed history + `{"role": "user", "content": question}`
   - `tokens` = sum of `count_tokens` over the final system text and every message content.
 
+Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
+
 ## Prompt kit
 **Learn (tutor prompt)**
 ```text

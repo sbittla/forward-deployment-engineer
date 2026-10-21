@@ -1,4 +1,4 @@
-"""SLO arithmetic for the service: SLI, burn rate and multi-window alerts."""
+"""SLO arithmetic for the service: SLI, burn rate, multi-window alerts and the canary decision."""
 from dataclasses import dataclass
 
 HOUR = 3600
@@ -29,3 +29,23 @@ class SLO:
         if self.burn_rate(requests, now, 6 * HOUR) >= 6 and self.burn_rate(requests, now, 1800) >= 6:
             return ["ticket"]
         return []
+
+
+def canary_decision(base: dict, canary: dict, min_requests: int = 500) -> str:
+    """Compare the canary with the current version over the same window: "wait", "rollback" or "promote".
+
+    Wait below `min_requests` canary requests. Roll back when the canary's error rate exceeds 1.5x the base's plus
+    0.001, its p95 exceeds 1.2x the base's, its judge pass rate falls more than 0.03 below the base's, or its refusal
+    rate rises more than 0.02 above the base's. Otherwise promote.
+    """
+    if canary["requests"] < min_requests:
+        return "wait"                              # too little data to judge
+    if canary["error_rate"] > base["error_rate"] * 1.5 + 0.001:
+        return "rollback"
+    if canary["p95_ms"] > base["p95_ms"] * 1.2:
+        return "rollback"
+    if canary["judge_pass"] < base["judge_pass"] - 0.03:
+        return "rollback"                          # quality regressed
+    if canary["refusal_rate"] > base["refusal_rate"] + 0.02:
+        return "rollback"                          # over-refusing is a regression too
+    return "promote"

@@ -26,6 +26,8 @@ workstream → one of `"R" "A" "C" "I"`.
 ## Field notes
 An unowned workstream (no `A`) is a risk you own until someone else does. Raise it in the next steering meeting.
 
+Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
+
 ## Prompt kit
 **Learn (tutor prompt)**
 ```text

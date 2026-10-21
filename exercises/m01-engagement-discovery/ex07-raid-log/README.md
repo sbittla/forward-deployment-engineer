@@ -28,6 +28,8 @@ Implement `RaidLog` in `starter.py`:
 
 IDs are assigned on `add` as `R-1, A-2, I-3, D-4…` (prefix = kind, global counter).
 
+Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
+
 ## Prompt kit
 **Learn (tutor prompt)**
 ```text

@@ -50,6 +50,8 @@ reproducible slice of conversations to human reviewers.
 Offline evals answer "is this version good?"; online monitoring answers "is it still good *for today's traffic*?".
 When drift fires, the first action is to pull a sample into review and grow the golden set, not to change the prompt.
 
+Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
+
 ## Prompt kit
 **Learn (tutor prompt)**
 ```text
@@ -62,7 +64,8 @@ hour after a drift alert.
 ```text
 Implement exercises/m09-evaluation/ex100-online-monitoring-drift/starter.py so test_monitoring.py passes. Follow
 the README formulas exactly (quantile edges, EPS floor, nearest-rank p95, alert order). Standard library only
-(math, hashlib). Don't edit the tests. Run pytest on the folder and show the output.
+(math, hashlib). Don't edit the tests. Run pytest on the folder and show the output. If the README and the tests
+disagree, stop and tell me instead of guessing.
 ```
 **Review**
 ```text

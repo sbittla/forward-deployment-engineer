@@ -1,3 +1,4 @@
+import io
 import json
 import threading
 import urllib.error
@@ -80,3 +81,75 @@ def test_404(app):
     with pytest.raises(urllib.error.HTTPError) as e:
         get(url + "/admin")
     assert e.value.code == 404
+
+
+def test_sse_format(impl):
+    assert impl.sse("delta", {"text": "Hi"}) == b'event: delta\ndata: {"text": "Hi"}\n\n'
+    assert impl.sse("done", {}) == b"event: done\ndata: {}\n\n"
+
+
+def test_relay_deltas_and_keepalive(impl):
+    out = io.BytesIO()
+    assert impl.relay(iter(["Hel", None, "lo"]), out) == "done"
+    assert out.getvalue() == (impl.sse("delta", {"text": "Hel"}) + b": keep-alive\n\n"
+                              + impl.sse("delta", {"text": "lo"}) + impl.sse("done", {}))
+
+
+class GoneAfter(io.BytesIO):
+    """A response stream whose browser disconnects after `n` writes."""
+
+    def __init__(self, n):
+        super().__init__()
+        self.n = n
+
+    def write(self, b):
+        if self.n == 0:
+            raise BrokenPipeError
+        self.n -= 1
+        return super().write(b)
+
+
+def test_relay_cancels_upstream_on_disconnect(impl):
+    state = {"pulled": 0, "closed": False}
+
+    def upstream():
+        try:
+            for i in range(1000):
+                state["pulled"] += 1
+                yield f"token{i} "
+        finally:
+            state["closed"] = True
+
+    out = GoneAfter(2)
+    assert impl.relay(upstream(), out) == "cancelled"
+    assert state["closed"] and state["pulled"] == 3
+    assert out.getvalue() == impl.sse("delta", {"text": "token0 "}) + impl.sse("delta", {"text": "token1 "})
+
+
+def test_relay_upstream_error(impl):
+    def upstream():
+        yield "Partial "
+        raise TimeoutError("upstream read timed out after 30s; key sk-secret")
+
+    out = io.BytesIO()
+    assert impl.relay(upstream(), out) == "error"
+    body = out.getvalue()
+    assert body.endswith(impl.sse("error", {"message": impl.UNAVAILABLE}))
+    assert b"sk-secret" not in body and b"event: done" not in body
+
+
+def test_stream_endpoint(app, impl):
+    url, llm = app
+    body = json.dumps({"q": "deductible?"}).encode()
+    req = urllib.request.Request(url + "/api/chat/stream", data=body, method="POST",
+                                 headers={"Content-Type": "application/json"})
+    with urllib.request.urlopen(req, timeout=5) as r:
+        assert r.headers.get("Content-Type").startswith("text/event-stream")
+        assert r.headers.get("Cache-Control") == "no-cache" and r.headers.get("X-Accel-Buffering") == "no"
+        raw = r.read().decode()
+    events = [e for e in raw.split("\n\n") if e.strip()]
+    deltas = [json.loads(e.split("data: ", 1)[1])["text"] for e in events if e.startswith("event: delta")]
+    assert len(deltas) > 1 and "".join(deltas) == "You asked: deductible?"
+    assert events[-1] == "event: done\ndata: {}"
+    assert llm.calls[-1]["system"] == impl.SYSTEM_PROMPT
+    assert post(url + "/api/chat/stream", {"q": ""})[0] == 400

@@ -1,4 +1,5 @@
 from dataclasses import dataclass, field
+from datetime import date
 
 
 @dataclass
@@ -18,4 +19,16 @@ def recursive_chunks(text: str, max_chars: int, separators=("\n\n", "\n", ". ", 
 
 
 def heading_chunks(markdown: str) -> list[Chunk]:
+    raise NotImplementedError
+
+
+def chunk_key(doc_id: str, path: str, text: str) -> str:
+    raise NotImplementedError
+
+
+def plan_reindex(doc_id: str, current: dict[str, str], incoming: list[Chunk]) -> tuple[list[Chunk], list[str]]:
+    raise NotImplementedError
+
+
+def filter_effective(chunks: list[Chunk], on: date) -> list[Chunk]:
     raise NotImplementedError

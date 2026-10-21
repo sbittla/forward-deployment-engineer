@@ -35,6 +35,8 @@ working days).
    Milestone due date = the finish date of the task tagged with it (finish day offset, rounded up, minus 1 → working
    day date).
 
+Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
+
 ## Prompt kit
 **Learn (tutor prompt)**
 ```text

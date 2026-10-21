@@ -1,0 +1,28 @@
+{
+  "path": "exercises/m11-deploy-operate/ex64-airgap-bundle",
+  "status": "PASS",
+  "problems": [],
+  "tests": {
+    "passed": 3,
+    "failed": 0,
+    "error": 0,
+    "skipped": 0
+  },
+  "declared": 3,
+  "ran": 3,
+  "starter_failing": 3,
+  "cases": [
+    {
+      "test": "py:test_build_and_verify",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_tamper_detected",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_safe_extract",
+      "status": "passed"
+    }
+  ]
+}

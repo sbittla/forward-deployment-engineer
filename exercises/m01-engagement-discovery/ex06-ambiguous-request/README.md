@@ -32,6 +32,8 @@ instead of waiting for perfect answers.
 Send the questions *and* your assumptions together: "Unless you tell me otherwise by Thursday, I will assume…".
 That converts waiting into progress.
 
+Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
+
 ## Prompt kit
 **Learn (tutor prompt)**
 ```text

@@ -1,0 +1,40 @@
+{
+  "path": "exercises/m02-production-python/ex14-circuit-breaker",
+  "status": "PASS",
+  "problems": [],
+  "tests": {
+    "passed": 6,
+    "failed": 0,
+    "error": 0,
+    "skipped": 0
+  },
+  "declared": 6,
+  "ran": 6,
+  "starter_failing": 6,
+  "cases": [
+    {
+      "test": "py:test_opens_after_threshold",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_success_resets_counter",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_half_open_success_closes",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_half_open_failure_reopens_and_restarts_timer",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_bulkhead",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_bulkhead_threads",
+      "status": "passed"
+    }
+  ]
+}

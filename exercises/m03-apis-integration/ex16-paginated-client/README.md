@@ -27,6 +27,8 @@ build the RAG corpus. The vendor's docs say: respect `Retry-After` on 429 and st
 
 Header lookups are case-insensitive.
 
+Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
+
 ## Prompt kit
 **Learn (tutor prompt)**
 ```text

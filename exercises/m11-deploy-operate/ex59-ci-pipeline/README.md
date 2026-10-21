@@ -24,6 +24,8 @@ permissions, pinned actions, timeouts, no secrets echoed to logs, deploys only f
    | `deploy-gate` | a job named `deploy` lacks `needs` including `test`, or lacks an `if` mentioning `refs/heads/main` |
 2. Write `ci.yml` in this directory (jobs `test` and `deploy`) that has **no** issues; the test job must run `pytest`.
 
+Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
+
 ## Prompt kit
 **Learn (tutor prompt)**
 ```text

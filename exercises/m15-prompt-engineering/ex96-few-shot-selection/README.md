@@ -40,6 +40,8 @@ Examples are `{"input": str, "output": str}`. Similarity is `cosine(hash_embed(a
 Few-shot examples are the strongest steering signal in a prompt, so models copy their quirks: length, phrasing,
 even typos. Curate the pool like a golden set, and include hard negatives.
 
+Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
+
 ## Prompt kit
 **Learn (tutor prompt)**
 ```text
@@ -52,7 +54,8 @@ failure modes of dynamic selection and how to evaluate it against a fixed set.
 ```text
 Implement exercises/m15-prompt-engineering/ex96-few-shot-selection/starter.py so test_few_shot.py passes. Use
 fde_kit.text.hash_embed and cosine for similarity; no third-party packages. Follow the README's tie-break and ordering
-rules exactly, since the tests depend on them. Do not edit tests. Run pytest on the folder and show the output.
+rules exactly, since the tests depend on them. Do not edit tests. Run pytest on the folder and show the output. If
+the README and the tests disagree, stop and tell me instead of guessing.
 ```
 **Review**
 ```text

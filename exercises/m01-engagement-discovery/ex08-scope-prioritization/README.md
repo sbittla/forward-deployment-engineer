@@ -29,6 +29,8 @@ the trade-offs and what lands later — is a core FDE skill.
 ## Field notes
 Never cut quality silently to fit scope. Cut scope loudly, with a written phase-2 list.
 
+Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
+
 ## Prompt kit
 **Learn (tutor prompt)**
 ```text

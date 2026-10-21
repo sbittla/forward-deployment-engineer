@@ -1,0 +1,104 @@
+{
+  "path": "capstones/c3-insights-analyst",
+  "status": "PASS",
+  "problems": [],
+  "tests": {
+    "passed": 22,
+    "failed": 0,
+    "error": 0,
+    "skipped": 0
+  },
+  "declared": 14,
+  "ran": 22,
+  "starter_failing": 22,
+  "cases": [
+    {
+      "test": "py:test_repair_loop",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_system_prompt_has_schema_and_rules",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_refuses_after_unsafe_attempts",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_narrative_multi_row",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_question_suite",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_deliverable[analyst_guide.md]",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_deliverable[exec_readout.md]",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_load_report",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_silver_rules",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_gold_view",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_schema_prompt_and_dictionary",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_blocks[DELETE FROM transactions]",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_blocks[SELECT 1; DROP TABLE transactions]",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_blocks[UPDATE transactions SET amount_usd = 0]",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_blocks[SELECT * FROM pragma_table_info('accounts')]",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_blocks[SELECT name FROM sqlite_master]",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_blocks[SELECT * FROM transactions t JOIN salaries s ON 1=1]",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_blocks[ATTACH DATABASE 'x.db' AS x]",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_blocks[explain select 1]",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_allows_and_limits",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_comments_cannot_smuggle",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_error_messages_are_actionable",
+      "status": "passed"
+    }
+  ]
+}

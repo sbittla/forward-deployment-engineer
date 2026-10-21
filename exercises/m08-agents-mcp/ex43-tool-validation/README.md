@@ -29,6 +29,8 @@ its call on the next turn. Side-effecting tools must also be safe against duplic
   5. `side_effect=True` tools are executed at most once per `call_id`: a repeated `call_id` returns the first
      result without calling `fn` again.
 
+Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
+
 ## Prompt kit
 **Learn (tutor prompt)**
 ```text

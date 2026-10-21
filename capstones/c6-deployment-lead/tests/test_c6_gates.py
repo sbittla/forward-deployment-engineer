@@ -1,3 +1,5 @@
+import re
+
 import pytest
 
 PACKAGE = "deliverylead"
@@ -63,4 +65,8 @@ def test_steering_update(cap, ctx):
     assert "| data | Atlas SI | AMBER | -12% |" in md
     assert "| D-fe-1 | Atlas SI | reject |" in md
     assert "-15.25 (-36.97%)" in md and "2 open with the security team" in md
-    assert md.rstrip().endswith("- activation 50% below 60%")
+    heads = re.findall(r"^## (.*)$", md, re.M)
+    assert heads == ["Decisions needed", "Overall", "Workstreams", "Partner deliverables", "Adoption and impact",
+                     "Security"], "lead with the decision, then status, changes, value, risks"
+    asks = md.split("## Decisions needed")[1].split("## Overall")[0]
+    assert "- activation 50% below 60%" in asks and "D-fe-1" in asks

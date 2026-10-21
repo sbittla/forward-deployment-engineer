@@ -1,0 +1,12 @@
+$ node --test exercises/m14-field-leadership/ex91-react-copilot-ui/panel.test.ts
+✔ reducer (2.064413ms)
+✔ hook sends, replies and retries (0.876705ms)
+✔ panel renders accessible, safe markup (1.032941ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 3
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 307.661307

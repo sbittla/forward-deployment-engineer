@@ -8,9 +8,9 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-INCLUDE = ["exercises", "capstones", "fde_kit", "scripts", "conftest.py", "pytest.ini", "requirements.txt",
-           "package.json", "README.md", "LICENSE", "LICENSE-CONTENT", "NOTICE.md", "VERSIONS.md", "CHANGELOG.md",
-           ".gitattributes"]
+INCLUDE = ["exercises", "capstones", "playbook", "fde_kit", "scripts", "conftest.py", "pytest.ini",
+           "requirements.txt", "package.json", "README.md", "LICENSE", "LICENSE-CONTENT", "NOTICE.md", "VERSIONS.md",
+           "CHANGELOG.md", ".gitattributes"]
 SKIP = shutil.ignore_patterns("__pycache__", "*.pyc", ".pytest_cache", "node_modules")
 
 
@@ -25,7 +25,8 @@ def export(target: Path) -> int:
             shutil.copytree(src, target / name, ignore=SKIP)
         elif src.exists():
             shutil.copy2(src, target / name)
-    (target / "scripts" / "export_learner.py").unlink(missing_ok=True)
+    for script in ("export_learner.py", "run_all.py"):  # both need the full repository
+        (target / "scripts" / script).unlink(missing_ok=True)
     note = ("\n> This is a learner export: reference solutions are not included, so `--solutions` runs are "
             "unavailable. Work from each exercise's README and tests.\n")
     readme = target / "README.md"

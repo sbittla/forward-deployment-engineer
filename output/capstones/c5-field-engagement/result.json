@@ -1,0 +1,80 @@
+{
+  "path": "capstones/c5-field-engagement",
+  "status": "PASS",
+  "problems": [],
+  "tests": {
+    "passed": 16,
+    "failed": 0,
+    "error": 0,
+    "skipped": 0
+  },
+  "declared": 14,
+  "ran": 16,
+  "starter_failing": 16,
+  "cases": [
+    {
+      "test": "py:test_deliverable[handoff_runbook.md]",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_deliverable[product_feedback.md]",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_deliverable[stakeholder_update.md]",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_charter",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_assumptions",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_engagement_plan",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_evaluate",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_roi",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_readout",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_pipeline_end_to_end",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_guard_blocks_phi",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_extraction_repair_and_failure",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_triage_never_downgrades",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_voice_metrics",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_deidentify_removes_all_phi",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_names_mentioned_by_agent_and_emails",
+      "status": "passed"
+    }
+  ]
+}

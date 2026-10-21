@@ -1,0 +1,44 @@
+{
+  "path": "exercises/m01-engagement-discovery/ex03-roi-calculator",
+  "status": "PASS",
+  "problems": [],
+  "tests": {
+    "passed": 7,
+    "failed": 0,
+    "error": 0,
+    "skipped": 0
+  },
+  "declared": 7,
+  "ran": 7,
+  "starter_failing": 7,
+  "cases": [
+    {
+      "test": "py:test_labor_savings",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_llm_cost",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_payback",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_summary",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_sensitivity",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_sensitivity_scales_several_params_together",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_edge_cases",
+      "status": "passed"
+    }
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "path": "exercises/m11-deploy-operate/ex63-env-preflight",
+  "status": "PASS",
+  "problems": [],
+  "tests": {
+    "passed": 5,
+    "failed": 0,
+    "error": 0,
+    "skipped": 0
+  },
+  "declared": 5,
+  "ran": 5,
+  "starter_failing": 5,
+  "cases": [
+    {
+      "test": "py:test_all_pass",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_failures_and_hints",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_warn_only",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_crashing_check",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_not_writable",
+      "status": "passed"
+    }
+  ]
+}

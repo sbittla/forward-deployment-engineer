@@ -1,0 +1,52 @@
+{
+  "path": "exercises/m10-safety-security/ex54-prompt-injection",
+  "status": "PASS",
+  "problems": [],
+  "tests": {
+    "passed": 9,
+    "failed": 0,
+    "error": 0,
+    "skipped": 0
+  },
+  "declared": 7,
+  "ran": 9,
+  "starter_failing": 9,
+  "cases": [
+    {
+      "test": "py:test_wrap",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_signals",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_benign[Please forward my invoice, thanks!]",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_benign[I ignored the previous email, sorry. What are the rules for refunds?]",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_benign[My order number is 123456789.]",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_post_to_url_is_exfil",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_gate_read_only",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_gate_egress",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_gate_tainted",
+      "status": "passed"
+    }
+  ]
+}

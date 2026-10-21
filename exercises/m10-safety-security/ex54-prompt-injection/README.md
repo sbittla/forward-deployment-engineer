@@ -30,6 +30,8 @@ side-effecting tools when the context is tainted.
    - side-effect tool with `tainted=True` → allowed but `needs_confirmation=True`, reason `"tainted context"`
    - otherwise allowed, reason `"ok"`
 
+Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
+
 ## Prompt kit
 **Learn (tutor prompt)**
 ```text

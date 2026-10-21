@@ -1,0 +1,32 @@
+{
+  "path": "exercises/m01-engagement-discovery/ex08-scope-prioritization",
+  "status": "PASS",
+  "problems": [],
+  "tests": {
+    "passed": 4,
+    "failed": 0,
+    "error": 0,
+    "skipped": 0
+  },
+  "declared": 4,
+  "ran": 4,
+  "starter_failing": 4,
+  "cases": [
+    {
+      "test": "py:test_plan",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_musts_overflow",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_dependency_not_satisfiable",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_message",
+      "status": "passed"
+    }
+  ]
+}

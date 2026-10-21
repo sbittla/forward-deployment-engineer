@@ -36,6 +36,23 @@ Critical path: discovery -> landing-zone -> ingest -> agent-evals -> go-live (P5
 - Atlas SI delivers designs and evidence (tests, evals, threat model) for review two days before each milestone.
 - Partner deliverables are accepted only through the Deployment Lead's review gate.
 
+## Support boundaries
+- Hypercare: the FDE team and Atlas SI fix defects in delivered scope for 10 working days after go-live, during bank
+  business hours, through the Bank IT service desk queue.
+- Bank IT runs first-line support and on-call from go-live; the FDE team is second line during hypercare only.
+- Not covered: changes to source systems, new data sources or features (these go through change control), and
+  issues in the bank's SSO, network or warehouse platforms.
+- After hypercare, the bank's support contract with the platform vendor applies; this SOW ends.
+
+## Exit criteria
+The engagement closes when each criterion is met, with the evidence named:
+- Go-live milestone accepted (acceptance record signed by the bank sponsor).
+- Both Atlas SI deliverables accepted through the review gate (review memos).
+- Knowledge-transfer exit criteria in the enablement plan met (two Bank IT engineers per skill, signed runbook
+  walkthrough).
+- Hypercare ended with no open severity-1 or severity-2 defects (service desk report).
+- Access for FDE and Atlas SI staff revoked (Bank IT access review).
+
 ## Change control
 Scope, milestone or acceptance changes need a written change request signed by both sponsors; estimates are
 re-baselined on approval.

@@ -30,7 +30,9 @@ behind zod/valibot) and a client that validates every response at the boundary.
 node --test exercises/m05-fullstack-typescript/ex27-ts-typed-client/client.test.ts
 FDE_SOLUTIONS=1 node --test exercises/m05-fullstack-typescript/ex27-ts-typed-client/client.test.ts   # reference
 ```
-Requires Node ≥ 23.6 (native TypeScript type stripping; no build step, no npm install).
+Requires Node ≥ 22.18; Node 24 LTS recommended (native TypeScript type stripping; no build step, no npm install).
+
+Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
 
 ## Prompt kit
 **Learn (tutor prompt)**
@@ -46,7 +48,7 @@ one wrong.
 Implement exercises/m05-fullstack-typescript/ex27-ts-typed-client/starter.ts so that client.test.ts passes.
 README.md in that folder is the spec: follow its names, formats, ordering and error messages exactly. Public API:
 `ValidationError`, `HttpError`, `str`, `num`, `bool`, `arr`, `obj`, `optional`, `literal`, `TicketSchema`,
-`createClient`. Constraints: TypeScript executed directly by Node 23.6+ type stripping: no npm packages, no build
+`createClient`. Constraints: TypeScript executed directly by Node 22.18+ type stripping: no npm packages, no build
 step, and only erasable type syntax (no enums, namespaces or parameter properties). Do not modify the tests. When
 you're done, run `node --test exercises/m05-fullstack-typescript/ex27-ts-typed-client/client.test.ts` and show me
 the output. If the README and the tests disagree, stop and tell me instead of guessing.

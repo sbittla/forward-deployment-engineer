@@ -25,6 +25,8 @@ produced which answer. Treat prompts like code: named, versioned, validated and 
 - `diff(name, v1, v2) -> list[str]` — `difflib.unified_diff` of the two templates' lines (no line endings),
   with `fromfile=f"{name}@{v1}"`, `tofile=f"{name}@{v2}"`.
 
+Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
+
 ## Prompt kit
 **Learn (tutor prompt)**
 ```text

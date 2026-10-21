@@ -35,6 +35,33 @@ def test_lease_expiry_and_stale_ack(impl):
     assert q.stats()["done"] == 1
 
 
+def test_extend_keeps_lease_alive(impl):
+    clk = Clock()
+    q = impl.JobQueue(clk)
+    jid = q.enqueue("triage", {})
+    job = q.claim("w1", lease_s=10)
+    clk.t += 8
+    q.extend(jid, "w1", lease_s=10)  # heartbeat: lease now runs to t+18
+    clk.t += 5
+    assert q.claim("w2") is None
+    assert job.attempts == 1  # a heartbeat is not a new attempt
+    q.ack(jid, "w1")
+    assert q.stats()["done"] == 1
+
+
+def test_extend_requires_live_lease(impl):
+    clk = Clock()
+    q = impl.JobQueue(clk)
+    jid = q.enqueue("triage", {})
+    q.claim("w1", lease_s=10)
+    with pytest.raises(impl.LeaseError):
+        q.extend(jid, "w2", lease_s=10)  # not the owner
+    clk.t += 11
+    with pytest.raises(impl.LeaseError):
+        q.extend(jid, "w1", lease_s=10)  # lease already expired
+    assert q.claim("w2").attempts == 2
+
+
 def test_backoff_then_dead_letter(impl):
     clk = Clock()
     q = impl.JobQueue(clk, max_attempts=3, base_backoff=2)

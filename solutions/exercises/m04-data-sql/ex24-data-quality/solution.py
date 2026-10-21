@@ -1,3 +1,5 @@
+import hashlib
+import hmac
 import re
 from collections import Counter
 from dataclasses import dataclass, field
@@ -88,3 +90,41 @@ def run_checks(rows: list[dict], checks: list[Check]) -> Report:
         passed, bad = c.fn(rows)
         results.append(Result(c.name, c.severity, passed, len(bad), bad[:5]))
     return Report(results)
+
+
+# Part B · pseudonymisation and data contracts
+
+def pseudonymise(value: str, key: bytes) -> str:
+    """Stable token for joins and counts; can't be reversed without the key."""
+    normalised = value.strip().lower().encode()
+    return hmac.new(key, normalised, hashlib.sha256).hexdigest()[:32]
+
+
+_BLOCKING = re.compile(r"(unique|not_null)\((\w+)\)")
+
+
+def checks_from_contract(contract: dict) -> list[Check]:
+    blocking = list(contract.get("checks_blocking", []))
+    checks: list[Check] = []
+    for col, spec in contract.get("schema", {}).items():
+        if spec.get("nullable") is False:
+            checks.append(not_null(col))
+        if "pattern" in spec:
+            checks.append(matches(col, spec["pattern"]))
+        if "range" in spec:
+            lo, hi = spec["range"]
+            checks.append(in_range(col, lo, hi))
+        if "values" in spec:
+            checks.append(accepted_values(col, spec["values"]))
+    built = {c.name for c in checks}
+    for name in blocking:
+        if name in built:
+            continue
+        m = _BLOCKING.fullmatch(name)
+        if not m:
+            raise ValueError(f"unknown blocking check: {name}")
+        checks.append(unique(m[2]) if m[1] == "unique" else not_null(m[2]))
+        built.add(name)
+    for c in checks:
+        c.severity = "error" if c.name in blocking else "warn"
+    return checks

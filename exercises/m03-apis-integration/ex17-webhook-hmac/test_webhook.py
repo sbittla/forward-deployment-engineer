@@ -63,3 +63,58 @@ def test_dedupe_expires(impl):
     clk.t += 61
     assert r.handle({"X-Signature": impl.sign(body, SECRET, clk.t)}, body)[0] == 202
     assert len(r.processed) == 2
+
+
+# Part B · version-ordered updates and reconciliation
+
+CASES = [{"id": "c1", "version": v, "status": s} for v, s in [(1, "open"), (2, "pending"), (3, "closed")]] + \
+        [{"id": "c2", "version": v, "status": s} for v, s in [(1, "open"), (2, "closed")]]
+LATEST = {"c1": CASES[2], "c2": CASES[4]}
+
+
+def test_apply_update_rejects_stale_and_duplicate(impl):
+    store = {}
+    assert impl.apply_update(store, CASES[1]) is True
+    assert impl.apply_update(store, CASES[1]) is False  # duplicate
+    assert impl.apply_update(store, CASES[0]) is False  # older version
+    assert impl.apply_update(store, CASES[2]) is True
+    assert store == {"c1": CASES[2]}
+
+
+def test_shuffled_and_duplicated_deliveries_converge(impl):
+    import random
+    for seed in range(20):
+        deliveries = CASES * 2
+        random.Random(seed).shuffle(deliveries)
+        store = {}
+        for record in deliveries:
+            impl.apply_update(store, record)
+        assert store == LATEST, f"seed {seed}"
+
+
+class FakeClient:
+    def __init__(self, records):
+        self.records, self.calls = records, []
+
+    def list_all(self, path, params):
+        self.calls.append((path, params))
+        yield from self.records
+
+
+def test_reconcile_uses_the_same_path(impl):
+    store = {"c1": CASES[2]}  # webhook already delivered the newest c1
+    client = FakeClient([CASES[1], CASES[4]])
+    assert impl.reconcile(client, store, "2026-01-01T00:00:00Z") == 1
+    assert client.calls == [("/cases", {"updated_since": "2026-01-01T00:00:00Z"})]
+    assert store == LATEST
+
+
+def test_receiver_ignores_stale_redelivery(impl):
+    clk = Clock()
+    store = {}
+    r = impl.WebhookReceiver(SECRET, clock=clk, store=store)
+    events = [("evt_new", CASES[2]), ("evt_old_1", CASES[0]), ("evt_old_2", CASES[1])]
+    for event_id, record in events:  # distinct ids, so dedupe lets the stale ones through
+        body = json.dumps({"id": event_id, "type": "case.updated", "data": record})
+        assert r.handle({"X-Signature": impl.sign(body, SECRET, clk.t)}, body) == (202, "accepted")
+    assert store == {"c1": CASES[2]}

@@ -1,4 +1,5 @@
 import re
+import unicodedata
 from dataclasses import dataclass, field
 
 SEVERITY = {"critical": 10, "high": 5, "medium": 2, "low": 1}
@@ -12,6 +13,11 @@ RECOMMENDATIONS = {
     "tool_misuse": "Least-privilege tool scopes, schema validation and human approval for destructive tools.",
 }
 PII = re.compile(r"[\w.+-]+@[\w-]+\.[\w.-]+|\b\d{3}-\d{2}-\d{4}\b")
+
+
+INSTRUCTION_MARKERS = ("ignore previous", "ignore all previous", "ignore prior", "disregard", "do not tell the user",
+                       "don't tell the user", "before answering", "before using this tool")
+SECRET_MARKERS = ("~/.ssh", "id_rsa", ".env", "api key", "api_key", "password", "secret", "credential")
 
 
 @dataclass
@@ -90,3 +96,38 @@ def render_assessment(report: Report, system_name: str) -> str:
     failing = sorted({r["category"] for r in failures})
     lines += [f"- {c}: {RECOMMENDATIONS[c]}" for c in failing] or ["- No successful attacks in this suite."]
     return "\n".join(lines) + "\n"
+
+
+def scan_tools(tools: list[dict]) -> list[dict]:
+    names = [t["name"] for t in tools]
+    findings = []
+    for tool in tools:
+        raw = tool.get("description", "")
+        reasons = []
+        if any(unicodedata.category(ch) == "Cf" for ch in raw):
+            reasons.append("hidden unicode")
+        text = "".join(ch for ch in raw if unicodedata.category(ch) != "Cf").lower()
+        if any(m in text for m in INSTRUCTION_MARKERS):
+            reasons.append("hidden instruction")
+        if any(m in text for m in SECRET_MARKERS):
+            reasons.append("secret access")
+        for other in names:
+            if other != tool["name"] and re.search(rf"\b{re.escape(other.lower())}\b", text):
+                reasons.append(f"references other tool: {other}")
+        findings += [{"tool": tool["name"], "reason": r} for r in reasons]
+    return findings
+
+
+def check_audience(claims: dict, server_audience: str) -> None:
+    aud = claims.get("aud")
+    audiences = [aud] if isinstance(aud, str) else list(aud or [])
+    if server_audience not in audiences:
+        raise ValueError(f"token audience mismatch: expected {server_audience!r}, got {aud!r}")
+
+
+def upstream_headers(inbound_token: str, claims: dict, server_audience: str, exchange) -> dict:
+    check_audience(claims, server_audience)
+    downstream = exchange(inbound_token)
+    if not downstream or downstream == inbound_token:
+        raise ValueError("token passthrough: exchange the inbound token, never forward it")
+    return {"Authorization": f"Bearer {downstream}"}

@@ -24,6 +24,8 @@ Keep `legacy_acme_report` untouched (it's the reference). Implement:
 
 `build_report`'s source must not mention any customer by name.
 
+Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
+
 ## Prompt kit
 **Learn (tutor prompt)**
 ```text

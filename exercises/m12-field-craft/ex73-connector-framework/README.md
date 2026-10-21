@@ -32,6 +32,8 @@ A mapping config:
 `default` if given, else `None`; required and missing → raise `MappingError(field)`); transforms are skipped for
 `None`. `connector.run(records) -> (rows, errors)` collects `(index, field, message)` errors without aborting.
 
+Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
+
 ## Prompt kit
 **Learn (tutor prompt)**
 ```text

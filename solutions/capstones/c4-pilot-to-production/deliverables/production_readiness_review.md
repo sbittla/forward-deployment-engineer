@@ -34,6 +34,38 @@ The customer could not provide exact traffic forecasts, so these are written ass
 - [x] Preflight passes in the customer's staging namespace
 - [x] SLO defined (99.5%, 5 s) with multi-window burn-rate alerts
 
+## Gates
+Each gate is pass or fail, and any failure means the service isn't ready, whatever the scorecard below says.
+
+| Gate | Result | Evidence |
+|---|---|---|
+| Platform policy accepts the Dockerfile, manifests and CI workflow | PASS | `policy.py` reports no findings on `deploy/` (`test_your_deploy_artifacts_pass`) |
+| Secrets and customer payloads are never logged or baked into images | PASS | Negative test sends a shipment report and finds none of its text in the log (`test_summarize_and_errors`); `no-secrets` and `secret-literal` rules |
+| Readiness reports not ready while the circuit is open; clients get 503 with `Retry-After` | PASS | `test_degrades_gracefully` |
+| Burn-rate alerts fire as specified (page at 14.4x over 1 h and 5 min) | PASS | `test_slo_alerts`; alerts routed to the Logistics Platform on-call |
+| Performance targets met at the assumed peak, measured, not projected | FAIL | Not yet: the staging peak run in `performance_test_plan.md` hasn't run; only local runs are measured |
+| Rollback rehearsed by the customer's operations team | PASS | Logistics Platform on-call ran the runbook's rollback in staging |
+
+## Scorecard
+Scored 0 to 4 on the evidence, with the weights from the readiness scorecard: 0 nothing exists, 1 ad hoc,
+2 documented, 3 tested with evidence, 4 tested and owned by the customer's team.
+
+| Dimension | Weight | Score | Evidence |
+|---|---|---|---|
+| Functional correctness | 15% | 4 | Tests on the request path, error paths and degraded mode; the platform team runs them in CI |
+| AI evaluation | 20% | 2 | No versioned golden set yet; fallback summaries reviewed by operations managers, not graded |
+| Security and privacy | 15% | 4 | The gates above, enforced by the platform team's admission policy; security sign-off |
+| Performance | 10% | 2 | `performance_test_plan.md`: plan, budget and targets documented, every number labelled; peak not yet measured |
+| Economics | 10% | 2 | Token volumes estimated; no measured cost per successful summary |
+| Reliability | 10% | 4 | SLO with burn-rate alerts, retries, fallback and breaker tested; on-call owns the alerts |
+| Adoption | 10% | 3 | Change plan agreed with the operations sponsor; summaries per team tracked weekly |
+| Handover | 10% | 3 | Runbook with deploy, rollback, alerts and escalation; rollback rehearsed by the customer |
+
+Weighted score: 3.00 (0.60 + 0.40 + 0.60 + 0.20 + 0.20 + 0.40 + 0.30 + 0.30). The score reaches 3.0 and no
+dimension is below 2, but the performance gate fails, so the service **isn't ready yet**: go-live waits for the
+staging peak run to meet the targets. After that, AI evaluation is the weakest dimension; a golden set of graded
+summaries, run in CI, is the first item after go-live.
+
 ## Capacity
 Little's law: 20 req/s × 4 s p95 × 1.3 headroom = 104 requests in flight. At 16 concurrent requests per replica
 that is 7 replicas at peak. The HPA runs 3 to 12 replicas, and the load test confirmed linear scaling up to 5

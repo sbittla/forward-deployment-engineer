@@ -1,0 +1,84 @@
+{
+  "path": "capstones/c1-support-copilot",
+  "status": "PASS",
+  "problems": [],
+  "tests": {
+    "passed": 17,
+    "failed": 0,
+    "error": 0,
+    "skipped": 0
+  },
+  "declared": 16,
+  "ran": 17,
+  "starter_failing": 17,
+  "cases": [
+    {
+      "test": "py:test_http_api",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_answer_view_widget",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_deliverables[discovery_brief.md]",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_deliverables[runbook.md]",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_grounded_answer_with_citation",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_abstains_without_calling_model",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_routing",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_pii_never_reaches_model",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_guardrail_blocks_promises",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_invalid_citations_removed_and_uncited_escalates",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_budget_trims_sources",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_golden_set_meets_launch_bar",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_launch_bar_reports_misses",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_exec_readout_uses_measured_numbers",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_chunks_keep_section_paths",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_retrieval_ranks_the_right_section",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_coverage_definition",
+      "status": "passed"
+    }
+  ]
+}

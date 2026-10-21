@@ -25,6 +25,8 @@ incremental load that is **idempotent** (safe to re-run), **atomic** (a crash le
 - If a batch fails, roll back that batch (watermark unchanged for it) and re-raise.
 - Return the number of rows loaded in this run.
 
+Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
+
 ## Prompt kit
 **Learn (tutor prompt)**
 ```text

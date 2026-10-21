@@ -41,6 +41,8 @@ Implement in `starter.py`:
 A charter is a forcing function: if you cannot fill in a measurable baseline, you have found your next discovery
 question. Bring the unmeasurable list to the sponsor meeting rather than guessing.
 
+Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
+
 ## Prompt kit
 **Learn (tutor prompt)**
 ```text

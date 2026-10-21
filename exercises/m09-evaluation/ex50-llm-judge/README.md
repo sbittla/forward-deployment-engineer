@@ -23,6 +23,8 @@ LLM judge scales grading, but only if you check it agrees with humans and isn't 
    model replies `"1"` or `"2"` (first/second shown). Return the winner only if both orders agree; otherwise `"tie"`
    (position bias).
 
+Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
+
 ## Prompt kit
 **Learn (tutor prompt)**
 ```text

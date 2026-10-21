@@ -6,6 +6,7 @@
 - Run an adversarial test suite against an LLM system.
 - Detect canary leaks, forbidden tools, PII and followed injections.
 - Report residual risk to a CISO with a severity-weighted score.
+- Review a connector's tool descriptions for poisoning, and reject tokens meant for another service.
 
 ## Scenario
 AHEAD's Forward Deployed AI Security Engineers "run adversarial testing against LLMs, agents, and copilots, convert
@@ -34,8 +35,27 @@ The system under test is `target(prompt) -> {"text": str, "tool_calls": [names]}
    score), `Findings` (a table of failed attacks, ordered by severity weight desc then id: `| ID | Category |
    Severity | Evidence |`), `Coverage` (a per-category table), and `Recommendations` (one line per failing category
    from `RECOMMENDATIONS`).
+6. `scan_tools(tools) -> list[dict]` reviews third-party MCP tool definitions (`{"name", "description"}`) for tool
+   poisoning, returning one `{"tool", "reason"}` per finding, in tool order and, per tool, in this reason order:
+   - `hidden unicode`: the description contains an invisible format character (Unicode category `Cf`: zero-width
+     spaces, bidirectional overrides, tag characters)
+   - `hidden instruction`: after removing those characters and lowercasing, it contains any of `INSTRUCTION_MARKERS`
+   - `secret access`: it contains any of `SECRET_MARKERS`
+   - `references other tool: <name>`: it names another tool in the list as a whole word (lowercased), one finding per
+     tool named, in list order
+
+   A clean list returns `[]`.
+7. `check_audience(claims, server_audience) -> None` accepts a decoded token whose `aud` (a string or a list) includes
+   `server_audience`; otherwise (wrong, missing or empty `aud`) it raises `ValueError` mentioning `audience`.
+8. `upstream_headers(inbound_token, claims, server_audience, exchange) -> dict` is what your MCP server sends to a
+   downstream API: it calls `check_audience`, then `exchange(inbound_token)` for a token scoped to the downstream API,
+   and returns `{"Authorization": "Bearer <exchanged>"}`. If the exchange returns the inbound token unchanged (or
+   nothing), raise `ValueError` mentioning `passthrough`: forwarding the user's token makes the server a confused
+   deputy.
 
 **Errors:** `Attack` raises `ValueError` for a category outside `CATEGORIES` or a severity outside `SEVERITY` (a typo would otherwise silently drop a finding from the risk score).
+
+Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
 
 ## Prompt kit
 **Learn (tutor prompt)**
@@ -50,7 +70,8 @@ wrong.
 ```text
 Implement exercises/m14-field-leadership/ex93-red-team-harness/starter.py so that test_redteam.py passes. README.md
 in that folder is the spec: follow its names, formats, ordering and error messages exactly. Public API: `Attack`,
-`Report`, `detect`, `run_suite`, `retest_diff`, `render_assessment`. Constraints: Python 3.11+, the standard library
+`Report`, `detect`, `run_suite`, `retest_diff`, `render_assessment`, `scan_tools`,
+`check_audience`, `upstream_headers`. Constraints: Python 3.11+, the standard library
 and the repo's fde_kit package only (pyyaml is allowed where the README uses YAML). Do not modify the tests or
 fde_kit. When you're done, run `pytest exercises/m14-field-leadership/ex93-red-team-harness` and show me the output.
 If the README and the tests disagree, stop and tell me instead of guessing.

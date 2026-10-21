@@ -6,6 +6,7 @@
 - Express data-quality rules declaratively and run them before every refresh.
 - Separate blocking errors from warnings.
 - Report failures with samples so owners can fix the source.
+- Pseudonymise identifiers with a keyed hash, and derive checks from a data contract.
 
 ## Scenario
 Your RAG answers went wrong for a week because an upstream job started writing empty `policy_number`s. Nobody
@@ -33,6 +34,21 @@ Check factories (each returns a `Check` with `name`, `severity` ("error" default
 All factories accept `severity="warn"`. Check names: `not_null(policy_number)`, `in_range(premium,0,100000)` etc.
 — i.e. `factory(arg1,arg2)` with no spaces.
 
+### Part B · Pseudonymisation and data contracts
+`pseudonymise(value, key) -> str` — a keyed, stable token for joins and counts: normalise with
+`value.strip().lower()`, then return the first 32 hex characters of HMAC-SHA256 under `key` (bytes). A plain hash of
+an email isn't anonymous: anyone with a list of emails can hash them and match. The same value and key always give the
+same token; a different key gives a different one.
+
+`checks_from_contract(contract) -> list[Check]` turns a data contract (the dict you get from its YAML) into checks:
+- for each column in `contract["schema"]`, in order: `nullable: false` → `not_null(col)`; `pattern` →
+  `matches(col, pattern)`; `range: [lo, hi]` → `in_range(col, lo, hi)`; `values` → `accepted_values(col, values)`
+- then each name in `contract["checks_blocking"]` not already built, which must be `unique(col)` or `not_null(col)`;
+  any other name raises `ValueError("unknown blocking check: <name>")`
+- a check's severity is `"error"` if its name is listed in `checks_blocking`, otherwise `"warn"`
+
+Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
+
 ## Prompt kit
 **Learn (tutor prompt)**
 ```text
@@ -46,11 +62,11 @@ time, and tell me what to re-read if I get one wrong.
 ```text
 Implement exercises/m04-data-sql/ex24-data-quality/starter.py so that test_dq.py passes. README.md in that folder is
 the spec: follow its names, formats, ordering and error messages exactly. Public API: `Check`, `Result`, `Report`,
-`not_null`, `unique`, `in_range`, `matches`, `accepted_values`, `row_count_between`, `fresh`, `run_checks`.
-Constraints: Python 3.11+, the standard library and the repo's fde_kit package only (pyyaml is allowed where the
-README uses YAML). Do not modify the tests or fde_kit. When you're done, run `pytest
-exercises/m04-data-sql/ex24-data-quality` and show me the output. If the README and the tests disagree, stop and
-tell me instead of guessing.
+`not_null`, `unique`, `in_range`, `matches`, `accepted_values`, `row_count_between`, `fresh`, `run_checks`,
+`pseudonymise`, `checks_from_contract`. Constraints: Python 3.11+, the standard library and the repo's fde_kit
+package only (pyyaml is allowed where the README uses YAML). Do not modify the tests or fde_kit. When you're done,
+run `pytest exercises/m04-data-sql/ex24-data-quality` and show me the output. If the README and the tests disagree,
+stop and tell me instead of guessing.
 ```
 **Review**
 ```text

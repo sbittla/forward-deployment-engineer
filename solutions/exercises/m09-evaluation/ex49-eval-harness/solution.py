@@ -1,4 +1,5 @@
 import json
+import math
 import re
 from collections import defaultdict
 from dataclasses import dataclass, field
@@ -48,6 +49,24 @@ class EvalReport:
         lines += ["", "## Failures"]
         lines += [f"- {r.case.id}: {r.error or r.output[:80]}" for r in self.failures()] or ["- none"]
         return "\n".join(lines) + "\n"
+
+    def by_slice(self, z: float = 1.96) -> dict[str, dict]:
+        groups = defaultdict(list)
+        for r in self.results:
+            for t in r.case.tags:
+                groups[t].append(r.passed)
+        out = {}
+        for t, v in sorted(groups.items()):
+            low, high = wilson_interval(sum(v), len(v), z)
+            out[t] = {"n": len(v), "passed": sum(v), "pass_rate": round(sum(v) / len(v), 4),
+                      "low": round(low, 4), "high": round(high, 4)}
+        return out
+
+    def failure_taxonomy(self, labels: dict[str, str]) -> list[tuple[str, int]]:
+        counts = defaultdict(int)
+        for r in self.failures():
+            counts[labels.get(r.case.id, "unlabelled")] += 1
+        return sorted(counts.items(), key=lambda kv: (-kv[1], kv[0]))
 
 
 def _norm(s: str) -> str:
@@ -102,3 +121,33 @@ def run_eval(cases: list[Case], system) -> EvalReport:
             continue
         results.append(CaseResult(c, bool(GRADERS[c.grader](out, c.expected)), out))
     return EvalReport(results)
+
+
+def wilson_interval(successes: int, n: int, z: float = 1.96) -> tuple[float, float]:
+    if n <= 0 or not 0 <= successes <= n:
+        raise ValueError("need n > 0 and 0 <= successes <= n")
+    p = successes / n
+    denom = 1 + z * z / n
+    centre = (p + z * z / (2 * n)) / denom
+    half = z * math.sqrt(p * (1 - p) / n + z * z / (4 * n * n)) / denom
+    return max(0.0, centre - half), min(1.0, centre + half)
+
+
+def cost_per_success(cost_per_request: float, pass_rate: float) -> float:
+    if pass_rate <= 0:
+        raise ValueError("pass_rate must be positive")
+    return cost_per_request / pass_rate
+
+
+def _leak_norm(s: str) -> str:
+    return " ".join(re.sub(r"[^0-9a-z]+", " ", str(s).lower()).split())
+
+
+def find_leakage(cases: list[Case], examples: list[str]) -> list[str]:
+    pool = [f" {_leak_norm(e)} " for e in examples]
+    leaked = []
+    for c in cases:
+        needle = _leak_norm(c.input)
+        if needle and any(f" {needle} " in e for e in pool):
+            leaked.append(c.id)
+    return leaked

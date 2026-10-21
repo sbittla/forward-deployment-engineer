@@ -39,6 +39,18 @@ def test_sensitivity(impl):
     assert BASE["adoption"] == 0.6  # must not mutate inputs
 
 
+NORTHWIND = dict(tasks_per_month=40_000, minutes_saved=4, hourly_cost=45, adoption=0.6,
+                 in_tokens=6_000, out_tokens=400, price_in_mtok=3.0, price_out_mtok=15.0, calls_per_task=2,
+                 annual_platform_cost=120_000, one_time_cost=250_000)
+
+
+def test_sensitivity_scales_several_params_together(impl):
+    # the book's token-price column: input and output price move together
+    rows = impl.sensitivity(NORTHWIND, ("price_in_mtok", "price_out_mtok"), [0.25, 0.5, 1.0, 2.0])
+    assert rows == [(0.25, 738_240), (0.5, 732_480), (1.0, 720_960), (2.0, 697_920)]
+    assert NORTHWIND["price_in_mtok"] == 3.0 and NORTHWIND["price_out_mtok"] == 15.0
+
+
 def test_edge_cases(impl):
     assert impl.payback_months(1000, 0) == float("inf") and impl.payback_months(1000, -5) == float("inf")
     assert impl.annual_llm_cost(0, 100, 100, 3, 15) == 0.0

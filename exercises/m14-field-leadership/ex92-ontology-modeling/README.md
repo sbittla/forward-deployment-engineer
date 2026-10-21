@@ -32,6 +32,8 @@ query "shipments for this customer that are delayed" instead of joining five tab
    Then call `apply(ontology, **params)`, which mutates objects, and append an audit entry `{"action", "actor",
    "params", "seq"}`. A failed action leaves no audit entry and no changes.
 
+Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
+
 ## Prompt kit
 **Learn (tutor prompt)**
 ```text

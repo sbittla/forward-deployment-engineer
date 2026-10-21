@@ -43,6 +43,8 @@ claims customer.
    (tools: `search_policies, read_policy`) that pass your own validators. The tests also check that the skill's
    description says *when* to use it.
 
+Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
+
 ## Prompt kit
 **Learn (tutor prompt)**
 ```text

@@ -49,6 +49,8 @@ A trajectory is a list of steps: `{"type": "tool_call", "name", "arguments": dic
 pass@k flatters agents: it asks whether *any* of k tries worked. pass^k asks whether *all* of them did, which is what
 a user who runs the agent every day experiences. Report both, and lead with pass^k.
 
+Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
+
 ## Prompt kit
 **Learn (tutor prompt)**
 ```text
@@ -61,7 +63,8 @@ ordering, argument correctness, step budgets), and the difference between pass@k
 ```text
 Implement exercises/m09-evaluation/ex99-agent-trajectory-evals/starter.py so test_trajectory_evals.py passes.
 Follow the README check table exactly: only run checks present in the spec, plus has_final. Use math.comb for the
-estimators. Standard library only; don't edit tests. Show the pytest output.
+estimators. Standard library only; don't edit tests. Show the pytest output. If the README and the tests disagree,
+stop and tell me instead of guessing.
 ```
 **Review**
 ```text

@@ -32,6 +32,8 @@ Implement in `starter.py`:
 ## Field notes
 Always read the LLM's backlog back to the customer in their words. The model drafts; the customer owns it.
 
+Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
+
 ## Prompt kit
 **Learn (tutor prompt)**
 ```text

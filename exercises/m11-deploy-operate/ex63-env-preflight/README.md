@@ -29,6 +29,8 @@ failed check has severity `warn`, else `"PASS"`. `Report.render()` → one line 
 `[PASS] name — detail` / `[FAIL] name — detail (hint: ...)` (hint only when failing and non-empty), then a final
 line `Overall: PASS|WARN|FAIL`. `Report.exit_code` → 0 PASS, 1 WARN, 2 FAIL.
 
+Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
+
 ## Prompt kit
 **Learn (tutor prompt)**
 ```text

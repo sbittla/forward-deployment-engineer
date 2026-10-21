@@ -30,6 +30,8 @@ speech segment; `text` events carry the transcript for the segment currently ope
    3 dp), `long_silences` (count of gaps between consecutive segments, any speaker, longer than the threshold).
 6. `to_transcript(turns) -> str` — `"Caller: ...\nAgent: ..."`.
 
+Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
+
 ## Prompt kit
 **Learn (tutor prompt)**
 ```text

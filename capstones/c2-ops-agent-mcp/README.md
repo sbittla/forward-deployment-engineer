@@ -2,7 +2,7 @@
 
 **Covers:** R01 Python · R05 Integration · R11 Agents · R12 MCP · R13 Evals · R14 Safety · R17 Security ·
 R22 Production · R23 Product feedback · R24 Writing · R28 Architecture
-**Suggested time:** 2–3 days · **Builds on:** ex10, ex15, ex42–ex46, ex54, ex56, ex68
+**Builds on:** ex10, ex15, ex42–ex46, ex54, ex56, ex68
 **Take after:** End of Part III: after ex42–ex46, ex54 and ex56, plus ex10 and ex15 (Part II) and ex68 (Part I).
 
 ## The engagement
@@ -40,6 +40,8 @@ Outcome statuses: `resolved`, `pending_approval` (no approver available), `escal
 - `runbook.md`: deploy, rollback/kill switch, approval queue operations, monitoring, escalation.
 - `product_feedback.md`: at least 3 platform feature requests with evidence (the FDE → product loop).
 
+Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
+
 ## Run
 ```bash
 pytest capstones/c2-ops-agent-mcp
@@ -53,3 +55,9 @@ pytest --solutions capstones/c2-ops-agent-mcp
 | Correctness | All 10 scenarios pass; approval and loop limits behave as specified |
 | Security | Tenant isolation in the tool layer, not in the prompt; tamper-evident audit |
 | Communication | Design doc a security reviewer can approve; product feedback backed by numbers |
+
+## Assessment
+Assessed with the shared [capstone rubric](../RUBRIC.md): gates first (tests, critical correctness, security and
+privacy, honest reporting, plus this capstone's own gates), then a weighted score across nine dimensions. The bar is
+every gate passing, a weighted score of at least 3.0 and no dimension below 2. Section 4 of the rubric lists C2's
+acceptance criteria and gates. Submit your scorecard as `starter/deliverables/scorecard.md`.

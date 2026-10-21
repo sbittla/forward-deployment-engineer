@@ -32,6 +32,8 @@ Rules for the fixed behaviour:
 Reproduce first, then fix. Write the failing test for each report before touching the code — it is also your
 proof to the customer that the bug is gone.
 
+Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
+
 ## Prompt kit
 **Learn (tutor prompt)**
 ```text

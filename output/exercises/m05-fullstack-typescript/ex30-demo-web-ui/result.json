@@ -1,0 +1,68 @@
+{
+  "path": "exercises/m05-fullstack-typescript/ex30-demo-web-ui",
+  "status": "PASS",
+  "problems": [],
+  "tests": {
+    "passed": 13,
+    "failed": 0,
+    "error": 0,
+    "skipped": 0
+  },
+  "declared": 10,
+  "ran": 13,
+  "starter_failing": 13,
+  "cases": [
+    {
+      "test": "py:test_page",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_no_banner_when_live",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_chat_api",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_chat_validation[nope]",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_chat_validation[body1]",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_chat_validation[body2]",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_chat_validation[body3]",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_404",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_sse_format",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_relay_deltas_and_keepalive",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_relay_cancels_upstream_on_disconnect",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_relay_upstream_error",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_stream_endpoint",
+      "status": "passed"
+    }
+  ]
+}

@@ -28,6 +28,8 @@ Permissions look like `"ticket:read"`, `"ticket:*"`, `"*"`, or with a numeric li
   without hash, sort_keys))`. The first `prev_hash` is `"0" * 64`. `verify() -> bool` recomputes the chain;
   editing or deleting any entry makes it False.
 
+Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
+
 ## Prompt kit
 **Learn (tutor prompt)**
 ```text

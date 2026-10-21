@@ -17,13 +17,32 @@ def _parse(header: str):
     return int(parts["t"]), parts["v1"]
 
 
+def apply_update(store: dict, record: dict) -> bool:
+    """Store the record if it's newer than our copy; return True if it was applied."""
+    current = store.get(record["id"])
+    if current is not None and current["version"] >= record["version"]:
+        return False
+    store[record["id"]] = record
+    return True
+
+
+def reconcile(client, store: dict, since: str) -> int:
+    """Catch anything the webhooks missed, through the same code path."""
+    applied = 0
+    for record in client.list_all("/cases", {"updated_since": since}):
+        applied += apply_update(store, record)
+    return applied
+
+
 class WebhookReceiver:
-    def __init__(self, secret: str, clock=time.time, tolerance: int = 300, dedupe_ttl: int = 3600):
+    def __init__(self, secret: str, clock=time.time, tolerance: int = 300, dedupe_ttl: int = 3600,
+                 store: dict | None = None):
         self.secret = secret
         self.clock = clock
         self.tolerance = tolerance
         self.dedupe_ttl = dedupe_ttl
         self.processed: list[dict] = []
+        self.store = store
         self._seen: dict[str, float] = {}
 
     def handle(self, headers: dict, body: str) -> tuple[int, str]:
@@ -50,4 +69,6 @@ class WebhookReceiver:
             return 200, "duplicate"
         self._seen[event_id] = now
         self.processed.append(event)
+        if self.store is not None and isinstance(event.get("data"), dict):
+            apply_update(self.store, event["data"])
         return 202, "accepted"

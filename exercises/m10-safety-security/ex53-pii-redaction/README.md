@@ -36,6 +36,8 @@ checksum; `detect` uses it for `CREDIT_CARD`.
 Regex PII detection is a floor, not a ceiling: names and addresses need NER. Say so in the design review — and log
 detector recall on a labelled sample.
 
+Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
+
 ## Prompt kit
 **Learn (tutor prompt)**
 ```text

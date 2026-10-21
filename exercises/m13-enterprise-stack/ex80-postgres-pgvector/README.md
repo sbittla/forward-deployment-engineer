@@ -36,6 +36,8 @@ into Postgres with the `pgvector` extension. Port the schema and queries and gen
    `SELECT doc_id, chunk, embedding {op} %s AS distance FROM {table} ORDER BY embedding {op} %s LIMIT {k}`.
    `k` must be 1–100.
 
+Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
+
 ## Prompt kit
 **Learn (tutor prompt)**
 ```text

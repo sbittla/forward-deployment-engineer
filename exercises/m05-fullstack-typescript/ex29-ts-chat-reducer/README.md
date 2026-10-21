@@ -38,6 +38,8 @@ messages only, joined with `\n`.
 node --test exercises/m05-fullstack-typescript/ex29-ts-chat-reducer/reducer.test.ts
 ```
 
+Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
+
 ## Prompt kit
 **Learn (tutor prompt)**
 ```text
@@ -50,7 +52,7 @@ understanding, one at a time, and tell me what to re-read if I get one wrong.
 ```text
 Implement exercises/m05-fullstack-typescript/ex29-ts-chat-reducer/starter.ts so that reducer.test.ts passes.
 README.md in that folder is the spec: follow its names, formats, ordering and error messages exactly. Public API:
-`initialState`, `reduce`, `transcript`. Constraints: TypeScript executed directly by Node 23.6+ type stripping: no
+`initialState`, `reduce`, `transcript`. Constraints: TypeScript executed directly by Node 22.18+ type stripping: no
 npm packages, no build step, and only erasable type syntax (no enums, namespaces or parameter properties). Do not
 modify the tests. When you're done, run `node --test
 exercises/m05-fullstack-typescript/ex29-ts-chat-reducer/reducer.test.ts` and show me the output. If the README and

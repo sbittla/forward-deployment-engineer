@@ -34,6 +34,6 @@ def render(tasks: list[dict], today: date, project: str) -> str:
              for t in tasks if t["status"] == "blocked" or _overdue(t, today)]
     asks = [f"- {t['ask']}" for t in tasks if t.get("ask")]
     lines = [f"# {project} — status {today.isoformat()}", "", f"**Overall: {overall_status(tasks, today).upper()}**", ""]
-    lines += _section("Done this week", done) + _section("Next up", nxt)
-    lines += _section("Risks & blockers", risks) + _section("Asks", asks)
+    lines += _section("Asks", asks) + _section("Done this week", done)
+    lines += _section("Next up", nxt) + _section("Risks & blockers", risks)
     return "\n".join(lines)

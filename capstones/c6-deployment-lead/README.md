@@ -3,7 +3,7 @@
 **Covers:** R33 Delivery management · R34 Adoption & change · R35 Enablement · R40 Technical leadership ·
 R43 Regulatory/security gates · R19 Executive communication · R30 Value · R20 Ambiguity · R23 Product feedback ·
 R13 Measurement
-**Suggested time:** 2 days · **Builds on:** ex05, ex07, ex08, ex81–ex84, ex90
+**Builds on:** ex05, ex07, ex08, ex81–ex84, ex90
 **Take after:** Part V, last: after ex81, ex82 and ex84 (Part I), ex83 (Part III) and ex90.
 
 ## The engagement
@@ -26,12 +26,16 @@ system facts (`security.json`).
 | `adoption.py` | Funnel, lagging teams, difference-in-differences impact against the control group |
 | `security.py` | Auto-answer the questionnaire from system facts; anything about physical security or model risk always goes to humans |
 | `readiness.py` | Go-live decision: explicit blockers (rejected deliverables, open security items, slip > 10 days) and conditions (conditional deliverables, activation < 60%, weak impact) |
-| `steering.py` | The Friday steering update, generated from all of the above |
+| `steering.py` | The Friday steering update, generated from all of the above, in the order the committee needs it: **Decisions needed** first, then Overall (the status line), Workstreams and Partner deliverables (what changed), Adoption and impact (value), Security (risks) |
 
 ## Deliverables (`starter/deliverables/`)
-- `sow.md`: the SOW including **partner responsibilities**, acceptance criteria per milestone and a P50/P90 estimate.
+- `sow.md`: the SOW including **partner responsibilities**, acceptance criteria per milestone, **support
+  boundaries** (who supports what after go-live, for how long, and what isn't covered), **exit criteria** (when the
+  engagement closes, each with its evidence) and a P50/P90 estimate.
 - `partner_review_memo.md`: findings on Atlas SI's deliverables, conditions for acceptance, re-review date.
 - `enablement_plan.md`: audiences, workshops, champions, knowledge-transfer exit criteria, adoption targets.
+
+Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
 
 ## Run
 ```bash
@@ -43,3 +47,9 @@ pytest --solutions capstones/c6-deployment-lead
 1. The UI is off the critical path, yet it blocks go-live. How do you explain that to a CFO in one sentence?
 2. Impact is strong (−37% vs control) but activation is 50%. Which would you fix first, and how?
 3. What would you push back to your own product team after this engagement?
+
+## Assessment
+Assessed with the shared [capstone rubric](../RUBRIC.md): gates first (tests, critical correctness, security and
+privacy, honest reporting, plus this capstone's own gates), then a weighted score across nine dimensions. The bar is
+every gate passing, a weighted score of at least 3.0 and no dimension below 2. Section 4 of the rubric lists C6's
+acceptance criteria and gates. Submit your scorecard as `starter/deliverables/scorecard.md`.

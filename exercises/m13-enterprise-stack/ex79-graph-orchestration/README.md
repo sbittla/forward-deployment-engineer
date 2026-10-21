@@ -38,6 +38,8 @@ core so you can debug any of them, and know exactly what the framework does for 
 - `App.resume(thread_id, updates=None)` loads the latest checkpoint, applies `updates` **through the reducers**, and
   continues from `next`.
 
+Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
+
 ## Prompt kit
 **Learn (tutor prompt)**
 ```text

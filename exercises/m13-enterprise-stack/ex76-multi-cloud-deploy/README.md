@@ -33,6 +33,8 @@ translator once.
    not an EU region for that cloud (`aws`: starts with `eu-`; `gcp`: starts with `europe-`; `azure`: one of
    `EU_AZURE_REGIONS`). Any other jurisdiction → `[]`.
 
+Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
+
 ## Prompt kit
 **Learn (tutor prompt)**
 ```text

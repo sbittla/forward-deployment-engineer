@@ -22,6 +22,8 @@ services. You cannot reconstruct one request end-to-end. Fix that for the next i
 4. `get_logger(name, stream)` — returns a logger writing JSON to `stream` at INFO, without duplicate handlers if
    called twice.
 
+Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
+
 ## Prompt kit
 **Learn (tutor prompt)**
 ```text

@@ -25,6 +25,8 @@ amounts as strings. Your pipeline should notice drift *before* loading, classify
    column (types: int→INTEGER, float→REAL, bool→INTEGER, datetime→TEXT, str→TEXT, null→TEXT). Other change
    kinds produce a comment line `-- manual: <kind> <column> (<detail>)`.
 
+Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
+
 ## Prompt kit
 **Learn (tutor prompt)**
 ```text

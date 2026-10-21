@@ -1,0 +1,14 @@
+$ node --test exercises/m05-fullstack-typescript/ex28-ts-sse-parser/sse.test.ts
+✔ whole stream (1.505029ms)
+✔ arbitrary byte chunking incl. split emoji and CRLF (4.597481ms)
+✔ multi-line data, default event, leading space, no-data events (0.985046ms)
+✔ end flushes final event (0.298892ms)
+✔ error event throws (0.656732ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 5
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 363.317919

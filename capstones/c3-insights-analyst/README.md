@@ -2,7 +2,7 @@
 
 **Covers:** R01 Python · R03 SQL & modelling · R04 Pipelines · R05 Integration · R08 LLM apps · R13 Evals ·
 R24 Writing · R25 Regulated domain · R31 Data platforms
-**Suggested time:** 2 days · **Builds on:** ex19, ex22–ex26, ex32, ex49, ex55
+**Builds on:** ex19, ex22–ex26, ex32, ex49, ex55
 **Take after:** End of Part III: after ex32, ex49 and ex55, plus ex19 and ex22–ex26 from Part II.
 
 ## The engagement
@@ -31,6 +31,8 @@ malicious.
   escalation.
 - `exec_readout.md`: measured results (percentages), controls, risks, next steps. Quote **your** eval numbers.
 
+Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
+
 ## Run
 ```bash
 pytest capstones/c3-insights-analyst
@@ -41,3 +43,9 @@ pytest --solutions capstones/c3-insights-analyst
 - Swap SQLite for DuckDB or a Databricks SQL warehouse behind the same `Analyst` interface.
 - Add column-level access control (e.g., hide `customer_name` from some roles) enforced in `guard_sql`.
 - Add a "show me a chart" mode that returns a Vega-Lite spec built from the result rows.
+
+## Assessment
+Assessed with the shared [capstone rubric](../RUBRIC.md): gates first (tests, critical correctness, security and
+privacy, honest reporting, plus this capstone's own gates), then a weighted score across nine dimensions. The bar is
+every gate passing, a weighted score of at least 3.0 and no dimension below 2. Section 4 of the rubric lists C3's
+acceptance criteria and gates. Submit your scorecard as `starter/deliverables/scorecard.md`.

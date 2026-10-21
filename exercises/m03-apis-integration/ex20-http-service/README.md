@@ -29,6 +29,8 @@ their checklist using only the standard library, so it runs in their locked-down
 Every response is JSON and carries an `X-Request-ID` header: echo the client's `X-Request-ID` if sent, otherwise
 generate one. Use `uuid4().hex`.
 
+Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
+
 ## Prompt kit
 **Learn (tutor prompt)**
 ```text

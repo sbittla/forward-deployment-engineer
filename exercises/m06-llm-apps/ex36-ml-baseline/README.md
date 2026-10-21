@@ -28,6 +28,8 @@ LLM is worth it. Either way, you now have numbers.
 
 **Errors:** calling `predict_proba`/`predict` before `fit` raises `RuntimeError`.
 
+Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
+
 ## Prompt kit
 **Learn (tutor prompt)**
 ```text

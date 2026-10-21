@@ -30,6 +30,8 @@ Payload equality: compare a SHA-256 of `json.dumps(payload, sort_keys=True)`.
 Retries without idempotency turn a reliability fix into a money bug. Always ask the customer's API team which
 endpoints accept an `Idempotency-Key` header.
 
+Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
+
 ## Prompt kit
 **Learn (tutor prompt)**
 ```text

@@ -52,6 +52,8 @@ this server process into legacy mode. After that, requests **without** `_meta` a
 When a customer's MCP integration "just stopped working" after a client upgrade, check the era first: a legacy-only
 server facing a modern client fails silently or with an obscure error. Dual-era servers buy you a migration window.
 
+Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
+
 ## Prompt kit
 **Learn (tutor prompt)**
 ```text

@@ -2,7 +2,7 @@
   "name": "fde-exercises",
   "private": true,
   "type": "module",
-  "engines": { "node": ">=23.6" },
+  "engines": { "node": ">=22.18" },
   "scripts": {
     "test": "python scripts/check.py",
     "test:solutions": "python scripts/check.py --solutions"

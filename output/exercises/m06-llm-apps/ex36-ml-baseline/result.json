@@ -1,0 +1,40 @@
+{
+  "path": "exercises/m06-llm-apps/ex36-ml-baseline",
+  "status": "PASS",
+  "problems": [],
+  "tests": {
+    "passed": 6,
+    "failed": 0,
+    "error": 0,
+    "skipped": 0
+  },
+  "declared": 6,
+  "ran": 6,
+  "starter_failing": 6,
+  "cases": [
+    {
+      "test": "py:test_split_stratified_deterministic",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_naive_bayes",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_metrics_exact",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_llm_classify",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_recommend",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_predict_before_fit_and_degenerate_metrics",
+      "status": "passed"
+    }
+  ]
+}

@@ -60,3 +60,17 @@ def test_load_and_capacity(cap):
         srv.server_close()
     assert cap.required_replicas(target_rps=20, p95_latency_s=4.0, concurrency_per_replica=16) == 7
     assert cap.required_replicas(1, 0.5, 64) == 2
+
+
+def test_canary_decision(cap):
+    base = {"requests": 5000, "error_rate": 0.004, "p95_ms": 3800, "judge_pass": 0.91, "refusal_rate": 0.03}
+    same = dict(base, requests=600)
+    assert cap.canary_decision(base, dict(same, requests=499)) == "wait"
+    assert cap.canary_decision(base, same) == "promote"
+    assert cap.canary_decision(base, dict(same, error_rate=0.0071)) == "rollback"
+    assert cap.canary_decision(base, dict(same, error_rate=0.0069)) == "promote"
+    assert cap.canary_decision(base, dict(same, p95_ms=4600)) == "rollback"
+    # Same errors and latency, four points worse on quality: an error-only canary would promote this.
+    assert cap.canary_decision(base, dict(same, judge_pass=0.87)) == "rollback"
+    assert cap.canary_decision(base, dict(same, refusal_rate=0.06)) == "rollback"
+    assert cap.canary_decision(base, dict(same, requests=100), min_requests=100) == "promote"

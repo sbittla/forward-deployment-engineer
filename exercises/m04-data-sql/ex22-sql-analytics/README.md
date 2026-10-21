@@ -37,6 +37,8 @@ constant so the customer's analysts can copy it):
 ## Hints
 `julianday(b) - julianday(a)` gives days. A `UNION ALL` of created and resolved events makes `weekly_flow` easy.
 
+Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
+
 ## Prompt kit
 **Learn (tutor prompt)**
 ```text

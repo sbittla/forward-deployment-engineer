@@ -33,6 +33,8 @@ customer's identity provider (Entra ID, Okta).
    `subject_token_type=urn:ietf:params:oauth:token-type:access_token`, `requested_token_type=...:access_token`,
    `scope`, `client_id`, `client_secret`.
 
+Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
+
 ## Prompt kit
 **Learn (tutor prompt)**
 ```text

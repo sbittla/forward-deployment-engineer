@@ -11,6 +11,12 @@ TODO
 ## Checklist
 TODO
 
+## Gates
+TODO
+
+## Scorecard
+TODO
+
 ## Capacity
 TODO
 

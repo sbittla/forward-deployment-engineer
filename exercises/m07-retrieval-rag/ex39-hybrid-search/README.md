@@ -23,6 +23,8 @@ Keyword search nails identifiers; vector search handles paraphrases. Customers w
 
 In production you would plug real embeddings (and a real vector DB) into the same interfaces.
 
+Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
+
 ## Prompt kit
 **Learn (tutor prompt)**
 ```text

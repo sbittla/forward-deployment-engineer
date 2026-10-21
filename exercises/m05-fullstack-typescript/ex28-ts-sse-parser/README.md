@@ -30,6 +30,8 @@ corrupts answers about 1 in 50 times. Write the parser properly.
 node --test exercises/m05-fullstack-typescript/ex28-ts-sse-parser/sse.test.ts
 ```
 
+Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
+
 ## Prompt kit
 **Learn (tutor prompt)**
 ```text
@@ -43,7 +45,7 @@ one wrong.
 ```text
 Implement exercises/m05-fullstack-typescript/ex28-ts-sse-parser/starter.ts so that sse.test.ts passes. README.md in
 that folder is the spec: follow its names, formats, ordering and error messages exactly. Public API: `Utf8Chunker`,
-`SSEParser`, `accumulateText`. Constraints: TypeScript executed directly by Node 23.6+ type stripping: no npm
+`SSEParser`, `accumulateText`. Constraints: TypeScript executed directly by Node 22.18+ type stripping: no npm
 packages, no build step, and only erasable type syntax (no enums, namespaces or parameter properties). Do not modify
 the tests. When you're done, run `node --test exercises/m05-fullstack-typescript/ex28-ts-sse-parser/sse.test.ts` and
 show me the output. If the README and the tests disagree, stop and tell me instead of guessing.

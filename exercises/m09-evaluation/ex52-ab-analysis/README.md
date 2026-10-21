@@ -29,6 +29,8 @@ Outcomes are lists of 0/1 (1 = ticket resolved on first contact).
 
 **Errors:** `lift`, `bootstrap_ci`, `z_test` and `decide` raise `ValueError` if either group is empty.
 
+Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
+
 ## Prompt kit
 **Learn (tutor prompt)**
 ```text

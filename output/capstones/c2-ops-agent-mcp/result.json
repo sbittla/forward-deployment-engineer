@@ -1,0 +1,108 @@
+{
+  "path": "capstones/c2-ops-agent-mcp",
+  "status": "PASS",
+  "problems": [],
+  "tests": {
+    "passed": 23,
+    "failed": 0,
+    "error": 0,
+    "skipped": 0
+  },
+  "declared": 15,
+  "ran": 23,
+  "starter_failing": 23,
+  "cases": [
+    {
+      "test": "py:test_scenario_suite",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_injection_blocked_before_model",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_message_is_wrapped_and_tools_passed",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_pending_when_no_approver",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_runaway_loop_escalates",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_deliverable[design_doc.md]",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_deliverable[product_feedback.md]",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_deliverable[runbook.md]",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_discovery_and_listing",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_tools_are_customer_scoped",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_refund_paths",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_approval_queue",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_protocol_errors",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_legacy_handshake_still_served",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_store",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_policy[A100-45.0-expected0]",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_policy[A100-46.0-expected1]",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_policy[B200-120.0-expected2]",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_policy[A101-100.0-expected3]",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_policy[A101-100.01-expected4]",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_policy[A102-10.0-expected5]",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_policy[A103-10.0-expected6]",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_audit_chain",
+      "status": "passed"
+    }
+  ]
+}

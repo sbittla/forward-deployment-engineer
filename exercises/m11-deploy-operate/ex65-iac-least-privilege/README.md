@@ -30,6 +30,8 @@ for the bucket that passes their storage rules.
    "Referencing" means the resource's `bucket` attribute equals `"${aws_s3_bucket.N.id}"`.
 4. Write `infra.tf.json` in this directory: bucket `docs` that passes `lint_terraform`.
 
+Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
+
 ## Prompt kit
 **Learn (tutor prompt)**
 ```text

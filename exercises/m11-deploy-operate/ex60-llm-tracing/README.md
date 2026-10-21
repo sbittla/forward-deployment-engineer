@@ -28,6 +28,8 @@ cost attributes. (In production you'd use the OpenTelemetry SDK and an exporter;
 4. `critical_path(spans, trace_id) -> list[str]` — from the root, repeatedly follow the longest-duration child;
    return the span names.
 
+Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
+
 ## Prompt kit
 **Learn (tutor prompt)**
 ```text

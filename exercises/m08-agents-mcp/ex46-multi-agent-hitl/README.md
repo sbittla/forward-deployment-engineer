@@ -27,6 +27,8 @@ specialised workers execute steps; risky steps pause for approval. Everything is
 3. `RunReport(steps, statuses: {id: status}, outputs: {id: str}, audit: list[str])` — audit lines like
    `"plan: 4 steps"`, `"s1: done"`, `"s4: approval requested"`, `"s4: rejected"`, in the order they happen.
 
+Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
+
 ## Prompt kit
 **Learn (tutor prompt)**
 ```text

@@ -24,6 +24,8 @@ in transit, and their install script must refuse anything that would write outsi
 3. `safe_extract(path, dest, key)` — verify first; raise `ValueError` listing problems if any; otherwise extract all
    files except the manifest into `dest`.
 
+Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
+
 ## Prompt kit
 **Learn (tutor prompt)**
 ```text

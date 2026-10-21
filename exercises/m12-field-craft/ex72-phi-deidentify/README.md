@@ -30,6 +30,8 @@ programmes need the full 18 identifiers, an expert review, and legal sign-off) p
 `access_log_entry(user, purpose, record_ids, today) -> dict` — `{"user", "purpose", "record_count", "date"}`
 (never the record contents); raise `ValueError` if `purpose` is not in `ALLOWED_PURPOSES`.
 
+Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
+
 ## Prompt kit
 **Learn (tutor prompt)**
 ```text

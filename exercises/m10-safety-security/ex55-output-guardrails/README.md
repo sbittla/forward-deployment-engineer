@@ -29,6 +29,8 @@ Result: if any block-level violation → `allowed=False`, `safe_text=policy.fall
 `safe_text` = the supported sentences joined by a single space (or `policy.fallback` if none remain).
 Violations are listed in the order of the checks above (sentences in order).
 
+Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
+
 ## Prompt kit
 **Learn (tutor prompt)**
 ```text

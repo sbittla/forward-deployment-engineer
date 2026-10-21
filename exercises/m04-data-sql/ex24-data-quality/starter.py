@@ -61,3 +61,11 @@ def fresh(col, max_age: timedelta, now: datetime, severity="error") -> Check:
 
 def run_checks(rows: list[dict], checks: list[Check]) -> Report:
     raise NotImplementedError
+
+
+def pseudonymise(value: str, key: bytes) -> str:
+    raise NotImplementedError
+
+
+def checks_from_contract(contract: dict) -> list[Check]:
+    raise NotImplementedError

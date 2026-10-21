@@ -40,6 +40,8 @@ client to smoke-test any MCP server on site (theirs or yours) without installing
     `limit` must be 1–50 else `ValueError`.
   - `get_ticket(ticket_id)` → full row as dict, or `KeyError` if absent.
 
+Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
+
 ## Prompt kit
 **Learn (tutor prompt)**
 ```text

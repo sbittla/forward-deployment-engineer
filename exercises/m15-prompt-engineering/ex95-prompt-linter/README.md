@@ -12,7 +12,7 @@
 The customer has 40 prompt templates spread across three services, edited by six people. Last month a teammate
 renamed `{ticket}` to `{ticket_text}` in the code but not the template, and the model received the literal string
 `{ticket}` for two days. A second incident: a support email containing "ignore previous instructions" was pasted into a
-prompt with no delimiters. You'll build the linter that would have caught both, and wire it into CI next to the
+prompt with no delimiters. You'll build the linter that would have caught both, ready to run in CI next to the
 eval gate from ex51.
 
 ## Your task
@@ -43,6 +43,8 @@ eval gate from ex51.
 Linting is cheap and catches the boring failures; evals catch the interesting ones. Put both in CI and the
 prompt becomes code with a review process, not a string someone edits in production.
 
+Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
+
 ## Prompt kit
 **Learn (tutor prompt)**
 ```text
@@ -56,7 +58,8 @@ current Claude models. Keep each example under 6 lines. Then quiz me with 3 shor
 Implement exercises/m15-prompt-engineering/ex95-prompt-linter/starter.py so that test_prompt_linter.py passes.
 Follow the rule table in README.md exactly (ids, severities, ordering). Use only the standard library. Do not edit
 the tests. Keep the regex constants at module level so the rules can be tuned without touching logic. Run
-`pytest exercises/m15-prompt-engineering/ex95-prompt-linter` and show me the output.
+`pytest exercises/m15-prompt-engineering/ex95-prompt-linter` and show me the output. If the README and the tests
+disagree, stop and tell me instead of guessing.
 ```
 **Review**
 ```text

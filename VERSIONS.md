@@ -8,7 +8,7 @@ to re-check when something stops matching the real world. If you find one that's
 | Item | Version used | Where |
 |---|---|---|
 | Python | 3.11, 3.12, 3.13 (CI matrix) | all Python exercises |
-| Node.js | 23.6+ (native TypeScript type stripping; CI uses 24) | ex27–ex29, ex91, capstone 1 web view |
+| Node.js | 22.18+ (native TypeScript type stripping, on by default from 22.18 and 23.6); use a supported LTS line: 24 recommended, and CI uses 24. Node 23 is end-of-life | ex27–ex29, ex91, capstone 1 web view |
 | pytest / PyYAML | see `requirements.txt` | test runner, YAML exercises |
 
 ## Protocols and specifications

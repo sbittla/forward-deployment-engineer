@@ -20,12 +20,14 @@ optional `completed (YYYY-MM-DD)`, `ask` (a request for the customer).
    - **amber**: any overdue non-done task, or any blocked task
    - **green**: otherwise
 2. `render(tasks, today, project) -> str` with sections in order:
-   `# <project> — status <YYYY-MM-DD>`, `**Overall: RED|AMBER|GREEN**`, `## Done this week` (completed in the last
-   7 days, inclusive), `## Next up` (not done, due in next 14 days, sorted by due), `## Risks & blockers`
-   (blocked or overdue, with owner), `## Asks` (all non-empty `ask` values). Empty sections show `- none`.
+   `# <project> — status <YYYY-MM-DD>`, `**Overall: RED|AMBER|GREEN**`, `## Asks` (all non-empty `ask` values), `## Done this week` (completed in
+   the last 7 days, inclusive), `## Next up` (not done, due in next 14 days, sorted by due), `## Risks & blockers`
+   (blocked or overdue, with owner). Empty sections show `- none`.
 
 ## Field notes
 Lead with the ask. Executives read the first three lines.
+
+Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
 
 ## Prompt kit
 **Learn (tutor prompt)**

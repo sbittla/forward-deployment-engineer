@@ -28,6 +28,8 @@ Malformed lines are counted and skipped.
 
 When no service logged an ERROR, `root_cause` returns `None` and the summary says `Root cause: none` and `Blast radius: none`.
 
+Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
+
 ## Prompt kit
 **Learn (tutor prompt)**
 ```text

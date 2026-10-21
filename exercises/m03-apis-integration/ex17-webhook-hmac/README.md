@@ -6,6 +6,7 @@
 - Verify webhook signatures with HMAC and constant-time comparison.
 - Reject stale timestamps and replayed events.
 - Acknowledge duplicate deliveries without double-processing.
+- Apply updates in version order and reconcile missed deliveries through the same code path.
 
 ## Scenario
 The customer's CRM will push "case updated" events to your service. Their security team's review checklist:
@@ -28,6 +29,22 @@ is the raw request body string.
 
 Header names are case-insensitive.
 
+### Part B · Version-ordered updates and reconciliation
+Deduplication by event id stops repeats, not stale deliveries of *different* events. Each record carries `id` and an
+integer `version`.
+
+3. `apply_update(store, record) -> bool` — store `record` under `record["id"]` only if `store` holds no copy or an
+   older `version`; return `True` if it was applied, `False` for a duplicate or out-of-order delivery.
+4. `reconcile(client, store, since) -> int` — call `client.list_all("/cases", {"updated_since": since})`, pass every
+   record through `apply_update` and return how many were applied.
+5. `WebhookReceiver(..., store=None)` — when `store` is a dict, every accepted event whose `data` is a dict is also
+   passed through `apply_update(store, event["data"])`. The response is still `(202, "accepted")`.
+
+Because both paths share `apply_update`, the final store must be the same whatever order the records arrive in and
+however many times.
+
+Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
+
 ## Prompt kit
 **Learn (tutor prompt)**
 ```text
@@ -40,10 +57,10 @@ three questions to check my understanding, one at a time, and tell me what to re
 ```text
 Implement exercises/m03-apis-integration/ex17-webhook-hmac/starter.py so that test_webhook.py passes. README.md in
 that folder is the spec: follow its names, formats, ordering and error messages exactly. Public API: `sign`,
-`WebhookReceiver`. Constraints: Python 3.11+, the standard library and the repo's fde_kit package only (pyyaml is
-allowed where the README uses YAML). Do not modify the tests or fde_kit. When you're done, run `pytest
-exercises/m03-apis-integration/ex17-webhook-hmac` and show me the output. If the README and the tests disagree, stop
-and tell me instead of guessing.
+`WebhookReceiver`, `apply_update`, `reconcile`. Constraints: Python 3.11+, the standard library and the repo's
+fde_kit package only (pyyaml is allowed where the README uses YAML). Do not modify the tests or fde_kit. When you're
+done, run `pytest exercises/m03-apis-integration/ex17-webhook-hmac` and show me the output. If the README and the
+tests disagree, stop and tell me instead of guessing.
 ```
 **Review**
 ```text

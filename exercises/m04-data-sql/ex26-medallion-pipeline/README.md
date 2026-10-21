@@ -35,6 +35,8 @@ Input: JSON lines of e-commerce events: `{"event_id","ts","type":"view|purchase"
 In Databricks terms: bronze = Auto Loader to a Delta table, silver = `MERGE INTO` with expectations, gold =
 materialised views. Keep the quarantine table — it is your best customer-facing data-quality report.
 
+Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
+
 ## Prompt kit
 **Learn (tutor prompt)**
 ```text

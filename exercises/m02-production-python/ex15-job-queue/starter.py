@@ -31,6 +31,9 @@ class JobQueue:
     def claim(self, worker: str, lease_s: float = 30) -> Job | None:
         raise NotImplementedError
 
+    def extend(self, job_id: int, worker: str, lease_s: float) -> None:
+        raise NotImplementedError
+
     def ack(self, job_id: int, worker: str) -> None:
         raise NotImplementedError
 

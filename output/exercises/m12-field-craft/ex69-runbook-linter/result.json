@@ -1,0 +1,36 @@
+{
+  "path": "exercises/m12-field-craft/ex69-runbook-linter",
+  "status": "PASS",
+  "problems": [],
+  "tests": {
+    "passed": 5,
+    "failed": 0,
+    "error": 0,
+    "skipped": 0
+  },
+  "declared": 5,
+  "ran": 5,
+  "starter_failing": 5,
+  "cases": [
+    {
+      "test": "py:test_good",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_bad",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_heading_with_extra_words",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_fence_in_wrong_section_doesnt_count",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_your_runbook",
+      "status": "passed"
+    }
+  ]
+}

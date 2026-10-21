@@ -1,0 +1,40 @@
+{
+  "path": "exercises/m12-field-craft/ex71-finetune-dataprep",
+  "status": "PASS",
+  "problems": [],
+  "tests": {
+    "passed": 6,
+    "failed": 0,
+    "error": 0,
+    "skipped": 0
+  },
+  "declared": 6,
+  "ran": 6,
+  "starter_failing": 6,
+  "cases": [
+    {
+      "test": "py:test_select",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_to_example_merge_redact_trailing",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_dedupe",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_split_stratified_no_overlap",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_token_filter_jsonl_stats",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_unusable_conversations",
+      "status": "passed"
+    }
+  ]
+}

@@ -52,3 +52,19 @@ class CostLedger:
     def over_budget(self, budgets: dict[str, float]) -> list[str]:
         spend = self.by_tenant()
         return sorted(t for t, limit in budgets.items() if spend.get(t, {"cost_usd": 0})["cost_usd"] > limit)
+
+
+def cost_per_request(system: int, docs: int, question: int, output: int,
+                     price_in: float = 3.0, price_out: float = 15.0,
+                     cached_prefix: bool = False, cache_read: float = 0.1) -> float:
+    """Dollars per request. Prices are per million tokens; a cached prefix is billed as a cache read."""
+    if min(system, docs, question, output) < 0:
+        raise ValueError("token counts must be non-negative")
+    prefix_price = price_in * (cache_read if cached_prefix else 1.0)
+    return (system * prefix_price + (docs + question) * price_in + output * price_out) / 1_000_000
+
+
+def monthly_cost(per_request: float, requests: int, response_hit_rate: float = 0.0) -> float:
+    if not 0.0 <= response_hit_rate <= 1.0:
+        raise ValueError("response_hit_rate must be between 0 and 1")
+    return round(per_request * requests * (1.0 - response_hit_rate), 2)

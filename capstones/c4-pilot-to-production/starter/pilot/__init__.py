@@ -7,8 +7,9 @@ from .policy import lint_ci, lint_dockerfile, lint_k8s
 from .preflight import run_preflight
 from .resilience import CircuitOpen, ResilientLLM
 from .service import make_server
-from .slo import SLO
+from .slo import SLO, canary_decision
 
 __all__ = ["ConfigError", "Secret", "Settings", "load_settings", "diagnose", "LoadReport", "required_replicas",
            "run_load", "Metrics", "json_logger", "lint_ci", "lint_dockerfile", "lint_k8s", "run_preflight",
-           "CircuitOpen", "ResilientLLM", "make_server", "SLO"]
+           "CircuitOpen", "ResilientLLM", "make_server", "SLO",
+           "canary_decision"]

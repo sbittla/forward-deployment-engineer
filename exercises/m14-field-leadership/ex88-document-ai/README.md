@@ -34,6 +34,8 @@ OCR words: `{"text", "page", "x0", "y0", "x1", "y1", "conf"}` (y grows downward)
    `.jpg`/`.jpeg`, `.gif`, `.webp` → `{"type": "image", "source": {"type": "base64", "media_type": ...}}`; the text
    question block comes **after** the file block. Unsupported extension or a file over 32 MB → `ValueError`.
 
+Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
+
 ## Prompt kit
 **Learn (tutor prompt)**
 ```text

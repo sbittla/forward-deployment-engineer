@@ -26,6 +26,8 @@ that meets its quality and latency needs, and fail over when a model is overload
    (overloaded) move to the next model; any other exception propagates immediately. `attempts` is a list of
    `(model, "ok" | "<status>")`. If all fail, raise the last exception.
 
+Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
+
 ## Prompt kit
 **Learn (tutor prompt)**
 ```text

@@ -20,13 +20,15 @@ Implement in `starter.py` (all money in the same currency, monthly volumes):
 | `annual_llm_cost(tasks_per_month, in_tokens, out_tokens, price_in_mtok, price_out_mtok, calls_per_task=1)` | token cost per call × calls × tasks × 12 |
 | `payback_months(one_time_cost, monthly_net_benefit)` | `inf` if net benefit ≤ 0, else cost / benefit |
 | `roi_summary(**inputs)` | dict with `annual_savings`, `annual_llm_cost`, `annual_run_cost` (llm + `annual_platform_cost`), `annual_net`, `roi_pct` (first year, includes one-time cost), `payback_months` — rounded to 2 dp |
-| `sensitivity(inputs, param, multipliers)` | list of `(multiplier, annual_net)` re-running the summary with `inputs[param] * m` |
+| `sensitivity(inputs, param, multipliers)` | list of `(multiplier, annual_net)` re-running the summary with `inputs[param] * m`; `param` may also be a tuple of names scaled together, e.g. `("price_in_mtok", "price_out_mtok")` for the token price |
 
 `roi_summary` takes keyword args: `tasks_per_month, minutes_saved, hourly_cost, adoption, in_tokens, out_tokens,
 price_in_mtok, price_out_mtok, calls_per_task, annual_platform_cost, one_time_cost`.
 
 ## Field notes
 Lead with adoption sensitivity: the token bill is rarely what kills ROI — low adoption is.
+
+Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
 
 ## Prompt kit
 **Learn (tutor prompt)**

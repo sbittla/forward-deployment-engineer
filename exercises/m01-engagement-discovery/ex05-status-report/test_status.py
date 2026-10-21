@@ -42,16 +42,16 @@ def test_render(impl):
     lines = md.splitlines()
     assert lines[0] == "# Claims Copilot — status 2026-10-16"
     assert "**Overall: RED**" in md
-    order = [md.index(h) for h in ("## Done this week", "## Next up", "## Risks & blockers", "## Asks")]
+    order = [md.index(h) for h in ("## Asks", "## Done this week", "## Next up", "## Risks & blockers")]
     assert order == sorted(order)
     done = md[md.index("## Done this week"):md.index("## Next up")]
     assert "Index policy PDFs" in done and "Old thing" not in done
     nxt = md[md.index("## Next up"):md.index("## Risks")]
     assert nxt.index("Load test") < nxt.index("SSO integration") < nxt.index("Eval set v1")
     assert "Exec readout" not in nxt
-    risks = md[md.index("## Risks"):md.index("## Asks")]
+    risks = md[md.index("## Risks"):]
     assert "SSO integration" in risks and "Priya" in risks
-    assert "Need IdP metadata from IT" in md[md.index("## Asks"):]
+    assert "Need IdP metadata from IT" in md[md.index("## Asks"):md.index("## Done this week")]
 
 
 def test_render_empty_sections(impl):

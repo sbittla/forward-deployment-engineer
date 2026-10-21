@@ -26,3 +26,13 @@ class CostLedger:
 
     def over_budget(self, budgets: dict[str, float]) -> list[str]:
         raise NotImplementedError
+
+
+def cost_per_request(system: int, docs: int, question: int, output: int,
+                     price_in: float = 3.0, price_out: float = 15.0,
+                     cached_prefix: bool = False, cache_read: float = 0.1) -> float:
+    raise NotImplementedError
+
+
+def monthly_cost(per_request: float, requests: int, response_hit_rate: float = 0.0) -> float:
+    raise NotImplementedError

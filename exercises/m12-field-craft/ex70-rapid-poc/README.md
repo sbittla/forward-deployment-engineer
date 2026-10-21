@@ -32,6 +32,8 @@ Fields: `invoice_number`, `invoice_date` (ISO `YYYY-MM-DD`), `total` (float), `v
    `- Improve <field> extraction` for each field under 0.9 accuracy, and always
    `- Run on 200 labelled invoices before any production decision`.
 
+Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
+
 ## Prompt kit
 **Learn (tutor prompt)**
 ```text

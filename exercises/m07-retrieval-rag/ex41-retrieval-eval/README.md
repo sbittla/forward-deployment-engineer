@@ -24,6 +24,8 @@ RAG failures are retrieval failures, so measure retrieval separately from genera
 6. `compare(a, b, names=("A","B")) -> str` — markdown table `| Metric | A | B | Δ |` over the mean metrics in the
    order recall, precision, mrr, ndcg, with Δ formatted with sign (e.g. `+0.1250`).
 
+Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
+
 ## Prompt kit
 **Learn (tutor prompt)**
 ```text

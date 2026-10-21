@@ -23,6 +23,8 @@ locked out.
 3. `call_with_auth(fn)` — calls `fn(token)`. If it raises an exception with `status == 401`, invalidate, fetch a
    fresh token and retry **once**. Other exceptions propagate.
 
+Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
+
 ## Prompt kit
 **Learn (tutor prompt)**
 ```text

@@ -6,7 +6,8 @@ PACKAGE = "deliverylead"
 
 REQUIRED = {
     "sow.md": ["Objectives", "In scope", "Out of scope", "Deliverables and acceptance criteria", "Timeline",
-               "Assumptions", "Customer responsibilities", "Partner responsibilities", "Change control", "Estimate"],
+               "Assumptions", "Customer responsibilities", "Partner responsibilities", "Support boundaries",
+               "Exit criteria", "Change control", "Estimate"],
     "partner_review_memo.md": ["Summary", "Findings", "Conditions for acceptance", "Re-review date"],
     "enablement_plan.md": ["Audiences", "Workshops", "Champions", "Knowledge-transfer exit criteria", "Adoption targets"],
 }

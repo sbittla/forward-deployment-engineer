@@ -2,7 +2,7 @@
 
 **Covers:** R01 Python · R06 Cloud · R07 Containers/K8s/CI · R15 Observability · R20 Ambiguity · R22 Production ·
 R24 Writing · R26 On-site embedding · R27 Cost & latency · R28 Architecture · R29 Debugging
-**Suggested time:** 3 days · **Builds on:** ex09–ex14, ex20, ex21, ex57–ex66
+**Builds on:** ex09–ex14, ex20, ex21, ex57–ex66
 **Take after:** End of Part IV: after ex57–ex66, plus ex09–ex14, ex20 and ex21 from Part II.
 
 ## The engagement
@@ -24,7 +24,7 @@ cheap to revisit.
 | `resilience.py` | `ResilientLLM`: retries with jittered backoff (honour `retry_after`), fallback model on overload, circuit breaker |
 | `observability.py` | Prometheus text-format counters and histograms; JSON logger |
 | `service.py` | `/healthz`, `/readyz` (red when the circuit is open), `/metrics`, authenticated `/v1/summarize` with limits; 503 + `Retry-After` in degraded mode; never log payloads |
-| `slo.py` | Burn-rate alerts (page 14.4x over 1 h and 5 m; ticket 6x over 6 h and 30 m) |
+| `slo.py` | Burn-rate alerts (page 14.4x over 1 h and 5 m; ticket 6x over 6 h and 30 m); `canary_decision(base, canary, min_requests=500)` → `wait`, `rollback` or `promote` |
 | `preflight.py` | Run on site: config, DNS, egress via proxy, allowlist, CA bundle → PASS/WARN/FAIL (+ CLI) |
 | `incident.py` | Turn the pilot's incident log into findings, each paired with its fix |
 | `loadtest.py` | HTTP load generator and a Little's-law replica estimate |
@@ -35,11 +35,23 @@ Fix the deploy artifacts in `starter/deploy/` (`Dockerfile`, `k8s.yaml`, `ci.yml
 
 ## Deliverables (`starter/deliverables/`)
 - `production_readiness_review.md`: summary, **assumptions**, incident findings → fixes, a checklist (≥ 8 items done),
-  capacity math, open risks, sign-off.
+  **gates** (each marked PASS or FAIL, with evidence) listed **before** a **scorecard** (each dimension's weight and
+  score, and the weighted score), capacity math, open risks, sign-off. Any failed gate means not ready, whatever the
+  score.
+- `performance_test_plan.md`: workload model, targets, latency budget, tests, quality under load, and a report whose
+  numbers are each labelled measured, assumed, estimated or projected.
 - `runbook.md`: deploy, rollback, alerts, degraded mode, customer-environment specifics, escalation.
+
+Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
 
 ## Run
 ```bash
 pytest capstones/c4-pilot-to-production
 pytest --solutions capstones/c4-pilot-to-production
 ```
+
+## Assessment
+Assessed with the shared [capstone rubric](../RUBRIC.md): gates first (tests, critical correctness, security and
+privacy, honest reporting, plus this capstone's own gates), then a weighted score across nine dimensions. The bar is
+every gate passing, a weighted score of at least 3.0 and no dimension below 2. Section 4 of the rubric lists C4's
+acceptance criteria and gates. Submit your scorecard as `starter/deliverables/scorecard.md`.

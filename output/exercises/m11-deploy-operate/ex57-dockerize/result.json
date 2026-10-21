@@ -1,0 +1,52 @@
+{
+  "path": "exercises/m11-deploy-operate/ex57-dockerize",
+  "status": "PASS",
+  "problems": [],
+  "tests": {
+    "passed": 9,
+    "failed": 0,
+    "error": 0,
+    "skipped": 0
+  },
+  "declared": 4,
+  "ran": 9,
+  "starter_failing": 9,
+  "cases": [
+    {
+      "test": "py:test_bad_has_all_issues",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_good_clean",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_rules[FROM python:latest-pinned-base]",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_rules[FROM python@sha256:abc123-None]",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_rules[USER root-non-root]",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_rules[CMD [\"x\"]\\nUSER app-non-root]",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_rules[env DB_PASSWORD=hunter2-no-secrets]",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_rules[ARG GITHUB_TOKEN-None]",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_your_dockerfile_passes",
+      "status": "passed"
+    }
+  ]
+}

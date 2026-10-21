@@ -25,6 +25,8 @@ you still validate at your boundary, because schemas drift and not every deploym
    schema as JSON in the system prompt), parse + validate; on failure send back the errors and retry up to
    `max_repairs` times. Raise `ValueError` with the last errors if still invalid.
 
+Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
+
 ## Prompt kit
 **Learn (tutor prompt)**
 ```text

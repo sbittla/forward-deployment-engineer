@@ -6,6 +6,7 @@
 - Ship a demo web app that cannot fail on the customer's Wi-Fi.
 - Render model output safely with textContent, never innerHTML.
 - Make demo mode visible and the real model one switch away.
+- Relay a streamed answer as server-sent events, and stop the upstream when the browser leaves.
 
 ## Scenario
 Tomorrow at 9 a.m. you demo to the customer's VP. No time for a React build pipeline, and the demo laptop is the
@@ -24,30 +25,54 @@ HTML/JS frontend, a fake model by default so the demo **cannot** fail on Wi-Fi, 
 - `POST /api/chat` with JSON `{"q": str, "history": [{"role","content"}...]}` → calls
   `llm.complete(history + [{"role": "user", "content": q}], system=SYSTEM_PROMPT)` and returns
   `{"answer": text, "model": response.model, "latency_ms": int}`. Invalid input → 400 JSON error.
+- `POST /api/chat/stream` with the same body and the same 400 validation → `200` with headers
+  `Content-Type: text/event-stream`, `Cache-Control: no-cache` and `X-Accel-Buffering: no`, no `Content-Length`,
+  and a body written by `relay`: one `delta` event per piece of the answer (at least two pieces for a multi-word
+  answer, e.g. split after each word's trailing whitespace; the pieces concatenate to exactly `response.text`),
+  then a `done` event. The connection closes after the stream.
 - Anything else → 404.
+
+Two module-level helpers do the streaming, so they can be tested without a socket:
+
+- `sse(event: str, data: dict) -> bytes` → `f"event: {event}\ndata: {json.dumps(data)}\n\n"` encoded as UTF-8.
+- `relay(chunks, wfile) -> str` reads text pieces from the iterator `chunks` and writes `sse("delta", {"text":
+  piece})` for each, flushing after every write. A `None` piece means the upstream is still working (a long tool
+  call): write the SSE comment `b": keep-alive\n\n"` instead. When `chunks` is exhausted, write `sse("done", {})`
+  and return `"done"`.
+  - The browser left: a write raises `BrokenPipeError` or `ConnectionResetError` → stop reading immediately and
+    return `"cancelled"`.
+  - The upstream failed: iterating `chunks` raises any other exception → write `sse("error", {"message":
+    UNAVAILABLE})` (module constant `"The assistant is unavailable."`; never the exception text, which can hold
+    internal details) and return `"error"`. No `done` event.
+  - In every case, call `chunks.close()` if it has one before returning, so a generator wrapping the provider's
+    stream closes the upstream connection and the model stops generating for nobody.
 
 `SYSTEM_PROMPT` (module constant) must tell the model it is a support copilot that answers concisely and says
 when it does not know.
 
 ## Field notes
-Demo with the fake model, then flip one env var to show the real one if the network allows. Rehearse the failure
-path: what do you say if the real model is slow?
+Demo with the fake model. `make_app` takes the model as a parameter, so a launcher can pass `fde_kit.get_llm()`,
+which returns the real client when `FDE_LIVE=1` is set, to show live behaviour if the network allows. Rehearse the
+failure path: what do you say if the real model is slow? A fake model scripted to raise shows the page's error
+message, and on the streaming endpoint the generic `error` event.
+
+Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
 
 ## Prompt kit
 **Learn (tutor prompt)**
 ```text
 I'm preparing for a Forward Deployed Engineer role and working on the exercise "Demo chat UI served from Python".
 Before I write code, teach me building a minimal demo stack with the Python standard library and vanilla JS,
-XSS-safe rendering, and how to rehearse failure paths for a live demo. Use short Python examples that are not the
-exercise solution. Then ask me three questions to check my understanding, one at a time, and tell me what to re-read
-if I get one wrong.
+XSS-safe rendering, relaying a streamed answer as server-sent events with cancellation, and how to rehearse failure
+paths for a live demo. Use short Python examples that are not the exercise solution. Then ask me three questions
+to check my understanding, one at a time, and tell me what to re-read if I get one wrong.
 ```
 **Build (coding-agent spec)**
 ```text
 Implement exercises/m05-fullstack-typescript/ex30-demo-web-ui/starter.py so that test_demo_ui.py passes. README.md
-in that folder is the spec: follow its names, formats, ordering and error messages exactly. Public API: `make_app`.
-Constraints: Python 3.11+, the standard library and the repo's fde_kit package only (pyyaml is allowed where the
-README uses YAML). Do not modify the tests or fde_kit. When you're done, run `pytest
+in that folder is the spec: follow its names, formats, ordering and error messages exactly. Public API: `make_app`,
+`sse`, `relay`. Constraints: Python 3.11+, the standard library and the repo's fde_kit package only (pyyaml is
+allowed where the README uses YAML). Do not modify the tests or fde_kit. When you're done, run `pytest
 exercises/m05-fullstack-typescript/ex30-demo-web-ui` and show me the output. If the README and the tests disagree,
 stop and tell me instead of guessing.
 ```
@@ -55,8 +80,9 @@ stop and tell me instead of guessing.
 ```text
 Review my solution to "Demo chat UI served from Python" as a senior forward deployed engineer would before it ships
 to a customer. Specifically: Is there any path where model or user text reaches innerHTML? Does invalid JSON return
-a 400 instead of a crash? Would the demo banner be obvious on a projector? Rank findings by customer impact, quote
-the line for each, and say which ones a test should catch.
+a 400 instead of a crash? Would the demo banner be obvious on a projector? Does the stream stop the upstream when
+the browser disconnects, and does an upstream error leak its message to the browser? Rank findings by customer
+impact, quote the line for each, and say which ones a test should catch.
 ```
 **Production prompt (what this exercise's code sends to a model)**
 ```text

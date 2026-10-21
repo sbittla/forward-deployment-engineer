@@ -1,0 +1,52 @@
+{
+  "path": "exercises/m14-field-leadership/ex89-permission-aware-rag",
+  "status": "PASS",
+  "problems": [],
+  "tests": {
+    "passed": 9,
+    "failed": 0,
+    "error": 0,
+    "skipped": 0
+  },
+  "declared": 6,
+  "ran": 9,
+  "starter_failing": 9,
+  "cases": [
+    {
+      "test": "py:test_token_roundtrip",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_token_claim_checks[<lambda>-expired]",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_token_claim_checks[<lambda>-issuer]",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_token_claim_checks[<lambda>-audience]",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_token_claim_checks[<lambda>-not yet valid]",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_signature_and_alg_none",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_allowed",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_secure_search_filters_before_ranking",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_obo",
+      "status": "passed"
+    }
+  ]
+}

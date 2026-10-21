@@ -1,4 +1,5 @@
 import json
+import re
 import time
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
@@ -69,6 +70,37 @@ BANNER = ('<p id="demo-banner" style="background:#fff3cd;border:1px solid #e0c06
           'DEMO MODE: answers come from a scripted model, not a live LLM.</p>')
 
 
+UNAVAILABLE = "The assistant is unavailable."
+
+
+def sse(event: str, data: dict) -> bytes:
+    return f"event: {event}\ndata: {json.dumps(data)}\n\n".encode()
+
+
+def relay(chunks, wfile) -> str:
+    """Relay text deltas to the browser as SSE; close the upstream if the browser leaves."""
+    try:
+        for text in chunks:  # None means "still working": send a comment so proxies keep the connection open
+            wfile.write(b": keep-alive\n\n" if text is None else sse("delta", {"text": text}))
+            wfile.flush()
+        wfile.write(sse("done", {}))
+        wfile.flush()
+        return "done"
+    except (BrokenPipeError, ConnectionResetError):
+        return "cancelled"
+    except Exception:
+        try:
+            wfile.write(sse("error", {"message": UNAVAILABLE}))
+            wfile.flush()
+        except (BrokenPipeError, ConnectionResetError):
+            return "cancelled"
+        return "error"
+    finally:
+        close = getattr(chunks, "close", None)
+        if close is not None:
+            close()
+
+
 def _valid_history(h):
     return isinstance(h, list) and all(
         isinstance(m, dict) and m.get("role") in ("user", "assistant") and isinstance(m.get("content"), str) for m in h)
@@ -97,7 +129,7 @@ def make_app(llm, demo_mode: bool = True) -> ThreadingHTTPServer:
             self._json(404, {"error": "not found"})
 
         def do_POST(self):
-            if self.path != "/api/chat":
+            if self.path not in ("/api/chat", "/api/chat/stream"):
                 return self._json(404, {"error": "not found"})
             try:
                 body = json.loads(self.rfile.read(int(self.headers.get("Content-Length") or 0)))
@@ -107,9 +139,25 @@ def make_app(llm, demo_mode: bool = True) -> ThreadingHTTPServer:
             history = body.get("history", []) if isinstance(body, dict) else None
             if not isinstance(q, str) or not q.strip() or not _valid_history(history):
                 return self._json(400, {"error": "need non-empty q and a valid history list"})
+            messages = history + [{"role": "user", "content": q}]
+            if self.path == "/api/chat/stream":
+                return self._stream(messages)
             t0 = time.perf_counter()
-            resp = llm.complete(history + [{"role": "user", "content": q}], system=SYSTEM_PROMPT)
+            resp = llm.complete(messages, system=SYSTEM_PROMPT)
             self._json(200, {"answer": resp.text, "model": resp.model,
                              "latency_ms": int((time.perf_counter() - t0) * 1000)})
+
+        def _stream(self, messages):
+            def chunks():
+                text = llm.complete(messages, system=SYSTEM_PROMPT).text
+                yield from re.findall(r"\S+\s*|\s+", text)
+
+            self.send_response(200)
+            self.send_header("Content-Type", "text/event-stream")
+            self.send_header("Cache-Control", "no-cache")
+            self.send_header("X-Accel-Buffering", "no")
+            self.end_headers()
+            relay(chunks(), self.wfile)
+            self.close_connection = True
 
     return ThreadingHTTPServer(("127.0.0.1", 0), Handler)

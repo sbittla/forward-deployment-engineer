@@ -32,6 +32,8 @@ It's also wrong in at least six ways.
    test command in backticks), `Conventions`, `Never do` (must cover secrets in logs, string-built SQL and
    unvalidated paths), `Before you finish` (verification steps).
 
+Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
+
 ## Prompt kit
 **Learn (tutor prompt)**
 ```text

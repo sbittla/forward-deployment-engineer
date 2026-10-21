@@ -25,6 +25,8 @@ request-rate limit.
 Measure the provider's actual limits (requests *and* tokens per minute) in the customer's tenant; they are often
 lower than the docs because of org-level quotas.
 
+Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
+
 ## Prompt kit
 **Learn (tutor prompt)**
 ```text

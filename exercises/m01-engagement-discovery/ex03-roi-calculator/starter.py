@@ -14,5 +14,5 @@ def roi_summary(**inputs) -> dict:
     raise NotImplementedError
 
 
-def sensitivity(inputs: dict, param: str, multipliers) -> list[tuple[float, float]]:
+def sensitivity(inputs: dict, param, multipliers) -> list[tuple[float, float]]:
     raise NotImplementedError

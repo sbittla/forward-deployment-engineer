@@ -37,6 +37,8 @@ Greedy search over hand-written edits is crude, but it makes the team write thei
 habit matters more than the optimiser. With a live model, run each prompt several times: sampling noise can be larger
 than the edit's effect.
 
+Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
+
 ## Prompt kit
 **Learn (tutor prompt)**
 ```text
@@ -49,7 +51,8 @@ classification prompt that sometimes answers in full sentences.
 ```text
 Implement exercises/m15-prompt-engineering/ex97-prompt-hill-climb/starter.py so test_hill_climb.py passes. Follow the
 README rules for shuffling, tie-breaks, rounding and when the test split is evaluated (exactly once). Standard library
-only (random, math). Don't change the tests. Show the pytest output when done.
+only (random, math). Don't change the tests. Show the pytest output when done. If the README and the tests disagree,
+stop and tell me instead of guessing.
 ```
 **Review**
 ```text

@@ -31,6 +31,8 @@ Feedback items: `{"customer", "text", "arr" (annual revenue, USD), "severity": "
    ```
    clusters ordered by score desc (ties: earliest first index); one blank line between clusters.
 
+Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
+
 ## Prompt kit
 **Learn (tutor prompt)**
 ```text

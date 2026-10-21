@@ -35,6 +35,12 @@ class EvalReport:
     def to_markdown(self) -> str:
         raise NotImplementedError
 
+    def by_slice(self, z: float = 1.96) -> dict[str, dict]:
+        raise NotImplementedError
+
+    def failure_taxonomy(self, labels: dict[str, str]) -> list[tuple[str, int]]:
+        raise NotImplementedError
+
 
 GRADERS: dict = {}
 
@@ -44,4 +50,16 @@ def load_cases(path) -> list[Case]:
 
 
 def run_eval(cases: list[Case], system) -> EvalReport:
+    raise NotImplementedError
+
+
+def wilson_interval(successes: int, n: int, z: float = 1.96) -> tuple[float, float]:
+    raise NotImplementedError
+
+
+def cost_per_success(cost_per_request: float, pass_rate: float) -> float:
+    raise NotImplementedError
+
+
+def find_leakage(cases: list[Case], examples: list[str]) -> list[str]:
     raise NotImplementedError

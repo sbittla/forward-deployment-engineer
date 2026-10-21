@@ -1,0 +1,40 @@
+{
+  "path": "exercises/m06-llm-apps/ex34-model-router",
+  "status": "PASS",
+  "problems": [],
+  "tests": {
+    "passed": 6,
+    "failed": 0,
+    "error": 0,
+    "skipped": 0
+  },
+  "declared": 6,
+  "ran": 6,
+  "starter_failing": 6,
+  "cases": [
+    {
+      "test": "py:test_cost",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_route_cheapest_first",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_route_constraints",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_fallback_on_overload",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_non_retryable_propagates",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_all_fail",
+      "status": "passed"
+    }
+  ]
+}

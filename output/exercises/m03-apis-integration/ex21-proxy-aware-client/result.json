@@ -1,0 +1,56 @@
+{
+  "path": "exercises/m03-apis-integration/ex21-proxy-aware-client",
+  "status": "PASS",
+  "problems": [],
+  "tests": {
+    "passed": 10,
+    "failed": 0,
+    "error": 0,
+    "skipped": 0
+  },
+  "declared": 6,
+  "ran": 10,
+  "starter_failing": 10,
+  "cases": [
+    {
+      "test": "py:test_from_env",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_proxy_for[https://api.anthropic.com/v1/messages-http://proxy.bank.local:3128]",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_proxy_for[https://search.corp.local/q-None]",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_proxy_for[http://localhost:8080/-None]",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_proxy_for[https://vault.bank.local:8200/v1-None]",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_proxy_for[https://vault.bank.local/v1-http://proxy.bank.local:3128]",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_no_proxy_star",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_egress",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_diagnose",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_opener",
+      "status": "passed"
+    }
+  ]
+}

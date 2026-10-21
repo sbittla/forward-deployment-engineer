@@ -1,0 +1,36 @@
+{
+  "path": "exercises/m14-field-leadership/ex83-security-questionnaire",
+  "status": "PASS",
+  "problems": [],
+  "tests": {
+    "passed": 5,
+    "failed": 0,
+    "error": 0,
+    "skipped": 0
+  },
+  "declared": 5,
+  "ran": 5,
+  "starter_failing": 5,
+  "cases": [
+    {
+      "test": "py:test_answers",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_unknown_goes_to_humans",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_answer_all",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_contradictions",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_regulatory_triage",
+      "status": "passed"
+    }
+  ]
+}

@@ -31,6 +31,8 @@ Usage events: `{"user", "team", "event": "invited"|"login"|"query", "week": int}
 
 **Errors:** `diff_in_diff` raises `ValueError` if any of the four lists is empty.
 
+Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
+
 ## Prompt kit
 **Learn (tutor prompt)**
 ```text

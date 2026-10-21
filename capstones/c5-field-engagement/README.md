@@ -3,9 +3,9 @@
 **Covers:** R14 Safety · R17 Compliance · R18 Discovery · R19 Exec communication · R20 Ambiguity ·
 R21 Rapid POC · R23 Product feedback · R24 Writing · R25 Regulated domain (healthcare) · R26 On-site embedding ·
 R30 Value metrics · R32 Voice
-**Suggested time:** 3 days (the whole arc of a 6-week engagement, compressed) · **Builds on:** ex01–ex08, ex32,
+**Builds on:** ex01–ex08, ex32,
 ex48, ex53, ex68, ex72, ex75
-**Take after:** Part V: after all of Part I, ex32 and ex48 (Part III), and ex72 and ex75 (Part IV).
+**Take after:** Part V: after all of Part I, ex32, ex48 and ex53 (Part III), and ex72 and ex75 (Part IV).
 
 ## The engagement
 You are embedded at Lakeside Community Health for six weeks. Their after-hours voice agent records patient calls;
@@ -37,6 +37,8 @@ catch it.
 - `handoff_runbook.md`: daily operation, red-flag change control, PHI incident response, monitoring, escalation.
 - `product_feedback.md`: what the platform should build so the next clinic takes two weeks less.
 
+Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
+
 ## Run
 ```bash
 pytest capstones/c5-field-engagement
@@ -47,3 +49,9 @@ pytest --solutions capstones/c5-field-engagement
 1. Which open question would have changed your design most if answered differently?
 2. Where did you choose deterministic code over the model, and why?
 3. What did you tell the CMO about the limits of a 4-call eval set?
+
+## Assessment
+Assessed with the shared [capstone rubric](../RUBRIC.md): gates first (tests, critical correctness, security and
+privacy, honest reporting, plus this capstone's own gates), then a weighted score across nine dimensions. The bar is
+every gate passing, a weighted score of at least 3.0 and no dimension below 2. Section 4 of the rubric lists C5's
+acceptance criteria and gates. Submit your scorecard as `starter/deliverables/scorecard.md`.

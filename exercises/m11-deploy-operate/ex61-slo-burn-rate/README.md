@@ -25,6 +25,8 @@ Requests: `(ts_seconds, status_code, latency_ms)`. A request is **good** if `sta
 - `budget_remaining(requests, now, period_s=30*86400)` → `1 - (bad / (total * error_budget))` over the period,
   rounded to 4 dp (can go negative; 1.0 when there are no requests)
 
+Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
+
 ## Prompt kit
 **Learn (tutor prompt)**
 ```text

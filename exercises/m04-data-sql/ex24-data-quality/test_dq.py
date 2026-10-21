@@ -55,3 +55,51 @@ def test_markdown(impl):
     assert md.splitlines()[0] == "| Check | Severity | Status | Failed |"
     assert "| not_null(policy_number) | error | FAIL | 1 |" in md
     assert "| row_count_between(1,10) | error | PASS | 0 |" in md
+
+
+# Part B · pseudonymisation and data contracts
+
+KEY = b"analytics-pseudonym-key"
+
+
+def test_pseudonymise_is_keyed_and_stable(impl):
+    import hashlib
+    import hmac
+    token = impl.pseudonymise("Ana@Example.com", KEY)
+    assert token == hmac.new(KEY, b"ana@example.com", hashlib.sha256).hexdigest()[:32]
+    assert impl.pseudonymise(" ana@example.com ", KEY) == token  # normalised before hashing
+    assert impl.pseudonymise("Ana@Example.com", b"another-key") != token
+    assert token != hashlib.sha256(b"ana@example.com").hexdigest()[:32]  # not a plain hash
+
+
+CONTRACT = {
+    "dataset": "claims.policies",
+    "schema": {
+        "policy_number": {"type": "string", "nullable": False, "pattern": r"PN-\d{4}"},
+        "premium": {"type": "decimal", "range": [0, 100000]},
+        "state": {"type": "string", "values": ["CA", "NY", "TX"]},
+    },
+    "checks_blocking": ["not_null(policy_number)", "unique(policy_number)"],
+}
+
+
+def test_checks_from_contract(impl):
+    checks = impl.checks_from_contract(CONTRACT)
+    assert [(c.name, c.severity) for c in checks] == [
+        ("not_null(policy_number)", "error"),
+        (r"matches(policy_number,PN-\d{4})", "warn"),
+        ("in_range(premium,0,100000)", "warn"),
+        ("accepted_values(state)", "warn"),
+        ("unique(policy_number)", "error"),
+    ]
+    r = by_name(impl.run_checks(ROWS, checks))
+    assert r["unique(policy_number)"].sample_rows == [2, 3]
+    clean = [row for row in ROWS if row["policy_number"] == "PN-0001"]
+    assert impl.run_checks(clean, checks).ok is True
+
+
+def test_contract_rejects_unknown_blocking_check(impl):
+    import pytest
+    bad = {**CONTRACT, "checks_blocking": ["row_count_between(1,10)"]}
+    with pytest.raises(ValueError, match="unknown blocking check: row_count_between"):
+        impl.checks_from_contract(bad)

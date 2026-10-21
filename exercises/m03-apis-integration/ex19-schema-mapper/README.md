@@ -28,6 +28,8 @@ with row numbers so the customer's admin can fix the source.
 `RowError(row, field, message)` uses the 0-based row index. A row with any error is excluded from `customers`,
 and **all** errors in that row are reported (not just the first).
 
+Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
+
 ## Prompt kit
 **Learn (tutor prompt)**
 ```text

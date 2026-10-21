@@ -1,5 +1,8 @@
+import hashlib
+import json
 import re
 from dataclasses import dataclass, field
+from datetime import date
 
 
 @dataclass
@@ -71,4 +74,30 @@ def heading_chunks(markdown: str) -> list[Chunk]:
         trail = [t for t in trail if t[0] < level] + [(level, m.group(2))]
         start, end = m.start(), bounds[i + 2]
         out.append(Chunk(markdown[start:end], start, end, {"path": " > ".join(t[1] for t in trail)}))
+    return out
+
+
+def chunk_key(doc_id: str, path: str, text: str) -> str:
+    return hashlib.sha256(json.dumps([doc_id, path, text]).encode()).hexdigest()
+
+
+def plan_reindex(doc_id: str, current: dict[str, str], incoming: list[Chunk]) -> tuple[list[Chunk], list[str]]:
+    fresh = {chunk_key(doc_id, c.meta.get("path", ""), c.text): c for c in incoming}
+    to_add = [chunk for key, chunk in fresh.items() if key not in current]
+    to_delete = [idx for key, idx in current.items() if key not in fresh]
+    return to_add, to_delete
+
+
+def _as_date(value) -> date | None:
+    if value is None or isinstance(value, date):
+        return value
+    return date.fromisoformat(value)
+
+
+def filter_effective(chunks: list[Chunk], on: date) -> list[Chunk]:
+    out = []
+    for c in chunks:
+        start, end = _as_date(c.meta.get("effective_from")), _as_date(c.meta.get("effective_to"))
+        if (start is None or start <= on) and (end is None or on < end):
+            out.append(c)
     return out

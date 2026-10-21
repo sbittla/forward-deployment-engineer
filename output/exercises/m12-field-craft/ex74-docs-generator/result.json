@@ -1,0 +1,36 @@
+{
+  "path": "exercises/m12-field-craft/ex74-docs-generator",
+  "status": "PASS",
+  "problems": [],
+  "tests": {
+    "passed": 5,
+    "failed": 0,
+    "error": 0,
+    "skipped": 0
+  },
+  "declared": 5,
+  "ran": 5,
+  "starter_failing": 5,
+  "cases": [
+    {
+      "test": "py:test_public_api",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_parse_docstring",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_render",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_missing_docs",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_empty_module",
+      "status": "passed"
+    }
+  ]
+}

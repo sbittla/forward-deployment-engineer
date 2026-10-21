@@ -6,7 +6,7 @@
 ## Learning objectives
 - See partitions, narrow vs wide transformations and shuffles in a mini engine.
 - Diagnose and fix key skew with salting.
-- Write the equivalent PySpark/Delta job for Databricks.
+- Write the equivalent PySpark/Delta job for Databricks, guarded by blocking input checks before it overwrites.
 
 ## Scenario
 Databricks, Palantir and Snowflake-adjacent FDE roles assume you can reason about distributed execution: why a job
@@ -25,14 +25,20 @@ tiny partitioned engine so you can *see* those mechanics. Part B is the real PyS
   to each key, `reduce_by_key`, strip the salt, `reduce_by_key` again. The result equals a plain `reduce_by_key`.
 
 ## Part B: `spark_job.py`
-Write a PySpark job, the code you'd run on Databricks, that:
+Write a PySpark job, the code you'd run on Databricks, as `build(spark, min_rows, max_age_hours)`, that:
 1. reads `transactions` (Delta) with `spark.read.table("bronze.transactions")`
-2. keeps `amount > 0`, groups by `merchant`, and sums `amount` as `total` using `pyspark.sql.functions`
-3. writes the result with `.write.format("delta").mode("overwrite").saveAsTable("gold.merchant_totals")`
-4. never calls `.collect()` or `.toPandas()` on the un-aggregated data (the test checks there are none at all)
+2. **blocks** before any write: counts the input rows (`count`) and measures the age of the newest `ingested_at`, and
+   raises if there are fewer than `min_rows` rows or the newest row is older than `max_age_hours`. An overwrite
+   trusts its input completely; a partial bronze must fail the job, not replace correct totals
+3. keeps `amount > 0`, groups by `merchant`, and sums `amount` as `total` using `pyspark.sql.functions`
+4. writes the result with `.write.format("delta").mode("overwrite").saveAsTable("gold.merchant_totals")`
+5. never calls `.collect()` or `.toPandas()` on the un-aggregated data (the test checks there are none at all)
 
-`spark_job.py` isn't executed by the tests (no Spark cluster needed); it's parsed and checked statically. For the
+`spark_job.py` isn't executed by the tests (no Spark cluster needed); it's parsed and checked statically: the
+`count` call and a `raise` must come before the `saveAsTable` line. For the
 Scala API, the same job is `df.filter($"amount" > 0).groupBy("merchant").agg(sum("amount").as("total"))`.
+
+Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
 
 ## Prompt kit
 **Learn (tutor prompt)**

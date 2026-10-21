@@ -26,6 +26,8 @@ Work with real module objects (use `inspect`).
 4. `missing_docs(module) -> list[str]` — public items without a docstring, plus public **methods** of public classes
    without one as `Class.method`.
 
+Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
+
 ## Prompt kit
 **Learn (tutor prompt)**
 ```text

@@ -32,6 +32,8 @@ automated_decision (bool), regulated_domain (bool), data_sources (list), model_p
    `## Monitoring`, `## Human oversight`, `## Required controls`, `## Approval` (a line
    `Status: BLOCKED (<n> issues)` if `validate` finds issues else `Status: READY FOR REVIEW`).
 
+Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
+
 ## Prompt kit
 **Learn (tutor prompt)**
 ```text

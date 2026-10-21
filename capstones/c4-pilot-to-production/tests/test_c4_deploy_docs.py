@@ -27,8 +27,10 @@ def test_your_deploy_artifacts_pass(cap, cap_dir):
 
 
 REQUIRED = {
-    "production_readiness_review.md": ["Summary", "Assumptions", "Incident findings", "Checklist", "Capacity",
-                                       "Open risks", "Sign-off"],
+    "production_readiness_review.md": ["Summary", "Assumptions", "Incident findings", "Checklist", "Gates",
+                                       "Scorecard", "Capacity", "Open risks", "Sign-off"],
+    "performance_test_plan.md": ["Workload model", "Targets", "Latency budget", "Tests", "Quality under load",
+                                 "Report"],
     "runbook.md": ["Overview", "Deploy", "Rollback", "Alerts", "Degraded mode", "Customer environment", "Escalation"],
 }
 
@@ -42,3 +44,28 @@ def test_deliverables(cap_dir, name):
     assert not re.search(r"TODO|TBD|FIXME", text)
     if name == "production_readiness_review.md":
         assert text.count("[x]") >= 8, "checklist needs at least 8 completed items"
+
+
+def _section(text, heading):
+    """The body under the first heading that contains `heading`, up to the next heading."""
+    m = re.search(rf"^#+\s+[^\n]*{heading}[^\n]*\n(.*?)(?=^#+\s|\Z)", text, re.M | re.S | re.I)
+    return m.group(1) if m else ""
+
+
+def test_readiness_review_gates_before_score(cap_dir):
+    text = (cap_dir / "deliverables" / "production_readiness_review.md").read_text(encoding="utf-8")
+    headings = [h.lower() for h in re.findall(r"^#+\s+(.*)$", text, re.M)]
+    gates = next((i for i, h in enumerate(headings) if "gates" in h), None)
+    score = next((i for i, h in enumerate(headings) if "scorecard" in h), None)
+    assert gates is not None and score is not None and gates < score, "list the gates before the scorecard"
+    assert len(re.findall(r"\b(PASS|FAIL)\b", _section(text, "Gates"))) >= 5, "each gate needs PASS or FAIL"
+    card = _section(text, "Scorecard")
+    assert len(re.findall(r"\d+\s*%", card)) >= 8, "give every dimension its weight"
+    assert re.search(r"weighted score[^\n]*\d\.\d", card, re.I), "state the weighted score"
+
+
+def test_performance_plan_labels_numbers(cap_dir):
+    text = (cap_dir / "deliverables" / "performance_test_plan.md").read_text(encoding="utf-8")
+    report = _section(text, "Report").lower()
+    for status in ("measured", "assumed", "estimated"):
+        assert status in report, f"the report labels no number as '{status}'"

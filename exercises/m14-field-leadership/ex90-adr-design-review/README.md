@@ -32,6 +32,8 @@ review gate that decides whether a partner's design or deliverable can ship.
    `"conditional"` if majors exist, test pass rate < 100%, or `eval_pass_rate < 0.9`; else `"accept"`. Reasons list
    every triggered condition in that order.
 
+Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
+
 ## Prompt kit
 **Learn (tutor prompt)**
 ```text

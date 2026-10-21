@@ -32,6 +32,8 @@ the tests came from exactly that run.
 
 **Errors:** an unknown `variant` raises `ValueError` (silently signing with the wrong layout produces 401s that are very hard to debug).
 
+Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
+
 ## Prompt kit
 **Learn (tutor prompt)**
 ```text
