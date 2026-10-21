@@ -44,3 +44,4 @@ without calling the transport.
 | `test_retry_once_on_401` | Token not invalidated before the retry, so the same `tok1` is sent again |
 | `test_401_twice_propagates_and_other_errors` | Retry loops on repeated 401s, or non-401 errors are swallowed |
 | `test_invalidate` | `invalidate` clears the token but leaves the expiry, or vice versa |
+| `test_boundary_persistent_401_costs_two_token_calls` | The retry loops, or fetches more than one fresh token, when every call returns 401 |

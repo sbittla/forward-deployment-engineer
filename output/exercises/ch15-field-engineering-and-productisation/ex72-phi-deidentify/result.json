@@ -3,14 +3,14 @@
   "status": "PASS",
   "problems": [],
   "tests": {
-    "passed": 4,
+    "passed": 5,
     "failed": 0,
     "error": 0,
     "skipped": 0
   },
-  "declared": 4,
-  "ran": 4,
-  "starter_failing": 4,
+  "declared": 5,
+  "ran": 5,
+  "starter_failing": 5,
   "cases": [
     {
       "test": "py:test_deidentify",
@@ -26,6 +26,10 @@
     },
     {
       "test": "py:test_access_log",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_boundary_other_names_not_scrubbed",
       "status": "passed"
     }
   ]

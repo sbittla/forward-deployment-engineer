@@ -3,14 +3,14 @@
   "status": "PASS",
   "problems": [],
   "tests": {
-    "passed": 12,
+    "passed": 14,
     "failed": 0,
     "error": 0,
     "skipped": 0
   },
-  "declared": 11,
-  "ran": 12,
-  "starter_failing": 12,
+  "declared": 13,
+  "ran": 14,
+  "starter_failing": 14,
   "cases": [
     {
       "test": "py:test_discover",
@@ -58,6 +58,14 @@
     },
     {
       "test": "py:test_demo_server_subprocess",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_boundary_schema_not_enforced_by_server",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_list_result_has_no_structured_content",
       "status": "passed"
     }
   ]

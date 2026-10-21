@@ -52,3 +52,5 @@ Keep a dict of `event_id -> time first seen` for deduplication, and purge old en
 | `test_shuffled_and_duplicated_deliveries_converge` | Last write wins: the record is stored without comparing versions |
 | `test_reconcile_uses_the_same_path` | Wrong path or params passed to `list_all`, or records written without `apply_update` |
 | `test_receiver_ignores_stale_redelivery` | `store` ignored, or `event["data"]` stored directly instead of through `apply_update` |
+| `test_boundary_replay_outside_window_is_stale` | Staleness not checked, or checked with the wrong sign, so a replay is accepted once its seen id expires |
+| `test_boundary_dedupe_is_per_process` | Seen ids kept in a class-level or module-level dict shared between receivers instead of per instance |

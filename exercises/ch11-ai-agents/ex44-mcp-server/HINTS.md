@@ -54,3 +54,5 @@ Split `handle` into two layers:
 | `test_tool_registration_validation` | Tool name regex or schema type not checked at registration |
 | `test_serve_stdio` | Parse errors not answered; replies written for notifications |
 | `test_demo_server_subprocess` | Demo server not started under `__main__`; `lookup_policy` doesn't raise for bad ids |
+| `test_boundary_schema_not_enforced_by_server` | A tool's `TypeError` turned into a JSON-RPC error instead of an `isError` result |
+| `test_list_result_has_no_structured_content` | `structuredContent` sent for a list (MCP requires an object), or the list missing from the text content |

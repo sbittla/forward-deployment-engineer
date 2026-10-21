@@ -41,3 +41,4 @@ and finally the scrubbed note.
 | `test_elderly_and_restricted_zip` | Age computed from years only (birthday ignored); restricted zip3 list not applied |
 | `test_retention` | Legal hold ignored; boundary uses `<=` |
 | `test_access_log` | Record contents included; unknown purpose accepted |
+| `test_boundary_other_names_not_scrubbed` | Names other than the patient's replaced, or the note changed beyond the patient's name |

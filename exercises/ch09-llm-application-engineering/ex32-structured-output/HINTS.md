@@ -44,3 +44,5 @@ parses.
 | `test_missing_required` | Required check skipped when other properties are present |
 | `test_repair_loop` | Schema not in the system prompt; repair message lacks the error paths |
 | `test_gives_up` | Wrong number of calls (should be `max_repairs + 1`), or final error doesn't list the problems |
+| `test_boundary_schema_valid_is_not_correct` | `validate` checking values against the source or rejecting large amounts; it should check shape only |
+| `test_boundary_refusal_spends_repairs` | Not raising `ValueError` when no reply contains JSON, or stopping before `max_repairs + 1` calls |

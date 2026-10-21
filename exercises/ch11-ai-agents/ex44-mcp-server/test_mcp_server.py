@@ -138,3 +138,23 @@ def test_demo_server_subprocess(exercise_dir):
     assert [t["name"] for t in replies[2]["result"]["tools"]] == ["lookup_policy"]
     assert replies[3]["result"]["structuredContent"] == {"policy_id": "P-100", "status": "active"}
     assert replies[4]["result"]["isError"] is True
+
+
+def test_boundary_schema_not_enforced_by_server(server):
+    """The server doesn't validate arguments against inputSchema; a bad call fails inside the tool."""
+    r = server.handle(modern("tools/call", {"name": "add", "arguments": {"a": 1}}))
+    assert "error" not in r and r["result"]["isError"] is True
+    assert r["result"]["content"][0]["text"].startswith("Error: ")
+
+
+def test_list_result_has_no_structured_content(impl):
+    """MCP's structuredContent must be a JSON object, so a list result is returned as JSON text only."""
+    s = impl.MCPServer("policy-db", "0.2.0")
+
+    @s.tool("ids", "Policy ids", {"type": "object"})
+    def ids():
+        return ["P-1", "P-2"]
+
+    r = s.handle(modern("tools/call", {"name": "ids", "arguments": {}}))["result"]
+    assert "structuredContent" not in r and r["isError"] is False
+    assert json.loads(r["content"][0]["text"]) == ["P-1", "P-2"]

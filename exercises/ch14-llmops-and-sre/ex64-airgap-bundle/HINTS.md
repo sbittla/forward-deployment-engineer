@@ -41,3 +41,4 @@ between them shows up as "bad signature".
 | `test_build_and_verify` | Windows `\` separators in member names; signature computed with the `signature` key still present |
 | `test_tamper_detected` | Unsafe member also reported as unexpected; no early return after a missing manifest |
 | `test_safe_extract` | `extractall` used; manifest extracted; extraction happens before verification |
+| `test_boundary_shared_key_can_resign` | Pins a limitation, not a bug: with a shared HMAC key, a re-signed bundle verifies. If it fails, the manifest isn't rebuilt from the current files, or `verify_bundle` checks more than the spec says |

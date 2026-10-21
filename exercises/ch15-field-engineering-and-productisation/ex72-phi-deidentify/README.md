@@ -23,6 +23,8 @@ programmes need the full 18 identifiers, an expert review, and legal sign-off) p
 - in `note`: first replace MRNs (`MRN[:#\s]*\d+`) → `[MRN]`, emails → `[EMAIL]`, dates (`YYYY-MM-DD` or
   `MM/DD/YYYY`) → `[DATE]` and phones → `[PHONE]`; then replace each part of the patient's name
   (case-insensitive, whole word) with `[NAME]` (so `Maria Lopez` becomes `[NAME] [NAME]`)
+  Only the patient's own name is replaced: other people's names (a clinician, a relative) stay in the note, a
+  documented limit of this teaching subset.
 
 `apply_retention(records, today, retention_days, legal_holds: set) -> (kept, purged_ids)` — records have `id` and
 `created` (ISO date). Purge records older than `retention_days` unless their id is on legal hold. `purged_ids` sorted.
@@ -31,6 +33,27 @@ programmes need the full 18 identifiers, an expert review, and legal sign-off) p
 (never the record contents); raise `ValueError` if `purpose` is not in `ALLOWED_PURPOSES`.
 
 Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
+
+## Run and verify
+
+- **Prerequisites:** Python 3.11 or later and `pip install -r requirements.txt`, run once from the repository root.
+  No API key or network access is needed.
+- **Run your work:** from the repository root,
+  `pytest exercises/ch15-field-engineering-and-productisation/ex72-phi-deidentify`.
+- **Expected output:** all 5 tests fail against the starter; when you're done, all 5 pass.
+- **Check the reference solution:**
+  `pytest --solutions exercises/ch15-field-engineering-and-productisation/ex72-phi-deidentify`: all 5 pass.
+- **Tests:** `test_phi.py` (5 tests).
+- **Common failures:** `ModuleNotFoundError: No module named 'fde_kit'` means the command didn't run from the
+  repository root. For a failing test, [HINTS.md](HINTS.md) says what it usually means.
+- **Whose failure is it?** If your run fails but the reference run passes, it's your code. If the reference run fails
+  too, check the prerequisites (`python --version`, `node --version`); if they're met, it's a defect in the published
+  solution, so report it with the repository's Errata issue template.
+- **Cleanup:** none. The tests write only to temporary directories, and `__pycache__` folders are ignored by git.
+- **Production caveats:** A teaching subset of Safe Harbor: names other than the patient's, addresses, seven-digit
+  local phone numbers and many other identifiers pass through, and the access log is a returned dictionary.
+  Production needs a maintained de-identification tool with measured recall on the customer's own notes, privacy and
+  legal sign-off, scheduled and logged retention jobs, and an append-only audit log.
 
 ## Prompt kit
 **Learn (tutor prompt)**

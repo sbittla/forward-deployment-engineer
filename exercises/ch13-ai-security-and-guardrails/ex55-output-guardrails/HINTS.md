@@ -41,3 +41,4 @@ supported sentences.
 | `test_whole_word_topics` | Substring topic matching (`pursue` matches `sue`) |
 | `test_all_ungrounded_falls_back` | Empty string returned instead of the fallback |
 | `test_ssn_leak` | SSN pattern missing from the PII check |
+| `test_boundary_poisoned_source_counts_as_grounded` | Sources other than the first ignored for support or PII checks; this test pins that output checks trust every source |

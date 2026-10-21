@@ -41,3 +41,4 @@ passes.
 | `test_bucket_limits_rate` | Refill not continuous (whole seconds only), or bucket acquired outside the job flow |
 | `test_bucket_starts_full` | Initial token count of 0 |
 | `test_invalid_limits` | Validation missing in `TokenBucket.__init__`, or `concurrency=0` hangs instead of raising |
+| `test_boundary_cancellation_propagates` | `except BaseException` (or a bare `except`) stores `CancelledError` in a slot instead of letting it propagate |

@@ -70,3 +70,17 @@ def test_gives_up(impl):
     with pytest.raises(ValueError) as e:
         impl.complete_structured(llm, "x", SCHEMA, max_repairs=2)
     assert "claim_id" in str(e.value) and len(llm.calls) == 3
+
+
+def test_boundary_schema_valid_is_not_correct(impl):
+    # validate checks shape only: an amount the email never mentioned still passes.
+    invented = {**GOOD, "amount": 98765.0, "claim_id": "CL-99999"}
+    assert impl.validate(invented, SCHEMA) == []
+
+
+def test_boundary_refusal_spends_repairs(impl):
+    # complete_structured reads only the reply text, so a refusal looks like malformed output.
+    llm = FakeLLM(["I can't help with extracting this claim."] * 3)
+    with pytest.raises(ValueError):
+        impl.complete_structured(llm, "Email: ...", SCHEMA, max_repairs=2)
+    assert len(llm.calls) == 3

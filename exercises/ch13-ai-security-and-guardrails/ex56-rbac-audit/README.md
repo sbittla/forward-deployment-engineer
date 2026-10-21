@@ -26,9 +26,30 @@ Permissions look like `"ticket:read"`, `"ticket:*"`, `"*"`, or with a numeric li
      reasons: `"tenant mismatch"`, `"granted by <permission>"`, `"no matching permission"`
 - `AuditLog` — append-only, hash-chained: each entry stores `prev_hash` and `hash = sha256(prev_hash + json(entry
   without hash, sort_keys))`. The first `prev_hash` is `"0" * 64`. `verify() -> bool` recomputes the chain;
-  editing or deleting any entry makes it False.
+  editing or deleting any entry makes it False. `verify()` proves internal consistency only: an edited log whose
+  hashes are all recomputed with the same formula verifies, so production anchors the latest hash outside the app.
 
 Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
+
+## Run and verify
+
+- **Prerequisites:** Python 3.11 or later and `pip install -r requirements.txt`, run once from the repository root.
+  No API key or network access is needed.
+- **Run your work:** from the repository root, `pytest exercises/ch13-ai-security-and-guardrails/ex56-rbac-audit`.
+- **Expected output:** all 8 tests fail against the starter; when you're done, all 8 pass.
+- **Check the reference solution:** `pytest --solutions exercises/ch13-ai-security-and-guardrails/ex56-rbac-audit`:
+  all 8 pass.
+- **Tests:** `test_rbac.py` (8 tests).
+- **Common failures:** `ModuleNotFoundError: No module named 'fde_kit'` means the command didn't run from the
+  repository root. For a failing test, [HINTS.md](HINTS.md) says what it usually means.
+- **Whose failure is it?** If your run fails but the reference run passes, it's your code. If the reference run fails
+  too, check the prerequisites (`python --version`, `node --version`); if they're met, it's a defect in the published
+  solution, so report it with the repository's Errata issue template.
+- **Cleanup:** none. The tests write only to temporary directories, and `__pycache__` folders are ignored by git.
+- **Production caveats:** Roles live in a dict and the audit log in memory; a hash chain is tamper-evident, not
+  tamper-proof (`test_boundary_rebuilt_chain_still_verifies`). Production loads roles from the identity provider or a
+  policy engine, ships audit entries to write-once storage or an external log service, and anchors the latest hash
+  somewhere the application can't write.
 
 ## Prompt kit
 **Learn (tutor prompt)**

@@ -52,6 +52,26 @@ When drift fires, the first action is to pull a sample into review and grow the 
 
 Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
 
+## Run and verify
+
+- **Prerequisites:** Python 3.11 or later and `pip install -r requirements.txt`, run once from the repository root.
+  No API key or network access is needed.
+- **Run your work:** from the repository root, `pytest exercises/ch12-llm-evaluation/ex100-online-monitoring-drift`.
+- **Expected output:** all 8 tests fail against the starter; when you're done, all 8 pass.
+- **Check the reference solution:** `pytest --solutions exercises/ch12-llm-evaluation/ex100-online-monitoring-drift`:
+  all 8 pass.
+- **Tests:** `test_monitoring.py` (8 tests).
+- **Common failures:** `ModuleNotFoundError: No module named 'fde_kit'` means the command didn't run from the
+  repository root. For a failing test, [HINTS.md](HINTS.md) says what it usually means.
+- **Whose failure is it?** If your run fails but the reference run passes, it's your code. If the reference run fails
+  too, check the prerequisites (`python --version`, `node --version`); if they're met, it's a defect in the published
+  solution, so report it with the repository's Errata issue template.
+- **Cleanup:** none. The tests write only to temporary directories, and `__pycache__` folders are ignored by git.
+- **Production caveats:** Thresholds are fixed constants and alerts are returned, not routed. A production monitor
+  calibrates PSI and judge thresholds on its own traffic, pages through the on-call system with deduplication, tracks
+  the judge's model version so a judge upgrade isn't read as quality drift, and de-identifies conversations before
+  they reach human reviewers.
+
 ## Prompt kit
 **Learn (tutor prompt)**
 ```text

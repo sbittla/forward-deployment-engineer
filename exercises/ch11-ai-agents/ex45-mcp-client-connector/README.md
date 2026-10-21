@@ -36,11 +36,32 @@ client to smoke-test any MCP server on site (theirs or yours) without installing
 **Connector**
 - `make_ticket_tools(conn) -> list[ToolDef]` with `ToolDef(name, description, input_schema, fn)`:
   - `search_tickets(query, status=None, limit=10)` → list of `{"id","title","status"}` whose title contains
-    `query` (case-insensitive), optional exact `status` filter, ordered by id, **parameterised SQL only**;
+    `query` (case-insensitive, literally: `%` and `_` in the query match only themselves, not as `LIKE`
+    wildcards), optional exact `status` filter, ordered by id, **parameterised SQL only**;
     `limit` must be 1–50 else `ValueError`.
   - `get_ticket(ticket_id)` → full row as dict, or `KeyError` if absent.
 
 Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
+
+## Run and verify
+
+- **Prerequisites:** Python 3.11 or later and `pip install -r requirements.txt`, run once from the repository root.
+  No API key or network access is needed.
+- **Run your work:** from the repository root, `pytest exercises/ch11-ai-agents/ex45-mcp-client-connector`.
+- **Expected output:** 6 of the 7 tests fail against the starter (the one that passes checks scaffolding the starter
+  already provides); when you're done, all 7 pass.
+- **Check the reference solution:** `pytest --solutions exercises/ch11-ai-agents/ex45-mcp-client-connector`: all 7
+  pass.
+- **Tests:** `test_mcp_client.py` (7 tests).
+- **Common failures:** `ModuleNotFoundError: No module named 'fde_kit'` means the command didn't run from the
+  repository root. For a failing test, [HINTS.md](HINTS.md) says what it usually means.
+- **Whose failure is it?** If your run fails but the reference run passes, it's your code. If the reference run fails
+  too, check the prerequisites (`python --version`, `node --version`); if they're met, it's a defect in the published
+  solution, so report it with the repository's Errata issue template.
+- **Cleanup:** none. The tests write only to temporary directories, and `__pycache__` folders are ignored by git.
+- **Production caveats:** The client has no read timeout (`recv` waits forever), and the connector doesn't know who
+  is calling, so every caller can search every ticket. Production adds timeouts and scopes queries to the
+  authenticated caller under a read-only database role.
 
 ## Prompt kit
 **Learn (tutor prompt)**

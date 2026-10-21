@@ -41,3 +41,4 @@ numbers only.
 | `test_abstain_low_score_skips_llm` | Model called even though the top score is below `min_score` |
 | `test_model_abstains` | Reply not stripped before comparing, so the abstention isn't recognised |
 | `test_k_passed` | `retrieve` called with a hard-coded k |
+| `test_boundary_valid_citation_not_checked_for_support` | `grounded` made to depend on something other than valid citation numbers; ex40 deliberately doesn't check that a source supports its claim |

@@ -58,6 +58,26 @@ message, and on the streaming endpoint the generic `error` event.
 
 Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
 
+## Run and verify
+
+- **Prerequisites:** Python 3.11 or later and `pip install -r requirements.txt`, run once from the repository root.
+  No API key or network access is needed.
+- **Run your work:** from the repository root, `pytest exercises/ch07-full-stack-engineering/ex30-demo-web-ui`.
+- **Expected output:** all 13 tests fail against the starter; when you're done, all 13 pass.
+- **Check the reference solution:** `pytest --solutions exercises/ch07-full-stack-engineering/ex30-demo-web-ui`: all
+  13 pass.
+- **Tests:** `test_demo_ui.py` (13 tests).
+- **Common failures:** `ModuleNotFoundError: No module named 'fde_kit'` means the command didn't run from the
+  repository root. For a failing test, [HINTS.md](HINTS.md) says what it usually means.
+- **Whose failure is it?** If your run fails but the reference run passes, it's your code. If the reference run fails
+  too, check the prerequisites (`python --version`, `node --version`); if they're met, it's a defect in the published
+  solution, so report it with the repository's Errata issue template.
+- **Cleanup:** none. The tests write only to temporary directories, and `__pycache__` folders are ignored by git.
+- **Production caveats:** The demo server has no authentication, rate limits or per-user cost attribution, which is
+  why it binds to `127.0.0.1` only. A production backend for frontend authenticates the user's existing session,
+  reads the provider key from a secret store, enforces limits and request ids before any tokens are spent, and logs
+  upstream errors server-side while the browser gets only the generic message.
+
 ## Prompt kit
 **Learn (tutor prompt)**
 ```text

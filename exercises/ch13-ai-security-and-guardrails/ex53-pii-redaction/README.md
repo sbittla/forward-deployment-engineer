@@ -32,11 +32,34 @@ for the final answer.
 `luhn_ok(digits) -> bool` validates a digit string (separators already removed) with the Luhn
 checksum; `detect` uses it for `CREDIT_CARD`.
 
+Only the five types above are detected: names, street addresses and other free text are **not**, so `detect`
+returns `[]` for them and `redact` leaves them unchanged (production needs NER; see Field notes).
+
 ## Field notes
 Regex PII detection is a floor, not a ceiling: names and addresses need NER. Say so in the design review — and log
 detector recall on a labelled sample.
 
 Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
+
+## Run and verify
+
+- **Prerequisites:** Python 3.11 or later and `pip install -r requirements.txt`, run once from the repository root.
+  No API key or network access is needed.
+- **Run your work:** from the repository root, `pytest exercises/ch13-ai-security-and-guardrails/ex53-pii-redaction`.
+- **Expected output:** all 17 tests fail against the starter; when you're done, all 17 pass.
+- **Check the reference solution:**
+  `pytest --solutions exercises/ch13-ai-security-and-guardrails/ex53-pii-redaction`: all 17 pass.
+- **Tests:** `test_pii.py` (17 tests).
+- **Common failures:** `ModuleNotFoundError: No module named 'fde_kit'` means the command didn't run from the
+  repository root. For a failing test, [HINTS.md](HINTS.md) says what it usually means.
+- **Whose failure is it?** If your run fails but the reference run passes, it's your code. If the reference run fails
+  too, check the prerequisites (`python --version`, `node --version`); if they're met, it's a defect in the published
+  solution, so report it with the repository's Errata issue template.
+- **Cleanup:** none. The tests write only to temporary directories, and `__pycache__` folders are ignored by git.
+- **Production caveats:** Regex rules find only structured US-format identifiers: names, addresses and free-text
+  descriptions pass through unredacted (`test_boundary_name_not_redacted`). Production adds an NER detector,
+  locale-specific rules and a recall figure measured on a labelled sample, and keeps the token mapping in protected
+  storage inside the network.
 
 ## Prompt kit
 **Learn (tutor prompt)**

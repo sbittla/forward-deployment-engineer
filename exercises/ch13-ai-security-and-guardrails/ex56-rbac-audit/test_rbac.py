@@ -63,3 +63,19 @@ def test_delete_detection(ac):
         ac.check(ANA, "kb:read", {"tenant": "retail"})
     del ac.audit.entries[1]
     assert not ac.audit.verify()
+
+
+def test_boundary_rebuilt_chain_still_verifies(ac):
+    # Documented limitation: verify() proves internal consistency only. Someone with write access who edits an
+    # entry and recomputes every hash produces a log that verifies; production anchors hashes outside the app.
+    import hashlib
+    import json
+    for _ in range(3):
+        ac.check(ANA, "kb:read", {"tenant": "retail"})
+    ac.audit.entries[1]["allowed"] = False
+    prev = "0" * 64
+    for e in ac.audit.entries:
+        e["prev_hash"] = prev
+        body = json.dumps({k: v for k, v in e.items() if k != "hash"}, sort_keys=True)
+        e["hash"] = prev = hashlib.sha256((prev + body).encode()).hexdigest()
+    assert ac.audit.verify()

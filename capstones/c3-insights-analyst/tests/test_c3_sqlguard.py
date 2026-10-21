@@ -10,6 +10,8 @@ PACKAGE = "insights"
     "SELECT * FROM pragma_table_info('accounts')",
     "SELECT name FROM sqlite_master",
     "SELECT * FROM transactions t JOIN salaries s ON 1=1",
+    "SELECT * FROM accounts, salaries",
+    "SELECT a.account_id FROM accounts a, salaries s WHERE 1=1",
     "ATTACH DATABASE 'x.db' AS x",
     "explain select 1",
 ])

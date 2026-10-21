@@ -55,9 +55,11 @@ class MCPServer:
         except Exception as exc:  # tool failures are results the model can read and recover from
             msg = exc.args[0] if isinstance(exc, KeyError) and exc.args else str(exc)
             return {"content": [{"type": "text", "text": f"Error: {msg}"}], "isError": True}, None
-        if isinstance(out, (dict, list)):
+        if isinstance(out, dict):     # MCP's structuredContent must be a JSON object
             return {"content": [{"type": "text", "text": json.dumps(out)}], "structuredContent": out,
                     "isError": False}, None
+        if isinstance(out, list):
+            return {"content": [{"type": "text", "text": json.dumps(out)}], "isError": False}, None
         return {"content": [{"type": "text", "text": str(out)}], "isError": False}, None
 
     # ---------- dispatch ----------

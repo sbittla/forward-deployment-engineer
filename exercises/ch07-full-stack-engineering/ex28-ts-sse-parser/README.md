@@ -32,6 +32,31 @@ node --test exercises/ch07-full-stack-engineering/ex28-ts-sse-parser/sse.test.ts
 
 Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
 
+## Run and verify
+
+- **Prerequisites:** Python 3.11 or later and `pip install -r requirements.txt`, run once from the repository root;
+  Node.js 22.18 or later (24 LTS recommended) for the TypeScript tests, with no `npm install`. No API key or network
+  access is needed.
+- **Run your work:** from the repository root,
+  `node --test exercises/ch07-full-stack-engineering/ex28-ts-sse-parser/sse.test.ts`.
+- **Expected output:** all 5 tests fail against the starter; when you're done, all 5 pass.
+- **Check the reference solution:**
+  `FDE_SOLUTIONS=1 node --test exercises/ch07-full-stack-engineering/ex28-ts-sse-parser/sse.test.ts` (PowerShell:
+  `$env:FDE_SOLUTIONS=1; node --test exercises/ch07-full-stack-engineering/ex28-ts-sse-parser/sse.test.ts`): all 5
+  pass.
+- **Tests:** `sse.test.ts` (5 tests).
+- **Common failures:** `ModuleNotFoundError: No module named 'fde_kit'` means the command didn't run from the
+  repository root; a Node.js error about the `.ts` extension means Node is older than 22.18. For a failing test,
+  [HINTS.md](HINTS.md) says what it usually means.
+- **Whose failure is it?** If your run fails but the reference run passes, it's your code. If the reference run fails
+  too, check the prerequisites (`python --version`, `node --version`); if they're met, it's a defect in the published
+  solution, so report it with the repository's Errata issue template.
+- **Cleanup:** none. The tests write only to temporary directories, and `__pycache__` folders are ignored by git.
+- **Production caveats:** The parser ignores the SSE `id:` and `retry:` fields, so it can't resume a dropped stream,
+  and `accumulateText` works on a finished list of events. A production client also needs a timeout for a silent
+  stream, an `AbortController` behind the Stop button, and a retry policy that doesn't send the user's question
+  twice.
+
 ## Prompt kit
 **Learn (tutor prompt)**
 ```text

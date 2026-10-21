@@ -94,3 +94,11 @@ def test_failed_call_not_cached(impl):
     with pytest.raises(ConnectionError):
         store.run("k", {}, flaky)
     assert store.run("k", {}, flaky) == "done" and len(attempts) == 2
+
+
+def test_boundary_retry_after_is_not_capped_by_a_deadline(impl):
+    # Pins a documented limitation: there is no overall time budget, so a server's
+    # Retry-After of an hour is slept in full. Production code checks a deadline first.
+    op, sleeps, calls = make(impl, [HTTPError(503, retry_after=3600)])
+    assert op() == "ok"
+    assert sleeps == [3600] and calls["n"] == 2

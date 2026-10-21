@@ -3,17 +3,21 @@
   "status": "PASS",
   "problems": [],
   "tests": {
-    "passed": 6,
+    "passed": 7,
     "failed": 0,
     "error": 0,
     "skipped": 0
   },
-  "declared": 6,
-  "ran": 6,
-  "starter_failing": 5,
+  "declared": 7,
+  "ran": 7,
+  "starter_failing": 6,
   "cases": [
     {
       "test": "py:test_connector_tools",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_search_wildcards_are_literal",
       "status": "passed"
     },
     {

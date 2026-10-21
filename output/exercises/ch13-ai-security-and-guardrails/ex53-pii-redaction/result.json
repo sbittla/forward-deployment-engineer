@@ -3,14 +3,14 @@
   "status": "PASS",
   "problems": [],
   "tests": {
-    "passed": 16,
+    "passed": 17,
     "failed": 0,
     "error": 0,
     "skipped": 0
   },
-  "declared": 7,
-  "ran": 16,
-  "starter_failing": 16,
+  "declared": 8,
+  "ran": 17,
+  "starter_failing": 17,
   "cases": [
     {
       "test": "py:test_detect_all",
@@ -74,6 +74,10 @@
     },
     {
       "test": "py:test_tokens_consistent_and_restore",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_boundary_name_not_redacted",
       "status": "passed"
     }
   ]

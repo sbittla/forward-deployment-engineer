@@ -3,14 +3,14 @@
   "status": "PASS",
   "problems": [],
   "tests": {
-    "passed": 5,
+    "passed": 6,
     "failed": 0,
     "error": 0,
     "skipped": 0
   },
-  "declared": 5,
-  "ran": 5,
-  "starter_failing": 5,
+  "declared": 6,
+  "ran": 6,
+  "starter_failing": 6,
   "cases": [
     {
       "test": "py:test_order_and_concurrency_bound",
@@ -30,6 +30,10 @@
     },
     {
       "test": "py:test_invalid_limits",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_boundary_cancellation_propagates",
       "status": "passed"
     }
   ]

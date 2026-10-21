@@ -22,7 +22,7 @@ SDK; building the wire protocol once by hand means you can debug any integration
 |---|---|
 | `server/discover` | `{"resultType", "supportedVersions": MODERN_VERSIONS, "capabilities": {"tools": {}}, "_meta": {"io.modelcontextprotocol/serverInfo": {"name", "version"}}, "instructions", "ttlMs": 3600000}` |
 | `tools/list` | `{"resultType", "tools": [{"name", "description", "inputSchema"}...] (registration order), "ttlMs": 300000}` |
-| `tools/call` `{name, arguments}` | `{"resultType", "content": [{"type": "text", "text"}], "isError": bool}`; when the tool returns a dict or list, also `"structuredContent"` with the value and the JSON text in `content` |
+| `tools/call` `{name, arguments}` | `{"resultType", "content": [{"type": "text", "text"}], "isError": bool}`; when the tool returns a dict, also `"structuredContent"` with the dict (MCP requires an object there) and its JSON text in `content`; a list is returned as JSON text only |
 | `ping` | `{"resultType": "complete"}` |
 
 **Legacy requests** (`2025-11-25` and earlier): an `initialize` request returns `{"protocolVersion": <client's
@@ -41,6 +41,9 @@ this server process into legacy mode. After that, requests **without** `_meta` a
 | Tool raises | **not** a protocol error: result with `isError: true` and text `"Error: <message>"` |
 | Bad JSON on the wire (`serve`) | `-32700` with `"id": null` |
 
+The server doesn't validate `arguments` against `inputSchema`: a call with a missing or mistyped argument
+reaches the tool, and the exception it raises (for example `TypeError`) is an `isError` result like any other.
+
 ## Your task
 - `MCPServer(name, version, instructions="")` with `@server.tool(name, description, input_schema)`. Reject tool names
   that don't match `^[A-Za-z0-9_.-]{1,128}$` and schemas that aren't dicts (`ValueError`).
@@ -53,6 +56,25 @@ When a customer's MCP integration "just stopped working" after a client upgrade,
 server facing a modern client fails silently or with an obscure error. Dual-era servers buy you a migration window.
 
 Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
+
+## Run and verify
+
+- **Prerequisites:** Python 3.11 or later and `pip install -r requirements.txt`, run once from the repository root.
+  No API key or network access is needed.
+- **Run your work:** from the repository root, `pytest exercises/ch11-ai-agents/ex44-mcp-server`.
+- **Expected output:** all 14 tests fail against the starter; when you're done, all 14 pass.
+- **Check the reference solution:** `pytest --solutions exercises/ch11-ai-agents/ex44-mcp-server`: all 14 pass.
+- **Tests:** `test_mcp_server.py` (14 tests).
+- **Common failures:** `ModuleNotFoundError: No module named 'fde_kit'` means the command didn't run from the
+  repository root. For a failing test, [HINTS.md](HINTS.md) says what it usually means.
+- **Whose failure is it?** If your run fails but the reference run passes, it's your code. If the reference run fails
+  too, check the prerequisites (`python --version`, `node --version`); if they're met, it's a defect in the published
+  solution, so report it with the repository's Errata issue template.
+- **Cleanup:** none. The tests write only to temporary directories, and `__pycache__` folders are ignored by git.
+- **Production caveats:** The server trusts whoever is on stdio, doesn't validate arguments against `inputSchema`,
+  returns raw exception text in `isError` results and switches the whole process to legacy on one `initialize`.
+  Production uses an official MCP SDK, the specification's authorisation on HTTP transports, schema validation and
+  sanitised errors, and keeps any legacy state per connection.
 
 ## Prompt kit
 **Learn (tutor prompt)**

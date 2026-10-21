@@ -66,3 +66,13 @@ def test_safe_extract(impl, src, tmp_path):
     with pytest.raises(ValueError):
         impl.safe_extract(bad, tmp_path / "install2", KEY)
     assert not (tmp_path / "escape.txt").exists()
+
+
+def test_boundary_shared_key_can_resign(impl, src, tmp_path):
+    # HMAC is symmetric: anyone holding the key can sign altered content, and it verifies.
+    original = impl.build_bundle(src, tmp_path / "bundle.tar.gz", "1", KEY)
+    (src / "app" / "main.py").write_text("print('altered')\n")
+    out = tmp_path / "resigned.tar.gz"
+    resigned = impl.build_bundle(src, out, "1", KEY)
+    assert resigned["files"]["app/main.py"] != original["files"]["app/main.py"]
+    assert impl.verify_bundle(out, KEY) == []

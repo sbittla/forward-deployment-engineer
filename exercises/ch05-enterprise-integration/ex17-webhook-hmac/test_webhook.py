@@ -118,3 +118,26 @@ def test_receiver_ignores_stale_redelivery(impl):
         body = json.dumps({"id": event_id, "type": "case.updated", "data": record})
         assert r.handle({"X-Signature": impl.sign(body, SECRET, clk.t)}, body) == (202, "accepted")
     assert store == {"c1": CASES[2]}
+
+
+# Boundary tests: pin what the timestamp window and the in-memory dedupe store do and don't cover
+
+def test_boundary_replay_outside_window_is_stale(impl):
+    clk = Clock()
+    r = impl.WebhookReceiver(SECRET, clock=clk, tolerance=300, dedupe_ttl=60)
+    body = '{"id":"evt_replay"}'
+    captured = {"X-Signature": impl.sign(body, SECRET, clk.t)}
+    assert r.handle(captured, body) == (202, "accepted")
+    clk.t += 301  # the seen id has expired; only the timestamp window stops the replay
+    assert r.handle(captured, body) == (400, "stale")
+    assert len(r.processed) == 1
+
+
+def test_boundary_dedupe_is_per_process(impl):
+    clk = Clock()
+    body = '{"id":"evt_1"}'
+    captured = {"X-Signature": impl.sign(body, SECRET, clk.t)}
+    first = impl.WebhookReceiver(SECRET, clock=clk)
+    assert first.handle(captured, body) == (202, "accepted")
+    restarted = impl.WebhookReceiver(SECRET, clock=clk)  # a restart or another replica
+    assert restarted.handle(captured, body) == (202, "accepted")

@@ -86,3 +86,15 @@ def test_invalidate(impl):
     p.get_token()
     p.invalidate()
     assert p.get_token() == "tok2"
+
+
+def test_boundary_persistent_401_costs_two_token_calls(impl):
+    tr = Transport()
+    p = impl.TokenProvider("u", "c", "s", tr)
+
+    def always401(token):
+        raise Unauthorized()
+
+    with pytest.raises(Unauthorized):
+        p.call_with_auth(always401)
+    assert len(tr.calls) == 2  # the first token and one refresh: never a loop

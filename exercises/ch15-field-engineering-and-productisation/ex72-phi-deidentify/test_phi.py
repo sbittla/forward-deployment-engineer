@@ -44,3 +44,10 @@ def test_access_log(impl):
     assert e == {"user": "dr.k", "purpose": "treatment", "record_count": 2, "date": "2026-10-16"}
     with pytest.raises(ValueError):
         impl.access_log_entry("analyst", "curiosity", ["a"], TODAY)
+
+
+def test_boundary_other_names_not_scrubbed(impl):
+    # Documented limit of the teaching subset: only the patient's own name parts are replaced.
+    note = "Maria Lopez seen by Dr. Chen; her son Daniel will call back."
+    out = impl.deidentify({**REC, "note": note}, TODAY)
+    assert out["note"] == "[NAME] [NAME] seen by Dr. Chen; her son Daniel will call back."

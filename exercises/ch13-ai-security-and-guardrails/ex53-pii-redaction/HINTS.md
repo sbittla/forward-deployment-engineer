@@ -44,3 +44,4 @@ regex per entity type and keep them in a list of `(type, pattern)` pairs.
 | `test_offsets` | Offsets computed after changing the text, instead of from match positions |
 | `test_mask` | Mask mode returns a non-empty mapping, or numbered tokens |
 | `test_tokens_consistent_and_restore` | Same email gets two tokens; numbering shared across types |
+| `test_boundary_name_not_redacted` | A rule beyond the table (names, capitalised words) added; this test pins the documented limit of regex detection |

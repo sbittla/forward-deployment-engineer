@@ -33,6 +33,25 @@ the tool that plans a hands-on enablement day and measures whether knowledge tra
 
 Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
 
+## Run and verify
+
+- **Prerequisites:** Python 3.11 or later and `pip install -r requirements.txt`, run once from the repository root.
+  No API key or network access is needed.
+- **Run your work:** from the repository root, `pytest exercises/ch03-technical-communication/ex84-workshop-builder`.
+- **Expected output:** all 4 tests fail against the starter; when you're done, all 4 pass.
+- **Check the reference solution:**
+  `pytest --solutions exercises/ch03-technical-communication/ex84-workshop-builder`: all 4 pass.
+- **Tests:** `test_workshop.py` (4 tests).
+- **Common failures:** `ModuleNotFoundError: No module named 'fde_kit'` means the command didn't run from the
+  repository root. For a failing test, [HINTS.md](HINTS.md) says what it usually means.
+- **Whose failure is it?** If your run fails but the reference run passes, it's your code. If the reference run fails
+  too, check the prerequisites (`python --version`, `node --version`); if they're met, it's a defect in the published
+  solution, so report it with the repository's Errata issue template.
+- **Cleanup:** none. The tests write only to temporary directories, and `__pycache__` folders are ignored by git.
+- **Production caveats:** Readiness rests on a quiz score and a self-reported lab flag. In production, confirm each
+  lab from an observable result, keep participants' scores under the customer's HR and privacy rules, and report
+  readiness by objective rather than ranking individuals.
+
 ## Prompt kit
 **Learn (tutor prompt)**
 ```text

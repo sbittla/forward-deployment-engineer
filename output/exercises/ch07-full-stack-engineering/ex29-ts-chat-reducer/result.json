@@ -3,14 +3,14 @@
   "status": "PASS",
   "problems": [],
   "tests": {
-    "passed": 4,
+    "passed": 5,
     "failed": 0,
     "error": 0,
     "skipped": 0
   },
-  "declared": 4,
-  "ran": 4,
-  "starter_failing": 4,
+  "declared": 5,
+  "ran": 5,
+  "starter_failing": 5,
   "cases": [
     {
       "test": "ts:happy path streaming",
@@ -26,6 +26,10 @@
     },
     {
       "test": "ts:immutability and unknown ids",
+      "status": "passed"
+    },
+    {
+      "test": "ts:boundary: connection lost mid-stream",
       "status": "passed"
     }
   ]

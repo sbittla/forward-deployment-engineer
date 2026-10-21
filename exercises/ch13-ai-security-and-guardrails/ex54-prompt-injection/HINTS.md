@@ -44,3 +44,4 @@ matches, in list order, so each signal appears at most once automatically.
 | `test_gate_read_only` | Read-only tools subjected to egress or taint checks |
 | `test_gate_egress` | Subdomains of allowed domains rejected; reason text format differs |
 | `test_gate_tainted` | Tainted side-effect call denied instead of allowed with confirmation |
+| `test_boundary_paraphrase_evades_signals_but_gate_blocks` | Extra exfiltration verbs beyond the spec's list; or the gate only checks egress when `tainted=True` |

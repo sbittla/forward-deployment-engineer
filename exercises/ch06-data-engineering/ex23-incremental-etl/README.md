@@ -24,8 +24,32 @@ incremental load that is **idempotent** (safe to re-run), **atomic** (a crash le
   watermark **in the same transaction** as each batch.
 - If a batch fails, roll back that batch (watermark unchanged for it) and re-raise.
 - Return the number of rows loaded in this run.
+- With no `etl_state` row for the job (the first run, or after you delete it to replay a backfill), start from
+  `("", -1)` so every source row qualifies; the upsert makes a replay add no duplicate rows. A row that arrives late,
+  with an `updated_at` behind the saved watermark, is not selected: that is the composite watermark's known limit.
 
 Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
+
+## Run and verify
+
+- **Prerequisites:** Python 3.11 or later and `pip install -r requirements.txt`, run once from the repository root.
+  No API key or network access is needed.
+- **Run your work:** from the repository root, `pytest exercises/ch06-data-engineering/ex23-incremental-etl`.
+- **Expected output:** all 5 tests fail against the starter; when you're done, all 5 pass.
+- **Check the reference solution:** `pytest --solutions exercises/ch06-data-engineering/ex23-incremental-etl`: all 5
+  pass.
+- **Tests:** `test_etl.py` (5 tests).
+- **Common failures:** `ModuleNotFoundError: No module named 'fde_kit'` means the command didn't run from the
+  repository root. For a failing test, [HINTS.md](HINTS.md) says what it usually means.
+- **Whose failure is it?** If your run fails but the reference run passes, it's your code. If the reference run fails
+  too, check the prerequisites (`python --version`, `node --version`); if they're met, it's a defect in the published
+  solution, so report it with the repository's Errata issue template.
+- **Cleanup:** none. The tests write only to temporary directories, and `__pycache__` folders are ignored by git.
+- **Production caveats:** Source and destination are separate SQLite connections, so only the destination side is
+  transactional, and the watermark trusts `updated_at`: rows that commit late, deletes and replays of older versions
+  (the upsert is last-writer-wins) need a CDC log position or a lookback window, a guarded upsert and a
+  reconciliation job in production. One bad row fails its whole batch; a production load quarantines it and alerts on
+  watermark lag.
 
 ## Prompt kit
 **Learn (tutor prompt)**

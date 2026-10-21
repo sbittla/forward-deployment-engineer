@@ -37,3 +37,4 @@ matches nothing, so the array comes back with the same contents. Adding a messag
 | `no double send while pending, no empty send` | `pending` not checked, or whitespace-only text not trimmed |
 | `error then retry` | Retry removes the user message too; or the no-op retry returns a copy instead of the same object |
 | `immutability and unknown ids` | A message changed in place (for example `msg.text += ...`) instead of copied |
+| `boundary: connection lost mid-stream` | `stream_error` leaves `pending` set, so the next `send` is ignored; or the partial answer is marked `done` and leaks into the transcript |

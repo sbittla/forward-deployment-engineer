@@ -3,14 +3,14 @@
   "status": "PASS",
   "problems": [],
   "tests": {
-    "passed": 10,
+    "passed": 11,
     "failed": 0,
     "error": 0,
     "skipped": 0
   },
-  "declared": 10,
-  "ran": 10,
-  "starter_failing": 10,
+  "declared": 11,
+  "ran": 11,
+  "starter_failing": 11,
   "cases": [
     {
       "test": "py:test_clean_prompt",
@@ -50,6 +50,10 @@
     },
     {
       "test": "py:test_render",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_boundary_render_inserts_values_verbatim",
       "status": "passed"
     }
   ]

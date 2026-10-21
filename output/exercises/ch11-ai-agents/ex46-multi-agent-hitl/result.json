@@ -3,14 +3,14 @@
   "status": "PASS",
   "problems": [],
   "tests": {
-    "passed": 6,
+    "passed": 7,
     "failed": 0,
     "error": 0,
     "skipped": 0
   },
-  "declared": 4,
-  "ran": 6,
-  "starter_failing": 6,
+  "declared": 5,
+  "ran": 7,
+  "starter_failing": 7,
   "cases": [
     {
       "test": "py:test_plan_topological_and_prompt",
@@ -34,6 +34,10 @@
     },
     {
       "test": "py:test_run_rejected_and_failure_cascade",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_boundary_approval_follows_plan_flag",
       "status": "passed"
     }
   ]

@@ -57,3 +57,11 @@ def test_k_passed(impl):
 
     impl.answer("q", retrieve, FakeLLM(["x [1]"]), k=2)
     assert seen == [2]
+
+
+def test_boundary_valid_citation_not_checked_for_support(impl):
+    # Pins the documented limitation: grounded means "valid citation numbers",
+    # not "the cited source supports the claim". Source 1 says nothing about earthquakes.
+    llm = FakeLLM(["Earthquake damage is covered [1]."])
+    a = impl.answer("Is earthquake damage covered?", lambda q, k: sources(impl), llm)
+    assert a.grounded and a.citations == ["policy-7.2"] and a.invalid_citations == []

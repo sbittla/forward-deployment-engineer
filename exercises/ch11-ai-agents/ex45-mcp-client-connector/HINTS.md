@@ -46,3 +46,4 @@ no `id` and doesn't wait for a reply.
 | `test_unsupported_version_picks_from_server_list` | `error.data.supported` ignored, so the default legacy version is used |
 | `test_rpc_error_keeps_data` | `RPCError` doesn't store `code` and `data` as attributes |
 | `test_client_stdio` | Notifications not skipped; no flush after writing; content items not joined |
+| `test_search_wildcards_are_literal` | `%` or `_` from the query passed into `LIKE` unescaped, so `%` matches every title |

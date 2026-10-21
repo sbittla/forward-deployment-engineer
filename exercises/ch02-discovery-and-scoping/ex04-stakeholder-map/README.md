@@ -28,6 +28,25 @@ An unowned workstream (no `A`) is a risk you own until someone else does. Raise 
 
 Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
 
+## Run and verify
+
+- **Prerequisites:** Python 3.11 or later and `pip install -r requirements.txt`, run once from the repository root.
+  No API key or network access is needed.
+- **Run your work:** from the repository root, `pytest exercises/ch02-discovery-and-scoping/ex04-stakeholder-map`.
+- **Expected output:** all 4 tests fail against the starter; when you're done, all 4 pass.
+- **Check the reference solution:** `pytest --solutions exercises/ch02-discovery-and-scoping/ex04-stakeholder-map`:
+  all 4 pass.
+- **Tests:** `test_stakeholders.py` (4 tests).
+- **Common failures:** `ModuleNotFoundError: No module named 'fde_kit'` means the command didn't run from the
+  repository root. For a failing test, [HINTS.md](HINTS.md) says what it usually means.
+- **Whose failure is it?** If your run fails but the reference run passes, it's your code. If the reference run fails
+  too, check the prerequisites (`python --version`, `node --version`); if they're met, it's a defect in the published
+  solution, so report it with the repository's Errata issue template.
+- **Cleanup:** none. The tests write only to temporary directories, and `__pycache__` folders are ignored by git.
+- **Production caveats:** Influence and interest scores are judgements, and the map is only as current as its last
+  review. In an engagement, agree the RACI with the sponsor, keep it with the RAID log and re-score stakeholders when
+  the project changes phase.
+
 ## Prompt kit
 **Learn (tutor prompt)**
 ```text

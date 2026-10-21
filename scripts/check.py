@@ -61,6 +61,7 @@ def main(argv: list[str]) -> int:
     if solutions:
         rc |= subprocess.call([sys.executable, str(ROOT / "scripts" / "spec_lint.py")], cwd=ROOT)
         rc |= subprocess.call([sys.executable, str(ROOT / "scripts" / "hints_lint.py")], cwd=ROOT)
+        rc |= subprocess.call([sys.executable, str(ROOT / "scripts" / "contract_lint.py")], cwd=ROOT)
     return rc
 
 

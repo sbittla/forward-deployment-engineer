@@ -46,3 +46,4 @@ the body as the record plus `prev_hash`, hash `prev_hash + json.dumps(body, sort
 | `test_audit_entries_and_chain` | First `prev_hash` isn't 64 zeros; `tenant` field missing from the entry |
 | `test_tamper_detection` | `verify` trusts stored hashes without recomputing them |
 | `test_delete_detection` | `verify` checks each hash on its own but not the `prev_hash` link |
+| `test_boundary_rebuilt_chain_still_verifies` | Hash computed differently from the spec (field order, `hash` included in the body); `verify` should recompute, not compare with a hidden secret |

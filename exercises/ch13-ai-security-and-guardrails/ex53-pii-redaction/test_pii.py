@@ -46,3 +46,11 @@ def test_tokens_consistent_and_restore(impl):
     assert "ana.ruiz" not in red and "4111" not in red and "123-45" not in red
     assert mapping["[EMAIL_2]"] == "bob@corp.io"
     assert impl.restore(red, mapping) == TEXT
+
+
+def test_boundary_name_not_redacted(impl):
+    # Documented limitation: regex rules find structured identifiers only. Names, addresses and free-text
+    # descriptions pass through unredacted; production needs NER and a measured recall.
+    text = "Ana Ruiz lives at 12 Elm Street; her daughter works at the school."
+    assert impl.detect(text) == []
+    assert impl.redact(text) == (text, {})

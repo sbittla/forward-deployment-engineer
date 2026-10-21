@@ -84,6 +84,14 @@ def test_connector_tools(impl, conn):
     assert conn.execute("SELECT COUNT(*) FROM tickets").fetchone()[0] == 3
 
 
+def test_search_wildcards_are_literal(impl, conn):
+    conn.execute("INSERT INTO tickets VALUES (4, 'Disk at 95% full', 'open', 'alert')")
+    search = {t.name: t for t in impl.make_ticket_tools(conn)}["search_tickets"].fn
+    assert [r["id"] for r in search(query="%")] == [4]
+    assert [r["id"] for r in search(query="95%")] == [4]
+    assert search(query="_") == []
+
+
 def test_client_modern_server(impl, conn):
     sent = []
     handler = spying(mini_server(impl.make_ticket_tools(conn), "modern"), sent)

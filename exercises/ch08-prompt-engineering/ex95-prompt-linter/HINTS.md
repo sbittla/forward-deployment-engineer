@@ -50,3 +50,4 @@ Get the placeholder regex right before anything else, because seven of the nine 
 | `test_dynamic_system_and_contradiction` | Dates or placeholders in the system prompt not detected |
 | `test_errors_sort_before_warnings` | Findings sorted by rule only, so warnings mix with errors |
 | `test_render` | Escaped braces substituted; only the first missing value reported |
+| `test_boundary_render_inserts_values_verbatim` | `render` escapes or strips values; the spec inserts them verbatim |

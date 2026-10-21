@@ -18,6 +18,8 @@ request-rate limit.
 2. `gather_limited(factories, concurrency, bucket=None)` — `factories` is a list of zero-arg callables that return
    coroutines. Run at most `concurrency` at once, acquire a bucket token (if given) before starting each, and return
    results **in input order**. A raised exception is returned in its slot (do not cancel the others).
+   Cancellation is not an item failure: `asyncio.CancelledError` propagates out of `gather_limited` and is never
+   stored in a slot (catch `Exception`, not `BaseException`).
 
 **Errors:** `TokenBucket` raises `ValueError` when `rate <= 0` or `capacity < 1`; `gather_limited` raises `ValueError` when `concurrency < 1` (a zero-size semaphore would wait forever).
 
@@ -26,6 +28,26 @@ Measure the provider's actual limits (requests *and* tokens per minute) in the c
 lower than the docs because of org-level quotas.
 
 Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
+
+## Run and verify
+
+- **Prerequisites:** Python 3.11 or later and `pip install -r requirements.txt`, run once from the repository root.
+  No API key or network access is needed.
+- **Run your work:** from the repository root, `pytest exercises/ch04-production-grade-python/ex12-async-rate-limit`.
+- **Expected output:** all 6 tests fail against the starter; when you're done, all 6 pass.
+- **Check the reference solution:**
+  `pytest --solutions exercises/ch04-production-grade-python/ex12-async-rate-limit`: all 6 pass.
+- **Tests:** `test_async.py` (6 tests).
+- **Common failures:** `ModuleNotFoundError: No module named 'fde_kit'` means the command didn't run from the
+  repository root. For a failing test, [HINTS.md](HINTS.md) says what it usually means.
+- **Whose failure is it?** If your run fails but the reference run passes, it's your code. If the reference run fails
+  too, check the prerequisites (`python --version`, `node --version`); if they're met, it's a defect in the published
+  solution, so report it with the repository's Errata issue template.
+- **Cleanup:** none. The tests write only to temporary directories, and `__pycache__` folders are ignored by git.
+- **Production caveats:** The bucket is per-process, there is no per-call timeout (a hung call holds its semaphore
+  slot), failed items aren't retried and every result is held in memory. Production wraps each call in
+  `asyncio.timeout()`, feeds `429`/`Retry-After` back into the limiter, shares the limit across workers that share a
+  quota, budgets tokens per minute as well as requests, and checkpoints results so a cancelled batch can resume.
 
 ## Prompt kit
 **Learn (tutor prompt)**

@@ -42,6 +42,26 @@ wording didn't anticipate. Version the spec, not the prompt: the prompt is a bui
 
 Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
 
+## Run and verify
+
+- **Prerequisites:** Python 3.11 or later and `pip install -r requirements.txt`, run once from the repository root.
+  No API key or network access is needed.
+- **Run your work:** from the repository root, `pytest exercises/ch08-prompt-engineering/ex98-prompt-from-spec`.
+- **Expected output:** all 7 tests fail against the starter; when you're done, all 7 pass.
+- **Check the reference solution:** `pytest --solutions exercises/ch08-prompt-engineering/ex98-prompt-from-spec`: all
+  7 pass.
+- **Tests:** `test_prompt_from_spec.py` (7 tests).
+- **Common failures:** `ModuleNotFoundError: No module named 'fde_kit'` means the command didn't run from the
+  repository root. For a failing test, [HINTS.md](HINTS.md) says what it usually means.
+- **Whose failure is it?** If your run fails but the reference run passes, it's your code. If the reference run fails
+  too, check the prerequisites (`python --version`, `node --version`); if they're met, it's a defect in the published
+  solution, so report it with the repository's Errata issue template.
+- **Cleanup:** none. The tests write only to temporary directories, and `__pycache__` folders are ignored by git.
+- **Production caveats:** Conformance uses substring checks against a fake model, which catch blatant failures only.
+  In production, add rubric-graded cases with a calibrated judge (ex50), version and review the policy specification
+  as the source of truth, and enforce hard constraints such as never revealing a reserve in code as well as in the
+  prompt (Chapter 13).
+
 ## Prompt kit
 **Learn (tutor prompt)**
 ```text

@@ -42,3 +42,4 @@ step by step. Turn both score lists into pass/fail booleans (`score >= threshold
 | `test_agreement` | Kappa computed on raw scores instead of pass/fail; `pe` formula wrong |
 | `test_agreement_perfect` | Division by zero when `pe == 1` |
 | `test_pairwise` | Second-order answer not translated; answers shown in the same order both times |
+| `test_boundary_consistent_bias_passes_through` | A consistent preference in both orders turned into a tie; only disagreement between orders is a tie |

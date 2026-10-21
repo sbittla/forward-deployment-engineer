@@ -25,8 +25,13 @@ CPU-only, so the GPU is reported in `output/environment.txt` but not needed. Res
 `exercises/` and `capstones/`, with `output/summary.md` on top.
 
 ## How it works
-- `exercises/chNN-<chapter>/<exercise>/`, one folder per book chapter: `README.md` (scenario + task), `starter.*`, tests, `meta.json`, and
-  `HINTS.md`: three progressive hints plus a table mapping each test to its most likely cause of failure.
+- `exercises/chNN-<chapter>/<exercise>/`, one folder per book chapter: `README.md` (scenario + task), `starter.*`,
+  tests, `meta.json`, and `HINTS.md`: three progressive hints plus a table mapping each test to its most likely cause
+  of failure.
+- Every exercise and capstone README ends with **Run and verify**, the same contract everywhere: prerequisites, the
+  command to run, the expected output against the starter and when done, how to check the reference solution, the
+  tests, common failures, how to tell whether a failure is your environment, your code or a defect in the published
+  solution, cleanup, and production caveats (what the exercise deliberately simplifies).
 - `solutions/` mirrors the tree with reference implementations. Peek only after you've tried the hints.
 - `pytest --solutions <path>` runs the same tests against the reference solution.
 - `capstones/<cN>/`: multi-day engagements with `starter/` packages, deliverable templates, shared `data/` and tests.
@@ -36,8 +41,9 @@ CPU-only, so the GPU is reported in `output/environment.txt` but not needed. Res
 - `interview/`: [127 interview questions with model answers](interview/questions-and-answers.md), seven or eight
   per book chapter, tagged technical, coding, debugging, system design, customer scenario or behavioural.
 - `fde_kit/`: the offline `FakeLLM`, an optional `AnthropicLLM` adapter (`FDE_LIVE=1`), and text utilities.
-- `scripts/`: `check.py` (all tests, or `--chapter N`), `run_all.py` (every suite, checked, report in `output/`), `starters_red.py` (every suite starts red), `spec_lint.py`,
-  `hints_lint.py` and `export_learner.py`.
+- `scripts/`: `check.py` (all tests, or `--chapter N`), `run_all.py` (every suite, checked, report in `output/`),
+  `starters_red.py` (every suite starts red), the linters `spec_lint.py`, `hints_lint.py` and `contract_lint.py`
+  (every README has a complete Run and verify section), and `export_learner.py`.
 
 ## Recommended order (the book's five parts)
 The chapter folders follow the book, so working through them in number order is the recommended path; every capstone

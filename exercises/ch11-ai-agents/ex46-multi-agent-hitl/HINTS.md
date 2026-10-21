@@ -41,3 +41,4 @@ already placed.
 | `test_plan_validation` | Cycle not detected, so the loop never ends or silently drops steps |
 | `test_run_approved` | Context includes every output instead of only the step's dependencies; approval asked for steps that don't need it |
 | `test_run_rejected_and_failure_cascade` | Skipped steps still asked for approval; audit lines out of order; exception text format differs |
+| `test_boundary_approval_follows_plan_flag` | Approval asked for a step whose `requires_approval` is false, or an unasked step not run |

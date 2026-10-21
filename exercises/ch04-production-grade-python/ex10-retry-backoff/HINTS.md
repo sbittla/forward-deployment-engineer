@@ -44,3 +44,4 @@ For the store, keep `key -> (payload_hash, result)`. Look the key up first; only
 | `test_jitter_uses_rng` | Using `random.random` directly instead of the injected `rng` |
 | `test_idempotency` | Payload hashed without `sort_keys`, or the conflict check skipped |
 | `test_failed_call_not_cached` | Result (or the key) stored before `fn` has succeeded |
+| `test_boundary_retry_after_is_not_capped_by_a_deadline` | `retry_after` clamped to `max_delay`; the spec says sleep exactly that (the missing deadline is a documented limitation) |

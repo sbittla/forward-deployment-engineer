@@ -55,3 +55,22 @@ test("immutability and unknown ids", () => {
   assert.deepEqual(m.reduce(after, { type: "delta", id: "zzz", text: "y" }).messages, after.messages);
   assert.deepEqual(m.reduce(after, { type: "clear" }), m.initialState);
 });
+
+test("boundary: connection lost mid-stream", () => {
+  // A dropped connection reaches the reducer as stream_error: keep the partial text out of
+  // the transcript, stop the spinner, show the error, and accept the user's next message.
+  let s = run([
+    { type: "send", id: "u1", text: "Is flood damage covered?" },
+    { type: "stream_start", id: "a1" },
+    { type: "delta", id: "a1", text: "Flood damage is cov" },
+    { type: "stream_error", id: "a1", error: "Connection lost. Check your network and retry." },
+  ]);
+  assert.equal(s.pending, false);
+  assert.equal(s.messages[1].status, "error");
+  assert.equal(s.messages[1].text, "Flood damage is cov");
+  assert.equal(s.error, "Connection lost. Check your network and retry.");
+  assert.equal(m.transcript(s), "user: Is flood damage covered?");
+  s = m.reduce(s, { type: "send", id: "u2", text: "Is wind damage covered?" });
+  assert.equal(s.pending, true);
+  assert.equal(s.messages.length, 3);
+});

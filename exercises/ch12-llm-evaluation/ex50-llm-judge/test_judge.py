@@ -44,3 +44,14 @@ def test_pairwise(impl):
     assert impl.pairwise(llm, "q", "x", "y") == "tie"
     first, second = (c["messages"][0]["content"] for c in llm.calls)
     assert first.index("x") < first.index("y") and second.index("y") < second.index("x")
+
+
+def test_boundary_consistent_bias_passes_through(impl):
+    # Order-swapping cancels only position bias. A judge that prefers the longer answer
+    # in both orders (verbosity bias) still produces a winner: calibrate for that separately.
+    long_wrong = (
+        "Yes, burst pipes are covered in full under every policy, "
+        "whatever the circumstances."
+    )
+    short_right = "Not covered: the house was unoccupied."
+    assert impl.pairwise(FakeLLM(["1", "2"]), "q", long_wrong, short_right) == "A"

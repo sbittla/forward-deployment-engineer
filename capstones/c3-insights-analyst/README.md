@@ -49,3 +49,23 @@ Assessed with the shared [capstone rubric](../RUBRIC.md): gates first (tests, cr
 privacy, honest reporting, plus this capstone's own gates), then a weighted score across nine dimensions. The bar is
 every gate passing, a weighted score of at least 3.0 and no dimension below 2. Section 4 of the rubric lists C3's
 acceptance criteria and gates. Submit your scorecard as `starter/deliverables/scorecard.md`.
+
+## Run and verify
+
+- **Prerequisites:** Python 3.11 or later and `pip install -r requirements.txt`, run once from the repository root.
+  No API key or network access is needed.
+- **Run your work:** from the repository root, `pytest capstones/c3-insights-analyst`.
+- **Expected output:** all 24 tests fail against the starter; when you're done, all 24 pass.
+- **Check the reference solution:** `pytest --solutions capstones/c3-insights-analyst`: all 24 pass.
+- **Tests:** `tests/test_c3_analyst.py`, `tests/test_c3_deliverables.py`, `tests/test_c3_etl_semantic.py`,
+  `tests/test_c3_sqlguard.py` (24 tests).
+- **Common failures:** `ModuleNotFoundError: No module named 'fde_kit'` means the command didn't run from the
+  repository root. For a failing test, [HINTS.md](HINTS.md) says what it usually means.
+- **Whose failure is it?** If your run fails but the reference run passes, it's your code. If the reference run fails
+  too, check the prerequisites (`python --version`, `node --version`); if they're met, it's a defect in the published
+  solution, so report it with the repository's Errata issue template.
+- **Cleanup:** none. The tests write only to temporary directories, and `__pycache__` folders are ignored by git.
+- **Production caveats:** The SQL guard parses text and the model attempts are scripted. Production also connects
+  with a read-only database role limited to the allow-listed tables, sets statement timeouts and row limits in the
+  database, and runs the unsafe-query evals against every model or prompt change.
+

@@ -71,3 +71,13 @@ def test_run_rejected_and_failure_cascade(impl):
     r = impl.Orchestrator(FakeLLM([json.dumps(PLAN)]), w, approve=lambda s: True).run("g")
     assert r.statuses == {"s1": "done", "s2": "failed", "s3": "skipped", "s4": "skipped"}
     assert r.outputs["s2"] == "TimeoutError: log store slow"
+
+
+def test_boundary_approval_follows_plan_flag(impl):
+    """ex46 trusts the planner's requires_approval flag: an unflagged refund runs without approval."""
+    plan = [{"id": "s1", "worker": "billing", "task": "refund $40", "depends_on": [], "requires_approval": False}]
+    asked = []
+    o = impl.Orchestrator(FakeLLM([json.dumps(plan)]), workers([]), approve=lambda s: asked.append(s.id) or False)
+    r = o.run("g")
+    assert asked == [] and r.statuses == {"s1": "done"}
+    assert "s1: approval requested" not in r.audit

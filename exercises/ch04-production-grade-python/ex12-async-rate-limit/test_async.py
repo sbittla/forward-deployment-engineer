@@ -65,3 +65,36 @@ def test_invalid_limits(impl):
     with pytest.raises(ValueError):
         asyncio.run(impl.gather_limited([lambda: asyncio.sleep(0)], 0))
     assert asyncio.run(impl.gather_limited([], 3)) == []
+
+
+def test_boundary_cancellation_propagates(impl):
+    # Cancellation is not an item failure: CancelledError must propagate, never be
+    # stored in a result slot (catch Exception, not BaseException).
+    started = []
+
+    def slow():
+        async def job():
+            started.append(1)
+            await asyncio.sleep(10)
+        return job()
+
+    async def ok():
+        return "ok"
+
+    async def cancelled():
+        raise asyncio.CancelledError()
+
+    async def main():
+        with pytest.raises(asyncio.CancelledError):
+            await impl.gather_limited([ok, cancelled, ok], concurrency=3)
+        task = asyncio.create_task(impl.gather_limited([slow] * 3, concurrency=3))
+        for _ in range(100):
+            if len(started) == 3:
+                break
+            await asyncio.sleep(0)
+        task.cancel()
+        with pytest.raises(asyncio.CancelledError):
+            await task
+        return task.cancelled()
+
+    assert asyncio.run(asyncio.wait_for(main(), timeout=5))

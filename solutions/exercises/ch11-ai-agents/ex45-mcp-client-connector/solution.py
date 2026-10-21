@@ -147,8 +147,10 @@ def make_ticket_tools(conn) -> list[ToolDef]:
     def search_tickets(query: str, status: str | None = None, limit: int = 10):
         if not 1 <= int(limit) <= 50:
             raise ValueError("limit must be between 1 and 50")
-        sql = "SELECT id, title, status FROM tickets WHERE lower(title) LIKE ? "
-        args: list = [f"%{query.lower()}%"]
+        # escape LIKE wildcards so a query of "%" or "_" matches itself, not every title
+        q = query.lower().replace("!", "!!").replace("%", "!%").replace("_", "!_")
+        sql = "SELECT id, title, status FROM tickets WHERE lower(title) LIKE ? ESCAPE '!' "
+        args: list = [f"%{q}%"]
         if status is not None:
             sql += "AND status = ? "
             args.append(status)

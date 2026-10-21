@@ -39,3 +39,5 @@ the first run so every row qualifies.
 | `test_initial_and_idempotent` | Watermark not saved, so the second run reloads everything; or saved from the first row of the batch |
 | `test_ties_and_updates` | Timestamp-only watermark misses id 4; plain `INSERT` fails on the updated row instead of upserting |
 | `test_failed_batch_rolls_back` | Watermark committed separately from the rows, or the whole run in one transaction (so batch 1 is lost too) |
+| `test_boundary_late_arriving_row_is_missed` | Selection isn't the composite `(updated_at, id)` predicate (e.g. a full rescan); this pins the documented limit |
+| `test_boundary_replay_after_watermark_reset` | Missing `etl_state` row not treated as `("", -1)`; plain `INSERT` duplicates or fails on replayed ids |

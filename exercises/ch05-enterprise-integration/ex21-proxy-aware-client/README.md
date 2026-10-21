@@ -33,6 +33,26 @@ Methods:
 
 Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
 
+## Run and verify
+
+- **Prerequisites:** Python 3.11 or later and `pip install -r requirements.txt`, run once from the repository root.
+  No API key or network access is needed.
+- **Run your work:** from the repository root,
+  `pytest exercises/ch05-enterprise-integration/ex21-proxy-aware-client`.
+- **Expected output:** all 10 tests fail against the starter; when you're done, all 10 pass.
+- **Check the reference solution:**
+  `pytest --solutions exercises/ch05-enterprise-integration/ex21-proxy-aware-client`: all 10 pass.
+- **Tests:** `test_network.py` (10 tests).
+- **Common failures:** `ModuleNotFoundError: No module named 'fde_kit'` means the command didn't run from the
+  repository root. For a failing test, [HINTS.md](HINTS.md) says what it usually means.
+- **Whose failure is it?** If your run fails but the reference run passes, it's your code. If the reference run fails
+  too, check the prerequisites (`python --version`, `node --version`); if they're met, it's a defect in the published
+  solution, so report it with the repository's Errata issue template.
+- **Cleanup:** none. The tests write only to temporary directories, and `__pycache__` folders are ignored by git.
+- **Production caveats:** The tool only reads settings; it doesn't open a connection. A production preflight also
+  resolves DNS, connects through the proxy and completes a TLS handshake against the configured CA bundle, and takes
+  proxy credentials from a secret store rather than embedding them in `HTTPS_PROXY`.
+
 ## Prompt kit
 **Learn (tutor prompt)**
 ```text
