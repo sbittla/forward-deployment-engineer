@@ -12,6 +12,7 @@ import argparse
 import datetime
 import os
 import platform
+import re
 import shutil
 import subprocess
 import sys
@@ -20,13 +21,16 @@ import venv
 from pathlib import Path
 
 REPO = "https://github.com/sbittla/forward-deployment-engineer.git"
+# the lines worth quoting from each step: test totals, linter results and overall verdicts
+SUMMARY = re.compile(r"^=+ .*\b(passed|failed)\b|^# (pass|fail) \d+|problem\(s\)|^(ALL PASS|NOT ALL PASSING)|^tests \d+")
 
 
 def run(cmd: list[str], cwd: Path, env: dict, log: Path) -> tuple[int, str]:
     p = subprocess.run(cmd, cwd=cwd, env=env, capture_output=True, text=True, encoding="utf-8", errors="replace")
     log.write_text(p.stdout + p.stderr, encoding="utf-8")
-    tail = [line for line in (p.stdout + p.stderr).splitlines() if line.strip()]
-    return p.returncode, tail[-1] if tail else ""
+    lines = [line.strip() for line in (p.stdout + p.stderr).splitlines() if line.strip()]
+    key = [line for line in lines if SUMMARY.search(line)]
+    return p.returncode, "; ".join(dict.fromkeys(key)) if key else (lines[-1] if lines else "")
 
 
 def version(cmd: list[str]) -> str:
@@ -78,9 +82,9 @@ def main() -> int:
         rc, line = run(cmd, src, env, logs / f"{len(steps)}.log")
         shown = " ".join(["python"] + cmd[1:]) if cmd[0] == py else " ".join(cmd)
         steps.append((title, shown, rc, line))
-    summary = src / "output" / "summary.md"
-    if summary.exists():
-        shutil.copy(summary, work / "summary.md")
+    for name in ("summary.md", "environment.txt"):
+        if (src / "output" / name).exists():
+            shutil.copy(src / "output" / name, work / name)
     return report(args, work, steps, commit, fail=any(s[2] for s in steps))
 
 
@@ -102,6 +106,10 @@ def report(args, work: Path, steps: list, commit: str, fail: bool) -> int:
     if docker_summary.exists():
         first = [line for line in docker_summary.read_text(encoding="utf-8").splitlines() if line.strip()][:2]
         lines += ["", "Docker run summary: " + " — ".join(first)]
+    container = work / "environment.txt"
+    if container.exists():
+        lines += ["", "Docker runner environment (`output/environment.txt`):", "", "```text"]
+        lines += container.read_text(encoding="utf-8").strip().splitlines()[:12] + ["```"]
     lines += ["", f"Logs: `{work / 'logs'}`"]
     Path(args.report).write_text("\n".join(lines) + "\n", encoding="utf-8")
     print("\n".join(lines))
