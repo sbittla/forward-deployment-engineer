@@ -6,7 +6,7 @@ Open a hint only after you've been stuck for about ten minutes. Each one gives a
 <summary>Hint 1 · Where to start</summary>
 
 Create one module-level `contextvars.ContextVar("correlation_id", default=None)`. Then write `correlation` with
-`@contextlib.contextmanager`: set the variable, yield the id, and restore it afterwards.
+`@contextlib.contextmanager`: set the variable, yield the id, and restore it afterward.
 `current_correlation_id()` just reads the variable.
 </details>
 

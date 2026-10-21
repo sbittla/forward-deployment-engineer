@@ -9,7 +9,7 @@ auditors. The data is customer-confidential; exports land in a per-customer dire
 - Lint: `ruff check .`
 
 ## Conventions
-- Database access goes through parameterised queries only (`conn.execute(sql, params)`).
+- Database access goes through parameterized queries only (`conn.execute(sql, params)`).
 - CSV output uses the `csv` module; files are written UTF-8 with `newline=""`.
 - Errors are raised with context (file name, record id), never silently swallowed.
 - No mutable default arguments.
@@ -21,6 +21,6 @@ auditors. The data is customer-confidential; exports land in a per-customer dire
 - Never catch bare `Exception` to return an empty result.
 
 ## Before you finish
-1. Write a failing test for each behaviour you change, then make it pass.
+1. Write a failing test for each behavior you change, then make it pass.
 2. Run `pytest -q` and paste the summary line in the PR description.
 3. List every external input (user strings, file names, API responses) and say how each is validated.

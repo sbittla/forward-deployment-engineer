@@ -4,11 +4,15 @@ import json
 import time
 
 
-def _mac(secret: str, t: int, body: str) -> str:
-    return hmac.new(secret.encode(), f"{t}.{body}".encode(), hashlib.sha256).hexdigest()
+def _raw(body: bytes | str) -> bytes:
+    return body if isinstance(body, bytes) else body.encode()     # a str body is UTF-8 encoded
 
 
-def sign(body: str, secret: str, t: int) -> str:
+def _mac(secret: str, t: int, body: bytes | str) -> str:
+    return hmac.new(secret.encode(), f"{t}.".encode() + _raw(body), hashlib.sha256).hexdigest()
+
+
+def sign(body: bytes | str, secret: str, t: int) -> str:
     return f"t={t},v1={_mac(secret, t, body)}"
 
 
@@ -46,7 +50,7 @@ class WebhookReceiver:
         self.store = store
         self._seen: dict[str, float] = {}
 
-    def handle(self, headers: dict, body: str) -> tuple[int, str]:
+    def handle(self, headers: dict, body: bytes | str) -> tuple[int, str]:
         now = self.clock()
         self._seen = {k: ts for k, ts in self._seen.items() if now - ts <= self.dedupe_ttl}
 
@@ -57,7 +61,8 @@ class WebhookReceiver:
             t, sig = _parse(header)
         except (KeyError, ValueError):
             return 401, "malformed signature"
-        if not any(hmac.compare_digest(sig, _mac(s, t, body)) for s in self._secrets):
+        # compare bytes: compare_digest raises TypeError on a non-ASCII str, which would be a 500
+        if not any(hmac.compare_digest(sig.encode(), _mac(s, t, body).encode()) for s in self._secrets):
             return 401, "bad signature"
         if abs(now - t) > self.tolerance:
             return 400, "stale"

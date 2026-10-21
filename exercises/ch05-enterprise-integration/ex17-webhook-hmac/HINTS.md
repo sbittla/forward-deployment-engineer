@@ -33,7 +33,7 @@ Keep a dict of `event_id -> time first seen` for deduplication, and purge old en
 - A malformed header (no `=`, no `t`, a non-numeric `t`) must return 401, not crash. Catch `KeyError` and
   `ValueError` around the parsing.
 - The staleness boundary is `abs(now - t) > tolerance`: exactly 300 seconds old is still accepted.
-- Sign and verify the **raw** body string. Re-serialising the parsed JSON changes the bytes.
+- Sign and verify the **raw** body string. Re-serializing the parsed JSON changes the bytes.
 - Part B: compare with `>=`, not `>`. An equal version is a duplicate and must not be applied. `reconcile` should
   call `apply_update` rather than write to the store itself, so both paths obey the same rule.
 </details>
@@ -45,6 +45,8 @@ Keep a dict of `event_id -> time first seen` for deduplication, and purge old en
 | `test_sign_format` | Message joined without the `.`, or the secret/body not encoded to bytes |
 | `test_accept_then_duplicate` | Header lookup is case-sensitive (`x-signature`), or duplicates processed again |
 | `test_bad_signature_and_missing` | Malformed header raises instead of returning 401; tampered body accepted |
+| `test_raw_body_bytes_are_signed` | `bytes` body formatted into an f-string (`b'...'` gets signed), or a `str` body not UTF-8 encoded |
+| `test_non_ascii_signature_is_401_not_a_crash` | `hmac.compare_digest` called on `str` values, which raises `TypeError` for non-ASCII text |
 | `test_stale` | Boundary uses `>=`; or staleness checked with the wrong sign |
 | `test_bad_json` | Missing `id` raises `KeyError` instead of returning 400 |
 | `test_dedupe_expires` | Seen ids never purged, so the event is a duplicate forever |

@@ -24,6 +24,9 @@ came from, and when the documents don't contain the answer, the assistant must s
   - retrieved text is data, never instructions: it goes only in the user message, and each source's text is put
     on one line (runs of whitespace, including newlines, become a single space) so a poisoned chunk can't
     forge another `[n] (doc_id)` source line.
+    This does not stop indirect prompt injection: a chunk's instruction text ("Ignore previous
+    instructions...") still reaches the model in the user message, and an answer that obeys it and cites `[1]`
+    still counts as grounded. Defenses belong to Chapter 13.
 - Parse `[n]` markers (also `[1][2]` and `[1, 3]`). Map valid numbers to `doc_id`s (deduplicated, in first-seen
   order). Numbers outside `1..len(sources)` go to `invalid_citations` and are removed from the returned text.
 - If the model replied with `ABSTAIN_TEXT`, return `abstained=True`.
@@ -36,9 +39,9 @@ Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each
 - **Prerequisites:** Python 3.11 or later and `pip install -r requirements.txt`, run once from the repository root.
   No API key or network access is needed.
 - **Run your work:** from the repository root, `pytest exercises/ch10-rag/ex40-rag-citations`.
-- **Expected output:** all 9 tests fail against the starter; when you're done, all 9 pass.
-- **Check the reference solution:** `pytest --solutions exercises/ch10-rag/ex40-rag-citations`: all 9 pass.
-- **Tests:** `test_rag.py` (9 tests).
+- **Expected output:** all 10 tests fail against the starter; when you're done, all 10 pass.
+- **Check the reference solution:** `pytest --solutions exercises/ch10-rag/ex40-rag-citations`: all 10 pass.
+- **Tests:** `test_rag.py` (10 tests).
 - **Common failures:** `ModuleNotFoundError: No module named 'fde_kit'` means the command didn't run from the
   repository root. For a failing test, [HINTS.md](HINTS.md) says what it usually means.
 - **Whose failure is it?** If your run fails but the reference run passes, it's your code. If the reference run fails
@@ -47,7 +50,7 @@ Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each
 - **Cleanup:** none. The tests write only to temporary directories, and `__pycache__` folders are ignored by git.
 - **Production caveats:** `grounded` checks only that citation numbers point at provided sources, not that the source
   supports the claim, and `retrieve` is trusted to return only what the user may see. Production adds a support check
-  or faithfulness judge, tunes `min_score` on labelled answerable and unanswerable questions, filters permissions
+  or faithfulness judge, tunes `min_score` on labeled answerable and unanswerable questions, filters permissions
   inside retrieval, and logs abstentions and stripped citations.
 
 ## Prompt kit

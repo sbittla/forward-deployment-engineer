@@ -17,7 +17,8 @@ def test_token_roundtrip(impl):
     tok = impl.make_token(CLAIMS, SECRET)
     assert tok.count(".") == 2 and "=" not in tok
     assert impl.verify_id_token(tok, SECRET, ISS, AUD, NOW)["sub"] == "u-123"
-    assert impl.verify_id_token(impl.make_token({**CLAIMS, "aud": ["x", AUD]}, SECRET), SECRET, ISS, AUD, NOW)
+    # Several audiences: OIDC then requires azp, the authorized party, to be this client.
+    assert impl.verify_id_token(impl.make_token({**CLAIMS, "aud": ["x", AUD], "azp": AUD}, SECRET), SECRET, ISS, AUD, NOW)
 
 
 @pytest.mark.parametrize("mutate,msg", [
@@ -142,3 +143,41 @@ def test_missing_acl_fails_closed(impl):
     results, audit = impl.secure_search(lee, "flood", docs, lambda q, ds, k: [d["id"] for d in ds][:k], k=10)
     assert "no-acl" not in results and "null-acl" not in results
     assert audit["denied"] == 3
+
+
+def test_nonce_checked_when_expected(impl):
+    # The client sent nonce n-1 in the authorization request; the ID token must echo it (replay protection).
+    ok = impl.make_token({**CLAIMS, "nonce": "n-1"}, SECRET)
+    assert impl.verify_id_token(ok, SECRET, ISS, AUD, NOW, expected_nonce="n-1")["nonce"] == "n-1"
+    assert impl.verify_id_token(ok, SECRET, ISS, AUD, NOW)          # no nonce sent, none required
+    for claims in [{**CLAIMS, "nonce": "n-2"}, CLAIMS]:              # mismatched, then missing
+        with pytest.raises(impl.AuthError, match="nonce"):
+            impl.verify_id_token(impl.make_token(claims, SECRET), SECRET, ISS, AUD, NOW, expected_nonce="n-1")
+
+
+def test_azp_checked(impl):
+    for claims in [{**CLAIMS, "aud": [AUD, "other-app"]},                    # several audiences, no azp
+                   {**CLAIMS, "aud": [AUD, "other-app"], "azp": "other-app"},
+                   {**CLAIMS, "azp": "other-app"}]:                          # azp present must be this client
+        with pytest.raises(impl.AuthError, match="azp"):
+            impl.verify_id_token(impl.make_token(claims, SECRET), SECRET, ISS, AUD, NOW)
+    assert impl.verify_id_token(impl.make_token({**CLAIMS, "azp": AUD}, SECRET), SECRET, ISS, AUD, NOW)
+
+
+API = "https://claims-api.northwind.example"
+
+
+def test_id_token_rejected_where_access_token_required(impl):
+    # The API validates access tokens issued for its own audience; an ID token is never an API bearer token.
+    at_claims = {**CLAIMS, "aud": API, "scope": "claims.read profile", "client_id": AUD}
+    at = impl.make_token(at_claims, SECRET, typ="at+jwt")
+    assert impl.verify_access_token(at, SECRET, ISS, API, NOW, required_scope="claims.read")["sub"] == "u-123"
+    with pytest.raises(impl.AuthError, match="scope"):
+        impl.verify_access_token(at, SECRET, ISS, API, NOW, required_scope="claims.write")
+    id_token_for_api = impl.make_token({**CLAIMS, "aud": API}, SECRET)     # typ JWT, even with the API's audience
+    with pytest.raises(impl.AuthError, match="type"):
+        impl.verify_access_token(id_token_for_api, SECRET, ISS, API, NOW)
+    with pytest.raises(impl.AuthError, match="audience"):               # the client's ID token: wrong audience too
+        impl.verify_access_token(impl.make_token(CLAIMS, SECRET, typ="at+jwt"), SECRET, ISS, API, NOW)
+    with pytest.raises(impl.AuthError, match="type"):                   # and an access token doesn't sign anyone in
+        impl.verify_id_token(impl.make_token(CLAIMS, SECRET, typ="at+jwt"), SECRET, ISS, AUD, NOW)

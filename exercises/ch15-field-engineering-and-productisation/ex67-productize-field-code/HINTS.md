@@ -1,4 +1,4 @@
-# ex67 hints · Productise a one-off field script
+# ex67 hints · Productize a one-off field script
 
 Open a hint only after you've been stuck for about ten minutes. Each one gives away more than the last.
 

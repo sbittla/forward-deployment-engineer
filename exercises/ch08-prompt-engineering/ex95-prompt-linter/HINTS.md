@@ -40,7 +40,7 @@ Get the placeholder regex right before anything else, because seven of the nine 
 
 | Test | Likely cause |
 |---|---|
-| `test_clean_prompt` | A rule fires falsely: P003 missing "JSON" in the system prompt, or P002 not recognising the tag pair |
+| `test_clean_prompt` | A rule fires falsely: P003 missing "JSON" in the system prompt, or P002 not recognizing the tag pair |
 | `test_placeholders_ignore_escaped_braces` | `{{literal}}` matched as a placeholder; duplicates kept |
 | `test_empty_system_and_undelimited_untrusted` | Message lacks `{email_body}` with braces; score formula wrong |
 | `test_mismatched_tag_is_not_delimited` | Opening and closing tag names not required to match |

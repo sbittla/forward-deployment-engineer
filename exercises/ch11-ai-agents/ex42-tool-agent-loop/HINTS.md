@@ -33,7 +33,7 @@ If the loop ends without returning, raise `AgentLoopError`.
 - A raising tool becomes `"<ExceptionType>: <message>"` with `is_error: True`. Catch it inside `_execute`, so the other
   calls in the same turn still run.
 - Encode non-string results with `json.dumps`. Pass a **copy** of the messages list to `llm.complete` if you keep
-  appending to it afterwards.
+  appending to it afterward.
 - Charge the budget straight after `llm.complete` returns, before the "no tool calls?" check and before any tool
   runs. Otherwise the over-budget turn's side effects have already happened when you stop.
 - Repeats: keep one `{fingerprint: count}` dict for the whole run, not per turn. Check every call in the turn before
@@ -53,5 +53,5 @@ If the loop ends without returning, raise `AgentLoopError`.
 | `test_budget_seconds_uses_clock` | `time.monotonic` called directly instead of the `clock` argument; start time re-read each step |
 | `test_budget_within_limits` | The final (no tool calls) response not charged |
 | `test_repeated_identical_call_detected` | Counts reset each turn; `sort_keys` missing so key order changes the fingerprint |
-| `test_per_tool_cap` | Cap check after executing; refused calls counted towards the cap; wrong message text |
+| `test_per_tool_cap` | Cap check after executing; refused calls counted toward the cap; wrong message text |
 | `test_timeout_is_outcome_unknown` | `TimeoutError` caught by the generic handler and reported with `is_error: True` |

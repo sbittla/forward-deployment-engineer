@@ -21,3 +21,6 @@ node_modules/
 .env
 *.local.json
 .DS_Store
+
+# Raw job-posting text belongs to the employers: publish identifiers only (research/postings-index.csv)
+postings.json

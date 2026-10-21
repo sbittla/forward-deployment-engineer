@@ -1,6 +1,6 @@
 # ex72 · Regulated data: de-identification and retention
 
-**Chapter:** 15 · Field Engineering and Productisation (`exercises/ch15-field-engineering-and-productisation/`) · **Covers:** R25 Regulated industry context, R17 Compliance
+**Chapter:** 15 · Field Engineering and Productization (`exercises/ch15-field-engineering-and-productisation/`) · **Covers:** R25 Regulated industry context, R17 Compliance
 
 ## Learning objectives
 - De-identify health records with a Safe Harbor-style subset of rules.
@@ -8,9 +8,9 @@
 - Log access by purpose without logging record contents.
 
 ## Scenario
-A health system wants to use LLMs to summarise intake notes for research dashboards. Their privacy officer
+A health system wants to use LLMs to summarize intake notes for research dashboards. Their privacy officer
 requires a HIPAA Safe Harbor-style de-identification step (this exercise implements a teaching subset — real
-programmes need the full 18 identifiers, an expert review, and legal sign-off) plus enforced retention.
+programs need the full 18 identifiers, an expert review, and legal sign-off) plus enforced retention.
 
 ## Your task
 `deidentify(record, today) -> dict` where `record = {"patient_name", "dob", "mrn", "zip", "phone", "email",

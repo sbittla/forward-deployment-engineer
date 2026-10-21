@@ -56,7 +56,7 @@ Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each
   solution, so report it with the repository's Errata issue template.
 - **Cleanup:** none. The tests write only to temporary directories, and `__pycache__` folders are ignored by git.
 - **Production caveats:** Checkpoints live in memory, and the step limit is the only guard against cycles. Production
-  uses a durable checkpointer, authorises who may resume an interrupted thread and with what updates, and records
+  uses a durable checkpointer, authorizes who may resume an interrupted thread and with what updates, and records
   each resume in the audit trail.
 
 ## Prompt kit

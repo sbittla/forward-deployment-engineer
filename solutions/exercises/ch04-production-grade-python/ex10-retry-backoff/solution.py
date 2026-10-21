@@ -14,14 +14,17 @@ def _retryable(exc: BaseException) -> bool:
 
 
 def retry(max_attempts=4, base_delay=0.5, max_delay=8.0, sleep=time.sleep, rng=random.random,
-          deadline=None, clock=time.monotonic, on_retry=None):
+          deadline=None, clock=time.monotonic, on_retry=None, attempt_timeout=None):
     def deco(fn):
         @functools.wraps(fn)
         def wrapper(*args, **kwargs):
             stop_at = None if deadline is None else clock() + deadline   # set once, before the first attempt
             for attempt in range(max_attempts):
                 try:
-                    return fn(*args, **kwargs)
+                    if attempt_timeout is None:
+                        return fn(*args, **kwargs)
+                    t = attempt_timeout if stop_at is None else min(attempt_timeout, stop_at - clock())
+                    return fn(*args, **kwargs, timeout=t)       # each attempt: its own timeout or the time left
                 except Exception as exc:
                     if not _retryable(exc) or attempt == max_attempts - 1:
                         raise

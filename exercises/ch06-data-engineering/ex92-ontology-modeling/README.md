@@ -1,6 +1,6 @@
-# ex92 · Ontology modelling: objects, links and governed actions
+# ex92 · Ontology modeling: objects, links and governed actions
 
-**Chapter:** 6 · Data Engineering (`exercises/ch06-data-engineering/`) · **Covers:** R42 Ontology / semantic modelling, R03 Data modelling, R31 Data platforms ·
+**Chapter:** 6 · Data Engineering (`exercises/ch06-data-engineering/`) · **Covers:** R42 Ontology / semantic modeling, R03 Data modeling, R31 Data platforms ·
 **Time:** 75 min
 
 ## Learning objectives
@@ -30,7 +30,10 @@ query "shipments for this customer that are delayed" instead of joining five tab
    `execute(name, actor, role, **params)`: check the role (`PermissionError`), parameter presence and types
    (`ValueError`), and `validate(ontology, **params)` (returns an error string or `None`, raised as `ValueError`).
    Then call `apply(ontology, **params)`, which mutates objects, and append an audit entry `{"action", "actor",
-   "params", "seq"}`. A failed action leaves no audit entry and no changes.
+   "params", "seq"}`. If `params` include the object type's primary key, that object must exist (`ValueError` naming
+   it) before `validate` runs. An unknown action name is a `ValueError`. A refused or failed action (any exception,
+   including one raised by `apply`) leaves no audit entry and no changes, appends `{"action", "actor", "role",
+   "error"}` (`error` is `str(exc)`) to `self.rejected`, and re-raises.
 
 Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
 
@@ -39,10 +42,10 @@ Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each
 - **Prerequisites:** Python 3.11 or later and `pip install -r requirements.txt`, run once from the repository root.
   No API key or network access is needed.
 - **Run your work:** from the repository root, `pytest exercises/ch06-data-engineering/ex92-ontology-modeling`.
-- **Expected output:** all 3 tests fail against the starter; when you're done, all 3 pass.
+- **Expected output:** all 4 tests fail against the starter; when you're done, all 4 pass.
 - **Check the reference solution:** `pytest --solutions exercises/ch06-data-engineering/ex92-ontology-modeling`: all
-  3 pass.
-- **Tests:** `test_ontology.py` (3 tests).
+  4 pass.
+- **Tests:** `test_ontology.py` (4 tests).
 - **Common failures:** `ModuleNotFoundError: No module named 'fde_kit'` means the command didn't run from the
   repository root. For a failing test, [HINTS.md](HINTS.md) says what it usually means.
 - **Whose failure is it?** If your run fails but the reference run passes, it's your code. If the reference run fails

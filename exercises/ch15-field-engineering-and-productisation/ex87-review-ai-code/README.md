@@ -1,6 +1,6 @@
 # ex87 · Review and fix an AI-agent-written pull request; write agent instructions
 
-**Chapter:** 15 · Field Engineering and Productisation (`exercises/ch15-field-engineering-and-productisation/`) · **Covers:** R37 AI-assisted engineering, R29 Debugging, R17 Security · **Hands-on:** AI coding
+**Chapter:** 15 · Field Engineering and Productization (`exercises/ch15-field-engineering-and-productisation/`) · **Covers:** R37 AI-assisted engineering, R29 Debugging, R17 Security · **Hands-on:** AI coding
 tools workflow
 
 ## Learning objectives
@@ -13,11 +13,11 @@ Anthropic's Staff FDE posting expects "everyday use of AI coding tools with the 
 IBM's forward-deployed units "use AI to accelerate AI implementation"; Deloitte trains client engineers on these
 tools. The productivity is real, and so is the failure mode: plausible code that passes a glance and ships a
 vulnerability. A coding agent produced `starter.py` (a ticket-export module) for the customer overnight. It runs.
-It's also wrong in at least six ways.
+It's also wrong in at least seven ways, across six functions.
 
 ## Your task
 1. **Fix `starter.py`** (keep the function signatures) so it passes the tests:
-   - `find_tickets(conn, customer)` must be safe against SQL injection (parameterised query)
+   - `find_tickets(conn, customer)` must be safe against SQL injection (parameterized query)
    - `export_csv(rows, filename, out_dir)` must refuse filenames that escape `out_dir` (`ValueError`) and must quote
      CSV fields properly
    - `fetch_all(client, total_pages)` must fetch every page (pages are 1-based, inclusive)
@@ -50,10 +50,10 @@ Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each
   too, check the prerequisites (`python --version`, `node --version`); if they're met, it's a defect in the published
   solution, so report it with the repository's Errata issue template.
 - **Cleanup:** none. The tests write only to temporary directories, and `__pycache__` folders are ignored by git.
-- **Production caveats:** The tests check six planted defects, one at a time. In production, add static analysis and
-  secret scanning to CI, enforce the agent's rules with pre-commit hooks and branch protection rather than an
-  instruction file alone, and keep a human reviewer on every agent-written change that touches SQL, paths,
-  credentials or shell commands.
+- **Production caveats:** The tests check the seven planted problems, one function at a time. In production, add
+  static analysis and secret scanning to CI, enforce the agent's rules with pre-commit hooks and branch protection
+  rather than an instruction file alone, and keep a human reviewer on every agent-written change that touches SQL,
+  paths, credentials or shell commands.
 
 ## Prompt kit
 **Learn (tutor prompt)**
@@ -86,7 +86,7 @@ which ones a test should catch.
 **Production prompt (what this exercise's code sends to a model)**
 ```text
 # Agent instructions (excerpt)
-- Use parameterised SQL only; never build queries with f-strings.
+- Use parameterized SQL only; never build queries with f-strings.
 - Resolve file paths and refuse anything outside the configured output directory.
 - Never log tokens, keys or Authorization headers; log a redacted form.
 - Don't catch broad exceptions to return defaults; raise with context.

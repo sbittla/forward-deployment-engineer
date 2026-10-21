@@ -4,7 +4,7 @@
 
 ## Learning objectives
 - Implement BM25 scoring and explain every term's contribution.
-- Understand how k1 and b control term saturation and length normalisation.
+- Understand how k1 and b control term saturation and length normalization.
 - Use keyword search for identifiers that embeddings miss.
 
 ## Scenario
@@ -38,9 +38,9 @@ Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each
   too, check the prerequisites (`python --version`, `node --version`); if they're met, it's a defect in the published
   solution, so report it with the repository's Errata issue template.
 - **Cleanup:** none. The tests write only to temporary directories, and `__pycache__` folders are ignored by git.
-- **Production caveats:** An in-memory index with simple regex tokenisation, a fixed English stop-word list and no
+- **Production caveats:** An in-memory index with simple regex tokenization, a fixed English stop-word list and no
   stemming or field weights. In production use a search engine's BM25 (OpenSearch, Elasticsearch, Lucene) with an
-  analyser chosen for the corpus languages, and tune `k1` and `b` against recall on a labelled query set.
+  analyzer chosen for the corpus languages, and tune `k1` and `b` against recall on a labeled query set.
 
 ## Prompt kit
 **Learn (tutor prompt)**

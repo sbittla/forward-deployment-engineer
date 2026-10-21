@@ -43,7 +43,7 @@ Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each
   too, check the prerequisites (`python --version`, `node --version`); if they're met, it's a defect in the published
   solution, so report it with the repository's Errata issue template.
 - **Cleanup:** none. The tests write only to temporary directories, and `__pycache__` folders are ignored by git.
-- **Production caveats:** Influence and interest scores are judgements, and the map is only as current as its last
+- **Production caveats:** Influence and interest scores are judgments, and the map is only as current as its last
   review. In an engagement, agree the RACI with the sponsor, keep it with the RAID log and re-score stakeholders when
   the project changes phase.
 

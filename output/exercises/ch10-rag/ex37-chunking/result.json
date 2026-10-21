@@ -3,14 +3,14 @@
   "status": "PASS",
   "problems": [],
   "tests": {
-    "passed": 9,
+    "passed": 11,
     "failed": 0,
     "error": 0,
     "skipped": 0
   },
-  "declared": 9,
-  "ran": 9,
-  "starter_failing": 9,
+  "declared": 11,
+  "ran": 11,
+  "starter_failing": 11,
   "cases": [
     {
       "test": "py:test_fixed",
@@ -37,7 +37,15 @@
       "status": "passed"
     },
     {
+      "test": "py:test_chunk_keys_distinguish_identical_chunks",
+      "status": "passed"
+    },
+    {
       "test": "py:test_plan_reindex_touches_only_changes",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_plan_reindex_refreshes_moved_chunks",
       "status": "passed"
     },
     {

@@ -2,7 +2,7 @@
 
 Verdict: request changes. Six defects, two of them exploitable. Tests now cover each one.
 
-- [security] starter.py:find_tickets: SQL injection via an f-string query; `x' OR '1'='1` returns every customer's tickets → parameterised query with `?`
+- [security] starter.py:find_tickets: SQL injection via an f-string query; `x' OR '1'='1` returns every customer's tickets → parameterized query with `?`
 - [security] starter.py:export_csv: path traversal; `../` or an absolute filename writes anywhere on disk → resolve the path and refuse anything outside `out_dir`
 - [security] starter.py:call_api: the API token is written to the log in plain text → log the action, never the credential
 - [correctness] starter.py:export_csv: hand-joined CSV breaks on commas and quotes inside subjects → use `csv.writer`

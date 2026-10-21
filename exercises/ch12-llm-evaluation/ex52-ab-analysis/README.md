@@ -46,7 +46,7 @@ Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each
   solution, so report it with the repository's Errata issue template.
 - **Cleanup:** none. The tests write only to temporary directories, and `__pycache__` folders are ignored by git.
 - **Production caveats:** The analysis treats every ticket as independent and has no guard against peeking or novelty
-  effects. A production analysis pre-registers the metric, rule and sample size, randomises and analyses by agent (or
+  effects. A production analysis pre-registers the metric, rule and sample size, randomizes and analyzes by agent (or
   uses a clustered analysis) when tickets share an agent, and has a statistician review high-stakes decisions.
 
 ## Prompt kit

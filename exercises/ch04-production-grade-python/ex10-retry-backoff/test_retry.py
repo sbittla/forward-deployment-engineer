@@ -97,8 +97,8 @@ def test_failed_call_not_cached(impl):
 
 
 def test_boundary_retry_after_is_not_capped_by_a_deadline(impl):
-    # Pins a documented limitation: there is no overall time budget, so a server's
-    # Retry-After of an hour is slept in full. Production code checks a deadline first.
+    # Pins a documented limitation: without deadline= (the default) there is no time budget, so a server's
+    # Retry-After of an hour is slept in full. Production code sets a deadline.
     op, sleeps, calls = make(impl, [HTTPError(503, retry_after=3600)])
     assert op() == "ok"
     assert sleeps == [3600] and calls["n"] == 2
@@ -173,6 +173,22 @@ def test_fault_slow_dependency_respects_deadline(impl):
     with pytest.raises(TimeoutError):
         slow()
     assert calls == [0.0, 3.5, 7.5] and clk.t == 10.5  # third backoff (2 s) would end at 12.5 > 10
+
+
+def test_fault_attempt_timeout_is_capped_by_time_left(impl):
+    # Each call receives timeout=min(attempt_timeout, time left before the deadline) and hangs for all of it
+    clk = FakeClock()
+    timeouts = []
+
+    @impl.retry(max_attempts=10, sleep=clk.sleep, rng=lambda: 1.0, deadline=10, clock=clk, attempt_timeout=4)
+    def hang(timeout):
+        timeouts.append(timeout)
+        clk.t += timeout
+        raise TimeoutError()
+
+    with pytest.raises(TimeoutError):
+        hang()
+    assert timeouts == [4, 4, 0.5] and clk.t == 10
 
 
 def test_fault_retry_after_beyond_deadline_fails_fast(impl):

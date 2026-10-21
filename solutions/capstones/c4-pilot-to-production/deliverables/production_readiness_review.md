@@ -55,7 +55,7 @@ Scored 0 to 4 on the evidence, with the weights from the readiness scorecard: 0 
 | Functional correctness | 15% | 4 | Tests on the request path, error paths and degraded mode; the platform team runs them in CI |
 | AI evaluation | 20% | 2 | No versioned golden set yet; fallback summaries reviewed by operations managers, not graded |
 | Security and privacy | 15% | 4 | The gates above, enforced by the platform team's admission policy; security sign-off |
-| Performance | 10% | 2 | `performance_test_plan.md`: plan, budget and targets documented, every number labelled; peak not yet measured |
+| Performance | 10% | 2 | `performance_test_plan.md`: plan, budget and targets documented, every number labeled; peak not yet measured |
 | Economics | 10% | 2 | Token volumes estimated; no measured cost per successful summary |
 | Reliability | 10% | 4 | SLO with burn-rate alerts, retries, fallback and breaker tested; on-call owns the alerts |
 | Adoption | 10% | 3 | Change plan agreed with the operations sponsor; summaries per team tracked weekly |

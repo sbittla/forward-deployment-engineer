@@ -8,7 +8,7 @@
 - Extract only after verification succeeds.
 
 ## Scenario
-A defence customer's network has no internet access. Everything — code, models, dependencies — arrives on approved
+A defense customer's network has no internet access. Everything — code, models, dependencies — arrives on approved
 media and is scanned at the boundary. Their security officer must be able to verify that the bundle wasn't altered
 in transit, and their install script must refuse anything that would write outside the install directory.
 

@@ -10,7 +10,7 @@
 ## Scenario
 The customer wants an "AI operations analyst" that investigates a billing dispute: pull the invoice, check payment
 logs, draft a customer email, and — only with a human's OK — issue a refund. A planner model writes the plan;
-specialised workers execute steps; risky steps pause for approval. Everything is audited.
+specialized workers execute steps; risky steps pause for approval. Everything is audited.
 
 ## Your task
 `Orchestrator(planner_llm, workers: dict[str, Callable[[str, dict], str]], approve: Callable[[Step], bool],

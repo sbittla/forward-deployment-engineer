@@ -61,9 +61,9 @@ Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each
   solution, so report it with the repository's Errata issue template.
 - **Cleanup:** none. The tests write only to temporary directories, and `__pycache__` folders are ignored by git.
 - **Production caveats:** The linter checks a template's structure, not the data that fills it: `render` inserts
-  values verbatim, so a value containing `</ticket>` can close its own tag, and P002 recognises untrusted input only
+  values verbatim, so a value containing `</ticket>` can close its own tag, and P002 recognizes untrusted input only
   by placeholder name. In production, escape untrusted values before rendering, wire `lint` into CI over every
-  template file, and keep injection defences in code and in the golden set (Chapter 13).
+  template file, and keep injection defenses in code and in the golden set (Chapter 13).
 
 ## Prompt kit
 **Learn (tutor prompt)**

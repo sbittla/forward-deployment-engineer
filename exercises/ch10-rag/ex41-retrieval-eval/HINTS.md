@@ -43,3 +43,6 @@ each against the numbers in the tests before you write `evaluate`, which only lo
 | `test_benchmark_baseline_vs_candidate` | One of the four metrics is off; check the unit tests above first, since the benchmark only reuses them |
 | `test_benchmark_stale_and_foreign_never_cited` | `citation_precision` not pooled or not rounded to 4 dp |
 | `test_benchmark_abstention` | `answered_unanswerable` counts abstentions instead of answers, or the keys differ |
+| `test_rag_scorecard` | A rate computed over all cases instead of its own slice; 0 instead of `None` for an empty slice; rates not rounded to 4 dp |
+| `test_rewrite_followup` | Prefix checked case-sensitively, or a standalone question rewritten; empty history not handled |
+| `test_rewrite_followup_recall` | Previous question placed after the follow-up or the wrong history entry used; check `test_rewrite_followup` first |

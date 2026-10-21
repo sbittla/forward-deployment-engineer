@@ -13,31 +13,31 @@
   "starter_failing": 8,
   "cases": [
     {
-      "test": "py:test_1_big_amounts",
+      "test": "py:test_big_invoices_do_not_crash",
       "status": "passed"
     },
     {
-      "test": "py:test_2_last_page",
+      "test": "py:test_report_includes_the_last_page",
       "status": "passed"
     },
     {
-      "test": "py:test_3_tags_isolated",
+      "test": "py:test_tags_do_not_leak_between_invoices",
       "status": "passed"
     },
     {
-      "test": "py:test_4_timezones",
+      "test": "py:test_overdue_check_survives_the_eu_move",
       "status": "passed"
     },
     {
-      "test": "py:test_5_cents",
+      "test": "py:test_totals_are_not_off_by_a_cent",
       "status": "passed"
     },
     {
-      "test": "py:test_6_remove_paid",
+      "test": "py:test_cleaning_paid_invoices_does_not_crash",
       "status": "passed"
     },
     {
-      "test": "py:test_7_config",
+      "test": "py:test_corrupted_config_is_not_silently_ignored",
       "status": "passed"
     },
     {

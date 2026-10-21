@@ -1,6 +1,6 @@
 # FDE engagement playbook
 
-Copyable templates for the artefacts the book teaches, in five packs that follow an engagement from the first
+Copyable templates for the artifacts the book teaches, in five packs that follow an engagement from the first
 meeting to handover. Each template states its owner, when to use it, its inputs and when it's done. Appendix F of
 *The Forward Deployed Engineer* describes how the packs fit together; Appendix E shows them filled in for a
 reference engagement.

@@ -39,7 +39,8 @@ numbers only.
 | `test_invalid_citation_removed` | Invalid marker left in the text, or the answer still marked grounded |
 | `test_no_citations_not_grounded` | `grounded` defaults to True when there are no citations |
 | `test_abstain_low_score_skips_llm` | Model called even though the top score is below `min_score` |
-| `test_model_abstains` | Reply not stripped before comparing, so the abstention isn't recognised |
+| `test_model_abstains` | Reply not stripped before comparing, so the abstention isn't recognized |
 | `test_k_passed` | `retrieve` called with a hard-coded k |
 | `test_boundary_valid_citation_not_checked_for_support` | `grounded` made to depend on something other than valid citation numbers; ex40 deliberately doesn't check that a source supports its claim |
 | `test_retrieved_text_stays_data` | Source text copied into the system prompt, or newlines kept so a chunk can start a forged `[2]` line |
+| `test_boundary_injected_instructions_still_reach_the_model` | Source text dropped or rewritten instead of passed through as data; ex40 deliberately doesn't filter instruction-like text (Chapter 13 does) |

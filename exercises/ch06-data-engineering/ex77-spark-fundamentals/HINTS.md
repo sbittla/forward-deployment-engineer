@@ -17,21 +17,22 @@ it.
 - **parallelize:** item *i* goes to partition `i % n`.
 - **reduce_by_key** is the wide operation:
   1. increment `STATS["shuffles"]`;
-  2. materialise;
+  2. materialize;
   3. route every pair to bucket `crc32(str(key)) % num_partitions`, reducing as you go;
   4. return a new RDD whose partitions are the buckets' items.
 - **Salting:** collect the items, make each key `(key, i % salts)` by position, reduce once (the hot key now spreads
   over several buckets), drop the salt, and reduce again. That's exactly two shuffles.
-- **Part B:** a chain of `spark.read.table(...)`, `.filter(...)`, `.groupBy("merchant")`,
-  `.agg(F.sum("amount").alias("total"))` and `.write.format("delta").mode("overwrite").saveAsTable(...)`. Before
-  that chain, aggregate the input once (`F.count("*")` and `F.max("ingested_at")`), take `.first()` and raise if
-  either check fails.
+- **Part B:** a chain of `spark.read.table(...)`, `.filter(...)` on `event_date` and `amount`,
+  `.groupBy("event_date", "merchant")`, `.agg(F.sum("amount").alias("total"))` and
+  `.write.format("delta").mode("overwrite").option("replaceWhere", ...).saveAsTable(...)`. Before that chain,
+  aggregate the batch once (`F.count("*")` and `F.max("ingested_at")`), get the trailing median of daily counts
+  (`groupBy("event_date").count()` then `F.percentile_approx`), take `.first()` and raise if a check fails.
 </details>
 
 <details>
 <summary>Hint 3 · The tricky part</summary>
 
-- Use `zlib.crc32`, not `hash()`. Python's string hash changes from run to run (hash randomisation), so partitioning
+- Use `zlib.crc32`, not `hash()`. Python's string hash changes from run to run (hash randomization), so partitioning
   wouldn't be reproducible, and Spark executors need the same answer on every machine.
 - Each lazy operation must capture its own function, so build each pending operation as a closure (or lambda) over the
   `fn` that was passed in.
@@ -51,4 +52,5 @@ it.
 | `test_skew_and_salting` | Salt taken from the key instead of the item position; more than two shuffles |
 | `test_skew_ratio_values` | Empty partitions divide by zero |
 | `test_spark_job_static` | `collect`/`toPandas` present; Delta format or table names missing; no `pyspark.sql` import |
-| `test_spark_job_guards_overwrite` | `build` lacks `min_rows`/`max_age_hours`; checks placed after the write, or they log instead of raising |
+| `test_spark_job_guards_overwrite` | `build` lacks `batch_date`/`max_age_hours`/`min_ratio`; no `replaceWhere` on `event_date`; checks placed after the write, or they log instead of raising |
+| `test_completeness_check_catches_the_truncated_extract` | Absolute floor instead of a ratio to the median; `<=` instead of `<` at exactly 50%; empty history accepted |

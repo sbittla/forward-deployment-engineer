@@ -1,6 +1,6 @@
 # ex70 · Time-boxed POC: invoice extraction
 
-**Chapter:** 15 · Field Engineering and Productisation (`exercises/ch15-field-engineering-and-productisation/`) · **Covers:** R21 Rapid prototyping, R08 LLM apps · **Time-box:** 90 minutes, hard stop
+**Chapter:** 15 · Field Engineering and Productization (`exercises/ch15-field-engineering-and-productisation/`) · **Covers:** R21 Rapid prototyping, R08 LLM apps · **Time-box:** 90 minutes, hard stop
 
 ## Learning objectives
 - Run an honest, time-boxed POC: rules first, the LLM only for gaps.
@@ -24,7 +24,7 @@ Fields: `invoice_number`, `invoice_date` (ISO `YYYY-MM-DD`), `total` (float), `v
    - vendor: the first non-empty line, unless it starts with `Invoice`
 2. `extract(text, llm=None) -> Extraction(fields, sources)` — rules first; if any field is missing and `llm` is given,
    ask the LLM for the **missing fields only** as JSON (the user message starts with a line
-   `Fields: <comma-separated missing field names>`, then a blank line, then the invoice text) and merge (LLM values never override rule values; normalise
+   `Fields: <comma-separated missing field names>`, then a blank line, then the invoice text) and merge (LLM values never override rule values; normalize
    dates/totals the same way). `sources[field]` is `"rule"` or `"llm"`.
 3. `evaluate(samples, gold, llm=None) -> dict` — per-field accuracy over samples (4 dp) and `"overall"`, plus
    `"llm_fields"` (count of fields filled by the LLM).
@@ -112,7 +112,7 @@ The compliance evidence map (which test or document proves which control) is in 
   solution, so report it with the repository's Errata issue template.
 - **Cleanup:** none. The tests write only to temporary directories, and `__pycache__` folders are ignored by git.
 - **Production caveats:** Four synthetic invoices and a scripted fake model show feasibility, not accuracy.
-  Production needs the 200-invoice labelled evaluation, an owner, runbooks, monitoring, cost limits and a compliance
+  Production needs the 200-invoice labeled evaluation, an owner, runbooks, monitoring, cost limits and a compliance
   review (Chapter 15's POC-to-production table), plus a check on model-filled values before they reach the payment
   system.
 

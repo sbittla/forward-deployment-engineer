@@ -13,9 +13,13 @@ Finance wants per-tenant LLM spend for chargeback, and your analytics show 30% o
 repeats ("How do I reset my password?"). Add an exact-match response cache and a ledger that prices usage.
 
 ## Your task
-1. `CachedLLM(llm, ttl_s, clock=time.time)` exposing `complete(messages, system=None, tools=None, model=None, **kw)`:
+1. `CachedLLM(llm, ttl_s, clock=time.time)` exposing
+   `complete(messages, system=None, tools=None, model=None, tenant=None, entitlements=None, **kw)`:
    - cache key = SHA-256 of canonical JSON (`sort_keys=True`) of `{model, system, messages, tools}` + extra kwargs
-     (so two tenants whose system prompts carry their own context never share an entry)
+     + the caller's scope: `tenant` and `entitlements` (an iterable of strings, compared as a sorted list, so order
+     doesn't matter). Identical prompts from two tenants, or from users with different entitlements, never share an
+     entry, even when the prompt doesn't mention the tenant. `tenant` and `entitlements` key the cache only; they
+     aren't passed to the wrapped `llm`. In a multi-tenant deployment, pass both on every call.
    - return a cached response if younger than `ttl_s`; only cache responses with `stop_reason == "end_turn"`
      (never cache tool calls); expired entries are refetched
    - `stats()` → `{"hits", "misses", "hit_rate"}` (hit_rate rounded to 3 dp, 0.0 when no calls)
@@ -47,10 +51,10 @@ Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each
   No API key or network access is needed.
 - **Run your work:** from the repository root,
   `pytest exercises/ch09-llm-application-engineering/ex35-llm-cache-costs`.
-- **Expected output:** all 9 tests fail against the starter; when you're done, all 9 pass.
+- **Expected output:** all 10 tests fail against the starter; when you're done, all 10 pass.
 - **Check the reference solution:**
-  `pytest --solutions exercises/ch09-llm-application-engineering/ex35-llm-cache-costs`: all 9 pass.
-- **Tests:** `test_cache_costs.py` (9 tests).
+  `pytest --solutions exercises/ch09-llm-application-engineering/ex35-llm-cache-costs`: all 10 pass.
+- **Tests:** `test_cache_costs.py` (10 tests).
 - **Common failures:** `ModuleNotFoundError: No module named 'fde_kit'` means the command didn't run from the
   repository root. For a failing test, [HINTS.md](HINTS.md) says what it usually means.
 - **Whose failure is it?** If your run fails but the reference run passes, it's your code. If the reference run fails

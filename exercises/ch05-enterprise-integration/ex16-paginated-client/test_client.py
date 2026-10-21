@@ -36,6 +36,17 @@ def test_retry_after(impl):
     assert sleeps == [3, 1]
 
 
+def test_retry_after_http_date(impl):
+    from email.utils import formatdate
+    now = 1_760_000_000
+    sleeps = []
+    api = FakeAPI(impl, [R(impl, 429, Retry_After=formatdate(now + 30, usegmt=True)),
+                         R(impl, 429, Retry_After=formatdate(now - 60, usegmt=True)), R(impl, body={"ok": True})])
+    c = impl.ApiClient("https://x", "t", api, sleep=sleeps.append, clock=lambda: now)
+    assert c.get("/a") == {"ok": True}
+    assert sleeps == [30, 0]
+
+
 def test_429_exhausted(impl):
     api = FakeAPI(impl, [R(impl, 429)] * 4)
     c = impl.ApiClient("https://x", "t", api, sleep=lambda s: None, max_retries=3)

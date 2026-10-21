@@ -1,6 +1,6 @@
 # Capstone 3 · Lakehouse ETL + NL-to-SQL analyst (financial services)
 
-**Covers:** R01 Python · R03 SQL & modelling · R04 Pipelines · R05 Integration · R08 LLM apps · R13 Evals ·
+**Covers:** R01 Python · R03 SQL & modeling · R04 Pipelines · R05 Integration · R08 LLM apps · R13 Evals ·
 R24 Writing · R25 Regulated domain · R31 Data platforms
 **Builds on:** ex19, ex22–ex26, ex32, ex49, ex55
 **Take after:** End of Part III: after ex32, ex49 and ex55, plus ex19 and ex22–ex26 from Part II.
@@ -22,7 +22,7 @@ malicious.
 |---|---|
 | `etl.py` | `load_warehouse()`: bronze rows → silver (typed, FX to USD, latest `updated_at` wins, referential checks) → gold `monthly_spend` view; `LoadReport` with quarantine reasons |
 | `semantic.py` | Metric definitions, the schema prompt, a generated data dictionary |
-| `sqlguard.py` | `guard_sql()`: single statement, SELECT/WITH only, forbidden keywords, table allow-list (CTEs allowed), row-limit enforcement, comment stripping |
+| `sqlguard.py` | `guard_sql()`: single statement, SELECT/WITH only, forbidden keywords, table allow-list (CTEs allowed), quoted or bracketed names refused (`"t"`, `` `t` ``, `[t]`, `'t'` after `FROM`/`JOIN`; quote characters inside string literals are fine), row-limit enforcement, comment stripping |
 | `analyst.py` | NL→SQL with a repair loop (errors are fed back to the model), `CANNOT_ANSWER` handling, refusal after N attempts, narratives computed from the result |
 | `evals.py` | Execution accuracy vs gold result sets (order-aware only when the gold SQL orders), refusal accuracy, unsafe-blocked count |
 
@@ -55,10 +55,10 @@ acceptance criteria and gates. Submit your scorecard as `starter/deliverables/sc
 - **Prerequisites:** Python 3.11 or later and `pip install -r requirements.txt`, run once from the repository root.
   No API key or network access is needed.
 - **Run your work:** from the repository root, `pytest capstones/c3-insights-analyst`.
-- **Expected output:** all 24 tests fail against the starter; when you're done, all 24 pass.
-- **Check the reference solution:** `pytest --solutions capstones/c3-insights-analyst`: all 24 pass.
+- **Expected output:** all 32 tests fail against the starter; when you're done, all 32 pass.
+- **Check the reference solution:** `pytest --solutions capstones/c3-insights-analyst`: all 32 pass.
 - **Tests:** `tests/test_c3_analyst.py`, `tests/test_c3_deliverables.py`, `tests/test_c3_etl_semantic.py`,
-  `tests/test_c3_sqlguard.py` (24 tests).
+  `tests/test_c3_sqlguard.py` (32 tests).
 - **Common failures:** `ModuleNotFoundError: No module named 'fde_kit'` means the command didn't run from the
   repository root. For a failing test, [HINTS.md](HINTS.md) says what it usually means.
 - **Whose failure is it?** If your run fails but the reference run passes, it's your code. If the reference run fails

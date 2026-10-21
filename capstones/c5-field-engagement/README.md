@@ -15,14 +15,14 @@ cases at the top. The Privacy Officer has one rule: **no PHI leaves the clinic n
 six weeks, and several key questions are unanswered when you arrive.
 
 Data in `data/`: your on-site `discovery_notes.md`, four voice-agent call event logs (`calls.json`) full of PHI, and
-nurse-labelled `gold_intakes.json`.
+nurse-labeled `gold_intakes.json`.
 
 ## What you build (`starter/engagement/`)
 | Module | Responsibility |
 |---|---|
 | `discovery.py` | Charter from notes, validation, explicit assumptions for open questions, a 6-milestone plan due on Fridays |
 | `voice.py` | Segments, transcript, latency, barge-ins and duration from voice events |
-| `deid.py` | Tokenise MRNs, emails, dates, phones and patient names; `phi_scan` to detect leftovers |
+| `deid.py` | Tokenize MRNs, emails, dates, phones and patient names; `phi_scan` to detect leftovers |
 | `intake.py` | Structured extraction with schema validation and repair; deterministic red-flag `triage` that only ever escalates |
 | `pipeline.py` | transcript → de-identify → **PHI guard on every outbound prompt** → extract → triage |
 | `evals.py` | Field accuracy and urgent-case recall (emergencies must be caught *as* emergencies) |
@@ -74,6 +74,6 @@ acceptance criteria and gates. Submit your scorecard as `starter/deliverables/sc
 - **Production caveats:** de-identification here is regex patterns plus a known-names list, so a name or identifier
   outside those patterns (a relative's name, an address, a rare format) passes the PHI guard, and the extraction
   model is scripted. A real clinic deployment needs a validated de-identification service measured for recall on
-  labelled calls, the Privacy Officer's written sign-off, clinical review of the red-flag rules, and the contracts
-  and audit controls that the applicable health-privacy rules require.
+  labeled calls, the Privacy Officer's written sign-off, clinical review of the red-flag rules, and the contracts and
+  audit controls that the applicable health-privacy rules require.
 

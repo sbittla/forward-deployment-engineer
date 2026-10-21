@@ -41,8 +41,10 @@ def select_examples(query: str, pool: list[dict], k: int = 3, lam: float = 0.7,
     return [pool[i] for i in sorted(chosen, key=lambda i: (rel[i], -i))]
 
 
-def ensure_label_coverage(selected: list[dict], pool: list[dict], labels: list[str], query: str) -> list[dict]:
-    """Swap in the most relevant example for any label missing from `selected` (replacing the least relevant)."""
+def ensure_label_coverage(selected: list[dict], pool: list[dict], labels: list[str], query: str,
+                          max_tokens: int | None = None) -> list[dict]:
+    """Swap in the most relevant example for any label missing from `selected`, replacing an example whose label is
+    over-represented. Never adds an example (k still holds) and never exceeds `max_tokens`."""
     q = hash_embed(query)
     out = list(selected)
     for label in labels:
@@ -55,13 +57,14 @@ def ensure_label_coverage(selected: list[dict], pool: list[dict], labels: list[s
         counts = {}
         for ex in out:
             counts[ex["output"]] = counts.get(ex["output"], 0) + 1
-        # replace the least relevant example whose label is over-represented
+        used = sum(approx_tokens(ex) for ex in out)
+        # replace the least relevant example whose label is over-represented and whose swap fits the budget;
+        # if none qualifies, the label stays uncovered: coverage never grows the list past k or the budget
         for i, ex in enumerate(out):
-            if counts[ex["output"]] > 1:
+            fits = max_tokens is None or used - approx_tokens(ex) + approx_tokens(best) <= max_tokens
+            if counts[ex["output"]] > 1 and fits:
                 out[i] = best
                 break
-        else:
-            out.insert(0, best)
     return sorted(out, key=lambda ex: cosine(q, hash_embed(ex["input"])))
 
 

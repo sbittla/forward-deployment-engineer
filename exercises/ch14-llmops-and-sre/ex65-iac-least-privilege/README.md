@@ -48,7 +48,7 @@ Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each
   solution, so report it with the repository's Errata issue template.
 - **Cleanup:** none. The tests write only to temporary directories, and `__pycache__` folders are ignored by git.
 - **Production caveats:** The linters check a few IAM and S3 rules on JSON; they don't evaluate conditions,
-  permission boundaries, organisation policies or resource policies. In production, generate the policy from observed
+  permission boundaries, organization policies or resource policies. In production, generate the policy from observed
   calls, confirm it with the cloud's access-analysis tools, and run the customer's policy-as-code checks in CI.
 
 ## Prompt kit

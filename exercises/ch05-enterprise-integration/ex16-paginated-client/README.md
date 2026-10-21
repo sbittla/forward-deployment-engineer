@@ -18,7 +18,9 @@ build the RAG corpus. The vendor's docs say: respect `Retry-After` on 429 and st
 
 1. `get(path, params=None)`:
    - sends `Authorization: Bearer <token>` and `Accept: application/json`
-   - on 429: sleep `Retry-After` seconds (default 1) and retry, up to `max_retries` retries, then raise `ApiError`
+   - on 429: sleep `Retry-After` seconds (default 1) and retry, up to `max_retries` retries, then raise `ApiError`.
+     `Retry-After` may also be an HTTP date (`Wed, 21 Oct 2026 07:28:00 GMT`): sleep until then by `clock()`, or 0
+     if it has passed
    - other status ≥ 400: raise `ApiError(status, body)` immediately
    - after any response with `X-RateLimit-Remaining == "0"`, sleep until `X-RateLimit-Reset` (if in the future)
      **before the next request**
@@ -37,10 +39,10 @@ Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each
 - **Prerequisites:** Python 3.11 or later and `pip install -r requirements.txt`, run once from the repository root.
   No API key or network access is needed.
 - **Run your work:** from the repository root, `pytest exercises/ch05-enterprise-integration/ex16-paginated-client`.
-- **Expected output:** all 8 tests fail against the starter; when you're done, all 8 pass.
+- **Expected output:** all 9 tests fail against the starter; when you're done, all 9 pass.
 - **Check the reference solution:** `pytest --solutions exercises/ch05-enterprise-integration/ex16-paginated-client`:
-  all 8 pass.
-- **Tests:** `test_client.py` (8 tests).
+  all 9 pass.
+- **Tests:** `test_client.py` (9 tests).
 - **Common failures:** `ModuleNotFoundError: No module named 'fde_kit'` means the command didn't run from the
   repository root. For a failing test, [HINTS.md](HINTS.md) says what it usually means.
 - **Whose failure is it?** If your run fails but the reference run passes, it's your code. If the reference run fails
@@ -48,8 +50,8 @@ Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each
   solution, so report it with the repository's Errata issue template.
 - **Cleanup:** none. The tests write only to temporary directories, and `__pycache__` folders are ignored by git.
 - **Production caveats:** The transport is injected and the API token is a plain string. A production client sets
-  connect and read timeouts, parses `Retry-After` as either seconds or an HTTP date, adds random jitter when several
-  workers share one key, and reads the token from the customer's secret manager.
+  connect and read timeouts, adds random jitter when several workers share one key, and reads the token from the
+  customer's secret manager.
 
 ## Prompt kit
 **Learn (tutor prompt)**

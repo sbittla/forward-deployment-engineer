@@ -20,11 +20,11 @@ adjuster, and roughly 1 in 8 coverage answers is later corrected by a supervisor
 ## Data sources
 - Policy forms HO-3 and PAP-1 (markdown export from the document management system), refreshed nightly.
 - The claims process guide maintained by Claims Operations.
-- Intent examples labelled from 3 months of resolved tickets (PII removed).
+- Intent examples labeled from 3 months of resolved tickets (PII removed).
 
 ## Constraints
 - Policyholder PII must not leave the customer's VPC unredacted. Emails, phone numbers and policy numbers are
-  tokenised before any model call.
+  tokenized before any model call.
 - Per-question model cost must stay under $0.02.
 - Go-live before the Q3 renewal season. The runbook must be owned by the Claims Platform team at handoff.
 
@@ -39,4 +39,4 @@ adjuster, and roughly 1 in 8 coverage answers is later corrected by a supervisor
 | Dana Ruiz | VP Claims (executive sponsor) | Handle time and quality |
 | Lee Park | Claims Ops Manager | Day-to-day adoption |
 | Priya Shah | IT Security Lead | PII handling and network egress |
-| Ana Gomez | Compliance | Citations and abstention behaviour |
+| Ana Gomez | Compliance | Citations and abstention behavior |

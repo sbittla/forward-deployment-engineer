@@ -15,7 +15,7 @@ Build from the bottom up. The safety of this system lives in the lower layers, n
 | 3 | `audit.py` | ex56 hash chain |
 | 4 | `tools.py` | ex43 validation, ex10 idempotency ideas |
 | 5 | `mcp.py` | ex44 server, ex45 client |
-| 6 | `agent.py` | ex42 loop, ex54 injection defences |
+| 6 | `agent.py` | ex42 loop, ex54 injection defenses |
 | 7 | `evals.py` | ex49 harness |
 
 `test_c2_store_policy.py` and `test_c2_mcp_tools.py` don't involve a model at all. Get them green first.
@@ -42,7 +42,7 @@ Build from the bottom up. The safety of this system lives in the lower layers, n
 <details>
 <summary>Hint 3 · The tricky part</summary>
 
-- Neutralise any `</untrusted>` inside the customer text, so it can't close your wrapper early (the test checks there
+- Neutralize any `</untrusted>` inside the customer text, so it can't close your wrapper early (the test checks there
   is exactly one).
 - Approval over the limit: with no approver available, the status is `pending_approval` and nothing is refunded. When
   a supervisor resolves an approval, the refund happens then, and is audited.
@@ -67,7 +67,7 @@ Build from the bottom up. The safety of this system lives in the lower layers, n
 | `test_protocol_errors` | Missing `_meta` accepted; `-32022` data incomplete; reply sent for a notification |
 | `test_legacy_handshake_still_served` | Legacy replies include `resultType`, or `initialize` not supported |
 | `test_injection_blocked_before_model` | Injection check runs after the model call, or isn't audited |
-| `test_message_is_wrapped_and_tools_passed` | Wrapper not neutralised; system prompt doesn't tell the model the content is untrusted |
+| `test_message_is_wrapped_and_tools_passed` | Wrapper not neutralized; system prompt doesn't tell the model the content is untrusted |
 | `test_pending_when_no_approver` | Over-limit refund executed, or the status not set to `pending_approval` |
 | `test_runaway_loop_escalates` | No step limit, or the actions not recorded |
 | `test_scenario_suite` | Read `m["failures"]`: each names the scenario and the expected outcome |

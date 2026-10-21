@@ -1,7 +1,10 @@
 import hmac
 import json
+import logging
 import re
+import threading
 import time
+from collections import OrderedDict
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
 SYSTEM_PROMPT = (
@@ -75,22 +78,33 @@ UNAVAILABLE = "The assistant is unavailable."
 MAX_BODY_BYTES = 64 * 1024
 
 
-def sse(event: str, data: dict) -> bytes:
-    return f"event: {event}\ndata: {json.dumps(data)}\n\n".encode()
+MAX_REPLAYS = 256
+log = logging.getLogger("ex30.bff")
 
 
-def relay(chunks, wfile) -> str:
-    """Relay text deltas to the browser as SSE; close the upstream if the browser leaves."""
+def sse(event: str, data: dict, event_id: int | None = None) -> bytes:
+    head = f"id: {event_id}\n" if event_id is not None else ""
+    return f"{head}event: {event}\ndata: {json.dumps(data)}\n\n".encode()
+
+
+def relay(chunks, wfile, first_id: int = 1) -> str:
+    """Relay text deltas to the browser as SSE with numbered ids; close the upstream if the browser leaves."""
+    next_id = first_id
     try:
         for text in chunks:  # None means "still working": send a comment so proxies keep the connection open
-            wfile.write(b": keep-alive\n\n" if text is None else sse("delta", {"text": text}))
+            if text is None:
+                wfile.write(b": keep-alive\n\n")
+            else:
+                wfile.write(sse("delta", {"text": text}, next_id))
+                next_id += 1
             wfile.flush()
-        wfile.write(sse("done", {}))
+        wfile.write(sse("done", {}, next_id))
         wfile.flush()
         return "done"
     except (BrokenPipeError, ConnectionResetError):
         return "cancelled"
     except Exception:
+        log.exception("upstream stream failed")  # details stay in the server log, never in the browser
         try:
             wfile.write(sse("error", {"message": UNAVAILABLE}))
             wfile.flush()
@@ -110,6 +124,8 @@ def _valid_history(h):
 
 def make_app(llm, demo_mode: bool = True, api_token: str | None = None) -> ThreadingHTTPServer:
     page = PAGE.replace("__BANNER__", BANNER if demo_mode else "").encode()
+    replays: OrderedDict = OrderedDict()  # (Authorization, request_id) -> answer pieces, for Last-Event-ID resume
+    lock = threading.Lock()
 
     class Handler(BaseHTTPRequestHandler):
         def log_message(self, *args):
@@ -151,27 +167,46 @@ def make_app(llm, demo_mode: bool = True, api_token: str | None = None) -> Threa
                 return self._json(400, {"error": "body must be JSON"})
             q = body.get("q") if isinstance(body, dict) else None
             history = body.get("history", []) if isinstance(body, dict) else None
+            request_id = body.get("request_id") if isinstance(body, dict) else None
             if not isinstance(q, str) or not q.strip() or not _valid_history(history):
                 return self._json(400, {"error": "need non-empty q and a valid history list"})
+            if request_id is not None and not (isinstance(request_id, str) and 0 < len(request_id) <= 128):
+                return self._json(400, {"error": "request_id must be a string of 1 to 128 characters"})
             messages = history + [{"role": "user", "content": q}]
             if self.path == "/api/chat/stream":
-                return self._stream(messages)
+                return self._stream(messages, request_id)
             t0 = time.perf_counter()
             resp = llm.complete(messages, system=SYSTEM_PROMPT)
             self._json(200, {"answer": resp.text, "model": resp.model,
                              "latency_ms": int((time.perf_counter() - t0) * 1000)})
 
-        def _stream(self, messages):
+        def _stream(self, messages, request_id):
+            last = self.headers.get("Last-Event-ID", "")
+            if last and not re.fullmatch(r"[0-9]{1,9}", last):
+                return self._json(400, {"error": "bad Last-Event-ID"})
+            key = (self.headers.get("Authorization", ""), request_id)  # a caller can replay only its own answer
+            with lock:
+                kept = replays.get(key) if request_id else None
+            if last and kept is None:  # regenerating would send a different answer after the old one's start
+                return self._json(409, {"error": "cannot resume this stream"})
+            skip = int(last or 0)
+
             def chunks():
                 text = llm.complete(messages, system=SYSTEM_PROMPT).text
-                yield from re.findall(r"\S+\s*|\s+", text)
+                pieces = re.findall(r"\S+\s*|\s+", text)
+                if request_id:
+                    with lock:
+                        replays[key] = pieces
+                        while len(replays) > MAX_REPLAYS:
+                            replays.popitem(last=False)
+                yield from pieces
 
             self.send_response(200)
             self.send_header("Content-Type", "text/event-stream")
             self.send_header("Cache-Control", "no-cache")
             self.send_header("X-Accel-Buffering", "no")
             self.end_headers()
-            relay(chunks(), self.wfile)
+            relay(iter(kept[skip:]) if kept is not None else chunks(), self.wfile, first_id=skip + 1)
             self.close_connection = True
 
     return ThreadingHTTPServer(("127.0.0.1", 0), Handler)

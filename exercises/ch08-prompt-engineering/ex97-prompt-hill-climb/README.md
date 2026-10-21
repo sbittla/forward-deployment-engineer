@@ -56,7 +56,7 @@ These make a run reproducible and reviewable (Section 8.4). Hashes are the first
 
 ## Field notes
 Greedy search over hand-written edits is crude, but it makes the team write their hypotheses down as edits. That
-habit matters more than the optimiser. With a live model, run each prompt several times: sampling noise can be larger
+habit matters more than the optimizer. With a live model, run each prompt several times: sampling noise can be larger
 than the edit's effect.
 
 Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.

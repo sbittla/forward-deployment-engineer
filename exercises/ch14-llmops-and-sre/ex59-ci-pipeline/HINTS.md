@@ -6,7 +6,7 @@ Open a hint only after you've been stuck for about ten minutes. Each one gives a
 <summary>Hint 1 · Where to start</summary>
 
 Read the triggers with `doc.get("on", doc.get(True))`. PyYAML follows YAML 1.1, which turns the bare key `on` into the
-boolean `True`. Then normalise the triggers into a set of event names, whether the YAML gave you a string, a list or a
+boolean `True`. Then normalize the triggers into a set of event names, whether the YAML gave you a string, a list or a
 dict.
 </details>
 

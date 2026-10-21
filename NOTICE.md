@@ -17,7 +17,7 @@ retrieval time.
 
 ## Fictional data
 Customer names (Northwind Insurance, Acme, Globex and others), people, tickets, invoices, medical records and all
-other data in the exercises are fictional. Any resemblance to real people or organisations is coincidental.
+other data in the exercises are fictional. Any resemblance to real people or organizations is coincidental.
 Identifiers that look like secrets (API keys, tokens, card numbers) are synthetic test values.
 
 ## Licensing

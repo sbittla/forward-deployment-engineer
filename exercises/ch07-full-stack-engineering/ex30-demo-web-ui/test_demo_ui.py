@@ -86,13 +86,17 @@ def test_404(app):
 def test_sse_format(impl):
     assert impl.sse("delta", {"text": "Hi"}) == b'event: delta\ndata: {"text": "Hi"}\n\n'
     assert impl.sse("done", {}) == b"event: done\ndata: {}\n\n"
+    assert impl.sse("delta", {"text": "Hi"}, 7) == b'id: 7\nevent: delta\ndata: {"text": "Hi"}\n\n'
 
 
 def test_relay_deltas_and_keepalive(impl):
     out = io.BytesIO()
     assert impl.relay(iter(["Hel", None, "lo"]), out) == "done"
-    assert out.getvalue() == (impl.sse("delta", {"text": "Hel"}) + b": keep-alive\n\n"
-                              + impl.sse("delta", {"text": "lo"}) + impl.sse("done", {}))
+    assert out.getvalue() == (impl.sse("delta", {"text": "Hel"}, 1) + b": keep-alive\n\n"
+                              + impl.sse("delta", {"text": "lo"}, 2) + impl.sse("done", {}, 3))
+    out = io.BytesIO()
+    assert impl.relay(iter(["lo"]), out, first_id=5) == "done"   # a resumed stream continues the numbering
+    assert out.getvalue() == impl.sse("delta", {"text": "lo"}, 5) + impl.sse("done", {}, 6)
 
 
 class GoneAfter(io.BytesIO):
@@ -123,10 +127,10 @@ def test_relay_cancels_upstream_on_disconnect(impl):
     out = GoneAfter(2)
     assert impl.relay(upstream(), out) == "cancelled"
     assert state["closed"] and state["pulled"] == 3
-    assert out.getvalue() == impl.sse("delta", {"text": "token0 "}) + impl.sse("delta", {"text": "token1 "})
+    assert out.getvalue() == impl.sse("delta", {"text": "token0 "}, 1) + impl.sse("delta", {"text": "token1 "}, 2)
 
 
-def test_relay_upstream_error(impl):
+def test_relay_upstream_error(impl, caplog):
     def upstream():
         yield "Partial "
         raise TimeoutError("upstream read timed out after 30s; key sk-secret")
@@ -136,6 +140,15 @@ def test_relay_upstream_error(impl):
     body = out.getvalue()
     assert body.endswith(impl.sse("error", {"message": impl.UNAVAILABLE}))
     assert b"sk-secret" not in body and b"event: done" not in body
+    assert "upstream read timed out" in caplog.text           # the details go to the server log instead
+
+    class Gone(io.BytesIO):                                      # the error write itself hits a closed socket
+        def write(self, b):
+            if b.startswith(b"event: error"):
+                raise BrokenPipeError
+            return super().write(b)
+
+    assert impl.relay(upstream(), Gone()) == "cancelled"
 
 
 def test_stream_endpoint(app, impl):
@@ -148,9 +161,10 @@ def test_stream_endpoint(app, impl):
         assert r.headers.get("Cache-Control") == "no-cache" and r.headers.get("X-Accel-Buffering") == "no"
         raw = r.read().decode()
     events = [e for e in raw.split("\n\n") if e.strip()]
-    deltas = [json.loads(e.split("data: ", 1)[1])["text"] for e in events if e.startswith("event: delta")]
+    deltas = [json.loads(e.split("data: ", 1)[1])["text"] for e in events if "\nevent: delta\n" in e]
     assert len(deltas) > 1 and "".join(deltas) == "You asked: deductible?"
-    assert events[-1] == "event: done\ndata: {}"
+    assert [e.split("\n", 1)[0] for e in events] == [f"id: {i}" for i in range(1, len(deltas) + 2)]
+    assert events[-1] == f"id: {len(deltas) + 1}\nevent: done\ndata: {{}}"
     assert llm.calls[-1]["system"] == impl.SYSTEM_PROMPT
     assert post(url + "/api/chat/stream", {"q": ""})[0] == 400
 
@@ -183,6 +197,28 @@ def test_stream_requires_token_when_configured(impl):
     finally:
         srv.shutdown()
         srv.server_close()
+
+
+def test_stream_resumes_after_last_event_id(app, impl):
+    # Resume: the server keeps each request_id's answer and replays the events after Last-Event-ID, without
+    # calling the model again. It refuses (409) to resume what it doesn't hold, rather than regenerate.
+    url, llm = app
+    stream = url + "/api/chat/stream"
+    body = json.dumps({"q": "is flood covered?", "request_id": "r-1"}).encode()
+    status, first = _post_raw(stream, body, {})
+    blocks = [b + b"\n\n" for b in first.split(b"\n\n")[:-1]]
+    assert status == 200 and len(blocks) > 3
+    calls = len(llm.calls)
+    status, resumed = _post_raw(stream, body, {"Last-Event-ID": "2"})
+    assert status == 200 and resumed == b"".join(blocks[2:])    # same ids, no duplicates, nothing missing
+    assert len(llm.calls) == calls                               # replayed, not regenerated
+    unknown = json.dumps({"q": "x", "request_id": "r-unknown"}).encode()
+    assert _post_raw(stream, unknown, {"Last-Event-ID": "2"})[0] == 409
+    assert _post_raw(stream, json.dumps({"q": "x"}).encode(), {"Last-Event-ID": "2"})[0] == 409
+    assert _post_raw(stream, body, {"Last-Event-ID": "2", "Authorization": "Bearer someone-else"})[0] == 409
+    assert _post_raw(stream, body, {"Last-Event-ID": "two"})[0] == 400
+    assert _post_raw(stream, json.dumps({"q": "x", "request_id": 7}).encode(), {})[0] == 400
+    assert len(llm.calls) == calls
 
 
 def test_oversized_body_rejected(app, impl):

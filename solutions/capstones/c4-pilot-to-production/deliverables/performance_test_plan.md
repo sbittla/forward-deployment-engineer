@@ -1,12 +1,12 @@
 # Performance test plan: shipment-exception summarizer
 
 Agreed with the Logistics Platform SRE team and the operations sponsor before go-live. Re-run it whenever the model,
-the prompt, the gateway or the load changes. Every number is labelled measured, assumed, estimated or projected.
+the prompt, the gateway or the load changes. Every number is labeled measured, assumed, estimated or projected.
 
 ## Workload model
 | Journey | Share | Input | Output | Delivery |
 |---|---|---|---|---|
-| Summarise one shipment-exception report | 100% | Up to 20,000 characters (the configured limit) | Up to 1,024 tokens, 5 bullets | Full JSON response, not streamed |
+| Summarize one shipment-exception report | 100% | Up to 20,000 characters (the configured limit) | Up to 1,024 tokens, 5 bullets | Full JSON response, not streamed |
 
 - **Arrivals:** an open process; requests arrive whether or not earlier ones have finished. Peak of 20 requests a
   second, three times the pilot's busiest hour (assumed: nobody could give us a forecast).

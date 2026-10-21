@@ -60,12 +60,17 @@ def estimate(tasks: list[dict]) -> tuple[float, float]:
     return round(p50, 1), round(p50 + Z90 * sd, 1)
 
 
+def _replan(eng: dict) -> dict:
+    """Schedule the remaining work from `as_of_day`: completed tasks finish "now", the rest are scheduled after."""
+    tasks, prog = eng["tasks"], eng.get("progress", {})
+    remaining = {t["id"]: expected(t) * (1 - prog.get(t["id"], 0.0)) for t in tasks}
+    return schedule(tasks, remaining, offset=eng["as_of_day"])
+
+
 def forecast(eng: dict) -> dict:
     """Re-plan the remaining work from `as_of_day` using reported progress."""
-    tasks, prog, now = eng["tasks"], eng.get("progress", {}), eng["as_of_day"]
-    remaining = {t["id"]: expected(t) * (1 - prog.get(t["id"], 0.0)) for t in tasks}
-    # completed tasks finish "now"; everything else is scheduled from now on
-    s = schedule(tasks, remaining, offset=now)
+    tasks = eng["tasks"]
+    s = _replan(eng)
     baseline_finish = max(v["ef"] for v in schedule(tasks).values())
     finish = max(v["ef"] for v in s.values())
     return {"baseline_finish_day": round(baseline_finish, 1), "forecast_finish_day": round(finish, 1),
@@ -96,3 +101,14 @@ def workstream_rag(eng: dict) -> dict:
             rag = "amber"
         out[ws] = {"variance": round(v, 3), "rag": rag}
     return out
+
+
+def next_milestone(eng: dict) -> dict | None:
+    """The first unfinished milestone by baseline finish, with its baseline and forecast day and acceptance."""
+    base, fc, prog = schedule(eng["tasks"]), _replan(eng), eng.get("progress", {})
+    open_ms = [t for t in eng["tasks"] if t.get("milestone") and prog.get(t["id"], 0.0) < 1.0]
+    if not open_ms:
+        return None
+    t = min(open_ms, key=lambda t: (base[t["id"]]["ef"], t["id"]))
+    return {"milestone": t["milestone"], "task": t["id"], "acceptance": t.get("acceptance", ""),
+            "baseline_day": round(base[t["id"]]["ef"], 1), "forecast_day": round(fc[t["id"]]["ef"], 1)}

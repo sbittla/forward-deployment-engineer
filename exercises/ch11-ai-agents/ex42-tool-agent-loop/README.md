@@ -29,7 +29,7 @@ framework, write the loop yourself once — every framework (and every productio
   `"<ExceptionType>: <message>"`. Unknown tool → `is_error: True`, `"unknown tool <name>"`.
 - `steps` counts model calls. If the model still wants tools after `max_steps` calls, raise `AgentLoopError`.
 
-### Budgets and loop detection (keyword-only arguments; the defaults keep the behaviour above)
+### Budgets and loop detection (keyword-only arguments; the defaults keep the behavior above)
 `run_agent(..., *, budget=None, usd_per_mtok=(0.0, 0.0), tool_caps=None, max_repeats=3, clock=time.monotonic)`
 - `RunBudget(max_steps=8, max_tokens=200_000, max_seconds=120.0, max_usd=2.0)` also tracks `steps`, `tokens` and
   `usd` (all start at 0). `charge(tokens, usd, elapsed_s)` adds one step, the tokens and the dollars, then checks
@@ -43,7 +43,7 @@ framework, write the loop yourself once — every framework (and every productio
   argument order doesn't matter. Count fingerprints over the whole run, checking every call of a turn before running
   any of them; when one reaches `max_repeats`, raise `RepeatedCallError` without executing that turn.
 - `tool_caps`: `{tool_name: max_calls_per_run}`. A call beyond its cap is not executed; it gets `is_error: True` and
-  `"cap reached: <name> allows <n> call(s) per run"`. Calls refused by the cap don't count towards it.
+  `"cap reached: <name> allows <n> call(s) per run"`. Calls refused by the cap don't count toward it.
 - A tool that raises `TimeoutError` may have succeeded, so it is not reported as a failure: `is_error: False` and
   `"outcome unknown: <name> timed out; check the current state before retrying"`.
 - `BudgetExceeded` and `RepeatedCallError` subclass `AgentLoopError`.
@@ -66,8 +66,8 @@ Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each
 - **Cleanup:** none. The tests write only to temporary directories, and `__pycache__` folders are ignored by git.
 - **Production caveats:** The loop keeps budgets and call counts in memory for one run, trusts every caller, imposes
   no deadline on a tool (it relies on the tool raising `TimeoutError`) and returns raw exception messages to the
-  model. Production adds per-call deadlines, a total tool-call cap, authorisation at dispatch from the session's
-  identity, sanitised errors and a persisted run record.
+  model. Production adds per-call deadlines, a total tool-call cap, authorization at dispatch from the session's
+  identity, sanitized errors and a persisted run record.
 
 ## Prompt kit
 **Learn (tutor prompt)**

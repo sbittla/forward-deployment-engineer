@@ -18,10 +18,12 @@ corrupts answers about 1 in 50 times. Write the parser properly.
    breaking multi-byte characters across chunks (hint: `TextDecoder` with `{ stream: true }`).
 2. `class SSEParser` with `push(text: string): SSEEvent[]` and `end(): SSEEvent[]`, where
    `SSEEvent = { event: string; data: string }`:
-   - lines end with `\n` or `\r\n`; a blank line dispatches the current event
+   - lines end with `\n`, `\r\n` or a bare `\r` (a `\r\n` split across two chunks is one line ending); a blank
+     line dispatches the current event
    - `event: name` sets the type (default `"message"`); `data: x` appends a data line (multiple data lines are joined
      with `\n`); one leading space after the colon is removed; lines starting with `:` are comments
-   - an event with no data lines is not dispatched; `end()` flushes a final event if the stream lacks a trailing blank line
+   - an event with no data lines is not dispatched; `end()` returns `[]` and resets the parser: as the WHATWG spec
+     says, an event the stream never terminated with a blank line is discarded, not dispatched
 3. `accumulateText(events: SSEEvent[]): string` — for Anthropic-style streams: concatenate
    `JSON.parse(data).delta.text` for every `content_block_delta` event whose delta type is `text_delta`; stop at
    `message_stop`; throw `Error(<error.message>)` on an `error` event; ignore everything else (`ping`, etc.).
@@ -65,12 +67,12 @@ Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each
   access is needed.
 - **Run your work:** from the repository root,
   `node --test exercises/ch07-full-stack-engineering/ex28-ts-sse-parser/sse.test.ts`.
-- **Expected output:** all 10 tests fail against the starter; when you're done, all 10 pass.
+- **Expected output:** all 11 tests fail against the starter; when you're done, all 11 pass.
 - **Check the reference solution:**
   `FDE_SOLUTIONS=1 node --test exercises/ch07-full-stack-engineering/ex28-ts-sse-parser/sse.test.ts` (PowerShell:
-  `$env:FDE_SOLUTIONS=1; node --test exercises/ch07-full-stack-engineering/ex28-ts-sse-parser/sse.test.ts`): all 10
+  `$env:FDE_SOLUTIONS=1; node --test exercises/ch07-full-stack-engineering/ex28-ts-sse-parser/sse.test.ts`): all 11
   pass.
-- **Tests:** `sse.test.ts` (10 tests).
+- **Tests:** `sse.test.ts` (11 tests).
 - **Common failures:** `ModuleNotFoundError: No module named 'fde_kit'` means the command didn't run from the
   repository root; a Node.js error about the `.ts` extension means Node is older than 22.18. For a failing test,
   [HINTS.md](HINTS.md) says what it usually means.
@@ -78,10 +80,10 @@ Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each
   too, check the prerequisites (`python --version`, `node --version`); if they're met, it's a defect in the published
   solution, so report it with the repository's Errata issue template.
 - **Cleanup:** none. The tests write only to temporary directories, and `__pycache__` folders are ignored by git.
-- **Production caveats:** The parser ignores the SSE `id:` and `retry:` fields, so it can't resume a dropped stream,
-  and `accumulateText` works on a finished list of events. A production client also needs a timeout for a silent
-  stream, an `AbortController` behind the Stop button, and a retry policy that doesn't send the user's question
-  twice.
+- **Production caveats:** The parser ignores the SSE `retry:` field, resuming works only if the server keeps each
+  request's events and replays those after `Last-Event-ID` (ex30 does), and `accumulateText` works on a finished list
+  of events. A production client also needs a timeout for a silent stream, an `AbortController` behind the Stop
+  button, and a retry policy that doesn't send the user's question twice.
 
 ## Prompt kit
 **Learn (tutor prompt)**

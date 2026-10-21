@@ -1,4 +1,5 @@
 import math
+import re
 
 METRICS = ("recall", "precision", "mrr", "ndcg")
 
@@ -71,3 +72,28 @@ def abstention_report(results: list[dict]) -> dict:
         "unanswerable": len(unanswerable),
         "answered_unanswerable": sum(1 for r in unanswerable if not r["abstained"]),
     }
+
+
+def rag_scorecard(results: list[dict]) -> dict:
+    """One row per case: answerable, abstained, citations and supporting doc ids."""
+    r = abstention_report(results)
+
+    def rate(part: int, whole: int) -> float | None:
+        return round(part / whole, 4) if whole else None
+
+    return {
+        "citation_precision": citation_precision(results),
+        "answered_unanswerable_rate": rate(r["answered_unanswerable"], r["unanswerable"]),
+        "abstained_answerable_rate": rate(r["abstained_answerable"], r["answerable"]),
+    }
+
+
+FOLLOWUP_STARTS = ("what about", "how about", "and ", "what if")
+FOLLOWUP_WORDS = {"it", "that", "this", "they", "them"}
+
+
+def rewrite_followup(question: str, history: list[str]) -> str:
+    q = question.strip().lower()
+    if history and (q.startswith(FOLLOWUP_STARTS) or FOLLOWUP_WORDS & set(re.findall(r"[a-z]+", q))):
+        return f"{history[-1]} {question}"
+    return question

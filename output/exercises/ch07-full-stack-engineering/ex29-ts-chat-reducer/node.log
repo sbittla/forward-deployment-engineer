@@ -1,11 +1,11 @@
 $ node --test exercises/ch07-full-stack-engineering/ex29-ts-chat-reducer/reducer.test.ts
-✔ happy path streaming (3.067437ms)
-✔ no double send while pending, no empty send (0.436731ms)
-✔ error then retry (0.561146ms)
-✔ immutability and unknown ids (0.582011ms)
-✔ boundary: connection lost mid-stream (0.428999ms)
-✔ cancel keeps the partial answer, marks it stopped and ignores late deltas (0.471515ms)
-✔ session expiry stops the spinner and offers sign-in, not retry (0.365228ms)
+✔ happy path streaming (2.156636ms)
+✔ no double send while pending, no empty send (0.28334ms)
+✔ error then retry (0.257723ms)
+✔ immutability and unknown ids (0.343715ms)
+✔ boundary: connection lost mid-stream (0.325071ms)
+✔ cancel keeps the partial answer, marks it stopped and ignores late deltas (0.411994ms)
+✔ session expiry stops the spinner and offers sign-in, not retry (0.39978ms)
 ℹ tests 7
 ℹ suites 0
 ℹ pass 7
@@ -13,4 +13,4 @@ $ node --test exercises/ch07-full-stack-engineering/ex29-ts-chat-reducer/reducer
 ℹ cancelled 0
 ℹ skipped 0
 ℹ todo 0
-ℹ duration_ms 433.557842
+ℹ duration_ms 330.68863

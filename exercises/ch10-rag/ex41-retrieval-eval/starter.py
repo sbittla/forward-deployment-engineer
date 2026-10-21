@@ -31,3 +31,11 @@ def citation_precision(answers: list[dict]) -> float:
 
 def abstention_report(results: list[dict]) -> dict:
     raise NotImplementedError
+
+
+def rag_scorecard(results: list[dict]) -> dict:
+    raise NotImplementedError
+
+
+def rewrite_followup(question: str, history: list[str]) -> str:
+    raise NotImplementedError

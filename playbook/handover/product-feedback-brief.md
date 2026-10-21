@@ -13,5 +13,5 @@
 - ARR represented: <amount>
 - Severity: <n> blocker, <n> major, <n> minor
 - Score: <distinct customers × 10 + ARR / 100,000 + severity weights>
-- Evidence for productisation: configuration that varied, golden-output tests, incidents caused by field copies
+- Evidence for productization: configuration that varied, golden-output tests, incidents caused by field copies
 > "<representative quote>" — <customer>

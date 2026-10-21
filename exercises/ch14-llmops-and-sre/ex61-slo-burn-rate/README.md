@@ -13,7 +13,9 @@ burn-rate alerts (the multi-window approach from the Google SRE workbook), not "
 
 ## Your task
 Requests: `(ts_seconds, status_code, latency_ms)`. A request is **good** if `status < 500` and
-`latency_ms <= latency_threshold_ms`.
+`latency_ms <= latency_threshold_ms`. The SLO models one user journey, the copilot's **streamed answers**, so
+`latency_ms` is the time to first token and the default threshold is 3,000 ms. A non-streamed journey (a full
+structured response, say) gets its own `SLO` with its own threshold on total time.
 
 `SLO(target=0.995, latency_threshold_ms=3000)`:
 - `error_budget` → `1 - target`
@@ -32,6 +34,11 @@ Requests: `(ts_seconds, status_code, latency_ms)`. A request is **good** if `sta
 
 **Thresholds are inclusive:** a burn rate of exactly 14.4 on both windows pages (`>=`, after rounding to 2 dp).
 
+`test_worked_example_alert_times` replays Chapter 14's worked release (Table 14.7) on a simulated clock: 1 request a
+second from 07:00, 2 a second from 08:30, when 15% start returning 503. With the default `SLO`, checked every 20
+seconds, the ticket fires at 08:41:20 and the page at 08:49:00; after a rollback at 09:01:00 the page clears at
+09:03:40. Synthetic traffic, so the times show how the windows behave, not how a real service would.
+
 Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
 
 ## Run and verify
@@ -39,10 +46,10 @@ Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each
 - **Prerequisites:** Python 3.11 or later and `pip install -r requirements.txt`, run once from the repository root.
   No API key or network access is needed.
 - **Run your work:** from the repository root, `pytest exercises/ch14-llmops-and-sre/ex61-slo-burn-rate`.
-- **Expected output:** all 9 tests fail against the starter; when you're done, all 9 pass.
-- **Check the reference solution:** `pytest --solutions exercises/ch14-llmops-and-sre/ex61-slo-burn-rate`: all 9
+- **Expected output:** all 10 tests fail against the starter; when you're done, all 10 pass.
+- **Check the reference solution:** `pytest --solutions exercises/ch14-llmops-and-sre/ex61-slo-burn-rate`: all 10
   pass.
-- **Tests:** `test_slo.py` (9 tests).
+- **Tests:** `test_slo.py` (10 tests).
 - **Common failures:** `ModuleNotFoundError: No module named 'fde_kit'` means the command didn't run from the
   repository root. For a failing test, [HINTS.md](HINTS.md) says what it usually means.
 - **Whose failure is it?** If your run fails but the reference run passes, it's your code. If the reference run fails

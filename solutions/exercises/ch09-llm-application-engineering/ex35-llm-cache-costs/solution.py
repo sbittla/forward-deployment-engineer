@@ -16,8 +16,11 @@ class CachedLLM:
     def _key(**parts) -> str:
         return hashlib.sha256(json.dumps(parts, sort_keys=True, default=str).encode()).hexdigest()
 
-    def complete(self, messages, system=None, tools=None, model=None, **kw):
-        key = self._key(model=model, system=system, messages=messages, tools=tools, kw=kw)
+    def complete(self, messages, system=None, tools=None, model=None, tenant=None, entitlements=None, **kw):
+        # The caller's scope is part of the key even when the prompt doesn't mention it: identical prompts from two
+        # tenants, or from users with different entitlements, must never share an entry. Scope isn't sent upstream.
+        scope = {"tenant": tenant, "entitlements": sorted(entitlements) if entitlements is not None else None}
+        key = self._key(model=model, system=system, messages=messages, tools=tools, kw=kw, scope=scope)
         now = self.clock()
         hit = self._store.get(key)
         if hit and now - hit[0] < self.ttl_s:

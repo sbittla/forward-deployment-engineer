@@ -28,7 +28,7 @@ appends to it, and `end` closes it and emits a `Segment`.
   The agent talks until 12.0 while the caller stops at 11.0, so the gap before 16.0 is 4 seconds, counted once.
 - Round latencies to 3 dp, or `7.7 - 6.5` gives `1.2000000000000002`.
 - An `end` for a speaker with no open segment is ignored.
-- `to_transcript` capitalises the speaker name (`Caller:` and `Agent:`).
+- `to_transcript` capitalizes the speaker name (`Caller:` and `Agent:`).
 </details>
 
 ## When a test fails
@@ -37,7 +37,7 @@ appends to it, and `end` closes it and emits a `Segment`.
 |---|---|
 | `test_segments` | Events not sorted by time first; segments not sorted by start |
 | `test_unclosed_segment` | Open segments discarded instead of closed at the last event time |
-| `test_turns_and_transcript` | Merged text not joined with a space; speaker not capitalised |
+| `test_turns_and_transcript` | Merged text not joined with a space; speaker not capitalized |
 | `test_latency_and_barge_in` | Latency taken against the wrong caller segment, or not rounded |
 | `test_metrics` | Silence gaps measured from the previous segment's end instead of the latest end |
 | `test_metrics_empty` | Percentile crashes on an empty list instead of returning `None` |

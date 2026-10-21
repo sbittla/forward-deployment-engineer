@@ -54,10 +54,11 @@ Write `sse` and `relay` before the streaming endpoint. They only need an iterato
 | `test_chat_api` | History and question sent in the wrong order; system prompt not passed; latency not an `int` |
 | `test_chat_validation` | Non-JSON body or a non-list history raises a 500 instead of returning 400 |
 | `test_404` | Unknown GET paths return the page instead of 404 |
-| `test_sse_format` | Missing the blank line (`\n\n`) that ends an event, or `data` not JSON-encoded |
-| `test_relay_deltas_and_keepalive` | `None` written as a delta instead of a `: keep-alive` comment; no `done` event at the end |
+| `test_sse_format` | Missing the blank line (`\n\n`) that ends an event, or `data` not JSON-encoded; the `id:` line missing or after `event:` |
+| `test_relay_deltas_and_keepalive` | `None` written as a delta instead of a `: keep-alive` comment; no `done` event at the end; ids not counted from `first_id`, or a keep-alive given an id |
 | `test_relay_cancels_upstream_on_disconnect` | Upstream iterator not closed; reading continued after the failed write; exception not caught |
-| `test_relay_upstream_error` | Exception text sent to the browser, or a `done` event written after the error |
+| `test_relay_upstream_error` | Exception text sent to the browser, or a `done` event written after the error; the exception not logged; a failed error write raising instead of returning `"cancelled"` |
 | `test_stream_endpoint` | Missing SSE headers; the whole answer sent as one delta; validation skipped on the stream path |
 | `test_stream_requires_token_when_configured` | Token checked only on one path; the `Bearer ` prefix not required; the model called before the check |
+| `test_stream_resumes_after_last_event_id` | Answers not kept per `(Authorization, request_id)`; the model called again on resume; ids restarting at 1 instead of `n + 1`; a regenerated answer instead of 409 |
 | `test_oversized_body_rejected` | Body read (or parsed) before the size check; a missing `MAX_BODY_BYTES` constant; 400 instead of 413 |

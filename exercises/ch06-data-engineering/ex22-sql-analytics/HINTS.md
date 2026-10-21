@@ -39,7 +39,7 @@ query there, checking it against the expected rows in the test. Each Python func
 |---|---|
 | `test_status` | Tie-break on status missing, or ordering by count ascending |
 | `test_avg_resolution` | Averaging days instead of hours; alphabetical priority order |
-| `test_top_agents` | Inclusive upper bound; ties not broken by name; `LIMIT` not parameterised |
+| `test_top_agents` | Inclusive upper bound; ties not broken by name; `LIMIT` not parameterized |
 | `test_reopen_rate` | Integer division gives 0; ordering by category before pct |
 | `test_customers_without_tickets` | Inner join instead of a left join; unsorted names |
 | `test_weekly_flow` | Weeks with only resolutions missing; wrong `strftime` format (must be `%Y-%W`) |

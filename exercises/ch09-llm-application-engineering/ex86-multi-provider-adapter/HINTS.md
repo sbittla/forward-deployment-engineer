@@ -19,7 +19,7 @@ doesn't group. With that helper, each builder is a short loop.
   when there's no text. Each tool result is its own `role: tool` message.
 - **Gemini:** roles are `user` and `model`. Tool results need the *function name*, not the call id, so build an
   id → name map from the earlier tool calls first.
-- **Parsers:** normalise each provider's stop reason to `end`, `tool_use` or `max_tokens`, and its tool calls to
+- **Parsers:** normalize each provider's stop reason to `end`, `tool_use` or `max_tokens`, and its tool calls to
   `{id, name, arguments}`.
 </details>
 

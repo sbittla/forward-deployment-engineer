@@ -1,6 +1,6 @@
-# ex73 · Generalise three customer variants into a config-driven connector
+# ex73 · Generalize three customer variants into a config-driven connector
 
-**Chapter:** 15 · Field Engineering and Productisation (`exercises/ch15-field-engineering-and-productisation/`) · **Covers:** R23 Productisation, R05 Integration, R28 Architecture
+**Chapter:** 15 · Field Engineering and Productization (`exercises/ch15-field-engineering-and-productisation/`) · **Covers:** R23 Productization, R05 Integration, R28 Architecture
 
 ## Learning objectives
 - Replace copy-pasted adapters with one config-driven connector engine.

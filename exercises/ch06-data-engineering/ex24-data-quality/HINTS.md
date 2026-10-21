@@ -28,7 +28,7 @@ has a count above 1.
 - `in_range` and `matches` skip `None` (that's `not_null`'s job), but `accepted_values` does not.
 - `sample_rows` is capped at 5, but `failed_count` is the full count.
 - `Report.ok` ignores failed checks whose severity is `warn`.
-- `pseudonymise` normalises first (`strip().lower()`), then `hmac.new(key, ..., hashlib.sha256)`. Encode the value,
+- `pseudonymise` normalizes first (`strip().lower()`), then `hmac.new(key, ..., hashlib.sha256)`. Encode the value,
   not the key: `key` is already bytes.
 - `checks_from_contract` builds every check with the factories you already have, then sets each one's severity from
   `checks_blocking` by name. Only the names the factories produce will match.
@@ -42,7 +42,7 @@ has a count above 1.
 | `test_warn_only_does_not_block` | `ok` counts warn-severity failures |
 | `test_dataset_checks` | `fresh` compares strings instead of parsed datetimes, or returns row indices |
 | `test_sample_cap` | `failed_count` uses the capped list's length |
-| `test_pseudonymise_is_keyed_and_stable` | Plain `sha256` without the key; no normalisation; full 64-char digest returned |
+| `test_pseudonymise_is_keyed_and_stable` | Plain `sha256` without the key; no normalization; full 64-char digest returned |
 | `test_checks_from_contract` | Checks built in a different order; severity left at `error` for unlisted checks |
 | `test_contract_rejects_unknown_blocking_check` | Unknown names silently ignored instead of raising `ValueError` |
 | `test_markdown` | Header or row spacing differs from `\| name \| severity \| PASS/FAIL \| n \|` |

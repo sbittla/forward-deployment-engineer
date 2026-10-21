@@ -32,7 +32,7 @@ fixed golden set, broken down by category, re-run on every change. You'll build 
 
 ### Evaluation as a decision
 - `wilson_interval(successes, n, z=1.96) -> (low, high)` — the Wilson score interval for a pass rate, as floats
-  (unrounded) clamped to `[0, 1]`. With `p = successes / n`: centre `(p + z²/2n) / (1 + z²/n)`, half-width
+  (unrounded) clamped to `[0, 1]`. With `p = successes / n`: center `(p + z²/2n) / (1 + z²/n)`, half-width
   `z·√(p(1−p)/n + z²/4n²) / (1 + z²/n)`. Raise `ValueError` unless `n > 0` and `0 <= successes <= n`.
 - `EvalReport.by_slice(z=1.96)` → `{tag: {"n", "passed", "pass_rate", "low", "high"}}` over the same tag groups as
   `by_tag`, sorted keys; `pass_rate`, `low` and `high` rounded to 4 dp. A slice of 40 can't tell 85% from 95%; the
@@ -51,9 +51,9 @@ fixed golden set, broken down by category, re-run on every change. You'll build 
   `min(1, 2 · Σ_{i ≤ min(fixed, broken)} C(n, i) / 2ⁿ)` with `n = fixed + broken`, unrounded; `1.0` when `n == 0`;
   `ValueError` for a negative count. The worked decision's 24 fixed and 14 broken give p ≈ 0.14.
 - `find_leakage(cases, examples)` — ids (in case order) of cases whose input appears in any few-shot or training
-  example after normalising both: lower-case, replace every run of characters other than `a-z` and `0-9` with one
-  space, collapse and strip spaces. The normalised input must appear as whole words (`"extract"` doesn't leak into
-  `"extraction rules"`). An input that normalises to `""` never leaks.
+  example after normalizing both: lower-case, replace every run of characters other than `a-z` and `0-9` with one
+  space, collapse and strip spaces. The normalized input must appear as whole words (`"extract"` doesn't leak into
+  `"extraction rules"`). An input that normalizes to `""` never leaks.
 
 Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
 

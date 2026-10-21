@@ -14,15 +14,17 @@ signatures verified with a shared secret, constant-time comparison, stale timest
 and duplicate deliveries acknowledged without double-processing.
 
 ## Your task
-Signature header: `X-Signature: t=<unix_ts>,v1=<hex>` where `hex = HMAC_SHA256(secret, f"{t}.{body}")` and `body`
-is the raw request body string.
+Signature header: `X-Signature: t=<unix_ts>,v1=<hex>` where `hex = HMAC_SHA256(secret, f"{t}.".encode() + body)`
+and `body` is the raw request body as `bytes`. `sign` and `handle` also accept a `str` body, which they UTF-8 encode
+first, so both forms give the same signature.
 
 1. `sign(body, secret, t) -> str` — returns the header value (useful for tests and for the customer's devs).
 2. `WebhookReceiver(secret, clock=time.time, tolerance=300, dedupe_ttl=3600)` with
    `handle(headers, body) -> (status, message)`. `secret` is one string, or a list of active secrets during rotation
    (`[new, old]`): a signature made with any of them is valid, and an empty list accepts nothing.
    - missing/malformed header → `(401, ...)`; a signature that matches no active secret →
-     `(401, "bad signature")` (compare with `hmac.compare_digest`)
+     `(401, "bad signature")` (compare with `hmac.compare_digest` on bytes, so a non-ASCII `v1` value is a 401, not a
+     `TypeError`)
    - `|now - t| > tolerance`, in the past or the future → `(400, "stale")`
    - body not JSON or missing `id` → `(400, ...)`
    - event `id` already seen within `dedupe_ttl` → `(200, "duplicate")` and do **not** process again
@@ -56,10 +58,10 @@ Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each
 - **Prerequisites:** Python 3.11 or later and `pip install -r requirements.txt`, run once from the repository root.
   No API key or network access is needed.
 - **Run your work:** from the repository root, `pytest exercises/ch05-enterprise-integration/ex17-webhook-hmac`.
-- **Expected output:** all 15 tests fail against the starter; when you're done, all 15 pass.
+- **Expected output:** all 17 tests fail against the starter; when you're done, all 17 pass.
 - **Check the reference solution:** `pytest --solutions exercises/ch05-enterprise-integration/ex17-webhook-hmac`: all
-  15 pass.
-- **Tests:** `test_webhook.py` (15 tests).
+  17 pass.
+- **Tests:** `test_webhook.py` (17 tests).
 - **Common failures:** `ModuleNotFoundError: No module named 'fde_kit'` means the command didn't run from the
   repository root. For a failing test, [HINTS.md](HINTS.md) says what it usually means.
 - **Whose failure is it?** If your run fails but the reference run passes, it's your code. If the reference run fails

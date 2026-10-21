@@ -28,7 +28,7 @@ test checks identity with `assert.equal`.
 - Take the reply's id only once the reply has arrived. The failed first attempt must not use up `m2`, because the
   test expects the eventual answer to be `m2`.
 - The store the test injects updates synchronously, but the `state` you captured is from the render, so `send()` must
-  remember the trimmed text **before** dispatching, not read it again afterwards.
+  remember the trimmed text **before** dispatching, not read it again afterward.
 - `onSubmit(e)` must call `e.preventDefault()` before `onSend()`. Without it, a real browser reloads the page.
 - The alert (with its Retry button) only renders when `state.error` is set. Pass `null` otherwise; the test's `h`
   filters it out.

@@ -1,6 +1,6 @@
 # ex75 · Model risk documentation for a regulated customer
 
-**Chapter:** 15 · Field Engineering and Productisation (`exercises/ch15-field-engineering-and-productisation/`) · **Covers:** R25 Regulated industries, R24 Technical writing, R14 Responsible AI
+**Chapter:** 15 · Field Engineering and Productization (`exercises/ch15-field-engineering-and-productisation/`) · **Covers:** R25 Regulated industries, R24 Technical writing, R14 Responsible AI
 
 ## Learning objectives
 - Assign a model risk tier from deployment characteristics.

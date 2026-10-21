@@ -5,6 +5,51 @@ change to a README spec or test contract bumps the major version, new exercises 
 and errata fixes are patch releases. Exercise ids never change within an edition of the book; directory names change
 only in a major release.
 
+## [1.1.1] - 2026-10-21
+Errata release, verified against *The Forward Deployed Engineer*, First Edition, version 1.1.1. Fixes every defect a
+chapter-by-chapter technical review found, and adds the reviewer's recommendations on token validation, research
+reproducibility and release currency. 1,002 tests (973 Python, 29 TypeScript) in 106 suites, up from 955. No exercise ids or folders changed.
+
+### Fixed (security)
+- **ex54 ToolGate egress bypass.** Destinations were matched only as lower-case `http(s)://` URLs, so
+  `HTTPS://attacker.net`, `//attacker.net` and a bare `attacker.net/collect` passed. The gate now finds URLs in any
+  case and scheme, scheme-relative URLs, e-mail addresses, IP literals and bare host names, and denies by default
+  (`test_boundary_egress_bypasses_blocked`); the remaining limit, obfuscated hosts, is pinned and documented.
+- **C3 SQL guard.** Quoted, bracketed and backticked identifiers (`"salaries"`, `[salaries]`, `"sqlite_master"`)
+  bypassed the allow-list; the guard now refuses them (eight new cases in `test_blocks`).
+- **ex17 webhooks.** A non-ASCII signature header raised an unhandled exception (a 500 for an unauthenticated
+  sender); the comparison now runs on bytes, and the raw body bytes are signed.
+- **ex35 response cache.** The key now includes the tenant and entitlements explicitly.
+- **ex89 tokens.** ID-token checks add `nonce` and `azp`; ID tokens are rejected where an access token is required,
+  and a new `verify_access_token` requires `typ: at+jwt` and the scope.
+
+### Fixed (behavior; existing tests updated)
+- **ex21** prefers lower-case proxy variables, as `requests` and curl do.
+- **ex28** follows the SSE standard: a bare CR ends a line, and an unterminated event is discarded at end of stream.
+- **ex30** numbers its events and resumes a stream after `Last-Event-ID` from a per-request replay buffer.
+- **ex37** chunk keys include the chunk's ordinal; `plan_reindex` returns updates for moved chunks.
+- **ex77** checks a batch's completeness against the trailing median, not an absolute row floor.
+- **C6** `render_steering` follows the book's six-item steering order, with changes since last week, risks and asks
+  with owners and dates, and the next milestone.
+- **ex13** tests are named in the customer's words.
+
+### Added
+- Tests behind book figures: ex03 `full_case` (Table 2.3 and the stop/go line) and the measured-saving re-run; ex41
+  query rewriting for follow-ups and `rag_scorecard`; ex61's worked alert times; ex10's per-attempt timeout; ex16's
+  HTTP-date `Retry-After`; ex90's check for negated downsides and ex92's log of refused actions.
+- `research/`: the job-posting analysis behind Chapters 1 and 17, with a per-posting index (no posting text), the
+  classification rules and a script that recomputes every published figure; its tests run in `check.py
+  --solutions`. Tightened rules changed the sample to 157 roles at 44 companies and corrected several percentages.
+- `scripts/currency_check.py`, run by `verify_release.py`: every section of `VERSIONS.md` carries a "Last checked"
+  date, and a release fails if one is older than 120 days or the code uses an unlisted model id.
+- Reader validation now records setup success, time to first passing test, hint use, unclear instructions and
+  caveat comprehension, per reader background.
+
+### Changed
+- Exercise and capstone documentation uses American English, like the book. Directory names keep their original
+  spelling (`ch15-field-engineering-and-productisation`): they're fixed identifiers.
+- `interview/questions-and-answers.md` is generated from the book, so it matches Appendix J.
+
 ## [1.1.0] - 2026-10-21
 Verified against *The Forward Deployed Engineer*, First Edition, version 1.1. Closes an external review's
 recommendations: reproducibility, production safety, one signature capstone, measurable claims and usability.
@@ -242,6 +287,7 @@ First public pre-release, for technical reviewers and beta readers.
   specified and tested (ex36, ex52, ex62, ex66, ex71, ex78, ex82, ex93 and others).
 - Undocumented test dependencies in ex53 (`luhn_ok`) and ex91 (`initialState`).
 
+[1.1.1]: https://github.com/sbittla/forward-deployment-engineer/releases/tag/v1.1.1
 [1.1.0]: https://github.com/sbittla/forward-deployment-engineer/releases/tag/v1.1.0
 [1.0.0]: https://github.com/sbittla/forward-deployment-engineer/releases/tag/v1.0.0
 [0.9.0]: https://github.com/sbittla/forward-deployment-engineer/releases/tag/v0.9.0

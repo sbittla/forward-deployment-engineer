@@ -4,7 +4,7 @@
 
 ## Learning objectives
 - Retry only transient failures with capped exponential backoff and full jitter.
-- Honour Retry-After from the server.
+- Honor Retry-After from the server.
 - Make side-effecting calls safe to retry with idempotency keys.
 
 ## Scenario
@@ -13,7 +13,7 @@ got the FDE team's IP blocked. Worse, a retried `POST /refunds` paid a customer 
 
 ## Your task
 1. `retry(max_attempts=4, base_delay=0.5, max_delay=8.0, sleep=time.sleep, rng=random.random, deadline=None,
-   clock=time.monotonic, on_retry=None)` — a decorator.
+   clock=time.monotonic, on_retry=None, attempt_timeout=None)` — a decorator.
    - Retry when the exception is a `ConnectionError`/`TimeoutError`, or has a `status` attribute in
      `{408, 429, 500, 502, 503, 504}`. Anything else is re-raised immediately.
    - Delay before retry *n* (0-based) uses **full jitter**: `rng() * min(max_delay, base_delay * 2**n)`.
@@ -24,20 +24,25 @@ got the FDE team's IP blocked. Worse, a retried `POST /refunds` paid a customer 
      also caps `retry_after`. With `deadline=None` there is no budget.
    - `on_retry` (optional) is called as `on_retry(attempt, delay, exc)` just before each sleep: one event per retry,
      none for the final failure or a non-retryable error. Use it to log each retry as a structured event.
+   - `attempt_timeout` (seconds, optional): when set, each call gets the keyword argument
+     `timeout=min(attempt_timeout, start + deadline - clock())`, or `timeout=attempt_timeout` with no `deadline`.
+     When unset, the wrapped function is called exactly as given.
 2. `IdempotencyStore.run(key, payload, fn)`:
    - First call with a key runs `fn(payload)` and stores the result.
    - Later calls with the same key **and same payload** return the stored result without calling `fn`.
    - Same key with a different payload raises `IdempotencyConflict`.
    - If `fn` raises, nothing is stored (a retry may run it again).
 
-Payload equality: compare a SHA-256 of `json.dumps(payload, sort_keys=True)`.
+Payload equality: compare a SHA-256 of `json.dumps(payload, sort_keys=True, default=str)` (`default=str` lets a
+`Decimal` amount hash).
 
 ### Fault-injection tests
 The `test_fault_*` tests drive the decorator with fake dependencies: one that fails a seeded 30% of calls (retries
 stay bounded per client), a full outage across 100 clients (exactly `clients × max_attempts` calls, with jittered
-waits), a dependency that hangs 3 seconds per call against a 10-second `deadline`, a `Retry-After` longer than the
-deadline (no sleep), and a server that applies a refund but loses the response twice (paid once, because the retry
-reuses the idempotency key against the server's `IdempotencyStore`).
+waits), a dependency that hangs 3 seconds per call against a 10-second `deadline`, an `attempt_timeout` of 4 seconds
+cut to the 0.5 seconds left (`[4, 4, 0.5]`), a `Retry-After` longer than the deadline (no sleep), and a server that
+applies a refund but loses the response twice (paid once, because the retry reuses the idempotency key against the
+server's `IdempotencyStore`).
 
 ## Field notes
 Retries without idempotency turn a reliability fix into a money bug. Always ask the customer's API team which
@@ -50,10 +55,10 @@ Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each
 - **Prerequisites:** Python 3.11 or later and `pip install -r requirements.txt`, run once from the repository root.
   No API key or network access is needed.
 - **Run your work:** from the repository root, `pytest exercises/ch04-production-grade-python/ex10-retry-backoff`.
-- **Expected output:** all 15 tests fail against the starter; when you're done, all 15 pass.
+- **Expected output:** all 16 tests fail against the starter; when you're done, all 16 pass.
 - **Check the reference solution:** `pytest --solutions exercises/ch04-production-grade-python/ex10-retry-backoff`:
-  all 15 pass.
-- **Tests:** `test_retry.py` (15 tests).
+  all 16 pass.
+- **Tests:** `test_retry.py` (16 tests).
 - **Common failures:** `ModuleNotFoundError: No module named 'fde_kit'` means the command didn't run from the
   repository root. For a failing test, [HINTS.md](HINTS.md) says what it usually means.
 - **Whose failure is it?** If your run fails but the reference run passes, it's your code. If the reference run fails

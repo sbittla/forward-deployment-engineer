@@ -30,7 +30,8 @@ Get `test_c3_etl_semantic.py` green first, then `test_c3_sqlguard.py`. Neither n
   `duplicates`.
 - **Gold:** `monthly_spend` is a SQL **view** over the silver table, grouped by account, category and month.
 - **guard_sql:** strip comments, then allow a single statement only, `SELECT`/`WITH` only, no forbidden keywords, and
-  only allowed tables (CTE names count as allowed). Then enforce the row limit.
+  only allowed tables (CTE names count as allowed). Refuse quoted or bracketed names: SQLite runs `FROM "salaries"`,
+  and a pattern for bare names never sees it. Then enforce the row limit.
 - **Analyst:** prompt with the schema and the rules, extract the SQL from the reply, guard it, execute it. On any
   error, feed the error text back as the next user message and retry. `CANNOT_ANSWER` is a refusal, not an error.
 </details>
@@ -59,8 +60,8 @@ Get `test_c3_etl_semantic.py` green first, then `test_c3_sqlguard.py`. Neither n
 | `test_silver_rules` | Earliest update kept instead of the latest; MM/DD/YYYY misread; FX not applied, or original amount not kept |
 | `test_gold_view` | View sums the original currency instead of USD; month key format differs |
 | `test_schema_prompt_and_dictionary` | Prompt lacks column types or metric names; dictionary table format differs |
-| `test_blocks` | System tables, `pragma_` functions, `EXPLAIN` or `ATTACH` not blocked; multi-statement check before stripping comments |
-| `test_allows_and_limits` | Trailing `;` kept; smaller limit overwritten; CTE names treated as unknown tables |
+| `test_blocks` | System tables, `pragma_` functions, `EXPLAIN` or `ATTACH` not blocked; multi-statement check before stripping comments; a quoted, backticked, bracketed or single-quoted table name slipping past the allow-list |
+| `test_allows_and_limits` | Trailing `;` kept; smaller limit overwritten; CTE names treated as unknown tables; quote characters inside a string literal refused |
 | `test_comments_cannot_smuggle` | Comments not stripped, or stripped after the statement check |
 | `test_error_messages_are_actionable` | Error doesn't name the bad table and the allowed ones |
 | `test_repair_loop` | SQL fences not stripped; database error not fed back to the model |

@@ -24,15 +24,25 @@ test("whole stream", () => {
 });
 
 test("arbitrary byte chunking incl. split emoji and CRLF", () => {
-  const bytes = new TextEncoder().encode(STREAM.replaceAll("\n", "\r\n"));
-  for (const size of [1, 2, 3, 5, 7, 64]) {
-    const dec = new m.Utf8Chunker();
-    const p = new m.SSEParser();
-    const evs: any[] = [];
-    for (let i = 0; i < bytes.length; i += size) evs.push(...p.push(dec.push(bytes.slice(i, i + size))));
-    evs.push(...p.push(dec.end()), ...p.end());
-    assert.equal(m.accumulateText(evs), "Hello, wörld 👋", `chunk size ${size}`);
+  for (const eol of ["\r\n", "\r"]) {
+    const bytes = new TextEncoder().encode(STREAM.replaceAll("\n", eol));
+    for (const size of [1, 2, 3, 5, 7, 64]) {
+      const dec = new m.Utf8Chunker();
+      const p = new m.SSEParser();
+      const evs: any[] = [];
+      for (let i = 0; i < bytes.length; i += size) evs.push(...p.push(dec.push(bytes.slice(i, i + size))));
+      evs.push(...p.push(dec.end()), ...p.end());
+      assert.equal(m.accumulateText(evs), "Hello, wörld 👋", `chunk size ${size}, eol ${JSON.stringify(eol)}`);
+    }
   }
+});
+
+test("bare CR ends a line, and a CRLF split across chunks is one line ending", () => {
+  const p = new m.SSEParser();
+  const evs = [...p.push("event: a\rdata: 1\r\r"), ...p.push("data: 2\r"), ...p.push("\n\r\n"),
+    ...p.push("data: 3\n\n")];
+  assert.deepEqual(evs, [{ event: "a", data: "1" }, { event: "message", data: "2" },
+    { event: "message", data: "3" }]);
 });
 
 test("multi-line data, default event, leading space, no-data events", () => {
@@ -41,10 +51,13 @@ test("multi-line data, default event, leading space, no-data events", () => {
   assert.deepEqual(evs, [{ event: "message", data: "line1\nline2" }]);
 });
 
-test("end flushes final event", () => {
-  const p = new m.SSEParser();
+test("end discards an unterminated event", () => {
+  const p = new m.SSEParser();                    // WHATWG: no blank line, no dispatch
   assert.deepEqual(p.push("event: x\ndata: 1"), []);
-  assert.deepEqual(p.end(), [{ event: "x", data: "1" }]);
+  assert.deepEqual(p.end(), []);
+  const q = new m.SSEParser();
+  assert.deepEqual(q.push("event: x\ndata: 1\n"), []);
+  assert.deepEqual(q.end(), []);
 });
 
 test("error event throws", () => {

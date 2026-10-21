@@ -39,6 +39,7 @@ to get the sections. Lowercase each section's heading for the key, and strip its
 |---|---|
 | `test_parse` | Status matched case-sensitively; a missing status doesn't raise; section keys not lowercased |
 | `test_lint` | Content checks run on missing sections; issues out of order |
+| `test_lint_rejects_negated_downside` | Downside words matched anywhere, so "no risk" counts; or the negation window crosses a clause boundary, so one denied word hides a real one |
 | `test_review_design` | Blank strings not treated as missing; findings not sorted by severity then area |
 | `test_gate` | Reasons in the wrong order or format; conditional reasons dropped when rejecting |
 | `test_risk_acceptance` | Content checks run while fields are missing; `owner_org` compared case-sensitively; the 90-day limit applied to an expiry before the decision |

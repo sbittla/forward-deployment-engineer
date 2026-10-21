@@ -16,9 +16,11 @@ are worth their weight in gold.
 ## Your task
 `NetworkPolicy.from_env(env: Mapping)` reads:
 
-- `HTTPS_PROXY` / `https_proxy`, `HTTP_PROXY` / `http_proxy` (upper-case wins)
-- `NO_PROXY` / `no_proxy`: comma list; entries match exact host, domain suffix (`.corp.local` or `corp.local`
-  matches `api.corp.local`), or `*` (bypass everything). Ports in entries (`host:8443`) match only that port.
+- `https_proxy` / `HTTPS_PROXY`, `http_proxy` / `HTTP_PROXY` (lower case wins when both are set, as in
+  `urllib`, `requests` and curl)
+- `no_proxy` / `NO_PROXY` (lower case wins): comma list; entries match exact host, domain suffix (`.corp.local` or
+  `corp.local` matches `api.corp.local`), or `*` (bypass everything). Ports in entries (`host:8443`) match only that
+  port.
 - `REQUESTS_CA_BUNDLE` then `SSL_CERT_FILE` → `ca_bundle`
 - `FDE_EGRESS_ALLOWLIST`: comma list of host patterns (`api.anthropic.com`, `*.corp.local`). Empty ⇒ allow
   all: unset means "no client-side restriction", because the customer's firewall, not this check, is the egress control.
@@ -47,10 +49,10 @@ Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each
   No API key or network access is needed.
 - **Run your work:** from the repository root,
   `pytest exercises/ch05-enterprise-integration/ex21-proxy-aware-client`.
-- **Expected output:** all 12 tests fail against the starter; when you're done, all 12 pass.
+- **Expected output:** all 13 tests fail against the starter; when you're done, all 13 pass.
 - **Check the reference solution:**
-  `pytest --solutions exercises/ch05-enterprise-integration/ex21-proxy-aware-client`: all 12 pass.
-- **Tests:** `test_network.py` (12 tests).
+  `pytest --solutions exercises/ch05-enterprise-integration/ex21-proxy-aware-client`: all 13 pass.
+- **Tests:** `test_network.py` (13 tests).
 - **Common failures:** `ModuleNotFoundError: No module named 'fde_kit'` means the command didn't run from the
   repository root. For a failing test, [HINTS.md](HINTS.md) says what it usually means.
 - **Whose failure is it?** If your run fails but the reference run passes, it's your code. If the reference run fails

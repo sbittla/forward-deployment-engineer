@@ -46,7 +46,7 @@ Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each
   solution, so report it with the repository's Errata issue template.
 - **Cleanup:** none. The tests write only to temporary directories, and `__pycache__` folders are ignored by git.
 - **Production caveats:** The root cause comes from first-error timestamps and a declared dependency map, which
-  assumes synchronised clocks and complete logs. Treat it as the first hypothesis: confirm it with traces, metrics
+  assumes synchronized clocks and complete logs. Treat it as the first hypothesis: confirm it with traces, metrics
   and change records, and allow for causes outside the logs, such as network or certificate changes.
 
 ## Prompt kit

@@ -29,7 +29,7 @@ broke. Then work out from the incident. Almost every module here is a production
 
 - **ResilientLLM:**
   1. Check the breaker; if it's open, raise `CircuitOpen` straight away.
-  2. Retry retryable statuses with jittered backoff, honouring `retry_after`.
+  2. Retry retryable statuses with jittered backoff, honoring `retry_after`.
   3. If the primary is still overloaded after the retries, try the fallback model.
   4. A non-retryable error (400) propagates immediately.
 - **The service maps failures to honest status codes:** an upstream error is 502 (and trips the breaker); an open

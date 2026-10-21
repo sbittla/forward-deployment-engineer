@@ -3,14 +3,14 @@
   "status": "PASS",
   "problems": [],
   "tests": {
-    "passed": 21,
+    "passed": 24,
     "failed": 0,
     "error": 0,
     "skipped": 0
   },
-  "declared": 11,
-  "ran": 21,
-  "starter_failing": 21,
+  "declared": 14,
+  "ran": 24,
+  "starter_failing": 24,
   "cases": [
     {
       "test": "py:test_token_roundtrip",
@@ -94,6 +94,18 @@
     },
     {
       "test": "py:test_missing_acl_fails_closed",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_nonce_checked_when_expected",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_azp_checked",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_id_token_rejected_where_access_token_required",
       "status": "passed"
     }
   ]

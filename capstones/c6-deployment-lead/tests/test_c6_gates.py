@@ -66,7 +66,40 @@ def test_steering_update(cap, ctx):
     assert "| D-fe-1 | Atlas SI | reject |" in md
     assert "-15.25 (-36.97%)" in md and "2 open with the security team" in md
     heads = re.findall(r"^## (.*)$", md, re.M)
-    assert heads == ["Decisions needed", "Overall", "Workstreams", "Partner deliverables", "Adoption and impact",
-                     "Security"], "lead with the decision, then status, changes, value, risks"
+    assert heads == ["Decisions needed", "Overall", "Changed since last week", "Adoption and impact", "Risks and asks",
+                     "Next milestone"], "Section 16.3's order: decision, status, changes, value, risks and asks, next"
+    assert re.findall(r"^### (.*)$", md, re.M) == ["Workstreams", "Partner deliverables"]
     asks = md.split("## Decisions needed")[1].split("## Overall")[0]
     assert "- activation 50% below 60%" in asks and "D-fe-1" in asks
+
+
+def _steering(cap, ctx, eng):
+    fc = cap.forecast(eng)
+    dec = cap.go_live(fc, ctx["reviews"], ctx["security"], ctx["funnel"], ctx["impact"])
+    return cap.render_steering(eng, cap.workstream_rag(eng), fc, ctx["reviews"], ctx["security"], ctx["funnel"],
+                               ctx["impact"], dec)
+
+
+def _section(md, name):
+    return md.split(f"## {name}\n")[1].split("\n## ")[0]
+
+
+def test_steering_changes_risks_and_next_milestone(cap, ctx):
+    md = _steering(cap, ctx, ctx["eng"])
+    changed = _section(md, "Changed since last week")
+    assert "- Delivered: landing-zone." in changed
+    assert "- Slipped or newly at risk: data GREEN -> AMBER; agent GREEN -> AMBER." in changed
+    assert "- Forecast finish: day 24.8, was day 24.1 last week (+0.7 days)." in changed
+    risks = _section(md, "Risks and asks").strip().splitlines()
+    assert [r.split()[1] for r in risks[:3]] == ["A-1", "R-3", "R-4"], "open items only, by due date"
+    assert risks[0].endswith("(owner: Meridian CISO office, due 2026-11-25)")
+    assert risks[3] == "- Security: 8 questions auto-answered from system facts; 2 open with the security team."
+    assert _section(md, "Next milestone").strip() == (
+        "- Eval bar met (agent-evals): forecast day 22.4 vs baseline 21.3. Acceptance: held-out pass rate of at least "
+        "0.9 on the bank's golden set, no critical-slice regressions.")
+    # a risk without an owner or date is shown as a gap, not hidden; no snapshot means no invented changes
+    eng = {k: v for k, v in ctx["eng"].items() if k != "last_week"}
+    eng["raid"] = [{"id": "R-9", "type": "risk", "text": "Vendor outage", "status": "open"}]
+    md = _steering(cap, ctx, eng)
+    assert "- R-9 risk: Vendor outage (owner: UNASSIGNED, due NO DATE)" in md
+    assert _section(md, "Changed since last week").startswith("- No previous snapshot to compare with.")

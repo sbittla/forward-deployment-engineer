@@ -57,12 +57,28 @@ def test_spark_job_guards_overwrite(exercise_dir):
     src = (exercise_dir / "spark_job.py").read_text()
     tree = ast.parse(src)
     builds = [n for n in ast.walk(tree) if isinstance(n, ast.FunctionDef) and n.name == "build"]
-    assert builds, "define build(spark, min_rows, max_age_hours)"
+    assert builds, "define build(spark, batch_date, max_age_hours, min_ratio)"
     params = [a.arg for a in builds[0].args.args]
-    assert params[:3] == ["spark", "min_rows", "max_age_hours"]
+    assert params[:4] == ["spark", "batch_date", "max_age_hours", "min_ratio"]
+    assert "replaceWhere" in src and "event_date" in src, "rebuild only the batch's event_date partition"
     attr_calls = [n for n in ast.walk(tree) if isinstance(n, ast.Call) and isinstance(n.func, ast.Attribute)]
     write_line = min(n.lineno for n in attr_calls if n.func.attr == "saveAsTable")
     assert any(n.func.attr == "count" and n.lineno < write_line for n in attr_calls), "count the input before writing"
     assert "ingested_at" in src, "check freshness on ingested_at"
     assert any(isinstance(n, ast.Raise) and n.lineno < write_line for n in ast.walk(tree)), \
         "a failed check must raise before the overwrite"
+
+
+def test_completeness_check_catches_the_truncated_extract(impl):
+    # The chapter's failure case: 1.1M rows for the day against a typical 9.4M. An absolute floor of 1,000,000 rows
+    # passes it; a check relative to the trailing median does not.
+    import pytest
+    trailing = [9_400_000, 9_100_000, 9_600_000, 9_350_000, 9_500_000, 9_200_000, 9_450_000]
+    with pytest.raises(impl.IncompleteBatch):
+        impl.check_batch_complete(1_100_000, trailing)
+    assert impl.check_batch_complete(9_000_000, trailing) is None
+    assert impl.check_batch_complete(4_700_000, trailing) is None        # exactly 50% of the 9.4M median passes
+    with pytest.raises(impl.IncompleteBatch):
+        impl.check_batch_complete(4_699_999, trailing)
+    with pytest.raises(impl.IncompleteBatch):
+        impl.check_batch_complete(9_000_000, [])                         # no history: fail closed

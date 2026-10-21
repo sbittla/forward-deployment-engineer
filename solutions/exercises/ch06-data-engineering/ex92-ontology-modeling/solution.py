@@ -34,6 +34,7 @@ class Ontology:
         self.link_types: dict[str, LinkType] = {}
         self.objects: dict[str, dict] = {}
         self.audit: list[dict] = []
+        self.rejected: list[dict] = []       # refused and failed actions: what a security review asks for first
         self.actions: dict[str, dict] = {}
 
     def add_object_type(self, ot: ObjectType) -> None:
@@ -95,21 +96,31 @@ class Ontology:
         self.actions[name] = dict(object_type=object_type, params=params, validate=validate, apply=apply,
                                   roles=set(allowed_roles))
 
-    def execute(self, name: str, actor: str, role: str, **params):
-        a = self.actions[name]
+    def _check(self, name: str, role: str, params: dict) -> dict:
+        a = self.actions.get(name)
+        if a is None:
+            raise ValueError(f"unknown action {name}")
         if role not in a["roles"]:
             raise PermissionError(f"role {role!r} may not run {name}")
         missing = [p for p in a["params"] if p not in params]
         bad = [p for p, t in a["params"].items() if p in params and not _type_ok(params[p], t)]
         if missing or bad or set(params) - set(a["params"]):
             raise ValueError(f"bad parameters: missing={missing} wrong_type={bad}")
+        ot = self.object_types[a["object_type"]]
+        if ot.primary_key in params and self.get(ot.name, params[ot.primary_key]) is None:
+            raise ValueError(f"unknown {ot.name} {params[ot.primary_key]}")
         problem = a["validate"](self, **params)
         if problem:
             raise ValueError(problem)
+        return a
+
+    def execute(self, name: str, actor: str, role: str, **params):
         snapshot = copy.deepcopy(self.objects)
         try:
+            a = self._check(name, role, params)
             a["apply"](self, **params)
-        except Exception:
+        except Exception as exc:
             self.objects = snapshot          # actions are atomic
+            self.rejected.append({"action": name, "actor": actor, "role": role, "error": str(exc)})
             raise
         self.audit.append({"action": name, "actor": actor, "params": dict(params), "seq": len(self.audit) + 1})

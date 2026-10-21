@@ -3,14 +3,14 @@
   "status": "PASS",
   "problems": [],
   "tests": {
-    "passed": 9,
+    "passed": 10,
     "failed": 0,
     "error": 0,
     "skipped": 0
   },
-  "declared": 9,
-  "ran": 9,
-  "starter_failing": 9,
+  "declared": 10,
+  "ran": 10,
+  "starter_failing": 10,
   "cases": [
     {
       "test": "py:test_budget_and_sli",
@@ -46,6 +46,10 @@
     },
     {
       "test": "py:test_canary_rollback_on_burn",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_worked_example_alert_times",
       "status": "passed"
     }
   ]

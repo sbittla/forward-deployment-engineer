@@ -43,3 +43,25 @@ def sensitivity(inputs: dict, param, multipliers) -> list[tuple[float, float]]:
         varied = {**inputs, **{p: inputs[p] * m for p in params}}
         rows.append((m, roi_summary(**varied)["annual_net"]))
     return rows
+
+
+def full_case(review_rate, review_minutes, annual_ops_cost, **inputs) -> dict:
+    """The case finance signs: roi_summary plus human review of assisted answers and ongoing operations."""
+    base = roi_summary(**inputs)
+    assisted = inputs["tasks_per_month"] * 12 * inputs.get("adoption", 1.0)
+    review = assisted * review_rate * review_minutes / 60 * inputs["hourly_cost"]
+    run = base["annual_llm_cost"] + inputs.get("annual_platform_cost", 0) + review + annual_ops_cost
+    net = base["annual_savings"] - run
+    one_time = inputs.get("one_time_cost", 0)
+    first_year_cost = one_time + run
+    roi = (net - one_time) / first_year_cost * 100 if first_year_cost else math.inf
+    pb = payback_months(one_time, net / 12)
+    return {
+        **base,
+        "annual_review_cost": round(review, 2),
+        "annual_ops_cost": round(annual_ops_cost, 2),
+        "annual_run_cost": round(run, 2),
+        "annual_net": round(net, 2),
+        "roi_pct": round(roi, 2),
+        "payback_months": pb if math.isinf(pb) else round(pb, 2),
+    }

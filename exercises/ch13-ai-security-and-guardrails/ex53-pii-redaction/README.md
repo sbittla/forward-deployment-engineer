@@ -37,7 +37,7 @@ returns `[]` for them and `redact` leaves them unchanged (production needs NER; 
 
 ## Field notes
 Regex PII detection is a floor, not a ceiling: names and addresses need NER. Say so in the design review — and log
-detector recall on a labelled sample.
+detector recall on a labeled sample.
 
 Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
 
@@ -58,7 +58,7 @@ Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each
 - **Cleanup:** none. The tests write only to temporary directories, and `__pycache__` folders are ignored by git.
 - **Production caveats:** Regex rules find only structured US-format identifiers: names, addresses and free-text
   descriptions pass through unredacted (`test_boundary_name_not_redacted`). Production adds an NER detector,
-  locale-specific rules and a recall figure measured on a labelled sample, and keeps the token mapping in protected
+  locale-specific rules and a recall figure measured on a labeled sample, and keeps the token mapping in protected
   storage inside the network.
 
 ## Prompt kit

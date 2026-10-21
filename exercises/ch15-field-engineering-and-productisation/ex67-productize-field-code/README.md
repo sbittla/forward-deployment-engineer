@@ -1,16 +1,16 @@
-# ex67 · Productise a one-off field script
+# ex67 · Productize a one-off field script
 
-**Chapter:** 15 · Field Engineering and Productisation (`exercises/ch15-field-engineering-and-productisation/`) · **Covers:** R23 Product feedback loop & reusable code
+**Chapter:** 15 · Field Engineering and Productization (`exercises/ch15-field-engineering-and-productisation/`) · **Covers:** R23 Product feedback loop & reusable code
 
 ## Learning objectives
 - Turn a one-off customer script into configurable product code.
-- Prove behaviour is unchanged with a golden-output comparison.
+- Prove behavior is unchanged with a golden-output comparison.
 - Remove customer names and constants from library code.
 
 ## Scenario
 Six months ago you wrote `legacy_acme_report()` on site at Acme in an afternoon. Now Globex wants the same thing,
-and product asks whether it can become a feature. The script is full of Acme-specific constants. Productise it:
-same behaviour for Acme via configuration, works for Globex, no customer names in library code.
+and product asks whether it can become a feature. The script is full of Acme-specific constants. Productize it:
+same behavior for Acme via configuration, works for Globex, no customer names in library code.
 
 ## Your task
 Keep `legacy_acme_report` untouched (it's the reference). Implement:

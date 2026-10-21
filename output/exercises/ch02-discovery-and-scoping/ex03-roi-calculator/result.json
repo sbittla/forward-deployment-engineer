@@ -3,14 +3,14 @@
   "status": "PASS",
   "problems": [],
   "tests": {
-    "passed": 7,
+    "passed": 9,
     "failed": 0,
     "error": 0,
     "skipped": 0
   },
-  "declared": 7,
-  "ran": 7,
-  "starter_failing": 7,
+  "declared": 9,
+  "ran": 9,
+  "starter_failing": 9,
   "cases": [
     {
       "test": "py:test_labor_savings",
@@ -38,6 +38,14 @@
     },
     {
       "test": "py:test_edge_cases",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_full_case_reproduces_table_2_3_and_stop_go",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_readout_rerun_with_measured_saving",
       "status": "passed"
     }
   ]

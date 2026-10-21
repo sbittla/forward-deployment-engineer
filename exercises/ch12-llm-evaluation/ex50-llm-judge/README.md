@@ -5,7 +5,7 @@
 ## Learning objectives
 - Use an LLM judge for criteria regex can't check.
 - Measure judge-human agreement with exact match, within-1 and Cohen's kappa.
-- Detect and neutralise position bias in pairwise judging.
+- Detect and neutralize position bias in pairwise judging.
 
 ## Scenario
 Many copilot answers can't be graded by regex ("Is this explanation of the exclusion accurate and polite?"). An
@@ -43,8 +43,8 @@ Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each
   solution, so report it with the repository's Errata issue template.
 - **Cleanup:** none. The tests write only to temporary directories, and `__pycache__` folders are ignored by git.
 - **Production caveats:** Order-swapping removes only position bias; verbosity and self-preference bias pass straight
-  through, and the kappa is only as good as the expert-labelled sample behind it. In production, pin the judge's
-  model version and rubric, store them with every score, re-run calibration (including length-matched pairs) whenever
+  through, and the kappa is only as good as the expert-labeled sample behind it. In production, pin the judge's model
+  version and rubric, store them with every score, re-run calibration (including length-matched pairs) whenever
   either changes, and send critical cases graded only by the judge to expert review.
 
 ## Prompt kit

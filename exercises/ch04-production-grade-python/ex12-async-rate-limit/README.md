@@ -54,7 +54,7 @@ Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each
 - **Production caveats:** The bucket is per-process, there is no per-call timeout (a hung call holds its semaphore
   slot), failed items aren't retried and every result is held in memory. Production wraps each call in
   `asyncio.timeout()`, feeds `429`/`Retry-After` back into the limiter, shares the limit across workers that share a
-  quota, budgets tokens per minute as well as requests, and checkpoints results so a cancelled batch can resume.
+  quota, budgets tokens per minute as well as requests, and checkpoints results so a canceled batch can resume.
 
 ## Prompt kit
 **Learn (tutor prompt)**

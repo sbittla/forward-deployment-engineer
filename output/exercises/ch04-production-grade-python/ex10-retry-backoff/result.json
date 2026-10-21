@@ -3,14 +3,14 @@
   "status": "PASS",
   "problems": [],
   "tests": {
-    "passed": 15,
+    "passed": 16,
     "failed": 0,
     "error": 0,
     "skipped": 0
   },
-  "declared": 15,
-  "ran": 15,
-  "starter_failing": 15,
+  "declared": 16,
+  "ran": 16,
+  "starter_failing": 16,
   "cases": [
     {
       "test": "py:test_retries_then_succeeds_with_exponential_backoff",
@@ -58,6 +58,10 @@
     },
     {
       "test": "py:test_fault_slow_dependency_respects_deadline",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_fault_attempt_timeout_is_capped_by_time_left",
       "status": "passed"
     },
     {

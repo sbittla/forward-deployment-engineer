@@ -3,14 +3,14 @@
   "status": "PASS",
   "problems": [],
   "tests": {
-    "passed": 9,
+    "passed": 10,
     "failed": 0,
     "error": 0,
     "skipped": 0
   },
-  "declared": 9,
-  "ran": 9,
-  "starter_failing": 9,
+  "declared": 10,
+  "ran": 10,
+  "starter_failing": 10,
   "cases": [
     {
       "test": "py:test_cache_hits_and_ttl",
@@ -42,6 +42,10 @@
     },
     {
       "test": "py:test_monthly_projection",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_key_includes_tenant_and_entitlements",
       "status": "passed"
     },
     {

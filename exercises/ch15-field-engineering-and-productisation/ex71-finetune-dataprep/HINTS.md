@@ -40,7 +40,7 @@ until the last one is from the assistant, and prepend the system message.
 |---|---|
 | `test_select` | `csat=None` compared with an int; conversations without agent turns kept |
 | `test_to_example_merge_redact_trailing` | Same-role turns not merged with `\n`; trailing customer turn kept; phone redacted before email |
-| `test_dedupe` | Digits not normalised, so near-duplicates survive |
+| `test_dedupe` | Digits not normalized, so near-duplicates survive |
 | `test_split_stratified_no_overlap` | Single-example intent sent to validation; split not reproducible with the same seed |
 | `test_token_filter_jsonl_stats` | Average computed over train only; JSONL written as one JSON array |
 | `test_unusable_conversations` | No error raised when only customer turns exist |

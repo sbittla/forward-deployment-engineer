@@ -3,8 +3,8 @@ import urllib.request
 import pytest
 
 ENV = {
-    "HTTPS_PROXY": "http://proxy.bank.local:3128",
-    "https_proxy": "http://ignored:1",
+    "HTTPS_PROXY": "http://ignored:1",
+    "https_proxy": "http://proxy.bank.local:3128",
     "http_proxy": "http://proxy.bank.local:3128",
     "no_proxy": "localhost,.corp.local,vault.bank.local:8200",
     "SSL_CERT_FILE": "/etc/ssl/bank-root.pem",
@@ -30,6 +30,16 @@ def test_from_env(impl):
 ])
 def test_proxy_for(impl, url, expected):
     assert impl.NetworkPolicy.from_env(ENV).proxy_for(url) == expected
+
+
+def test_lowercase_proxy_wins_like_requests(impl):
+    # urllib.request.getproxies() (used by requests) and curl prefer the lower-case variable when both are set
+    env = {"HTTPS_PROXY": "http://upper:1", "https_proxy": "http://lower:2",
+           "HTTP_PROXY": "http://upper:1", "http_proxy": "http://lower:2", "NO_PROXY": "a.corp", "no_proxy": "b.corp"}
+    p = impl.NetworkPolicy.from_env(env)
+    assert (p.https_proxy, p.http_proxy, p.no_proxy) == ("http://lower:2", "http://lower:2", ["b.corp"])
+    only_upper = impl.NetworkPolicy.from_env({"HTTPS_PROXY": "http://upper:1", "NO_PROXY": "a.corp"})
+    assert (only_upper.https_proxy, only_upper.no_proxy) == ("http://upper:1", ["a.corp"])
 
 
 def test_no_proxy_star(impl):

@@ -30,8 +30,8 @@ the query.
 
 - A skipped candidate is gone for good ("every candidate is considered once"). Don't put it back.
 - `#8` is a near-duplicate of `#0` (similarity ≥ 0.95), so it never appears, even with `lam=1.0`.
-- In `ensure_label_coverage`, replace the first example whose label appears **more than once**. If no label is
-  repeated, prepend the new example instead.
+- In `ensure_label_coverage`, replace the first example whose label appears **more than once** and whose swap fits
+  `max_tokens`. If none qualifies, leave the label uncovered; never append, or the list grows past `k`.
 - Escape with `html.escape(text, quote=False)`: `<`, `>` and `&` only.
 - The ticket goes inside `<ticket>…</ticket>` on the **last** line, after the instruction.
 </details>
@@ -45,6 +45,7 @@ the query.
 | `test_token_budget` | Over-budget candidates stop the loop instead of being skipped; integer division wrong in `approx_tokens` |
 | `test_bad_k` | `k=0` returns `[]` instead of raising |
 | `test_label_coverage` | Replacing the wrong example; labels with no pool examples cause an error |
+| `test_label_coverage_respects_k_and_budget` | An example appended when no label repeats; a swap that pushes the total past `max_tokens` |
 | `test_format_escapes_and_wraps` | Newline layout differs from the expected string; quotes escaped too |
 | `test_build_messages` | Ticket not escaped or not at the end; more than one message |
 | `test_injected_ticket_cannot_close_its_tag` | The ticket inserted raw, so a `</ticket>` inside it ends the block early and the text after it reads as instructions |

@@ -16,3 +16,7 @@ def roi_summary(**inputs) -> dict:
 
 def sensitivity(inputs: dict, param, multipliers) -> list[tuple[float, float]]:
     raise NotImplementedError
+
+
+def full_case(review_rate, review_minutes, annual_ops_cost, **inputs) -> dict:
+    raise NotImplementedError

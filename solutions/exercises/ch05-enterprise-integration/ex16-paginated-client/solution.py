@@ -1,5 +1,6 @@
 import time
 from dataclasses import dataclass, field
+from email.utils import parsedate_to_datetime
 
 
 @dataclass
@@ -21,6 +22,20 @@ def _h(headers: dict, name: str):
         if k.lower() == name:
             return v
     return None
+
+
+def _retry_after(value, now: float) -> float:
+    """Retry-After is delay-seconds or an HTTP date; missing or unparseable means 1 second."""
+    if value is None:
+        return 1.0
+    try:
+        return float(value)
+    except ValueError:
+        pass
+    try:
+        return max(0.0, parsedate_to_datetime(value).timestamp() - now)
+    except (TypeError, ValueError):
+        return 1.0
 
 
 class ApiClient:
@@ -55,7 +70,7 @@ class ApiClient:
             if resp.status == 429:
                 if attempt == self.max_retries:
                     raise ApiError(429, resp.body)
-                self.sleep(float(_h(resp.headers, "Retry-After") or 1))
+                self.sleep(_retry_after(_h(resp.headers, "Retry-After"), self.clock()))
                 continue
             if resp.status >= 400:
                 raise ApiError(resp.status, resp.body)

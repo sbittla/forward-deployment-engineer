@@ -4,13 +4,13 @@
 |---|---|
 | **Owner** | FDE with the customer's finance partner |
 | **When** | Before the pilot; re-run at the readout |
-| **Inputs** | Charter metrics, measured baselines, price lists, finance's loaded labour cost |
+| **Inputs** | Charter metrics, measured baselines, price lists, finance's loaded labor cost |
 | **Done when** | Every line has a status, and the sensitivity table covers every assumed or projected line |
 | **Book** | Chapter 2, Section 2.4 · ex03 |
 
 | Line | Annual value | Basis | Status (measured, quoted, estimated, assumed, projected) |
 |---|---|---|---|
-| Benefit: labour savings | | volume × adoption × minutes saved × loaded rate | |
+| Benefit: labor savings | | volume × adoption × minutes saved × loaded rate | |
 | Inference | | tokens × price × calls | |
 | Infrastructure and platform | | | |
 | Human review of outputs | | sample rate × minutes × rate | |

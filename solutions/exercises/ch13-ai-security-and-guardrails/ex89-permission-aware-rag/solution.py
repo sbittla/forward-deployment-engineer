@@ -6,6 +6,7 @@ from dataclasses import dataclass, field
 
 TOKEN_EXCHANGE = "urn:ietf:params:oauth:grant-type:token-exchange"
 ACCESS_TOKEN = "urn:ietf:params:oauth:token-type:access_token"
+ACCESS_TOKEN_TYP = "at+jwt"            # RFC 9068 header typ for JWT access tokens
 
 
 class AuthError(Exception):
@@ -35,14 +36,15 @@ def _sign(signing_input: str, secret: str) -> str:
     return _b64e(hmac.new(secret.encode(), signing_input.encode(), hashlib.sha256).digest())
 
 
-def make_token(claims: dict, secret: str, kid: str | None = None) -> str:
-    header = {"alg": "HS256", "typ": "JWT"} | ({"kid": kid} if kid is not None else {})
+def make_token(claims: dict, secret: str, kid: str | None = None, typ: str = "JWT") -> str:
+    header = {"alg": "HS256", "typ": typ} | ({"kid": kid} if kid is not None else {})
     head = _b64e(json.dumps(header).encode())
     body = _b64e(json.dumps(claims).encode())
     return f"{head}.{body}.{_sign(f'{head}.{body}', secret)}"
 
 
-def verify_id_token(token: str, secret: str | dict[str, str], issuer: str, audience: str, now: int) -> dict:
+def _verify_jwt(token: str, secret: str | dict[str, str], issuer: str, audience: str, now: int) -> tuple[dict, dict]:
+    """The checks every JWT gets: structure, alg allowlist, key by kid, signature, iss, aud, exp, nbf."""
     try:
         head_s, body_s, sig = token.split(".")
         header, claims = json.loads(_b64d(head_s)), json.loads(_b64d(body_s))
@@ -69,6 +71,35 @@ def verify_id_token(token: str, secret: str | dict[str, str], issuer: str, audie
     nbf = claims.get("nbf")
     if nbf is not None and (not isinstance(nbf, (int, float)) or nbf > now):
         raise AuthError("token not yet valid")
+    return header, claims
+
+
+def _typ(header: dict) -> str:
+    return str(header.get("typ", "")).lower().removeprefix("application/")
+
+
+def verify_id_token(token: str, secret: str | dict[str, str], issuer: str, audience: str, now: int,
+                    expected_nonce: str | None = None) -> dict:
+    """OIDC ID-token validation by the client (audience = its client_id). A teaching implementation, not full OIDC."""
+    header, claims = _verify_jwt(token, secret, issuer, audience, now)
+    if _typ(header) == ACCESS_TOKEN_TYP:              # an access token never establishes a session
+        raise AuthError("wrong token type: access token presented as an ID token")
+    aud = claims["aud"]
+    if ("azp" in claims or (isinstance(aud, list) and len(aud) > 1)) and claims.get("azp") != audience:
+        raise AuthError("wrong or missing azp")
+    if expected_nonce is not None and claims.get("nonce") != expected_nonce:
+        raise AuthError("nonce missing or mismatched")
+    return claims
+
+
+def verify_access_token(token: str, secret: str | dict[str, str], issuer: str, audience: str, now: int,
+                        required_scope: str | None = None) -> dict:
+    """Access-token validation by the API (audience = the API), for a JWT access token per RFC 9068."""
+    header, claims = _verify_jwt(token, secret, issuer, audience, now)
+    if _typ(header) != ACCESS_TOKEN_TYP:              # an ID token is never an API bearer token
+        raise AuthError(f"wrong token type {header.get('typ')!r}: an access token needs typ at+jwt")
+    if required_scope is not None and required_scope not in str(claims.get("scope", "")).split():
+        raise AuthError(f"insufficient scope: {required_scope} required")
     return claims
 
 

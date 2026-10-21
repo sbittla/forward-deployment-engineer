@@ -13,7 +13,7 @@ there with one `_parse(row)` function that either returns a clean event dict or 
 <details>
 <summary>Hint 2 · The approach</summary>
 
-- **_parse** checks in order: JSON parses, required keys are present, `type` is valid, country normalises, amount is
+- **_parse** checks in order: JSON parses, required keys are present, `type` is valid, country normalizes, amount is
   valid for purchases. Each failure has its own reason message.
 - **Country:** lowercase and strip, look it up in `COUNTRY_ALIASES`; otherwise accept any two-letter alphabetic code
   upper-cased; otherwise reject it.
@@ -37,6 +37,6 @@ there with one `_parse(row)` function that either returns a clean event dict or 
 | Test | Likely cause |
 |---|---|
 | `test_bronze_keeps_everything` | Broken lines dropped at bronze, or `line_no` not 0-based |
-| `test_silver` | Dedupe keeps the first occurrence instead of the latest `ts`; `usa` or `fr` not normalised; views missing `amount = 0.0` |
+| `test_silver` | Dedupe keeps the first occurrence instead of the latest `ts`; `usa` or `fr` not normalized; views missing `amount = 0.0` |
 | `test_gold` | Float rounding gives `10.55`; country `uk` not mapped to `GB` |
 | `test_quarantine_reasons` | Negative purchase amount or unknown type accepted; empty `gold([])` missing its keys |

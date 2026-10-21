@@ -19,8 +19,10 @@ def select_examples(query: str, pool: list[dict], k: int = 3, lam: float = 0.7,
     raise NotImplementedError
 
 
-def ensure_label_coverage(selected: list[dict], pool: list[dict], labels: list[str], query: str) -> list[dict]:
-    """Swap in the most relevant example for any label missing from `selected` (replacing the least relevant)."""
+def ensure_label_coverage(selected: list[dict], pool: list[dict], labels: list[str], query: str,
+                          max_tokens: int | None = None) -> list[dict]:
+    """Swap in the most relevant example for any label missing from `selected`, replacing an example whose label is
+    over-represented. Never adds an example (k still holds) and never exceeds `max_tokens`."""
     raise NotImplementedError
 
 

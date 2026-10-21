@@ -91,6 +91,23 @@ def test_monthly_projection(impl):
             impl.monthly_cost(cached, 2_000_000, response_hit_rate=bad)
 
 
+def test_key_includes_tenant_and_entitlements(impl):
+    # Identical prompts with a different tenant or entitlement scope must not share an entry, even though nothing in
+    # the prompt names the tenant.
+    llm = FakeLLM(lambda m, s, t: "Claims over $10k: 3")
+    c = impl.CachedLLM(llm, ttl_s=60, clock=Clock())
+    q = msgs("How many of my team's claims are over $10k?")
+    c.complete(q, system="S", model="m", tenant="acme", entitlements=["claims:read"])
+    c.complete(q, system="S", model="m", tenant="globex", entitlements=["claims:read"])
+    c.complete(q, system="S", model="m", tenant="acme", entitlements=["claims:read", "claims:reserves"])
+    assert len(llm.calls) == 3
+    c.complete(q, system="S", model="m", tenant="acme", entitlements=["claims:reserves", "claims:read"])
+    c.complete(q, system="S", model="m", tenant="acme", entitlements=["claims:read"])
+    assert len(llm.calls) == 3 and c.stats()["hits"] == 2         # same scope in any order: a hit
+    c.complete(q, system="S", model="m")                          # no scope is its own scope
+    assert len(llm.calls) == 4
+
+
 def test_cross_tenant_requests_do_not_share_entries(impl):
     # Cross-tenant leak check: the same question under each tenant's own system prompt must not hit the other's entry.
     llm = FakeLLM(lambda m, s, t: f"{s} says: your limit is private")

@@ -20,16 +20,18 @@ Examples are `{"input": str, "output": str}`. Similarity is `cosine(hash_embed(a
 - `approx_tokens(example) -> int`: `max(1, (len(input) + len(output)) // 4)`.
 - `select_examples(query, pool, k=3, lam=0.7, max_tokens=None) -> list[dict]`
   - Raise `ValueError` if `k < 1`.
-  - Greedy MMR: repeatedly take the candidate maximising `lam * rel - (1 - lam) * max_sim_to_already_chosen`
+  - Greedy MMR: repeatedly take the candidate maximizing `lam * rel - (1 - lam) * max_sim_to_already_chosen`
     (0 when none chosen); break ties by lower pool index. Every candidate is considered once.
   - Skip a candidate whose similarity to any chosen example is `>= DUPLICATE_SIM` (0.95), or whose tokens exceed
     the remaining budget; keep going until `k` are chosen or candidates run out.
   - Return chosen examples ordered by relevance **ascending** (ties: higher index first), so the most relevant
     example is last, nearest the query.
-- `ensure_label_coverage(selected, pool, labels, query) -> list[dict]`: for each label in order that has no example
-  in the list, take the pool example with that label most relevant to the query (not already present) and replace the
-  first example in the list whose label appears more than once; if none does, prepend it. Skip labels with no pool
-  examples. Return sorted by relevance ascending.
+- `ensure_label_coverage(selected, pool, labels, query, max_tokens=None) -> list[dict]`: for each label in order
+  that has no example in the list, take the pool example with that label most relevant to the query (not already
+  present) and replace the first example in the list whose label appears more than once and whose replacement keeps
+  the list's total `approx_tokens` within `max_tokens` (when given). If no example qualifies, leave the label
+  uncovered: the list never grows, so `k` and the budget still hold. Skip labels with no pool examples. Return sorted
+  by relevance ascending.
 - `format_examples(examples) -> str`: `<examples>` wrapper, one `<example>` per item with `<input>`/`<output>` children,
   newline-separated (see tests), HTML-escaping `<`, `>`, `&` in the text.
 - `build_messages(query, pool, k=3) -> list[dict]`: one user message: the formatted examples, a blank line, the
@@ -48,10 +50,10 @@ Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each
 - **Prerequisites:** Python 3.11 or later and `pip install -r requirements.txt`, run once from the repository root.
   No API key or network access is needed.
 - **Run your work:** from the repository root, `pytest exercises/ch08-prompt-engineering/ex96-few-shot-selection`.
-- **Expected output:** all 8 tests fail against the starter; when you're done, all 8 pass.
+- **Expected output:** all 9 tests fail against the starter; when you're done, all 9 pass.
 - **Check the reference solution:** `pytest --solutions exercises/ch08-prompt-engineering/ex96-few-shot-selection`:
-  all 8 pass.
-- **Tests:** `test_few_shot.py` (8 tests).
+  all 9 pass.
+- **Tests:** `test_few_shot.py` (9 tests).
 - **Common failures:** `ModuleNotFoundError: No module named 'fde_kit'` means the command didn't run from the
   repository root. For a failing test, [HINTS.md](HINTS.md) says what it usually means.
 - **Whose failure is it?** If your run fails but the reference run passes, it's your code. If the reference run fails
@@ -59,8 +61,8 @@ Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each
   solution, so report it with the repository's Errata issue template.
 - **Cleanup:** none. The tests write only to temporary directories, and `__pycache__` folders are ignored by git.
 - **Production caveats:** Hashed bag-of-words embeddings and a characters-divided-by-four token estimate stand in for
-  a real embedding model and the provider's tokeniser. In production, use the same embedding model as retrieval,
-  count tokens with the target model's tokeniser, and curate and version the example pool like a golden set, since a
+  a real embedding model and the provider's tokenizer. In production, use the same embedding model as retrieval,
+  count tokens with the target model's tokenizer, and curate and version the example pool like a golden set, since a
   poisoned example steers every query that retrieves it.
 
 ## Prompt kit

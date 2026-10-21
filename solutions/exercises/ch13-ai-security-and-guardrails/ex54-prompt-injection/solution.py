@@ -10,8 +10,13 @@ class Decision:
     reason: str
 
 
-EMAIL = re.compile(r"[A-Za-z0-9._%+-]+@([A-Za-z0-9.-]+\.[A-Za-z]{2,})")
-URL = re.compile(r"https?://[^\s\"'<>]+")
+# Destinations in the arguments of side-effect tools, matched case-insensitively and tried in this order. Anything
+# that looks like a place to send data counts as egress; the gate denies it unless its host is allowlisted.
+URL = re.compile(r"[a-z][a-z0-9+.-]*://[^\s\"'<>]*|(?<![\w:/])//[^\s\"'<>]+", re.I)  # any scheme, or scheme-relative
+EMAIL = re.compile(r"[^\s\"'<>@/]+@(\[[^\]\s]+\]|[^\s\"'<>/@,;]+)")                 # user@host, user@[ip]
+IPV6 = re.compile(r"\[([0-9a-f]*:[0-9a-f:.]*)\]", re.I)                            # bracketed IPv6 literal
+IPV4 = re.compile(r"(?<![\w.])(?:\d{1,3}\.){3}\d{1,3}(?![\w.])")
+DOMAIN = re.compile(r"(?<![\w.-])(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z]{2,63}(?![\w-])", re.I)  # bare host
 
 SIGNALS = [
     ("ignore_instructions", re.compile(
@@ -22,6 +27,31 @@ SIGNALS = [
         r"\b(send|forward|email|post|upload)\b[^.]{0,80}\bto\b\s+(\S+@\S+|https?://\S+)", re.I)),
     ("encoded_payload", re.compile(r"[A-Za-z0-9+/=]{40,}")),
 ]
+
+
+def _host(raw: str) -> str:
+    return raw.strip("[]").rstrip(".").lower()
+
+
+def _url_host(url: str) -> str:
+    try:
+        return _host(urlsplit(url if "://" in url else "x:" + url).hostname or "")
+    except ValueError:                                  # e.g. an unbalanced bracket: unparsable, so it fails closed
+        return ""
+
+
+def destinations(text: str) -> list[str]:
+    """Every host a string could send data to, lowercased; "" for a URL with no parsable host."""
+    found = []
+    for rx in (URL, EMAIL, IPV6, IPV4, DOMAIN):
+        def take(m, rx=rx):
+            if rx is URL:
+                found.append(_url_host(m.group(0)))
+            else:
+                found.append(_host(m.group(1) if rx in (EMAIL, IPV6) else m.group(0)))
+            return " "                                  # consume the match so later patterns don't re-read it
+        text = rx.sub(take, text)
+    return found
 
 
 def wrap_untrusted(content: str, source: str) -> str:
@@ -39,8 +69,7 @@ class ToolGate:
         self.allowed_domains = allowed_domains
 
     def _allowed_host(self, host: str) -> bool:
-        host = host.lower()
-        return any(host == d or host.endswith("." + d) for d in self.allowed_domains)
+        return bool(host) and any(host == d or host.endswith("." + d) for d in self.allowed_domains)
 
     def _strings(self, obj):
         if isinstance(obj, str):
@@ -55,14 +84,10 @@ class ToolGate:
     def authorize(self, tool: str, args: dict, tainted: bool) -> Decision:
         if tool not in self.side_effect_tools:
             return Decision(True, False, "read-only tool")
-        for s in self._strings(args):
-            for url in URL.findall(s):
-                host = urlsplit(url).hostname or ""
-                if not self._allowed_host(host):
-                    return Decision(False, False, f"egress to {host} blocked")
-            for domain in EMAIL.findall(s):
-                if not self._allowed_host(domain):
-                    return Decision(False, False, f"egress to {domain} blocked")
+        for s in self._strings(args):                  # every string, at any depth
+            for host in destinations(s):
+                if not self._allowed_host(host):         # deny by default: only allowlisted hosts pass
+                    return Decision(False, False, f"egress to {host or '<unknown>'} blocked")
         if tainted:
             return Decision(True, True, "tainted context")
         return Decision(True, False, "ok")

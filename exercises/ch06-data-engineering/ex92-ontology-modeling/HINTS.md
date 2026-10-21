@@ -1,4 +1,4 @@
-# ex92 hints · Ontology modelling: objects, links and governed actions
+# ex92 hints · Ontology modeling: objects, links and governed actions
 
 Open a hint only after you've been stuck for about ten minutes. Each one gives away more than the last.
 
@@ -38,4 +38,5 @@ Write `load` first, with one error string per bad row and no exceptions.
 |---|---|
 | `test_types_validated` | Link to an unknown type accepted; error index or wording wrong; invalid rows loaded anyway |
 | `test_traverse` | Reverse links (`~`) not supported; reverse results not sorted by key |
+| `test_unknown_object_and_refusals_are_logged` | `validate` runs before the object's existence is checked (`TypeError` on `None`); a refusal or failed `apply` not appended to `rejected`; changes not rolled back |
 | `test_actions` | Audit written before validation; missing parameters not rejected; role checked after the parameters |

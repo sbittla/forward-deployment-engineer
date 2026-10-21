@@ -4,7 +4,7 @@
 
 ## Learning objectives
 - Map dirty CRM exports to a canonical schema without aborting the batch.
-- Normalise phones to E.164, timestamps to aware UTC, and revenue to integers.
+- Normalize phones to E.164, timestamps to aware UTC, and revenue to integers.
 - Report every error per row so the customer's admin can fix the source.
 
 ## Scenario

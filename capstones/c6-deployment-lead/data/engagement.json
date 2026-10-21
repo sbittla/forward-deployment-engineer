@@ -14,12 +14,19 @@
     {"id": "landing-zone", "workstream": "platform", "o": 3, "m": 5, "p": 9, "deps": ["discovery"]},
     {"id": "ingest", "workstream": "data", "o": 5, "m": 8, "p": 17, "deps": ["landing-zone"]},
     {"id": "agent-core", "workstream": "agent", "o": 6, "m": 8, "p": 10, "deps": ["discovery"]},
-    {"id": "agent-evals", "workstream": "agent", "o": 2, "m": 3, "p": 4, "deps": ["agent-core", "ingest"], "milestone": "Eval bar met"},
+    {"id": "agent-evals", "workstream": "agent", "o": 2, "m": 3, "p": 4, "deps": ["agent-core", "ingest"], "milestone": "Eval bar met", "acceptance": "held-out pass rate of at least 0.9 on the bank's golden set, no critical-slice regressions"},
     {"id": "ui", "workstream": "frontend", "o": 4, "m": 6, "p": 8, "deps": ["agent-core"]},
     {"id": "security-review", "workstream": "platform", "o": 3, "m": 5, "p": 12, "deps": ["landing-zone"]},
     {"id": "training", "workstream": "enablement", "o": 2, "m": 3, "p": 4, "deps": ["ui"]},
-    {"id": "go-live", "workstream": "platform", "o": 1, "m": 2, "p": 3, "deps": ["agent-evals", "ui", "security-review", "training"], "milestone": "Go-live"}
+    {"id": "go-live", "workstream": "platform", "o": 1, "m": 2, "p": 3, "deps": ["agent-evals", "ui", "security-review", "training"], "milestone": "Go-live", "acceptance": "every gate passed or waived in writing; sponsor sign-off"}
   ],
   "progress": {"discovery": 1.0, "landing-zone": 1.0, "ingest": 0.4, "agent-core": 0.8, "ui": 0.3, "security-review": 0.5},
-  "as_of_day": 14
+  "as_of_day": 14,
+  "last_week": {"as_of_day": 9, "progress": {"discovery": 1.0, "landing-zone": 0.8, "ingest": 0.0, "agent-core": 0.5, "ui": 0.0, "security-review": 0.0}},
+  "raid": [
+    {"id": "A-1", "type": "ask", "text": "Close the physical-security and model-risk questions", "owner": "Meridian CISO office", "due": "2026-11-25", "status": "open"},
+    {"id": "R-3", "type": "risk", "text": "Atlas SI's frontend fixes miss the re-review", "owner": "Atlas SI delivery lead", "due": "2026-11-27", "status": "open"},
+    {"id": "R-4", "type": "risk", "text": "Private-banking activation stays below 60%", "owner": "Adoption lead", "due": "2026-12-04", "status": "open"},
+    {"id": "R-1", "type": "risk", "text": "Landing zone late", "owner": "Meridian platform team", "due": "2026-11-13", "status": "closed"}
+  ]
 }

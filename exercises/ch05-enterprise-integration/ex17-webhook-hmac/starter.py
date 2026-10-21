@@ -1,7 +1,7 @@
 import time
 
 
-def sign(body: str, secret: str, t: int) -> str:
+def sign(body: bytes | str, secret: str, t: int) -> str:
     raise NotImplementedError
 
 
@@ -23,5 +23,5 @@ class WebhookReceiver:
         self.processed: list[dict] = []
         self.store = store
 
-    def handle(self, headers: dict, body: str) -> tuple[int, str]:
+    def handle(self, headers: dict, body: bytes | str) -> tuple[int, str]:
         raise NotImplementedError

@@ -31,9 +31,9 @@ class NetworkPolicy:
     @classmethod
     def from_env(cls, env: Mapping[str, str]) -> "NetworkPolicy":
         return cls(
-            https_proxy=_first(env, "HTTPS_PROXY", "https_proxy"),
-            http_proxy=_first(env, "HTTP_PROXY", "http_proxy"),
-            no_proxy=_split(_first(env, "NO_PROXY", "no_proxy")),
+            https_proxy=_first(env, "https_proxy", "HTTPS_PROXY"),
+            http_proxy=_first(env, "http_proxy", "HTTP_PROXY"),
+            no_proxy=_split(_first(env, "no_proxy", "NO_PROXY")),
             ca_bundle=_first(env, "REQUESTS_CA_BUNDLE", "SSL_CERT_FILE"),
             allowlist=_split(env.get("FDE_EGRESS_ALLOWLIST")),
         )

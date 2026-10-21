@@ -6,7 +6,7 @@ Open a hint only after you've been stuck for about ten minutes. Each one gives a
 <summary>Hint 1 · Where to start</summary>
 
 The cache key is the whole design. Put every input that changes the answer into one dict (model, system, messages,
-tools, and the extra keyword arguments), serialise it with `json.dumps(..., sort_keys=True)` and hash it with
+tools, and the extra keyword arguments), serialize it with `json.dumps(..., sort_keys=True)` and hash it with
 SHA-256. Two requests that differ only in dict key order then produce the same key.
 
 The cost model is arithmetic: tokens times price per million, divided by 1,000,000. Write the book's worked example
@@ -53,4 +53,5 @@ as a test first ($0.0276 and $0.0195 per request) and make the numbers come out.
 | `test_unknown_model` | Unknown model priced at 0 instead of raising |
 | `test_cost_per_request_worked_example` | Cache-read price applied to documents too, or applied when `cached_prefix` is False; no `ValueError` for negative tokens |
 | `test_monthly_projection` | Hit rate not subtracted, total not rounded to 2 dp, or an out-of-range hit rate accepted |
+| `test_key_includes_tenant_and_entitlements` | Tenant or entitlements left out of the key; entitlements compared in call order; scope forwarded to the model |
 | `test_cross_tenant_requests_do_not_share_entries` | System prompt left out of the cache key, so one tenant receives another's cached answer |

@@ -3,14 +3,14 @@
   "status": "PASS",
   "problems": [],
   "tests": {
-    "passed": 12,
+    "passed": 14,
     "failed": 0,
     "error": 0,
     "skipped": 0
   },
-  "declared": 10,
-  "ran": 12,
-  "starter_failing": 12,
+  "declared": 12,
+  "ran": 14,
+  "starter_failing": 14,
   "cases": [
     {
       "test": "py:test_deliverable[enablement_plan.md]",
@@ -45,6 +45,10 @@
       "status": "passed"
     },
     {
+      "test": "py:test_steering_changes_risks_and_next_milestone",
+      "status": "passed"
+    },
+    {
       "test": "py:test_baseline",
       "status": "passed"
     },
@@ -54,6 +58,10 @@
     },
     {
       "test": "py:test_rag",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_next_milestone",
       "status": "passed"
     },
     {

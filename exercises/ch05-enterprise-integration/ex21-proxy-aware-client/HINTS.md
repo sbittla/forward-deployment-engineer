@@ -6,7 +6,7 @@ Open a hint only after you've been stuck for about ten minutes. Each one gives a
 <summary>Hint 1 · Where to start</summary>
 
 Start with `from_env`. Two tiny helpers cover almost all of it: one that returns the first non-empty value from a list
-of variable names (upper-case first), and one that splits a comma list, strips each entry and drops empty ones. Parse
+of variable names (lower-case first), and one that splits a comma list, strips each entry and drops empty ones. Parse
 URLs with `urllib.parse.urlsplit`, which gives you `.scheme`, `.hostname` and `.port`.
 </details>
 
@@ -36,7 +36,8 @@ URLs with `urllib.parse.urlsplit`, which gives you `.scheme`, `.hostname` and `.
 
 | Test | Likely cause |
 |---|---|
-| `test_from_env` | Lower-case variable preferred over upper-case; CA bundle order reversed |
+| `test_from_env` | Upper-case variable preferred over lower-case; CA bundle order reversed |
+| `test_lowercase_proxy_wins_like_requests` | Upper-case variable checked first, or the upper-case fallback dropped when lower case is unset |
 | `test_proxy_for` | Port in a NO_PROXY entry ignored (or required on every entry); leading-dot entries not matched |
 | `test_no_proxy_star` | `*` treated as a hostname pattern rather than "bypass all" |
 | `test_egress` | Suffix match without a dot boundary; wildcard matching the bare domain; empty allowlist denying everything |

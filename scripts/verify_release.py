@@ -89,6 +89,7 @@ def main() -> int:
         ("Install documented requirements", [py, "-m", "pip", "install", "--quiet", "--disable-pip-version-check", "-r", "requirements.txt"]),
         ("All reference solutions and linters", [py, "scripts/check.py", "--solutions"]),
         ("Every starter fails at least one test", [py, "scripts/starters_red.py"]),
+        ("Dated facts checked recently; every model id listed", [py, "scripts/currency_check.py"]),
     ]
     if args.docker:
         checks.append(("Every suite in Docker, checked one at a time", [py, "scripts/run_all.py", "--docker"]))

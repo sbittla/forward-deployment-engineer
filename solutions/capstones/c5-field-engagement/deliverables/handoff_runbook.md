@@ -21,7 +21,7 @@ approves, Clinical Informatics deploys after the eval suite passes with 100% urg
    notify the Privacy Officer within 1 hour, and preserve logs for the breach assessment.
 
 ## Monitoring
-- Urgent-case recall on the weekly nurse-labelled sample must stay at 100%. Any miss is a sev-1.
+- Urgent-case recall on the weekly nurse-labeled sample must stay at 100%. Any miss is a sev-1.
 - Field accuracy target is 95% or higher; review misses weekly.
 - Voice agent p95 response latency stays under 3 s, and barge-ins are tracked per week.
 

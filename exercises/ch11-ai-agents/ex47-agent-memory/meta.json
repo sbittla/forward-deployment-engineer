@@ -2,7 +2,7 @@
   "id": "ex47",
   "chapter": "ch11-ai-agents",
   "slug": "agent-memory",
-  "title": "Conversation memory and summarisation",
+  "title": "Conversation memory and summarization",
   "requirements": [
     "R11",
     "R09"

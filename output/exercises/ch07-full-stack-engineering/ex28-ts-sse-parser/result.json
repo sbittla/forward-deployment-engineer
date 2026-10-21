@@ -3,14 +3,14 @@
   "status": "PASS",
   "problems": [],
   "tests": {
-    "passed": 10,
+    "passed": 11,
     "failed": 0,
     "error": 0,
     "skipped": 0
   },
-  "declared": 10,
-  "ran": 10,
-  "starter_failing": 10,
+  "declared": 11,
+  "ran": 11,
+  "starter_failing": 11,
   "cases": [
     {
       "test": "ts:whole stream",
@@ -21,11 +21,15 @@
       "status": "passed"
     },
     {
+      "test": "ts:bare CR ends a line, and a CRLF split across chunks is one line ending",
+      "status": "passed"
+    },
+    {
       "test": "ts:multi-line data, default event, leading space, no-data events",
       "status": "passed"
     },
     {
-      "test": "ts:end flushes final event",
+      "test": "ts:end discards an unterminated event",
       "status": "passed"
     },
     {

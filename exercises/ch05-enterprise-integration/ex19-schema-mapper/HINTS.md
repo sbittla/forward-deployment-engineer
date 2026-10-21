@@ -36,5 +36,5 @@ Derive `segment` from the converted revenue.
 |---|---|
 | `test_good_rows` | Name whitespace not collapsed; timestamp left in the source offset instead of converted to UTC |
 | `test_errors_collected_per_field` | Stopping at the first error in a row, or reporting the source column name instead of the canonical field |
-| `test_phone_formats` | Formats handled one by one with patterns, instead of normalising to digits |
+| `test_phone_formats` | Formats handled one by one with patterns, instead of normalizing to digits |
 | `test_mid_market` | Segment thresholds use `>` instead of `>=` |

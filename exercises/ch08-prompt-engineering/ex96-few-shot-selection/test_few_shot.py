@@ -49,6 +49,17 @@ def test_label_coverage(impl):
     assert idx(impl.ensure_label_coverage(covered, POOL, ["account", "bug", "nonexistent"], Q)) == [5, 9, 0]
 
 
+def test_label_coverage_respects_k_and_budget(impl):
+    # Coverage replaces, never appends: with every label already distinct there's nothing to swap out.
+    distinct = [POOL[5], POOL[9], POOL[0]]                       # bug, billing, account
+    assert idx(impl.ensure_label_coverage(distinct, POOL, ["how-to"], Q)) == [5, 9, 0]
+    chosen = impl.select_examples(Q, POOL, 3)                    # [1, 9, 0]: 10 + 13 + 9 = 32 tokens
+    assert impl.approx_tokens(POOL[7]) == 11                     # the how-to example costs one more than #1
+    assert idx(impl.ensure_label_coverage(chosen, POOL, ["how-to"], Q, max_tokens=32)) == [1, 9, 0]
+    swapped = impl.ensure_label_coverage(chosen, POOL, ["how-to"], Q, max_tokens=33)
+    assert sorted(idx(swapped)) == [0, 7, 9] and sum(map(impl.approx_tokens, swapped)) == 33
+
+
 def test_format_escapes_and_wraps(impl):
     text = impl.format_examples([{"input": "a < b & c", "output": "how-to"}])
     assert text == ("<examples>\n<example>\n<input>a &lt; b &amp; c</input>\n<output>how-to</output>\n"

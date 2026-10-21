@@ -4,7 +4,7 @@
 
 ## Learning objectives
 - Trace requests as span trees with timing, tokens and cost.
-- Summarise latency percentiles and spend by model.
+- Summarize latency percentiles and spend by model.
 - Find the critical path that explains a slow answer.
 
 ## Scenario

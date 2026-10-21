@@ -77,15 +77,28 @@ def heading_chunks(markdown: str) -> list[Chunk]:
     return out
 
 
-def chunk_key(doc_id: str, path: str, text: str) -> str:
-    return hashlib.sha256(json.dumps([doc_id, path, text]).encode()).hexdigest()
+def chunk_key(doc_id: str, path: str, text: str, ordinal: int = 0) -> str:
+    return hashlib.sha256(json.dumps([doc_id, path, text, ordinal]).encode()).hexdigest()
 
 
-def plan_reindex(doc_id: str, current: dict[str, str], incoming: list[Chunk]) -> tuple[list[Chunk], list[str]]:
-    fresh = {chunk_key(doc_id, c.meta.get("path", ""), c.text): c for c in incoming}
+def chunk_keys(doc_id: str, chunks: list[Chunk]) -> list[str]:
+    seen: dict[tuple[str, str], int] = {}
+    keys = []
+    for c in chunks:
+        path = c.meta.get("path", "")
+        ordinal = seen.get((path, c.text), 0)
+        seen[(path, c.text)] = ordinal + 1
+        keys.append(chunk_key(doc_id, path, c.text, ordinal))
+    return keys
+
+
+def plan_reindex(doc_id: str, current: dict[str, str],
+                 incoming: list[Chunk]) -> tuple[list[Chunk], list[str], list[tuple[str, Chunk]]]:
+    fresh = dict(zip(chunk_keys(doc_id, incoming), incoming))
     to_add = [chunk for key, chunk in fresh.items() if key not in current]
     to_delete = [idx for key, idx in current.items() if key not in fresh]
-    return to_add, to_delete
+    to_update = [(current[key], chunk) for key, chunk in fresh.items() if key in current]
+    return to_add, to_delete, to_update
 
 
 def _as_date(value) -> date | None:

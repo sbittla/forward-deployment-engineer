@@ -73,8 +73,8 @@ Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each
 - **Cleanup:** none. The tests write only to temporary directories, and `__pycache__` folders are ignored by git.
 - **Production caveats:** The server trusts whoever is on stdio, doesn't validate arguments against `inputSchema`,
   returns raw exception text in `isError` results and switches the whole process to legacy on one `initialize`.
-  Production uses an official MCP SDK, the specification's authorisation on HTTP transports, schema validation and
-  sanitised errors, and keeps any legacy state per connection.
+  Production uses an official MCP SDK, the specification's authorization on HTTP transports, schema validation and
+  sanitized errors, and keeps any legacy state per connection.
 
 ## Prompt kit
 **Learn (tutor prompt)**

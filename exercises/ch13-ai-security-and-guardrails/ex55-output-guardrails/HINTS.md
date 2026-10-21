@@ -17,7 +17,7 @@ supported sentences.
 - **Banned phrases:** a lowercase substring check.
 - **PII leak:** find emails and SSN patterns in the answer. Flag a leak if any of them doesn't appear in the joined
   source text.
-- **Groundedness:** tokenise each source once into a set. For each sentence, compute the share of its content tokens
+- **Groundedness:** tokenize each source once into a set. For each sentence, compute the share of its content tokens
   found in a source's set, and call the sentence supported if any source reaches `min_support`.
 </details>
 

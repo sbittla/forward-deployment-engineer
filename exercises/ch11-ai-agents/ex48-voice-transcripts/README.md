@@ -5,10 +5,10 @@
 ## Learning objectives
 - Turn a voice call event log into segments, turns and latency metrics.
 - Measure response latency, barge-ins and silences.
-- Report conversational quality in numbers a contact-centre lead understands.
+- Report conversational quality in numbers a contact-center lead understands.
 
 ## Scenario
-Voice-agent FDE roles (contact centres, healthcare intake, drive-through ordering) live and die by conversational
+Voice-agent FDE roles (contact centers, healthcare intake, drive-through ordering) live and die by conversational
 latency and interruption handling. The customer says "the bot feels slow and talks over people". Turn that feeling
 into numbers from the call event log.
 

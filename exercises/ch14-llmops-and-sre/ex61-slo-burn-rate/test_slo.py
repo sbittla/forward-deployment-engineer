@@ -86,3 +86,37 @@ def test_canary_rollback_on_burn(impl):
     assert slo.canary_action(traffic(NOW - 600, NOW, 6), NOW) == "wait"   # 100 requests, all good
     early_bad = traffic(NOW - 600, NOW, 6, bad_every=10)              # 10 bad > 2.0 x 0.005 x 500 = 5
     assert slo.canary_action(early_bad, NOW) == "rollback"
+
+
+def _clock(t):
+    return f"{int(t // 3600):02d}:{int(t % 3600 // 60):02d}:{int(t % 60):02d}"
+
+
+def test_worked_example_alert_times(impl):
+    # Chapter 14's Table 14.7, on a simulated clock: 1 request a second from 07:00, 2 a second from the 08:30 peak,
+    # when 15% of requests start returning 503 until the rollback. Synthetic traffic, not a measurement.
+    slo, H = impl.SLO(), 3600                               # 99.5% over 30 days; streamed answers, 3,000 ms
+    start, peak = 7 * H, 8 * H + 30 * 60
+
+    def gen(rollback=None):
+        out, t, i = [], start, 0
+        while t < 10 * H:
+            bad = peak <= t and (rollback is None or t < rollback) and i % 20 < 3
+            out.append((t, 503 if bad else 200, 1200))
+            t += 1 / (2 if t >= peak else 1)
+            i += 1
+        return out
+
+    def first(reqs, t, cond):
+        while not cond(slo.alerts(reqs, t)):
+            t += 20
+            assert t < 10 * H, "the expected alert state never came"
+        return t
+
+    reqs = gen()
+    ticket = first(reqs, peak, lambda a: a == ["ticket"])
+    page = first(reqs, ticket, lambda a: a == ["page"])
+    assert (_clock(ticket), _clock(page)) == ("08:41:20", "08:49:00")
+    rollback = page + 12 * 60
+    clears = first(gen(rollback), rollback, lambda a: "page" not in a)
+    assert (_clock(rollback), _clock(clears)) == ("09:01:00", "09:03:40")

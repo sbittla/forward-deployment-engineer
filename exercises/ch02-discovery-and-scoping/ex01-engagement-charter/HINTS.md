@@ -6,7 +6,7 @@ Open a hint only after you've been stuck for about ten minutes. Each one gives a
 <summary>Hint 1 · Where to start</summary>
 
 Split the notes into sections first and parse each section separately. Every section starts with a line beginning
-`## `, so a multiline split on that marker gives you (title, body) pairs. Normalise the title (strip it, lowercase it)
+`## `, so a multiline split on that marker gives you (title, body) pairs. Normalize the title (strip it, lowercase it)
 and dispatch on it. Bullets are the lines that start with `- `.
 </details>
 

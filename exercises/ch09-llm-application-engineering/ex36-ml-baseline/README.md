@@ -20,7 +20,7 @@ LLM is worth it. Either way, you now have numbers.
    `predict(text)`.
 3. `metrics(y_true, y_pred) -> dict` with `accuracy`, `per_class` (`{label: {"precision","recall","f1"}}`, 0.0 when
    undefined), `macro_f1`, `confusion` (`{(true, pred): count}`). Round floats to 3 dp.
-4. `llm_classify(llm, text, labels)` — prompt the model to answer with exactly one label; normalise the reply
+4. `llm_classify(llm, text, labels)` — prompt the model to answer with exactly one label; normalize the reply
    (strip, lower, strip punctuation); unknown replies → `"unknown"`.
 5. `recommend(baseline, llm, monthly_volume, llm_cost_per_call)` → `"baseline"` if
    `llm["macro_f1"] - baseline["macro_f1"] < 0.03`, else `"llm"`; also returns the monthly LLM cost:
@@ -46,7 +46,7 @@ Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each
   solution, so report it with the repository's Errata issue template.
 - **Cleanup:** none. The tests write only to temporary directories, and `__pycache__` folders are ignored by git.
 - **Production caveats:** The dataset is small and synthetic, and the comparison uses a single split. Before
-  recommending a model in production, evaluate on the customer's labelled tickets with repeated or time-based splits,
+  recommending a model in production, evaluate on the customer's labeled tickets with repeated or time-based splits,
   report confidence intervals, and re-check the decision as the ticket mix drifts.
 
 ## Prompt kit

@@ -11,7 +11,7 @@
 | Gate | Negative test run | Result | Evidence (link) | Waiver allowed | Waiver (owner, expiry, compensating control) |
 |---|---|---|---|---|---|
 | Tenant isolation | | | | Never | |
-| Tool authorisation | | | | Never | |
+| Tool authorization | | | | Never | |
 | Least privilege | | | | Never (production identities) | |
 | Secrets | | | | Never | |
 | Prompt injection and egress | | | | Never (egress, side effects) | |

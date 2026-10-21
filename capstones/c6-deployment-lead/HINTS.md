@@ -58,10 +58,12 @@ Each module has its own test. `test_c6_plan.py` doesn't depend on anything else,
 | `test_baseline` | Critical path not ordered by start; P90 summing standard deviations instead of variances |
 | `test_forecast_and_slip` | Forecast schedule starts at day 0 instead of `as_of_day`; progress applied to the baseline |
 | `test_rag` | Planned progress not clamped; variance not weighted by effort; critical-path bump missing |
+| `test_next_milestone` | Milestones ordered by listing instead of baseline finish; forecast day taken from the baseline instead of the re-planned schedule; a finished milestone still returned |
 | `test_cycle_rejected` | Cycle loops forever instead of raising |
 | `test_partner_reviews` | Design checklist severities or gate reason order differ from ex90 |
 | `test_adoption_and_impact` | Funnel or diff-in-diff arithmetic (see ex82) |
 | `test_security_gate` | Physical or model-risk questions auto-answered; status not `open` when anything is unanswered |
 | `test_go_live` | Conditions reported as blockers; GO returned with conditions still present |
-| `test_steering_update` | Numbers typed in instead of computed; table rows differ; decisions not the first section |
+| `test_steering_update` | Numbers typed in instead of computed; table rows differ; sections not in Section 16.3's order (decision first, next milestone last) |
+| `test_steering_changes_risks_and_next_milestone` | Last week's RAG not recomputed from `last_week` with the same `workstream_rag`; closed RAID items shown; a missing owner or date hidden instead of shown as UNASSIGNED or NO DATE |
 | `test_deliverable` | A required heading missing (the SOW's support boundaries and exit criteria too), a placeholder left in, `D-fe-1` or a date missing from the memo, or no percentages |

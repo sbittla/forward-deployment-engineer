@@ -1,3 +1,4 @@
+import statistics
 import zlib
 
 STATS = {"shuffles": 0}
@@ -60,6 +61,19 @@ def skew_ratio(rdd: MiniRDD) -> float:
     sizes = rdd.partition_sizes()
     mean = sum(sizes) / len(sizes) if sizes else 0
     return round(max(sizes) / mean, 2) if mean else 0.0
+
+
+class IncompleteBatch(Exception):
+    pass
+
+
+def check_batch_complete(batch_rows: int, trailing_counts: list[int], min_ratio: float = 0.5) -> None:
+    """Raise IncompleteBatch unless batch_rows >= min_ratio * median(trailing_counts)."""
+    if not trailing_counts:
+        raise IncompleteBatch("no trailing counts to compare against")
+    median = statistics.median(trailing_counts)
+    if batch_rows < min_ratio * median:
+        raise IncompleteBatch(f"{batch_rows} rows is below {min_ratio:.0%} of the trailing median {median:g}")
 
 
 def salted_reduce_by_key(rdd: MiniRDD, fn, num_partitions: int, salts: int) -> MiniRDD:

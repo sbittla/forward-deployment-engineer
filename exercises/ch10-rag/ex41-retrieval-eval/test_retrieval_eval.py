@@ -159,3 +159,52 @@ def test_benchmark_abstention(impl):
     assert report(BASELINE) == {"answerable": 8, "abstained_answerable": 0, "unanswerable": 2,
                                 "answered_unanswerable": 1}
     assert report(CANDIDATE)["answered_unanswerable"] == 0 and report(CANDIDATE)["abstained_answerable"] == 0
+
+
+def test_rag_scorecard(impl):
+    results = [
+        {"answerable": True, "abstained": False, "citations": ["d1", "d2"], "supporting": ["d1"]},
+        {"answerable": True, "abstained": True, "citations": [], "supporting": ["d3"]},
+        {"answerable": False, "abstained": False, "citations": ["d9"], "supporting": []},
+        {"answerable": False, "abstained": True, "citations": [], "supporting": []},
+    ]
+    assert impl.rag_scorecard(results) == {"citation_precision": 0.3333, "answered_unanswerable_rate": 0.5,
+                                           "abstained_answerable_rate": 0.5}
+    # An assistant that refuses everything is perfect on one side and useless on the other.
+    refuse_all = [dict(r, abstained=True, citations=[]) for r in results]
+    assert impl.rag_scorecard(refuse_all) == {"citation_precision": 0.0, "answered_unanswerable_rate": 0.0,
+                                              "abstained_answerable_rate": 1.0}
+    assert impl.rag_scorecard(results[:2])["answered_unanswerable_rate"] is None
+
+
+# Follow-up questions (exercise data): each needs the previous question's subject to be answerable.
+FOLLOWUPS = {
+    "f1": {"history": ["is burst pipe water damage covered"], "query": "What about flood?",
+           "relevant": {"pol-9.1": 2}},
+    "f2": {"history": ["my roof was damaged by hail"], "query": "Is it covered?", "relevant": {"pol-15.1": 2}},
+    "f3": {"history": ["my basement has mold after a covered water loss"], "query": "Will you pay to fix it?",
+           "relevant": {"pol-12.4": 2}},
+    "f4": {"history": ["is hail roof damage covered"], "query": "How is it valued?", "relevant": {"pol-15.1": 2}},
+    "f5": {"history": ["do adjusters need photos"], "query": "And what else do they ask for?",
+           "relevant": {"faq-5": 2}},
+}
+
+
+def test_rewrite_followup(impl):
+    assert impl.rewrite_followup("What about flood?", ["is burst pipe covered"]) == \
+        "is burst pipe covered What about flood?"
+    assert impl.rewrite_followup("Is theft of contents covered?", ["is burst pipe covered"]) == \
+        "Is theft of contents covered?"
+    assert impl.rewrite_followup("Is it covered?", []) == "Is it covered?"
+
+
+def test_rewrite_followup_recall(impl):
+    def qrels(rewrite):
+        return {qid: {"query": rewrite(f["query"], f["history"]), "relevant": f["relevant"]}
+                for qid, f in FOLLOWUPS.items()}
+    bare = impl.evaluate(_ids(CANDIDATE), qrels(lambda q, h: q), BENCH_K)
+    rewritten = impl.evaluate(_ids(CANDIDATE), qrels(impl.rewrite_followup), BENCH_K)
+    assert (bare["mean"]["recall"], rewritten["mean"]["recall"]) == (0.4, 1.0)
+    assert (bare["mean"]["mrr"], rewritten["mean"]["mrr"]) == (0.2667, 0.9)
+    # The cost: "What about flood?" now carries the burst-pipe terms, and the burst-pipe chunk outranks flood.
+    assert (bare["per_query"]["f1"]["mrr"], rewritten["per_query"]["f1"]["mrr"]) == (1.0, 0.5)

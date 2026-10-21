@@ -5,7 +5,7 @@
 | **Owner** | FDE |
 | **When** | After the performance test plan has run |
 | **Inputs** | Test results, traces, cost data |
-| **Done when** | Every number is labelled measured, assumed, estimated or projected, and the verdict against each target is stated |
+| **Done when** | Every number is labeled measured, assumed, estimated or projected, and the verdict against each target is stated |
 | **Book** | Chapter 14, Section 14.3 |
 
 ## Verdict

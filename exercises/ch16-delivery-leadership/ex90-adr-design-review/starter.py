@@ -1,6 +1,7 @@
 from dataclasses import dataclass, field
 
 DOWNSIDE_WORDS = {"cost", "risk", "trade-off", "tradeoff", "downside", "slower", "lock-in", "complexity"}
+NEGATIONS = {"no", "not", "without", "zero", "nor", "never"}
 CHECKLIST = {
     "auth": "blocker", "data_flow": "blocker", "pii_handling": "blocker", "rollback": "blocker",
     "evals": "major", "observability": "major", "threat_model": "major",

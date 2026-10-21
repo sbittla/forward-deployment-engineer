@@ -21,7 +21,7 @@ cheap to revisit.
 | Module | Responsibility |
 |---|---|
 | `config.py` | Typed settings from env, aggregated errors, secret masking, egress allowlist check |
-| `resilience.py` | `ResilientLLM`: retries with jittered backoff (honour `retry_after`), fallback model on overload, circuit breaker |
+| `resilience.py` | `ResilientLLM`: retries with jittered backoff (honor `retry_after`), fallback model on overload, circuit breaker |
 | `observability.py` | Prometheus text-format counters and histograms; JSON logger |
 | `service.py` | `/healthz`, `/readyz` (red when the circuit is open), `/metrics`, authenticated `/v1/summarize` with limits; 503 + `Retry-After` in degraded mode; never log payloads |
 | `slo.py` | Burn-rate alerts (page 14.4x over 1 h and 5 m; ticket 6x over 6 h and 30 m); `canary_decision(base, canary, min_requests=500)` → `wait`, `rollback` or `promote` |
@@ -39,7 +39,7 @@ Fix the deploy artifacts in `starter/deploy/` (`Dockerfile`, `k8s.yaml`, `ci.yml
   score, and the weighted score), capacity math, open risks, sign-off. Any failed gate means not ready, whatever the
   score.
 - `performance_test_plan.md`: workload model, targets, latency budget, tests, quality under load, and a report whose
-  numbers are each labelled measured, assumed, estimated or projected.
+  numbers are each labeled measured, assumed, estimated or projected.
 - `runbook.md`: deploy, rollback, alerts, degraded mode, customer-environment specifics, escalation.
 
 Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.

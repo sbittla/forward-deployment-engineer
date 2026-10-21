@@ -23,11 +23,34 @@ body:
     validations:
       required: true
   - type: input
+    id: background
+    attributes:
+      label: Reader background
+      description: Starting background, years of experience, prior Python/TypeScript/Docker use (no names)
+      placeholder: "LLM app builder, 4 years; Python yes, TypeScript some, Docker yes"
+    validations:
+      required: true
+  - type: input
     id: outcome
     attributes:
       label: Outcome
-      description: Minutes taken, and whether "done when" was reached without help
-      placeholder: "75 min; done without help"
+      description: Minutes to first passing test, minutes to "done when", and whether it was reached without help
+      placeholder: "first test 18 min; done 75 min; done without help"
+    validations:
+      required: true
+  - type: input
+    id: hints
+    attributes:
+      label: Hint use and interventions
+      description: Hints opened (1, 2, 3, table) and the number of observer interventions
+      placeholder: "hint 1 and the table; 0 interventions"
+    validations:
+      required: true
+  - type: textarea
+    id: caveats
+    attributes:
+      label: Production caveats
+      description: The reader's answer to "What does this exercise not protect against in production?" and the score (1 or 0)
     validations:
       required: true
   - type: textarea

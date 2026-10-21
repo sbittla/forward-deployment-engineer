@@ -23,20 +23,28 @@ tiny partitioned engine so you can *see* those mechanics. Part B is the real PyS
 - `skew_ratio(rdd)` → `max(partition_sizes) / mean(partition_sizes)` rounded to 2 dp (0.0 for empty).
 - `salted_reduce_by_key(rdd, fn, num_partitions, salts)` fixes a hot key: append salt `i % salts` (by item position)
   to each key, `reduce_by_key`, strip the salt, `reduce_by_key` again. The result equals a plain `reduce_by_key`.
+- `check_batch_complete(batch_rows, trailing_counts, min_ratio=0.5)` raises `IncompleteBatch` when `trailing_counts`
+  is empty or `batch_rows < min_ratio * statistics.median(trailing_counts)`; otherwise it returns `None`. The test
+  replays the chapter's failure case: 1.1 million rows against a typical 9.4 million fails, though it would pass an
+  absolute floor of 1,000,000.
 
 ## Part B: `spark_job.py`
-Write a PySpark job, the code you'd run on Databricks, as `build(spark, min_rows, max_age_hours)`, that:
+Write a PySpark job, the code you'd run on Databricks, as `build(spark, batch_date, max_age_hours, min_ratio)`, that
+rebuilds one day (`event_date == batch_date`):
 1. reads `transactions` (Delta) with `spark.read.table("bronze.transactions")`
-2. **blocks** before any write: counts the input rows (`count`) and measures the age of the newest `ingested_at`, and
-   raises if there are fewer than `min_rows` rows or the newest row is older than `max_age_hours`. An overwrite
-   trusts its input completely; a partial bronze must fail the job, not replace correct totals
-3. keeps `amount > 0`, groups by `merchant`, and sums `amount` as `total` using `pyspark.sql.functions`
-4. writes the result with `.write.format("delta").mode("overwrite").saveAsTable("gold.merchant_totals")`
+2. **blocks** before any write: counts the batch's rows (`count`) and the trailing days' rows per `event_date`, and
+   measures the age of the newest `ingested_at`. It raises if the batch has fewer than `min_ratio` times the trailing
+   median (the `check_batch_complete` rule) or the newest row is older than `max_age_hours`. An overwrite trusts its
+   input completely; a partial batch must fail the job, not replace correct totals
+3. keeps the batch's rows with `amount > 0`, groups by `event_date` and `merchant`, and sums `amount` as `total` using
+   `pyspark.sql.functions`
+4. writes only that day's partition with `.write.format("delta").mode("overwrite")`,
+   `.option("replaceWhere", "event_date = '<batch_date>'")` and `.saveAsTable("gold.merchant_totals")`
 5. never calls `.collect()` or `.toPandas()` on the un-aggregated data (the test checks there are none at all)
 
-`spark_job.py` isn't executed by the tests (no Spark cluster needed); it's parsed and checked statically: the
-`count` call and a `raise` must come before the `saveAsTable` line. For the
-Scala API, the same job is `df.filter($"amount" > 0).groupBy("merchant").agg(sum("amount").as("total"))`.
+`spark_job.py` isn't executed by the tests (no Spark cluster needed); it's parsed and checked statically: the `count`
+call and a `raise` must come before the `saveAsTable` line, and `replaceWhere` and `event_date` must appear. For the
+Scala API, the aggregation is `df.filter($"amount" > 0).groupBy("merchant").agg(sum("amount").as("total"))`.
 
 Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
 
@@ -45,10 +53,10 @@ Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each
 - **Prerequisites:** Python 3.11 or later and `pip install -r requirements.txt`, run once from the repository root.
   No API key or network access is needed.
 - **Run your work:** from the repository root, `pytest exercises/ch06-data-engineering/ex77-spark-fundamentals`.
-- **Expected output:** all 6 tests fail against the starter; when you're done, all 6 pass.
+- **Expected output:** all 7 tests fail against the starter; when you're done, all 7 pass.
 - **Check the reference solution:** `pytest --solutions exercises/ch06-data-engineering/ex77-spark-fundamentals`: all
-  6 pass.
-- **Tests:** `test_spark.py` (6 tests).
+  7 pass.
+- **Tests:** `test_spark.py` (7 tests).
 - **Common failures:** `ModuleNotFoundError: No module named 'fde_kit'` means the command didn't run from the
   repository root. For a failing test, [HINTS.md](HINTS.md) says what it usually means.
 - **Whose failure is it?** If your run fails but the reference run passes, it's your code. If the reference run fails
@@ -57,8 +65,8 @@ Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each
 - **Cleanup:** none. The tests write only to temporary directories, and `__pycache__` folders are ignored by git.
 - **Production caveats:** `MiniRDD` runs in one process and only models partitioning and shuffles; the PySpark job is
   checked statically, not run on a cluster. Before production, run the job on representative data, read its plan and
-  Spark UI, tune the input-check thresholds with the data owner, and rely on Delta table history so a bad overwrite
-  can be restored.
+  Spark UI, tune `min_ratio` and the history window with the data owner (weekends and holidays need their own
+  baseline), and rely on Delta table history so a bad overwrite can be restored.
 
 ## Prompt kit
 **Learn (tutor prompt)**

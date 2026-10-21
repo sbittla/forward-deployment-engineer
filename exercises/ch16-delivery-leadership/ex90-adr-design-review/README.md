@@ -20,9 +20,13 @@ review gate that decides whether a partner's design or deliverable can ship.
    `## <Heading>` blocks become sections (heading lower-cased → body stripped). Missing title or status → `ValueError`.
 2. `lint_adr(adr) -> list[str]`: require sections `context`, `decision`, `consequences`, `alternatives considered`
    (`missing:<section>`); `alternatives considered` must list at least 2 bullets (`alternatives:fewer-than-2`);
-   `consequences` must mention at least one downside, i.e. a word from `{"cost", "risk", "trade-off", "tradeoff",
-   "downside", "slower", "lock-in", "complexity"}` (`consequences:no-downside`); an `accepted` ADR must include
-   `decided-by:` in its decision section (`decision:no-owner`).
+   `consequences` must mention at least one downside, i.e. a word from `DOWNSIDE_WORDS` (`{"cost", "risk",
+   "trade-off", "tradeoff", "downside", "slower", "lock-in", "complexity"}`, matched case-insensitively where no
+   letter, digit or hyphen precedes it) that is not denied: a word counts only if neither of the two words before it
+   in the same clause (text split at `. ; : , ! ?` and newlines) is in `NEGATIONS` (`{"no", "not", "without",
+   "zero", "nor", "never"}`), so "There is no risk and no lock-in." fails (`consequences:no-downside`). This is a
+   heuristic, not a reading: a reviewer still reads the section. An `accepted` ADR must include `decided-by:` in its
+   decision section (`decision:no-owner`).
 3. `review_design(design: dict) -> list[Finding(severity, area, message)]` against `CHECKLIST`. The design dict has
    keys such as `auth`, `data_flow`, `pii_handling`, `evals`, `rollback`, `observability`, `cost_estimate`,
    `slo`, `threat_model`. Missing/empty `blocker` items → severity `"blocker"`; missing `major` → `"major"`; missing
@@ -48,10 +52,10 @@ Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each
 - **Prerequisites:** Python 3.11 or later and `pip install -r requirements.txt`, run once from the repository root.
   No API key or network access is needed.
 - **Run your work:** from the repository root, `pytest exercises/ch16-delivery-leadership/ex90-adr-design-review`.
-- **Expected output:** all 5 tests fail against the starter; when you're done, all 5 pass.
+- **Expected output:** all 6 tests fail against the starter; when you're done, all 6 pass.
 - **Check the reference solution:** `pytest --solutions exercises/ch16-delivery-leadership/ex90-adr-design-review`:
-  all 5 pass.
-- **Tests:** `test_review_gate.py` (5 tests).
+  all 6 pass.
+- **Tests:** `test_review_gate.py` (6 tests).
 - **Common failures:** `ModuleNotFoundError: No module named 'fde_kit'` means the command didn't run from the
   repository root. For a failing test, [HINTS.md](HINTS.md) says what it usually means.
 - **Whose failure is it?** If your run fails but the reference run passes, it's your code. If the reference run fails

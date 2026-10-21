@@ -4,6 +4,8 @@
 
 ## Learning objectives
 - Validate OIDC ID tokens correctly, rejecting alg=none and bad claims.
+- Tell ID tokens (who signed in, checked by the client) from access tokens (what an API call may do, checked by
+  the API).
 - Filter retrieval candidates by ACL before ranking.
 - Build an on-behalf-of token exchange request for downstream APIs.
 
@@ -15,7 +17,19 @@ legacy systems, with identity and access". Enterprise RAG must enforce the **use
 customer's identity provider (Entra ID, Okta).
 
 ## Your task
-1. `verify_id_token(token, secret, issuer, audience, now)` for an HS256 JWT. Check, in this order, and raise
+This is a **teaching implementation**, not complete production OIDC: HS256 with a shared secret keeps the tests
+self-contained. Production uses the identity provider's supported validation and a maintained library configured with
+the right issuer, audience, algorithm and token type.
+
+Three tokens, three validators. **Authentication:** the user signs in at the identity provider and the copilot (the
+OIDC client) receives an **ID token** with `aud` = its client id; the copilot validates it and starts a session.
+**API authorization:** the client obtains an **access token** whose audience is the API (the resource server); the
+API validates it on every request. **Downstream calls:** the API exchanges the incoming access token for one with the
+downstream API's audience (RFC 8693) instead of passing it through. An ID token is never accepted as an API bearer
+token.
+
+1. `verify_id_token(token, secret, issuer, audience, now, expected_nonce=None)` for an HS256 JWT, where `audience` is
+   the client id. Check, in this order, and raise
    `AuthError` at the first failure, with a message containing the keyword in brackets:
    - **structure**: three base64url segments (no padding), whose header and payload decode to JSON objects
      (`malformed`);
@@ -29,21 +43,33 @@ customer's identity provider (Entra ID, Okta).
    - **audience** `aud` (a string or a list) includes `audience` (`audience`);
    - **expiry**: `exp` must be a number greater than `now`; a missing `exp` fails closed (`expired`, plus `exp`
      when it's missing: for example `token expired or missing exp`);
-   - **not-before**: when `nbf` is present it must be `<= now` (`not yet valid`).
+   - **not-before**: when `nbf` is present it must be `<= now` (`not yet valid`);
+   - **token type**: a header `typ` of `at+jwt` (or `application/at+jwt`, any case) is an access token and is rejected
+     (`type`);
+   - **authorized party**: when `azp` is present, or `aud` is a list of more than one value, `azp` must equal
+     `audience` (`azp`);
+   - **nonce**: when `expected_nonce` is given (the client sent a nonce in the authorization request), the `nonce`
+     claim must equal it; a missing or different nonce is rejected (`nonce`).
 
    Return the claims dict.
-2. `make_token(claims, secret, kid=None)` builds such a token (handy for tests and local dev), adding a `kid` header
-   when one is given.
-3. `Principal.from_claims(claims)`: `user = claims["sub"]`, `email`, `groups` (list, default empty).
-4. `allowed(doc_acl, principal)`: ACL is `{"users": [...], "groups": [...], "deny_groups": [...]}`. Deny wins;
+2. `make_token(claims, secret, kid=None, typ="JWT")` builds such a token (handy for tests and local dev), adding a
+   `kid` header when one is given; `typ="at+jwt"` makes a JWT access token.
+3. `verify_access_token(token, secret, issuer, audience, now, required_scope=None)`: what the **API** runs, where
+   `audience` is the API's own identifier. The same checks as `verify_id_token` from structure to not-before, then
+   **token type**: the header `typ` must be `at+jwt` (RFC 9068; `application/at+jwt` and any case accepted), so an
+   ID token is rejected (`type`); and **scope**: when `required_scope` is given it must be one of the
+   space-separated values in the `scope` claim (`scope`). Return the claims dict. (Opaque access tokens are checked by
+   token introspection instead; that's out of scope here.)
+4. `Principal.from_claims(claims)`: `user = claims["sub"]`, `email`, `groups` (list, default empty).
+5. `allowed(doc_acl, principal)`: ACL is `{"users": [...], "groups": [...], "deny_groups": [...]}`. Deny wins;
    otherwise allow if the user is listed, or shares a group, or the ACL has group `"everyone"`. A missing, `None` or
    empty ACL denies: retrieval authorization **fails closed** (Chapter 10, Section 10.6, makes the same rule for
    tenant metadata).
-5. `secure_search(principal, query, docs, search_fn, k)`: filter to permitted docs (by each doc's `acl`, which may
+6. `secure_search(principal, query, docs, search_fn, k)`: filter to permitted docs (by each doc's `acl`, which may
    be absent) **before** ranking (never rank
    and then drop: that leaks result counts and snippets), call `search_fn(query, permitted_docs, k)`, and return
    `(results, audit)` where audit is `{"user", "query", "candidates", "permitted", "denied"}`.
-6. `obo_exchange_request(user_token, client_id, client_secret, scope)`: the form body for an OAuth 2.0 token
+7. `obo_exchange_request(user_token, client_id, client_secret, scope)`: the form body for an OAuth 2.0 token
    exchange (RFC 8693) so downstream APIs see the user's identity rather than a god-mode service account:
    `grant_type=urn:ietf:params:oauth:grant-type:token-exchange`, `subject_token`,
    `subject_token_type=urn:ietf:params:oauth:token-type:access_token`, `requested_token_type=...:access_token`,
@@ -63,7 +89,8 @@ service then:
   unknown `kid`. During **rotation** the provider publishes the new key before signing with it and keeps the old one
   until tokens signed with it expire, so the cached set holds both. `test_kid_selects_key_during_rotation` models this
   with a dict of keys;
-- validates the same boundary as here: issuer, audience, expiry and not-before (allow a small clock skew, at most a
+- validates the same boundary as here: issuer, audience, token type, `nonce` and `azp` for ID tokens, scope for
+  access tokens, expiry and not-before (allow a small clock skew, at most a
   minute or two, in production), and rejects `alg: none`;
 - keeps any shared secret it does have (client secrets for token exchange) in the secret manager, never in code.
 
@@ -77,10 +104,10 @@ Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each
   No API key or network access is needed.
 - **Run your work:** from the repository root,
   `pytest exercises/ch13-ai-security-and-guardrails/ex89-permission-aware-rag`.
-- **Expected output:** all 21 tests fail against the starter; when you're done, all 21 pass.
+- **Expected output:** all 24 tests fail against the starter; when you're done, all 24 pass.
 - **Check the reference solution:**
-  `pytest --solutions exercises/ch13-ai-security-and-guardrails/ex89-permission-aware-rag`: all 21 pass.
-- **Tests:** `test_permissions.py` (21 tests).
+  `pytest --solutions exercises/ch13-ai-security-and-guardrails/ex89-permission-aware-rag`: all 24 pass.
+- **Tests:** `test_permissions.py` (24 tests).
 - **Common failures:** `ModuleNotFoundError: No module named 'fde_kit'` means the command didn't run from the
   repository root. For a failing test, [HINTS.md](HINTS.md) says what it usually means.
 - **Whose failure is it?** If your run fails but the reference run passes, it's your code. If the reference run fails
@@ -88,7 +115,7 @@ Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each
   solution, so report it with the repository's Errata issue template.
 - **Cleanup:** none. The tests write only to temporary directories, and `__pycache__` folders are ignored by git.
 - **Production caveats:** HS256 with a shared secret keeps the tests self-contained. Production uses a maintained JWT
-  library with an explicit RS256 or ES256 allowlist and JWKS keys selected by `kid` and cached, synchronises ACLs
+  library with an explicit RS256 or ES256 allowlist and JWKS keys selected by `kid` and cached, synchronizes ACLs
   from the source systems quickly enough that revoked access takes effect, and uses the identity provider's own
   token-exchange grant.
 
@@ -105,9 +132,9 @@ at a time, and tell me what to re-read if I get one wrong.
 ```text
 Implement exercises/ch13-ai-security-and-guardrails/ex89-permission-aware-rag/starter.py so that test_permissions.py passes.
 README.md in that folder is the spec: follow its names, formats, ordering and error messages exactly. Public API:
-`AuthError`, `Principal`, `make_token`, `verify_id_token`, `allowed`, `secure_search`, `obo_exchange_request`.
-Constraints: Python 3.11+, the standard library and the repo's fde_kit package only (pyyaml is allowed where the
-README uses YAML). Do not modify the tests or fde_kit. When you're done, run `pytest
+`AuthError`, `Principal`, `make_token`, `verify_id_token`, `verify_access_token`, `allowed`, `secure_search`,
+`obo_exchange_request`. Constraints: Python 3.11+, the standard library and the repo's fde_kit package only (pyyaml
+is allowed where the README uses YAML). Do not modify the tests or fde_kit. When you're done, run `pytest
 exercises/ch13-ai-security-and-guardrails/ex89-permission-aware-rag` and show me the output. If the README and the tests
 disagree, stop and tell me instead of guessing.
 ```

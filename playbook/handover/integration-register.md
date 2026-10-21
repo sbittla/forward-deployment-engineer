@@ -8,7 +8,7 @@
 | **Done when** | Every integration has an entry with no blank cells; the team taking over has debugged one integration from it |
 | **Book** | Chapter 5, Section 5.6 · first page of the handover pack (Appendix F) |
 
-| Integration | Endpoint and environment | Authentication; who issues credentials | Owner; escalation contact | Rate limits (documented / measured) | Error behaviour worth knowing | Data classification | Test fixtures |
+| Integration | Endpoint and environment | Authentication; who issues credentials | Owner; escalation contact | Rate limits (documented / measured) | Error behavior worth knowing | Data classification | Test fixtures |
 |---|---|---|---|---|---|---|---|
 | <system> | <base URL>, <prod / test> | <OAuth client credentials, API key, mTLS>; <team> | <team>; <contact> | <n> req/min / <n> req/min | <"returns 200 with an error body on timeout"> | <public, internal, confidential, personal> | <repo path> |
 

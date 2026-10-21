@@ -39,6 +39,7 @@ around `get`, so leave it until `get` works.
 |---|---|
 | `test_auth_headers_and_pagination` | Double or missing slash in the URL; cursor sent on the first request; caller's params changed |
 | `test_retry_after` | Retry-After read case-sensitively, or the default of 1 second missing |
+| `test_retry_after_http_date` | `float()` on a date raises `ValueError`; parse it with `email.utils.parsedate_to_datetime` and subtract `clock()`, floored at 0 |
 | `test_429_exhausted` | One request too few or too many: `max_retries=3` means 4 requests in total |
 | `test_client_error` | `ApiError` doesn't keep `status` and `body` as attributes |
 | `test_proactive_rate_limit_wait` | Sleeping right after the response (and after the last page), or not using the injected clock |

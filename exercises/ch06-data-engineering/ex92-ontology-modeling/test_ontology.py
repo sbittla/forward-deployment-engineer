@@ -67,3 +67,28 @@ def test_actions(onto):
     assert onto.traverse("Shipment", "S1", "ships_to")["name"] == "Globex"
     assert onto.audit == [{"action": "reassign_shipment", "actor": "ai-agent",
                            "params": {"shipment_id": "S1", "customer_id": "C2", "reason": "customer merge"}, "seq": 1}]
+
+
+def test_unknown_object_and_refusals_are_logged(onto):
+    onto.load("Shipment", [{"shipment_id": "S1", "customer_id": "C1", "wh_id": "W1", "status": "delayed", "weight_kg": 1.0}])
+
+    def apply(o, shipment_id, new_date):
+        o.get("Shipment", shipment_id)["status"] = "rescheduled"
+        if new_date == "never":
+            raise RuntimeError("downstream rejected the date")
+
+    onto.register_action("reschedule_shipment", "Shipment", {"shipment_id": "str", "new_date": "str"},
+                         lambda o, shipment_id, new_date: (
+                             "already delivered" if o.get("Shipment", shipment_id)["status"] == "delivered" else None),
+                         apply, allowed_roles={"ops_agent"})
+    with pytest.raises(ValueError, match="S9"):            # a missing object is a ValueError, never a TypeError
+        onto.execute("reschedule_shipment", "agent:ops-1", "ops_agent", shipment_id="S9", new_date="2026-10-20")
+    with pytest.raises(PermissionError):
+        onto.execute("reschedule_shipment", "mallory", "viewer", shipment_id="S1", new_date="2026-10-20")
+    with pytest.raises(RuntimeError):
+        onto.execute("reschedule_shipment", "agent:ops-1", "ops_agent", shipment_id="S1", new_date="never")
+    assert onto.get("Shipment", "S1")["status"] == "delayed" and onto.audit == []
+    assert [(r["actor"], r["role"], r["action"]) for r in onto.rejected] == [
+        ("agent:ops-1", "ops_agent", "reschedule_shipment"), ("mallory", "viewer", "reschedule_shipment"),
+        ("agent:ops-1", "ops_agent", "reschedule_shipment")]
+    assert "S9" in onto.rejected[0]["error"] and "viewer" in onto.rejected[1]["error"]

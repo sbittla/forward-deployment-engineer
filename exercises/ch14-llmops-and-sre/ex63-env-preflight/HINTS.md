@@ -37,7 +37,7 @@ Every factory has the same shape: define an inner `fn()` that returns `(ok, deta
 | Test | Likely cause |
 |---|---|
 | `test_all_pass` | Check name or detail format differs (`disk_free(/) — 90.0 GB free`); em dash replaced by a hyphen |
-| `test_failures_and_hints` | Version detail not `3.9.7 < 3.11`; hint shown for passing checks; failed warn check labelled FAIL |
+| `test_failures_and_hints` | Version detail not `3.9.7 < 3.11`; hint shown for passing checks; failed warn check labeled FAIL |
 | `test_warn_only` | `clock_skew` defaults to severity `fail` |
 | `test_crashing_check` | An exception from `fn` escapes `run_preflight` |
 | `test_not_writable` | `writable` only checks `os.access`, or swallows the error and reports success |

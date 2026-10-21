@@ -7,7 +7,7 @@ class CachedLLM:
         self.ttl_s = ttl_s
         self.clock = clock
 
-    def complete(self, messages, system=None, tools=None, model=None, **kw):
+    def complete(self, messages, system=None, tools=None, model=None, tenant=None, entitlements=None, **kw):
         raise NotImplementedError
 
     def stats(self) -> dict:

@@ -37,7 +37,7 @@ the spec into the prompt, trace every rule, and run a conformance suite generate
   `rule` differs; changes to `why` alone don't count.
 
 ## Field notes
-Explaining *why* in the prompt ("reserves are confidential") makes models generalise a rule to cases the rule's
+Explaining *why* in the prompt ("reserves are confidential") makes models generalize a rule to cases the rule's
 wording didn't anticipate. Version the spec, not the prompt: the prompt is a build artifact.
 
 Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.

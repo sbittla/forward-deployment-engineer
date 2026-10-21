@@ -18,5 +18,5 @@ For each source, also confirm:
 - [ ] Rate limits and maintenance windows, documented and measured.
 - [ ] How deletions and corrections reach us (soft deletes, change feed, reconciliation).
 - [ ] Retention period for every copy we make (raw, processed, logs, vector chunks).
-- [ ] Whether data may leave the network for a model provider, and in what form (redacted, tokenised).
+- [ ] Whether data may leave the network for a model provider, and in what form (redacted, tokenized).
 - [ ] A data contract or a draft of one (Chapter 6, Section 6.6).

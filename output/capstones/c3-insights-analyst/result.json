@@ -3,14 +3,14 @@
   "status": "PASS",
   "problems": [],
   "tests": {
-    "passed": 24,
+    "passed": 32,
     "failed": 0,
     "error": 0,
     "skipped": 0
   },
   "declared": 14,
-  "ran": 24,
-  "starter_failing": 24,
+  "ran": 32,
+  "starter_failing": 32,
   "cases": [
     {
       "test": "py:test_repair_loop",
@@ -94,6 +94,38 @@
     },
     {
       "test": "py:test_blocks[explain select 1]",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_blocks[SELECT * FROM \"salaries\"]",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_blocks[SELECT * FROM `salaries`]",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_blocks[SELECT * FROM [salaries]]",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_blocks[SELECT * FROM 'salaries']",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_blocks[SELECT * FROM\"salaries\"]",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_blocks[SELECT name FROM \"sqlite_master\"]",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_blocks[SELECT * FROM accounts, 'salaries']",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_blocks[SELECT * FROM accounts a JOIN \"salaries\" s ON 1=1]",
       "status": "passed"
     },
     {

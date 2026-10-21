@@ -32,6 +32,17 @@ def test_rag(cap, eng):
     assert rag["agent"]["variance"] == -0.145
 
 
+def test_next_milestone(cap, eng):
+    assert cap.next_milestone(eng) == {
+        "milestone": "Eval bar met", "task": "agent-evals", "baseline_day": 21.3, "forecast_day": 22.4,
+        "acceptance": "held-out pass rate of at least 0.9 on the bank's golden set, no critical-slice regressions"}
+    done = copy.deepcopy(eng)
+    done["progress"].update({"agent-evals": 1.0})
+    assert cap.next_milestone(done)["milestone"] == "Go-live"
+    done["progress"]["go-live"] = 1.0
+    assert cap.next_milestone(done) is None
+
+
 def test_cycle_rejected(cap):
     with pytest.raises(ValueError):
         cap.schedule([{"id": "a", "o": 1, "m": 1, "p": 1, "deps": ["b"]}, {"id": "b", "o": 1, "m": 1, "p": 1, "deps": ["a"]}])

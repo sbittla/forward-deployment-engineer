@@ -1,6 +1,6 @@
 # ex71 · Fine-tuning dataset preparation
 
-**Chapter:** 15 · Field Engineering and Productisation (`exercises/ch15-field-engineering-and-productisation/`) · **Covers:** R16 Fine-tuning / ML fundamentals
+**Chapter:** 15 · Field Engineering and Productization (`exercises/ch15-field-engineering-and-productisation/`) · **Covers:** R16 Fine-tuning / ML fundamentals
 
 ## Learning objectives
 - Select high-quality training conversations for fine-tuning.
@@ -22,7 +22,7 @@ Input conversations: `{"id", "intent", "csat" (1–5 or None), "resolved": bool,
    turns and "assistant" for agent turns]}`; consecutive turns by the same role are merged with `"\n"`; the example
    must end with an assistant message (drop trailing customer turns). Redact emails → `[EMAIL]` and phone numbers
    (`\+?\d[\d\s().-]{7,}\d`) → `[PHONE]` in every message.
-3. `dedupe(examples) -> list` — drop examples whose normalised content (lower-case, digits replaced by `0`,
+3. `dedupe(examples) -> list` — drop examples whose normalized content (lower-case, digits replaced by `0`,
    whitespace collapsed, over all non-system messages) has been seen; keep the first.
 4. `split(examples, intents, val_ratio=0.2, seed=0) -> (train, val)` — stratified by intent (parallel list), using
    `random.Random(seed)`; each intent contributes `max(1, round(n * val_ratio))` validation examples when it has ≥ 2

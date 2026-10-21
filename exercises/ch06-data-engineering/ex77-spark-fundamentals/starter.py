@@ -38,5 +38,13 @@ def skew_ratio(rdd: MiniRDD) -> float:
     raise NotImplementedError
 
 
+class IncompleteBatch(Exception):
+    pass
+
+
+def check_batch_complete(batch_rows: int, trailing_counts: list[int], min_ratio: float = 0.5) -> None:
+    raise NotImplementedError
+
+
 def salted_reduce_by_key(rdd: MiniRDD, fn, num_partitions: int, salts: int) -> MiniRDD:
     raise NotImplementedError

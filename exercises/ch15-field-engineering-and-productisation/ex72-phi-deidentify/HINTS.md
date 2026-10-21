@@ -6,7 +6,7 @@ Open a hint only after you've been stuck for about ten minutes. Each one gives a
 <summary>Hint 1 · Where to start</summary>
 
 Start the output as a copy of the record **without** the identifying keys (a dict comprehension that skips them), so
-you never change the input. Then add the generalised fields one at a time: birth year and age group, zip3, visit year,
+you never change the input. Then add the generalized fields one at a time: birth year and age group, zip3, visit year,
 and finally the scrubbed note.
 </details>
 

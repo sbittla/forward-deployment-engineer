@@ -3,14 +3,14 @@
   "status": "PASS",
   "problems": [],
   "tests": {
-    "passed": 15,
+    "passed": 16,
     "failed": 0,
     "error": 0,
     "skipped": 0
   },
-  "declared": 12,
-  "ran": 15,
-  "starter_failing": 15,
+  "declared": 13,
+  "ran": 16,
+  "starter_failing": 16,
   "cases": [
     {
       "test": "py:test_page",
@@ -66,6 +66,10 @@
     },
     {
       "test": "py:test_stream_requires_token_when_configured",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_stream_resumes_after_last_event_id",
       "status": "passed"
     },
     {

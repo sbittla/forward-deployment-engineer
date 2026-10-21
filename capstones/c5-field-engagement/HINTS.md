@@ -31,10 +31,10 @@ than discovering it in the eval.
   scans **every** outbound prompt for PHI and raises `PHILeak`, extract the intake, then run deterministic triage over
   the *original* caller text.
 - **Triage** is a red-flag keyword list that can only **raise** urgency (to `emergency`, callback `asap`), never lower
-  it. Clinical safety lives in code you can audit, not in the model's judgement.
-- **Extraction** validates the schema (urgency and callback window from fixed sets), normalises the symptoms (lower
+  it. Clinical safety lives in code you can audit, not in the model's judgment.
+- **Extraction** validates the schema (urgency and callback window from fixed sets), normalizes the symptoms (lower
   case, deduplicated), and feeds validation errors back for one repair attempt.
-- **Urgent recall:** of the gold emergencies, the share you also labelled emergency. Being labelled "urgent" doesn't
+- **Urgent recall:** of the gold emergencies, the share you also labeled emergency. Being labeled "urgent" doesn't
   count.
 </details>
 
@@ -65,7 +65,7 @@ than discovering it in the eval.
 | `test_names_mentioned_by_agent_and_emails` | Only the full name redacted; parenthesised phone format missed |
 | `test_pipeline_end_to_end` | Triage run on the model output instead of the caller text; PHI reaches the model |
 | `test_guard_blocks_phi` | Guard checks only the patient name, not dates and other PHI |
-| `test_extraction_repair_and_failure` | Symptoms not normalised; validation error not fed back; no error after the last attempt |
+| `test_extraction_repair_and_failure` | Symptoms not normalized; validation error not fed back; no error after the last attempt |
 | `test_triage_never_downgrades` | Triage replaces urgency with a lower level; callback window not set to `asap` |
 | `test_evaluate` | Urgent recall counts "urgent" as catching an emergency |
 | `test_roi` | Payback uses gross instead of net monthly savings |

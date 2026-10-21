@@ -1,6 +1,6 @@
 # ex74 · API reference and quickstart generator
 
-**Chapter:** 15 · Field Engineering and Productisation (`exercises/ch15-field-engineering-and-productisation/`) · **Covers:** R24 Technical writing & enablement, R01 Python
+**Chapter:** 15 · Field Engineering and Productization (`exercises/ch15-field-engineering-and-productisation/`) · **Covers:** R24 Technical writing & enablement, R01 Python
 
 ## Learning objectives
 - Generate API reference docs from the code itself.

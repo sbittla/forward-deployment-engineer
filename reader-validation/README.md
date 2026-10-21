@@ -28,16 +28,30 @@ you said.
 
 ## What to record
 
-Use the [reader feedback issue form](../.github/ISSUE_TEMPLATE/reader-validation.yml) once per session:
+Use the [reader feedback issue form](../.github/ISSUE_TEMPLATE/reader-validation.yml) once per session. The measures:
 
-- time taken, and whether the session's "done when" was reached without help;
-- every point of friction: the file and line, what the reader expected, what happened;
-- any command that failed, with its output and the reader's OS, Python and Node versions;
-- one sentence on what the reader would change.
+| Measure | How it's taken |
+|---|---|
+| Setup success | Session 1 reached "done when" without help (yes/no), and the step where it stopped if not |
+| Time to first passing test | Minutes from opening the exercise README to the first test that passes against the reader's own code |
+| Time to "done when" | Minutes for the whole session |
+| Hint use | Which of the three hints in `HINTS.md` the reader opened, and whether the test-to-cause table was used |
+| Observer interventions | Count, and the exact words of each hint the observer gave |
+| Unclear instructions | Each place the reader re-read or misread: file and line, what they expected, what happened |
+| Failed commands | The command, its output, and the reader's OS, Python and Node versions |
+| Caveat comprehension | After each session, ask: "What does this exercise *not* protect against in production?" Score 1 if the answer names a point from the exercise's Production caveats or the book's Production readiness panel, else 0 |
+| Change request | One sentence on what the reader would change |
+
+## Readers and backgrounds
+
+Record each reader's starting background (one of the three above, plus years of experience and whether they have
+used Python, TypeScript and Docker before) without names. Report results per background as well as overall: an
+exercise that only one background can finish is a finding.
 
 ## Pass bar and what happens next
 
-- **Pass:** at least 80% of sessions reach "done when" without help, and no session is blocked by a defect in the
-  book or the repository.
+- **Pass:** at least 80% of sessions reach "done when" without help, every reader completes setup, caveat
+  comprehension is at least 80%, and no session is blocked by a defect in the book or the repository.
 - Every recorded friction point gets a fix or a written reason not to fix it, linked from the issue.
-- The release notes and Appendix G then record the date, the number of readers and the pass rate.
+- The release notes and Appendix G then record the date, the number of readers and their backgrounds, the pass rate,
+  the median time to first passing test, hint use, and caveat comprehension.

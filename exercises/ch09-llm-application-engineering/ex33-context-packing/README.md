@@ -48,7 +48,7 @@ Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each
   solution, so report it with the repository's Errata issue template.
 - **Cleanup:** none. The tests write only to temporary directories, and `__pycache__` folders are ignored by git.
 - **Production caveats:** Tokens are estimated as `ceil(len(text) / 4)`, which can be off by a factor of two for
-  code, JSON or non-Latin scripts. Production packing uses the provider's token-counting endpoint or tokeniser and
+  code, JSON or non-Latin scripts. Production packing uses the provider's token-counting endpoint or tokenizer and
   logs what was included, truncated and dropped for every request.
 
 ## Prompt kit

@@ -12,7 +12,8 @@ def _overdue(t, today):
 def overall_status(tasks: list[dict], today: date) -> str:
     overdue = [t for t in tasks if _overdue(t, today)]
     blocked = [t for t in tasks if t["status"] == "blocked"]
-    if any(_d(t["due"]) <= today + timedelta(days=7) for t in blocked) or len(overdue) >= 3:
+    blocked_soon = any(_d(t["due"]) <= today + timedelta(days=7) for t in blocked)
+    if blocked_soon or len(overdue) >= 3:
         return "red"
     if overdue or blocked:
         return "amber"

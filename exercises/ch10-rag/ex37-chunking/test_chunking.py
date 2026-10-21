@@ -63,28 +63,55 @@ def test_heading_paths(impl):
 
 
 def test_chunk_key(impl):
-    expected = hashlib.sha256(json.dumps(["pol-7", "Policy > Coverage", "Flood is excluded."]).encode()).hexdigest()
+    expected = hashlib.sha256(json.dumps(["pol-7", "Policy > Coverage", "Flood is excluded.", 0]).encode()).hexdigest()
     assert impl.chunk_key("pol-7", "Policy > Coverage", "Flood is excluded.") == expected
     assert impl.chunk_key("pol-7", "Policy", "x") != impl.chunk_key("pol-8", "Policy", "x")
+    assert impl.chunk_key("pol-7", "Policy", "x", 1) != impl.chunk_key("pol-7", "Policy", "x", 0)
+
+
+def test_chunk_keys_distinguish_identical_chunks(impl):
+    Chunk = impl.Chunk
+    chunks = [Chunk("Sign here.", 0, 10, {"path": "Form"}), Chunk("Intro", 10, 15, {}),
+              Chunk("Sign here.", 15, 25, {"path": "Form"})]
+    keys = impl.chunk_keys("pol-7", chunks)
+    assert keys == [impl.chunk_key("pol-7", "Form", "Sign here.", 0), impl.chunk_key("pol-7", "", "Intro", 0),
+                    impl.chunk_key("pol-7", "Form", "Sign here.", 1)]
+    to_add, _, _ = impl.plan_reindex("pol-7", {}, chunks)
+    assert len(to_add) == 3
 
 
 def test_plan_reindex_touches_only_changes(impl):
     old = impl.heading_chunks(DOC)
-    current = {impl.chunk_key("pol-7", c.meta["path"], c.text): f"idx-{i}" for i, c in enumerate(old)}
+    current = {key: f"idx-{i}" for i, key in enumerate(impl.chunk_keys("pol-7", old))}
     new_doc = DOC.replace("File within 30 days.", "File within 14 days.")
-    to_add, to_delete = impl.plan_reindex("pol-7", current, impl.heading_chunks(new_doc))
+    to_add, to_delete, to_update = impl.plan_reindex("pol-7", current, impl.heading_chunks(new_doc))
     assert [c.meta["path"] for c in to_add] == ["Policy > Claims"]
     assert "14 days" in to_add[0].text
     assert to_delete == ["idx-4"]
-    assert impl.plan_reindex("pol-7", current, old) == ([], [])
+    assert [idx for idx, _ in to_update] == ["idx-0", "idx-1", "idx-2", "idx-3", "idx-5"]
+    assert impl.plan_reindex("pol-7", current, old) == ([], [], [(f"idx-{i}", c) for i, c in enumerate(old)])
+
+
+def test_plan_reindex_refreshes_moved_chunks(impl):
+    # Text unchanged but shifted: no re-embedding, yet the index must get the new offsets and metadata.
+    old = impl.heading_chunks(DOC)
+    current = {key: f"idx-{i}" for i, key in enumerate(impl.chunk_keys("pol-7", old))}
+    new = impl.heading_chunks(DOC.replace("Intro text", "Longer intro text"))
+    for c in new:
+        c.meta["effective_from"] = "2026-03-01"
+    to_add, to_delete, to_update = impl.plan_reindex("pol-7", current, new)
+    assert to_delete == ["idx-0"] and [c.text for c in to_add] == [new[0].text]
+    appendix = dict(to_update)["idx-5"]
+    assert appendix.start == old[5].start + len("Longer ") and DOC.replace("Intro text", "Longer intro text")[
+        appendix.start:appendix.end] == appendix.text
+    assert appendix.meta["effective_from"] == "2026-03-01"
 
 
 def test_plan_reindex_document_removed(impl):
-    current = {impl.chunk_key("pol-7", c.meta["path"], c.text): f"idx-{i}"
-               for i, c in enumerate(impl.heading_chunks(DOC))}
-    to_add, to_delete = impl.plan_reindex("pol-7", current, [])
-    assert to_add == [] and to_delete == [f"idx-{i}" for i in range(6)]
-    added, _ = impl.plan_reindex("pol-7", {}, impl.fixed_chunks("abcdef", 4, 1))
+    current = {key: f"idx-{i}" for i, key in enumerate(impl.chunk_keys("pol-7", impl.heading_chunks(DOC)))}
+    to_add, to_delete, to_update = impl.plan_reindex("pol-7", current, [])
+    assert to_add == [] and to_update == [] and to_delete == [f"idx-{i}" for i in range(6)]
+    added, _, _ = impl.plan_reindex("pol-7", {}, impl.fixed_chunks("abcdef", 4, 1))
     assert [c.text for c in added] == ["abcd", "def"]
 
 

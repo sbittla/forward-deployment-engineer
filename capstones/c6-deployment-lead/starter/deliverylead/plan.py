@@ -49,3 +49,9 @@ def workstream_rag(eng: dict) -> dict:
     than 0.1 behind plan is amber. Returns {workstream: {"variance", "rag"}}.
     """
     raise NotImplementedError
+
+
+def next_milestone(eng: dict) -> dict | None:
+    """The first unfinished milestone (progress < 1.0) by baseline finish: {"milestone", "task", "acceptance",
+    "baseline_day", "forecast_day"}, days rounded to 1 dp; None when every milestone is done."""
+    raise NotImplementedError

@@ -18,7 +18,7 @@ RAG failures are retrieval failures, so measure retrieval separately from genera
 1. `recall_at_k(ranked, relevant, k)` — fraction of relevant docs present in the top k (0.0 if none relevant).
 2. `precision_at_k(ranked, relevant, k)` — relevant hits in top k divided by k.
 3. `mrr(ranked, relevant)` — 1 / rank of the first relevant doc, 0 if none.
-4. `ndcg_at_k(ranked, relevant, k)` — DCG with gain `2**grade - 1` and discount `log2(rank + 1)`, normalised by the
+4. `ndcg_at_k(ranked, relevant, k)` — DCG with gain `2**grade - 1` and discount `log2(rank + 1)`, normalized by the
    ideal DCG from sorting grades desc. 0.0 when there are no relevant docs.
 5. `evaluate(retrieve, qrels, k) -> dict` — `retrieve(query, k) -> list[doc_id]`. Returns
    `{"per_query": {qid: {...4 metrics}}, "mean": {...}}` with all values rounded to 4 dp.
@@ -31,6 +31,18 @@ RAG failures are retrieval failures, so measure retrieval separately from genera
 8. `abstention_report(results) -> dict` — `results` is a list of `{"answerable": bool, "abstained": bool}`. Return
    `{"answerable": n, "abstained_answerable": n, "unanswerable": n, "answered_unanswerable": n}`. The launch bar
    for `answered_unanswerable` is zero.
+9. `rag_scorecard(results) -> dict` — `results` rows carry all four keys above (`answerable`, `abstained`,
+   `citations`, `supporting`). Return `{"citation_precision": citation_precision(results),
+   "answered_unanswerable_rate": answered_unanswerable ÷ unanswerable, "abstained_answerable_rate":
+   abstained_answerable ÷ answerable}`, the rates from `abstention_report` rounded to 4 dp and `None` when the
+   slice is empty. Reporting both rates exposes an assistant that refuses everything.
+10. `rewrite_followup(question, history) -> str` — a deterministic stand-in for a model-based query rewrite.
+   `history` lists the earlier user questions, oldest first. If `history` is non-empty and the question is a
+   follow-up (its stripped, lowercased text starts with `"what about"`, `"how about"`, `"and "` or `"what if"`, or
+   one of its words, matched with `[a-z]+`, is `it`, `that`, `this`, `they` or `them`), return
+   `f"{history[-1]} {question}"`; otherwise return `question` unchanged. The tests measure it on `FOLLOWUPS`, five
+   follow-up questions over the benchmark below with the candidate retriever: recall@3 0.4 → 1.0, MRR 0.2667 → 0.9,
+   and one cost: "What about flood?" drops from MRR 1.0 to 0.5 because the burst-pipe terms now outrank it.
 
 ### The fixed benchmark in the tests
 `test_retrieval_eval.py` ships a small, reproducible benchmark (exercise data) that runs on your functions:
@@ -51,16 +63,16 @@ Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each
 - **Prerequisites:** Python 3.11 or later and `pip install -r requirements.txt`, run once from the repository root.
   No API key or network access is needed.
 - **Run your work:** from the repository root, `pytest exercises/ch10-rag/ex41-retrieval-eval`.
-- **Expected output:** all 9 tests fail against the starter; when you're done, all 9 pass.
-- **Check the reference solution:** `pytest --solutions exercises/ch10-rag/ex41-retrieval-eval`: all 9 pass.
-- **Tests:** `test_retrieval_eval.py` (9 tests).
+- **Expected output:** all 12 tests fail against the starter; when you're done, all 12 pass.
+- **Check the reference solution:** `pytest --solutions exercises/ch10-rag/ex41-retrieval-eval`: all 12 pass.
+- **Tests:** `test_retrieval_eval.py` (12 tests).
 - **Common failures:** `ModuleNotFoundError: No module named 'fde_kit'` means the command didn't run from the
   repository root. For a failing test, [HINTS.md](HINTS.md) says what it usually means.
 - **Whose failure is it?** If your run fails but the reference run passes, it's your code. If the reference run fails
   too, check the prerequisites (`python --version`, `node --version`); if they're met, it's a defect in the published
   solution, so report it with the repository's Errata issue template.
 - **Cleanup:** none. The tests write only to temporary directories, and `__pycache__` folders are ignored by git.
-- **Production caveats:** The metrics are only as good as the qrels: a small hand-labelled set can't show statistical
+- **Production caveats:** The metrics are only as good as the qrels: a small hand-labeled set can't show statistical
   significance. In production, build the query set with the customer, version it with the index, include stale,
   conflicting and unanswerable cases, and report retrieval metrics separately from answer-quality metrics.
 
@@ -77,7 +89,7 @@ questions to check my understanding, one at a time, and tell me what to re-read 
 Implement exercises/ch10-rag/ex41-retrieval-eval/starter.py so that test_retrieval_eval.py passes.
 README.md in that folder is the spec: follow its names, formats, ordering and error messages exactly. Public API:
 `recall_at_k`, `precision_at_k`, `mrr`, `ndcg_at_k`, `evaluate`, `compare`, `citation_precision`,
-`abstention_report`. Constraints: Python 3.11+, the standard
+`abstention_report`, `rag_scorecard`, `rewrite_followup`. Constraints: Python 3.11+, the standard
 library and the repo's fde_kit package only (pyyaml is allowed where the README uses YAML). Do not modify the tests
 or fde_kit. When you're done, run `pytest exercises/ch10-rag/ex41-retrieval-eval` and show me the output.
 If the README and the tests disagree, stop and tell me instead of guessing.
@@ -85,7 +97,7 @@ If the README and the tests disagree, stop and tell me instead of guessing.
 **Review**
 ```text
 Review my solution to "Retrieval metrics: recall@k, MRR, nDCG" as a senior forward deployed engineer would before it
-ships to a customer. Specifically: Is nDCG normalised by the ideal ordering of all relevant docs, not just retrieved
+ships to a customer. Specifically: Is nDCG normalized by the ideal ordering of all relevant docs, not just retrieved
 ones? Are queries with no relevant docs handled? Is the comparison table sign-formatted correctly? Rank findings by
 customer impact, quote the line for each, and say which ones a test should catch.
 ```

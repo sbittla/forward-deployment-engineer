@@ -37,6 +37,8 @@ First-year ROI subtracts the one-time cost from the gain and adds it to the cost
 | `test_llm_cost` | Prices treated as per-thousand tokens, or `calls_per_task` ignored |
 | `test_payback` | Only `== 0` handled; a negative benefit must also give infinity |
 | `test_summary` | Run cost missing the platform cost; ROI computed without the one-time cost on both sides |
-| `test_sensitivity` | The input dict changed in place (the test checks `adoption` is still 0.6 afterwards) |
+| `test_sensitivity` | The input dict changed in place (the test checks `adoption` is still 0.6 afterward) |
 | `test_sensitivity_scales_several_params_together` | A tuple `param` used as one dict key, or only the first name scaled |
 | `test_edge_cases` | Division by zero when volume or adoption is zero |
+| `test_full_case_reproduces_table_2_3_and_stop_go` | Review cost charged on every question instead of the assisted ones (`tasks*12*adoption`), or net, ROI and payback not recomputed after adding review and operations to run cost |
+| `test_readout_rerun_with_measured_saving` | The measured team-average saving (2.9 min) used directly with 60% adoption, which counts adoption twice: divide by the pilot teams' usage share first |

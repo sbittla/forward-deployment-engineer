@@ -2,7 +2,7 @@
   "id": "ex54",
   "chapter": "ch13-ai-security-and-guardrails",
   "slug": "prompt-injection",
-  "title": "Prompt-injection defences for agents",
+  "title": "Prompt-injection defenses for agents",
   "requirements": [
     "R14",
     "R11",

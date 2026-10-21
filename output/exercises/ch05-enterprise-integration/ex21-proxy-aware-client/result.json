@@ -3,14 +3,14 @@
   "status": "PASS",
   "problems": [],
   "tests": {
-    "passed": 12,
+    "passed": 13,
     "failed": 0,
     "error": 0,
     "skipped": 0
   },
-  "declared": 8,
-  "ran": 12,
-  "starter_failing": 12,
+  "declared": 9,
+  "ran": 13,
+  "starter_failing": 13,
   "cases": [
     {
       "test": "py:test_from_env",
@@ -34,6 +34,10 @@
     },
     {
       "test": "py:test_proxy_for[https://vault.bank.local/v1-http://proxy.bank.local:3128]",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_lowercase_proxy_wins_like_requests",
       "status": "passed"
     },
     {

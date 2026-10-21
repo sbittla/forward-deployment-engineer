@@ -1,4 +1,4 @@
-# ex73 hints · Generalise three customer variants into a config-driven connector
+# ex73 hints · Generalize three customer variants into a config-driven connector
 
 Open a hint only after you've been stuck for about ten minutes. Each one gives away more than the last.
 

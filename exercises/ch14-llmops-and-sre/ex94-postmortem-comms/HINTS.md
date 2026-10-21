@@ -18,7 +18,7 @@ so a bad update never gets built.
 - **impact_summary:** sort the events by time, keep the first timestamp seen for each type, and compute whole minutes
   between `detected` and `resolved`, and between `detected` and `mitigated`. The peak is the maximum
   `affected_users`.
-- **blame_lint:** one regex with alternatives: the fixed phrases, plus a capitalised name followed by
+- **blame_lint:** one regex with alternatives: the fixed phrases, plus a capitalized name followed by
   broke/caused/forgot/missed. `finditer` returns the matches in order.
 - **render_postmortem:** lint first, validate the action items next, then render.
 </details>

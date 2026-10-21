@@ -62,7 +62,7 @@ Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each
 - **Cleanup:** none. The tests write only to temporary directories, and `__pycache__` folders are ignored by git.
 - **Production caveats:** Front matter is parsed as simple `key: value` lines, and skills are trusted once loaded.
   Production uses a real YAML parser, reviews skills and their scripts before installing them, and limits subagent
-  tools by the same authorisation policy as the parent's.
+  tools by the same authorization policy as the parent's.
 
 ## Prompt kit
 **Learn (tutor prompt)**

@@ -40,6 +40,22 @@ def test_bad_signature_and_missing(impl):
     assert r.processed == []
 
 
+def test_raw_body_bytes_are_signed(impl):
+    clk = Clock()
+    r = impl.WebhookReceiver(SECRET, clock=clk)
+    raw = '{"id":"evt_b","name":"Zoë"}'.encode()
+    assert impl.sign(raw, SECRET, clk.t) == impl.sign(raw.decode(), SECRET, clk.t)
+    assert r.handle({"X-Signature": impl.sign(raw, SECRET, clk.t)}, raw) == (202, "accepted")
+
+
+def test_non_ascii_signature_is_401_not_a_crash(impl):
+    clk = Clock()
+    r = impl.WebhookReceiver(SECRET, clock=clk)
+    body = '{"id":"evt_u"}'
+    assert r.handle({"X-Signature": f"t={clk.t},v1=é"}, body) == (401, "bad signature")
+    assert r.handle({"X-Signature": f"t={clk.t},v1=é"}, body.encode()) == (401, "bad signature")
+
+
 def test_stale(impl):
     clk = Clock()
     r = impl.WebhookReceiver(SECRET, clock=clk, tolerance=300)

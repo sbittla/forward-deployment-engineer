@@ -3,14 +3,14 @@
   "status": "PASS",
   "problems": [],
   "tests": {
-    "passed": 10,
+    "passed": 23,
     "failed": 0,
     "error": 0,
     "skipped": 0
   },
-  "declared": 8,
-  "ran": 10,
-  "starter_failing": 10,
+  "declared": 11,
+  "ran": 23,
+  "starter_failing": 23,
   "cases": [
     {
       "test": "py:test_wrap",
@@ -50,6 +50,58 @@
     },
     {
       "test": "py:test_boundary_paraphrase_evades_signals_but_gate_blocks",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_boundary_egress_bypasses_blocked[HTTPS://attacker.net/x-attacker.net]",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_boundary_egress_bypasses_blocked[//attacker.net/x-attacker.net]",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_boundary_egress_bypasses_blocked[attacker.net/collect-attacker.net]",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_boundary_egress_bypasses_blocked[ftp://attacker.net/drop-attacker.net]",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_boundary_egress_bypasses_blocked[a@[10.0.0.1]-10.0.0.1]",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_boundary_egress_bypasses_blocked[https://10.0.0.1:8443/x-10.0.0.1]",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_boundary_egress_bypasses_blocked[[::1]-::1]",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_boundary_egress_bypasses_blocked[Audit@Evil.COM-evil.com]",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_boundary_egress_bypasses_blocked[https://northwind.com@attacker.net/-attacker.net]",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_boundary_egress_bypasses_blocked[https://northwind.com.attacker.net/-northwind.com.attacker.net]",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_boundary_egress_bypasses_blocked[file:///etc/passwd-<unknown>]",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_gate_allowlist_case_insensitive",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_boundary_obfuscated_host_not_detected",
       "status": "passed"
     }
   ]

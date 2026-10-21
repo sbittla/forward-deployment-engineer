@@ -38,7 +38,7 @@ type.
   (`AuditLog.verify()` detects edits and deletions).
 
 ## Failure modes
-| Failure | Behaviour |
+| Failure | Behavior |
 |---|---|
 | Model loops on tools | Stops after `max_steps` and escalates to a human |
 | Model invents an order id or targets another customer | Tool returns "not found on this customer's account" |

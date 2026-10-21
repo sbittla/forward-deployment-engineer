@@ -1,4 +1,4 @@
-# ex54 hints · Prompt-injection defences for tool-using agents
+# ex54 hints · Prompt-injection defenses for tool-using agents
 
 Open a hint only after you've been stuck for about ten minutes. Each one gives away more than the last.
 
@@ -40,8 +40,11 @@ matches, in list order, so each signal appears at most once automatically.
 | `test_wrap` | Case-sensitive replacement misses `<UNTRUSTED`; quotes in the source not escaped |
 | `test_signals` | Signals returned in match order instead of the fixed order; base64 run length not 40 |
 | `test_benign` | Gap pattern crosses sentence boundaries; a verb alone triggers exfiltration |
-| `test_post_to_url_is_exfil` | Exfiltration only recognises email addresses, not URLs |
+| `test_post_to_url_is_exfil` | Exfiltration only recognizes email addresses, not URLs |
 | `test_gate_read_only` | Read-only tools subjected to egress or taint checks |
 | `test_gate_egress` | Subdomains of allowed domains rejected; reason text format differs |
 | `test_gate_tainted` | Tainted side-effect call denied instead of allowed with confirmation |
 | `test_boundary_paraphrase_evades_signals_but_gate_blocks` | Extra exfiltration verbs beyond the spec's list; or the gate only checks egress when `tainted=True` |
+| `test_boundary_egress_bypasses_blocked` | Only lowercase `http(s)://` URLs recognized; scheme-relative, bare-host or IP destinations ignored; the userinfo before `@` taken as the host |
+| `test_gate_allowlist_case_insensitive` | Hosts not lowercased before the allowlist check; strings other than the URL argument not scanned |
+| `test_boundary_obfuscated_host_not_detected` | Decoding or de-bracketing hosts goes beyond the spec; the test pins the gate's documented limit |

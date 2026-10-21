@@ -1,10 +1,14 @@
 # Versions and dated facts (as of 2026-10)
 
 AI platforms change monthly. This page lists every version-sensitive fact the exercises depend on, so you know what
-to re-check when something stops matching the real world. If you find one that's out of date, please open an
+to re-check when something stops matching the real world. Each section says when it was last checked, and
+`python scripts/currency_check.py` fails a release if a section is older than 120 days or the code uses a model id
+this page doesn't list. If you find one that's out of date, please open an
 [errata issue](.github/ISSUE_TEMPLATE/errata.yml).
 
 ## Runtimes
+*Last checked: 2026-10-21.*
+
 | Item | Version used | Where |
 |---|---|---|
 | Python | 3.11, 3.12, 3.13 (CI matrix) | all Python exercises |
@@ -12,6 +16,8 @@ to re-check when something stops matching the real world. If you find one that's
 | pytest / PyYAML | see `requirements.txt` | test runner, YAML exercises |
 
 ## Protocols and specifications
+*Last checked: 2026-10-21.*
+
 | Item | Version | Where | Notes |
 |---|---|---|---|
 | Model Context Protocol | **2026-07-28** (modern), plus legacy 2025-11-25 and earlier via `initialize` | ex44, ex45, capstone 2 | 2026-07-28 removed the handshake: per-request `_meta` protocol version, mandatory `server/discover`, `-32022` UnsupportedProtocolVersionError |
@@ -25,6 +31,8 @@ to re-check when something stops matching the real world. If you find one that's
 | Claude Code subagents | `.claude/agents/<name>.md` with `name`, `description`, `tools`, `model` | ex85 | |
 
 ## Model identifiers
+*Last checked: 2026-10-21.*
+
 Exercises run offline against `fde_kit.FakeLLM`; these ids appear as **labels and test data**, plus the default for
 the optional live adapter (`FDE_LIVE=1`).
 
@@ -36,10 +44,14 @@ the optional live adapter (`FDE_LIVE=1`).
 | `server-side-fallback-2026-07-01` beta | `fde_kit/llm.py` (live adapter only) |
 
 ## Prices
+*Last checked: 2026-10-21.*
+
 Every price in this repository is **exercise data**, chosen to make the arithmetic interesting: ex03, ex34, ex35,
 ex60, capstone 4. Don't quote them to a customer; check the provider's current price list.
 
 ## Third-party request/response formats
+*Last checked: 2026-10-21.*
+
 | Format | Where | Re-check when |
 |---|---|---|
 | Anthropic Messages API (tool_use / tool_result blocks, streaming events) | fde_kit, ex28, ex42, ex86 | the API adds new block types |

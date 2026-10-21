@@ -5,7 +5,7 @@ Open a hint only after you've been stuck for about ten minutes. Each one gives a
 <details>
 <summary>Hint 1 · Where to start</summary>
 
-Before checking any rule, normalise the file into a list of `(INSTRUCTION, rest)` pairs. Join `\` continuations into
+Before checking any rule, normalize the file into a list of `(INSTRUCTION, rest)` pairs. Join `\` continuations into
 one line (a regex replacing a backslash, optional spaces and a newline with a space does it), skip blank lines and
 comments, and uppercase the instruction word. Every rule then becomes a short loop over that list.
 </details>

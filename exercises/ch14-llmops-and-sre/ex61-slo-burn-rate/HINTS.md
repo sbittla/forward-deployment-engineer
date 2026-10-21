@@ -25,7 +25,7 @@ top of them.
 <summary>Hint 3 · The tricky part</summary>
 
 - The window is open at the start and closed at the end. A request at exactly `now - window_s` is outside.
-- A slow but successful request is still **bad**: latency counts towards the SLI.
+- A slow but successful request is still **bad**: latency counts toward the SLI.
 - The short window is there to stop alerts once an incident is over. The long window is there to stop alerts on a
   brief spike. That's why a five-minute spike alone mustn't page.
 - `budget_remaining` can go negative when the budget is overspent; don't clamp it.
@@ -44,3 +44,4 @@ top of them.
 | `test_budget_remaining` | Formula inverted, or no requests returns 0 instead of 1.0 |
 | `test_page_fires_at_exactly_14_4` | `>` used instead of `>=`, or the burn rate compared before rounding to 2 dp |
 | `test_canary_rollback_on_burn` | No early rollback for a canary that has already overspent; `wait` checked first |
+| `test_worked_example_alert_times` | Windows not bounded as `now - window_s < ts <= now` (future requests counted); the ticket checked before the page; burn compared before rounding |

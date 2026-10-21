@@ -22,11 +22,16 @@ def heading_chunks(markdown: str) -> list[Chunk]:
     raise NotImplementedError
 
 
-def chunk_key(doc_id: str, path: str, text: str) -> str:
+def chunk_key(doc_id: str, path: str, text: str, ordinal: int = 0) -> str:
     raise NotImplementedError
 
 
-def plan_reindex(doc_id: str, current: dict[str, str], incoming: list[Chunk]) -> tuple[list[Chunk], list[str]]:
+def chunk_keys(doc_id: str, chunks: list[Chunk]) -> list[str]:
+    raise NotImplementedError
+
+
+def plan_reindex(doc_id: str, current: dict[str, str],
+                 incoming: list[Chunk]) -> tuple[list[Chunk], list[str], list[tuple[str, Chunk]]]:
     raise NotImplementedError
 
 

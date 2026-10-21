@@ -10,11 +10,11 @@ of the book (Section 14.7).
 Every capstone has these four gates, plus its own gates listed in section 4.
 
 - **G1 · Tests.** `pytest capstones/<capstone>` is green from a clean checkout, with no tests skipped or deleted.
-- **G2 · Critical correctness.** The capstone's critical behaviours (section 4) hold, shown by tests or eval results.
+- **G2 · Critical correctness.** The capstone's critical behaviors (section 4) hold, shown by tests or eval results.
 - **G3 · Security and privacy.** No secrets in code or logs; the capstone's security gates (section 4) pass, shown by
   a negative test (one that tries to make the system misbehave and confirms it can't).
 - **G4 · Honest reporting.** Every number in the deliverables traces to a test, an eval run or a stated assumption,
-  and is labelled as measured, assumed, estimated or projected.
+  and is labeled as measured, assumed, estimated or projected.
 
 ## 2. Weighted dimensions
 
@@ -24,9 +24,9 @@ measured, with evidence · **4** evidence a customer's team could take over unch
 | Dimension | Weight | Evidence to require | A 3 looks like |
 |---|---|---|---|
 | Problem and acceptance criteria | 10% | Problem statement, stakeholders, measurable outcomes, explicit non-goals | Clear, testable and agreed: every outcome has a baseline, a target and a measurement |
-| Functional behaviour | 15% | Automated tests, edge cases, error handling, deterministic reproduction | Correct and robust: error paths tested, not only the happy path |
+| Functional behavior | 15% | Automated tests, edge cases, error handling, deterministic reproduction | Correct and robust: error paths tested, not only the happy path |
 | AI quality | 15% | Evaluation dataset, slice-level results, failure analysis, regression evidence | Meets the stated quality bar on every slice, with failures classified |
-| Security and privacy | 15% | Threat model, authorisation tests, tenant isolation, secrets and retention controls | All mandatory gates pass, each with a negative test |
+| Security and privacy | 15% | Threat model, authorization tests, tenant isolation, secrets and retention controls | All mandatory gates pass, each with a negative test |
 | Performance and reliability | 10% | Workload model, latency and throughput results, failure and recovery tests | Meets defined targets; degraded modes tested |
 | Economics | 10% | Cost model, assumptions, cost per successful task, sensitivity analysis | Transparent and plausible; the dominant assumption is identified |
 | Production operations | 10% | Monitoring, alerts, runbook, rollback, ownership, incident process | Operable by another team: someone else could run the rollback from the runbook |
@@ -37,7 +37,7 @@ measured, with evidence · **4** evidence a customer's team could take over unch
 scorecard says exactly what to improve: the lowest-scoring dimension, and the evidence that would raise it.
 
 The weights suit a general-purpose review. A capstone that's mostly delivery (C6) or mostly safety (C2) may shift
-weight towards its focus; write the change down before scoring, not after.
+weight toward its focus; write the change down before scoring, not after.
 
 ## 3. Scorecard to submit
 
@@ -61,7 +61,7 @@ Copy this into `starter/deliverables/scorecard.md` and fill it in.
 ## 4. Per-capstone criteria
 
 ### C1 · Enterprise support copilot (signature capstone)
-- **Required artefacts:** the `copilot/` modules; `discovery_brief.md`, `engagement_charter.md`, `architecture.md`,
+- **Required artifacts:** the `copilot/` modules; `discovery_brief.md`, `engagement_charter.md`, `architecture.md`,
   `threat_model.md`, `evaluation_report.md`, `test_report.md`, `runbook.md` and `final_readout.md`; a generated
   readout and a generated go/no-go (`golive.render_decision`).
 - **Acceptance criteria:** set in the charter and carried unchanged to the readout. Objective gates, computed by
@@ -80,7 +80,7 @@ Copy this into `starter/deliverables/scorecard.md` and fill it in.
   with failure injection and the load model; the computed go/no-go.
 
 ### C2 · Agentic order operations over MCP
-- **Required artefacts:** the `opsagent/` modules, `design_doc.md`, `runbook.md`, `product_feedback.md`.
+- **Required artifacts:** the `opsagent/` modules, `design_doc.md`, `runbook.md`, `product_feedback.md`.
 - **Acceptance criteria:** every scenario reaches its expected outcome; the independent policy re-check finds no
   refund outside policy.
 - **Capstone gates:** tools can only touch the authenticated customer's orders; refunds over $100 never execute
@@ -89,7 +89,7 @@ Copy this into `starter/deliverables/scorecard.md` and fill it in.
 - **Test evidence:** the scenario eval run and the policy re-check.
 
 ### C3 · Lakehouse analyst
-- **Required artefacts:** the `insights/` modules, `analyst_guide.md`, `exec_readout.md`.
+- **Required artifacts:** the `insights/` modules, `analyst_guide.md`, `exec_readout.md`.
 - **Acceptance criteria:** execution accuracy against the gold queries as stated in your readout; every bad row
   quarantined with a reason; no data lost silently between bronze and gold.
 - **Capstone gates:** the SQL guard blocks every write, multi-statement, system-table and non-allow-listed query
@@ -97,7 +97,7 @@ Copy this into `starter/deliverables/scorecard.md` and fill it in.
 - **Test evidence:** the ETL load report, the eval run with refusal accuracy and the unsafe-blocked count.
 
 ### C4 · Pilot to production
-- **Required artefacts:** the `pilot/` modules, fixed deploy artefacts, `production_readiness_review.md`,
+- **Required artifacts:** the `pilot/` modules, fixed deploy artifacts, `production_readiness_review.md`,
   `performance_test_plan.md`, `runbook.md`.
 - **Acceptance criteria:** the platform policy accepts the Dockerfile, manifests and CI; every incident finding is
   paired with a fix; capacity is explained with Little's Law and written assumptions.
@@ -108,7 +108,7 @@ Copy this into `starter/deliverables/scorecard.md` and fill it in.
   plan's report.
 
 ### C5 · Embedded field engagement
-- **Required artefacts:** the `engagement/` modules, `stakeholder_update.md`, `handoff_runbook.md`,
+- **Required artifacts:** the `engagement/` modules, `stakeholder_update.md`, `handoff_runbook.md`,
   `product_feedback.md`, the generated board readout.
 - **Acceptance criteria:** urgent-case recall of 100% (every emergency caught as an emergency); field accuracy as
   stated in the readout; assumptions for every open discovery question.
@@ -117,7 +117,7 @@ Copy this into `starter/deliverables/scorecard.md` and fill it in.
 - **Test evidence:** the eval run, including the under-triaged chest-pain call.
 
 ### C6 · Deployment lead
-- **Required artefacts:** the `deliverylead/` modules, `sow.md`, `partner_review_memo.md`, `enablement_plan.md`, the
+- **Required artifacts:** the `deliverylead/` modules, `sow.md`, `partner_review_memo.md`, `enablement_plan.md`, the
   generated steering update.
 - **Acceptance criteria:** the forecast, variance and go-live decision match the agreed rules; every blocker and
   condition is listed with its reason; the SOW has acceptance criteria per milestone, support boundaries and exit

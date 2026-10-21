@@ -41,6 +41,17 @@ def test_lint(impl):
                                                        "missing:alternatives considered"]
 
 
+def test_lint_rejects_negated_downside(impl):
+    trade_off = "Trade-off: recall at very large scale is lower than a dedicated engine, and index builds add cost."
+    for denial in ("There is no risk and no lock-in.", "Faster, without added cost; zero trade-off.",
+                   "Not a downside in sight."):
+        adr = impl.parse_adr(GOOD.replace(trade_off, denial))
+        assert impl.lint_adr(adr) == ["consequences:no-downside"], denial
+    # one real downside is enough, even beside a denied one
+    adr = impl.parse_adr(GOOD.replace(trade_off, "No new vendor risk. We accept lock-in to pgvector."))
+    assert impl.lint_adr(adr) == []
+
+
 DESIGN = {"auth": "Entra ID OIDC, per-user tokens", "data_flow": "diagram v3", "rollback": "blue/green",
           "pii_handling": "Emails are sent to model for summarisation", "evals": "", "observability": "OTel traces",
           "slo": "99.5%"}

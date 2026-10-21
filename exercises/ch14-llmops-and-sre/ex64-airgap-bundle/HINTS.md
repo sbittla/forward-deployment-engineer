@@ -5,7 +5,7 @@ Open a hint only after you've been stuck for about ten minutes. Each one gives a
 <details>
 <summary>Hint 1 · Where to start</summary>
 
-Write `_canonical(obj)` and `_sign(key, manifest)` first. Signing removes the `signature` key, serialises with
+Write `_canonical(obj)` and `_sign(key, manifest)` first. Signing removes the `signature` key, serializes with
 `sort_keys=True, separators=(",", ":")`, and HMACs the bytes. Build and verify both use this pair, so any mismatch
 between them shows up as "bad signature".
 </details>

@@ -32,10 +32,10 @@ Handle each line like this:
 <details>
 <summary>Hint 3 · The tricky part</summary>
 
-- Split only on `\n`, then strip a trailing `\r` from the line. If you split on `\r\n`, a chunk boundary between the
-  `\r` and the `\n` breaks it.
+- A line ends at the first `\r` or `\n`. After a `\r`, drop a `\n` if it's the next character, even when it
+  arrives in the next chunk. Splitting on the string `\r\n` breaks when a chunk boundary falls between them.
 - Remove only **one** leading space from the value, not all whitespace.
-- `end()` handles whatever is left in the buffer as a final line, then acts as if a blank line arrived.
+- `end()` dispatches nothing: an event without its closing blank line is discarded. Just reset the state.
 - In `accumulateText`, check for `message_stop` *before* anything else, so deltas after it are ignored. For `error`
   events, throw `new Error(JSON.parse(data).error.message)`.
 </details>
@@ -45,9 +45,10 @@ Handle each line like this:
 | Test | Likely cause |
 |---|---|
 | `whole stream` | Comment lines treated as fields, or deltas after `message_stop` still added |
-| `arbitrary byte chunking incl. split emoji and CRLF` | A new `TextDecoder` per chunk, or no `{ stream: true }`; lines split on `\r\n` across a chunk boundary |
+| `arbitrary byte chunking incl. split emoji and CRLF` | A new `TextDecoder` per chunk, or no `{ stream: true }`; lines split on `\r\n` across a chunk boundary; bare `\r` not a line end |
 | `multi-line data, default event, leading space, no-data events` | Data lines not joined with `\n`; an event with no data dispatched |
-| `end flushes final event` | `end()` ignores the leftover buffer |
+| `bare CR ends a line, and a CRLF split across chunks is one line ending` | Only `\n` treated as a line end; the `\n` after a chunk-final `\r` read as a blank line |
+| `end discards an unterminated event` | `end()` dispatches the partial event instead of discarding it |
 | `error event throws` | Error events skipped instead of thrown, or the wrong message field used |
 | `parser tracks the last event id` | `lastEventId` set when the `id` line is read instead of at dispatch; reset when an event has no `id`; NUL not rejected |
 | `stream: sends the bearer token and fails closed on 401 without retrying` | Header name or `Bearer ` prefix wrong; 401 treated as a dropped connection and retried; empty token still sent |

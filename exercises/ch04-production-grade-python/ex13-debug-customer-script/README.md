@@ -23,14 +23,15 @@ It "mostly works". Their bug reports, verbatim:
 Fix **every** bug in `starter.py` without changing function signatures. For each fix, add a one-line comment
 `# FIX(n): ...` explaining the root cause, as you would in a customer-facing change log.
 
-Rules for the fixed behaviour:
+Rules for the fixed behavior:
 - Money uses `decimal.Decimal`, rounded half-up to cents.
 - `is_overdue` treats naive datetimes as UTC.
 - `load_config` raises `ValueError` mentioning the path when JSON is invalid; a **missing** file still returns `{}`.
 
 ## Field notes
 Reproduce first, then fix. Write the failing test for each report before touching the code — it is also your
-proof to the customer that the bug is gone.
+proof to the customer that the bug is gone. The tests are named in the customer's words, one per report in order
+(`test_tags_do_not_leak_between_invoices` is report 3), so a failure reads as the report it reopens.
 
 Stuck? [HINTS.md](HINTS.md) has three progressive hints and a guide to what each failing test usually means.
 

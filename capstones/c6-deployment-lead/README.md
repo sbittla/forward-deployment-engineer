@@ -16,17 +16,18 @@ you need from us?*
 Data in `data/`: the plan with three-point estimates and reported progress (`engagement.json`), Atlas SI's two
 deliverables with designs and test/eval evidence (`partner_deliverables.json`), pilot usage events and before/after
 KPI measurements for pilot vs control teams (`adoption.json`), and the bank's security questionnaire with your
-system facts (`security.json`).
+system facts (`security.json`). `engagement.json` also holds last week's snapshot (`last_week`: `as_of_day` and
+`progress`) and the RAID log (`raid`: `id`, `type`, `text`, `owner`, `due`, `status`).
 
 ## What you build (`starter/deliverylead/`)
 | Module | Responsibility |
 |---|---|
-| `plan.py` | PERT estimates, critical path, P50/P90; **forecast** from reported progress (slip vs baseline); per-workstream earned-value variance → RAG |
+| `plan.py` | PERT estimates, critical path, P50/P90; **forecast** from reported progress (slip vs baseline); per-workstream earned-value variance → RAG; `next_milestone(eng)`: the first milestone task with progress below 1.0, by baseline finish, as `{"milestone", "task", "acceptance", "baseline_day", "forecast_day"}` (days to 1 dp; forecast from the re-planned schedule), or `None` when all are done |
 | `reviews.py` | Partner design checklist (blocker/major/minor) + evidence gate → accept / conditional / reject with reasons |
 | `adoption.py` | Funnel, lagging teams, difference-in-differences impact against the control group |
 | `security.py` | Auto-answer the questionnaire from system facts; anything about physical security or model risk always goes to humans |
 | `readiness.py` | Go-live decision: explicit blockers (rejected deliverables, open security items, slip > 10 days) and conditions (conditional deliverables, activation < 60%, weak impact) |
-| `steering.py` | The Friday steering update, generated from all of the above, in the order the committee needs it: **Decisions needed** first, then Overall (the status line), Workstreams and Partner deliverables (what changed), Adoption and impact (value), Security (risks) |
+| `steering.py` | The Friday steering update, generated from all of the above, in Section 16.3's order (one `##` heading each): **Decisions needed** (one bullet per blocker, then condition, or `- none`); **Overall** (the status line); **Changed since last week**: `- Delivered: <tasks that reached 1.0 since `last_week`>.`, `- Slipped or newly at risk: <ws OLD -> NEW; ...>.` (workstreams whose RAG got worse), `- Forecast finish: day X, was day Y last week (+Z days).`, then `### Workstreams` and `### Partner deliverables` tables (or `- No previous snapshot to compare with.` when `last_week` is absent); **Adoption and impact**; **Risks and asks**: open `raid` items by due date as `- <id> <type>: <text> (owner: <owner or UNASSIGNED>, due <due or NO DATE>)`, then the security line; **Next milestone**: `- <milestone> (<task>): forecast day X vs baseline Y. Acceptance: <acceptance>.` |
 
 ## Deliverables (`starter/deliverables/`)
 - `sow.md`: the SOW including **partner responsibilities**, acceptance criteria per milestone, **support
@@ -59,9 +60,9 @@ acceptance criteria and gates. Submit your scorecard as `starter/deliverables/sc
 - **Prerequisites:** Python 3.11 or later and `pip install -r requirements.txt`, run once from the repository root.
   No API key or network access is needed.
 - **Run your work:** from the repository root, `pytest capstones/c6-deployment-lead`.
-- **Expected output:** all 12 tests fail against the starter; when you're done, all 12 pass.
-- **Check the reference solution:** `pytest --solutions capstones/c6-deployment-lead`: all 12 pass.
-- **Tests:** `tests/test_c6_deliverables.py`, `tests/test_c6_gates.py`, `tests/test_c6_plan.py` (12 tests).
+- **Expected output:** all 14 tests fail against the starter; when you're done, all 14 pass.
+- **Check the reference solution:** `pytest --solutions capstones/c6-deployment-lead`: all 14 pass.
+- **Tests:** `tests/test_c6_deliverables.py`, `tests/test_c6_gates.py`, `tests/test_c6_plan.py` (14 tests).
 - **Common failures:** `ModuleNotFoundError: No module named 'fde_kit'` means the command didn't run from the
   repository root. For a failing test, [HINTS.md](HINTS.md) says what it usually means.
 - **Whose failure is it?** If your run fails but the reference run passes, it's your code. If the reference run fails

@@ -3,6 +3,7 @@ from datetime import date
 from dataclasses import dataclass, field
 
 DOWNSIDE_WORDS = {"cost", "risk", "trade-off", "tradeoff", "downside", "slower", "lock-in", "complexity"}
+NEGATIONS = {"no", "not", "without", "zero", "nor", "never"}
 CHECKLIST = {
     "auth": "blocker", "data_flow": "blocker", "pii_handling": "blocker", "rollback": "blocker",
     "evals": "major", "observability": "major", "threat_model": "major",
@@ -44,13 +45,26 @@ def parse_adr(markdown: str) -> ADR:
     return ADR(int(m.group(1)), m.group(2).strip(), st.group(1).lower(), sections)
 
 
+def _names_downside(text: str) -> bool:
+    """True if a downside word appears without a negation in the two words before it, in the same clause.
+
+    A heuristic: it rejects "no risk" and "without lock-in", but a reviewer still has to read the section."""
+    low = text.lower()
+    words = "|".join(re.escape(w) for w in sorted(DOWNSIDE_WORDS, key=len, reverse=True))
+    for m in re.finditer(rf"(?<![\w-])(?:{words})", low):
+        clause = re.split(r"[.;:,!?\n]", low[:m.start()])[-1]
+        if not NEGATIONS & set(clause.split()[-2:]):
+            return True
+    return False
+
+
 def lint_adr(adr: ADR) -> list[str]:
     issues = [f"missing:{s}" for s in REQUIRED if s not in adr.sections]
     alts = adr.sections.get("alternatives considered")
     if alts is not None and len(re.findall(r"^\s*[-*]\s+", alts, re.M)) < 2:
         issues.append("alternatives:fewer-than-2")
     cons = adr.sections.get("consequences")
-    if cons is not None and not any(w in cons.lower() for w in DOWNSIDE_WORDS):
+    if cons is not None and not _names_downside(cons):
         issues.append("consequences:no-downside")
     if adr.status == "accepted" and "decided-by:" not in adr.sections.get("decision", "").lower():
         issues.append("decision:no-owner")
