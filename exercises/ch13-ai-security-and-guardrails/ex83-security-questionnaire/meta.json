@@ -1,0 +1,12 @@
+{
+  "id": "ex83",
+  "chapter": "ch13-ai-security-and-guardrails",
+  "slug": "security-questionnaire",
+  "title": "Security and procurement questionnaire responder with regulatory triage",
+  "requirements": [
+    "R43",
+    "R17",
+    "R33"
+  ],
+  "language": "python"
+}

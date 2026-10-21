@@ -6,7 +6,7 @@
 | **When** | Before the pilot ends; re-run on model, prompt or load changes |
 | **Inputs** | Pilot logs (token counts, journeys), expected users and arrival pattern, provider quotas |
 | **Done when** | Targets agreed with the sponsor and SRE team; every test in the matrix has a pass condition |
-| **Book** | Chapter 14, Section 14.5 · ex60, ex62 |
+| **Book** | Chapter 14, Section 14.3 · ex60, ex62 |
 
 ## 1. Workload model
 | Journey | Share | Input tokens p50 / p95 | Output tokens p50 / p95 | Tool calls | Streamed or full |

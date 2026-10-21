@@ -1,0 +1,11 @@
+{
+  "id": "ex17",
+  "chapter": "ch05-enterprise-integration",
+  "slug": "webhook-hmac",
+  "title": "Webhook receiver with HMAC and replay protection",
+  "requirements": [
+    "R05",
+    "R17"
+  ],
+  "language": "python"
+}

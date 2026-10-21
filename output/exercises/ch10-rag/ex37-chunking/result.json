@@ -1,0 +1,52 @@
+{
+  "path": "exercises/ch10-rag/ex37-chunking",
+  "status": "PASS",
+  "problems": [],
+  "tests": {
+    "passed": 9,
+    "failed": 0,
+    "error": 0,
+    "skipped": 0
+  },
+  "declared": 9,
+  "ran": 9,
+  "starter_failing": 9,
+  "cases": [
+    {
+      "test": "py:test_fixed",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_recursive_invariants",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_recursive_prefers_paragraphs",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_recursive_hard_split",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_heading_paths",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_chunk_key",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_plan_reindex_touches_only_changes",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_plan_reindex_document_removed",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_filter_effective",
+      "status": "passed"
+    }
+  ]
+}

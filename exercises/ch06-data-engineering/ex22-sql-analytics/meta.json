@@ -1,0 +1,13 @@
+{
+  "id": "ex22",
+  "chapter": "ch06-data-engineering",
+  "slug": "sql-analytics",
+  "title": "SQL analytics on a support-ticket DB",
+  "requirements": [
+    "R03"
+  ],
+  "language": "python",
+  "tools": [
+    "SQL"
+  ]
+}

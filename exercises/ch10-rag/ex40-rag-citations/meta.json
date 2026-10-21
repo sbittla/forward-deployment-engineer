@@ -1,0 +1,12 @@
+{
+  "id": "ex40",
+  "chapter": "ch10-rag",
+  "slug": "rag-citations",
+  "title": "RAG answers with citations and abstention",
+  "requirements": [
+    "R10",
+    "R08",
+    "R14"
+  ],
+  "language": "python"
+}

@@ -1,0 +1,12 @@
+$ node --test exercises/ch07-full-stack-engineering/ex91-react-copilot-ui/panel.test.ts
+✔ reducer (2.77282ms)
+✔ hook sends, replies and retries (1.479116ms)
+✔ panel renders accessible, safe markup (1.166805ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 3
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 327.359214

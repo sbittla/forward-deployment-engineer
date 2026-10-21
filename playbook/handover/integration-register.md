@@ -6,7 +6,7 @@
 | **When** | From the first integration; one entry added the week each one is built |
 | **Inputs** | Endpoints, credentials process, owners, measured limits and recorded fixtures for each connected system |
 | **Done when** | Every integration has an entry with no blank cells; the team taking over has debugged one integration from it |
-| **Book** | Chapter 5, Section 5.10 · first page of the handover pack (Appendix F) |
+| **Book** | Chapter 5, Section 5.6 · first page of the handover pack (Appendix F) |
 
 | Integration | Endpoint and environment | Authentication; who issues credentials | Owner; escalation contact | Rate limits (documented / measured) | Error behaviour worth knowing | Data classification | Test fixtures |
 |---|---|---|---|---|---|---|---|

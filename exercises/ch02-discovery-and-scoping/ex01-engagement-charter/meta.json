@@ -1,0 +1,12 @@
+{
+  "id": "ex01",
+  "chapter": "ch02-discovery-and-scoping",
+  "slug": "engagement-charter",
+  "title": "Engagement charter from discovery notes",
+  "requirements": [
+    "R18",
+    "R30",
+    "R19"
+  ],
+  "language": "python"
+}

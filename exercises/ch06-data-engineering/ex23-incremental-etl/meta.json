@@ -1,0 +1,14 @@
+{
+  "id": "ex23",
+  "chapter": "ch06-data-engineering",
+  "slug": "incremental-etl",
+  "title": "Incremental ETL with watermarks and upserts",
+  "requirements": [
+    "R04",
+    "R03"
+  ],
+  "language": "python",
+  "tools": [
+    "SQL"
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "id": "ex97",
+  "chapter": "ch08-prompt-engineering",
+  "slug": "prompt-hill-climb",
+  "title": "Prompt hill-climbing with a held-out test set",
+  "requirements": [
+    "R09",
+    "R13"
+  ],
+  "language": "python",
+  "tools": [
+    "Prompt engineering"
+  ]
+}

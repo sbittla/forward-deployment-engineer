@@ -1,0 +1,12 @@
+{
+  "id": "ex72",
+  "chapter": "ch15-field-engineering-and-productisation",
+  "slug": "phi-deidentify",
+  "title": "Regulated data: de-identification and retention",
+  "requirements": [
+    "R25",
+    "R17",
+    "R43"
+  ],
+  "language": "python"
+}

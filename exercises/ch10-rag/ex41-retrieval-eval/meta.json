@@ -1,0 +1,11 @@
+{
+  "id": "ex41",
+  "chapter": "ch10-rag",
+  "slug": "retrieval-eval",
+  "title": "Retrieval metrics: recall@k, MRR, nDCG",
+  "requirements": [
+    "R10",
+    "R13"
+  ],
+  "language": "python"
+}

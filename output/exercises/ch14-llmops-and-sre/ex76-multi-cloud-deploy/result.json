@@ -1,0 +1,40 @@
+{
+  "path": "exercises/ch14-llmops-and-sre/ex76-multi-cloud-deploy",
+  "status": "PASS",
+  "problems": [],
+  "tests": {
+    "passed": 6,
+    "failed": 0,
+    "error": 0,
+    "skipped": 0
+  },
+  "declared": 6,
+  "ran": 6,
+  "starter_failing": 6,
+  "cases": [
+    {
+      "test": "py:test_aws",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_gcp",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_azure",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_unknown_cloud",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_endpoints_and_egress",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_residency",
+      "status": "passed"
+    }
+  ]
+}

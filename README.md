@@ -10,7 +10,7 @@ deterministic fake model stands in for the LLM, so no API key is needed.
 pip install -r requirements.txt
 python scripts/check.py --solutions          # all reference solutions: green
 python scripts/run_all.py --docker           # the same in Docker, with a per-exercise report in output/
-pytest exercises/m01-engagement-discovery/ex01-engagement-charter   # one exercise: starts red, make it green
+pytest exercises/ch02-discovery-and-scoping/ex01-engagement-charter   # one exercise: starts red, make it green
 ```
 Requirements: Python 3.11+, and Node 22.18+ for the TypeScript exercises (Node 24 LTS recommended; native type
 stripping, no npm install).
@@ -25,7 +25,7 @@ CPU-only, so the GPU is reported in `output/environment.txt` but not needed. Res
 `exercises/` and `capstones/`, with `output/summary.md` on top.
 
 ## How it works
-- `exercises/<module>/<exercise>/`: `README.md` (scenario + task), `starter.*`, tests, `meta.json`, and
+- `exercises/chNN-<chapter>/<exercise>/`, one folder per book chapter: `README.md` (scenario + task), `starter.*`, tests, `meta.json`, and
   `HINTS.md`: three progressive hints plus a table mapping each test to its most likely cause of failure.
 - `solutions/` mirrors the tree with reference implementations. Peek only after you've tried the hints.
 - `pytest --solutions <path>` runs the same tests against the reference solution.
@@ -38,181 +38,184 @@ CPU-only, so the GPU is reported in `output/environment.txt` but not needed. Res
   `hints_lint.py` and `export_learner.py`.
 
 ## Recommended order (the book's five parts)
-The module folders group exercises by topic; the book teaches them in this order so that every capstone comes after
-the exercises it builds on. Go at your own pace: the order matters more than the speed.
+The chapter folders follow the book, so working through them in number order is the recommended path; every capstone
+comes after the exercises it builds on. Go at your own pace: the order matters more than the speed.
 
 | Part | Exercises | Then |
 |---|---|---|
-| **I · The role and the engagement** | ex01–ex08, ex68, ex69, ex81, ex82, ex84 | |
+| **I · The FDE role and customer engagement** | ex01–ex08, ex68, ex69, ex81, ex82, ex84 | |
 | **II · Engineering foundations** | ex09–ex15 · ex16–ex21, ex78 · ex22–ex26, ex77, ex80, ex92 · ex27–ex30, ex91 | |
-| **III · Building AI systems** | ex95–ex98 (prompt engineering) · ex31–ex36, ex86 · ex37–ex41, ex88 · ex42–ex48, ex79, ex85 · ex49–ex52, ex99, ex100 · ex53–ex56, ex83, ex89, ex93 | Capstones 1, 2, 3 |
-| **IV · Production in the customer's world** | ex57–ex66, ex76, ex94 · ex67, ex70–ex75, ex87 | Capstone 4 |
-| **V · Leading engagements** | ex90 | Capstones 5, 6 |
+| **III · Building generative AI systems** | ex95–ex98 (prompt engineering) · ex31–ex36, ex86 · ex37–ex41, ex88 · ex42–ex48, ex79, ex85 · ex49–ex52, ex99, ex100 · ex53–ex56, ex83, ex89, ex93 | Capstones 1, 2, 3 |
+| **IV · Production operations (LLMOps)** | ex57–ex66, ex76, ex94 · ex67, ex70–ex75, ex87 | Capstone 4 |
+| **V · Engagement leadership and careers** | ex90 | Capstones 5, 6 |
 
 Every README has a **Prompt kit**: a tutor prompt to learn the concepts, a build spec you can hand to a coding agent,
 and a review prompt. Use the agent the way you would on a customer site: you own the result, so review what it writes.
 
 ## Exercises
 
-### M01 · Engagement & discovery
-| # | Exercise |
-|---|---|
-| ex01 | [Engagement charter from discovery notes](exercises/m01-engagement-discovery/ex01-engagement-charter/README.md) |
-| ex02 | [Discovery interview to user stories](exercises/m01-engagement-discovery/ex02-requirements-extractor/README.md) |
-| ex03 | [ROI and payback model for an AI deployment, with multi-parameter sensitivity](exercises/m01-engagement-discovery/ex03-roi-calculator/README.md) |
-| ex04 | [Stakeholder map, RACI and comms plan](exercises/m01-engagement-discovery/ex04-stakeholder-map/README.md) |
-| ex05 | [Weekly status report generator](exercises/m01-engagement-discovery/ex05-status-report/README.md) |
-| ex06 | [Ambiguous request to clarifying questions and assumptions](exercises/m01-engagement-discovery/ex06-ambiguous-request/README.md) |
-| ex07 | [RAID log: risks, assumptions, issues, decisions](exercises/m01-engagement-discovery/ex07-raid-log/README.md) |
-| ex08 | [Scope negotiation with MoSCoW under a deadline](exercises/m01-engagement-discovery/ex08-scope-prioritization/README.md) |
+Exercises live in one folder per book chapter: `exercises/chNN-<chapter>/exNN-<slug>/`, with the reference solution
+at the same path under `solutions/` and the run report at the same path under `output/`.
 
-### M02 · Production Python
+### Chapter 2 · Discovery and Scoping · `ch02-discovery-and-scoping/`
 | # | Exercise |
 |---|---|
-| ex09 | [Typed config and secrets loading](exercises/m02-production-python/ex09-typed-config/README.md) |
-| ex10 | [Retries, backoff, jitter, idempotency](exercises/m02-production-python/ex10-retry-backoff/README.md) |
-| ex11 | [Structured logging with correlation IDs](exercises/m02-production-python/ex11-structured-logging/README.md) |
-| ex12 | [Async fan-out with rate limiting](exercises/m02-production-python/ex12-async-rate-limit/README.md) |
-| ex13 | [Triage and fix a broken customer script](exercises/m02-production-python/ex13-debug-customer-script/README.md) |
-| ex14 | [Circuit breaker and bulkhead](exercises/m02-production-python/ex14-circuit-breaker/README.md) |
-| ex15 | [Idempotent job queue with dead-letter handling and lease extension](exercises/m02-production-python/ex15-job-queue/README.md) |
+| ex01 | [Engagement charter from discovery notes](exercises/ch02-discovery-and-scoping/ex01-engagement-charter/README.md) |
+| ex02 | [Discovery interview to user stories](exercises/ch02-discovery-and-scoping/ex02-requirements-extractor/README.md) |
+| ex03 | [ROI and payback model for an AI deployment, with multi-parameter sensitivity](exercises/ch02-discovery-and-scoping/ex03-roi-calculator/README.md) |
+| ex04 | [Stakeholder map, RACI and comms plan](exercises/ch02-discovery-and-scoping/ex04-stakeholder-map/README.md) |
+| ex06 | [Ambiguous request to clarifying questions and assumptions](exercises/ch02-discovery-and-scoping/ex06-ambiguous-request/README.md) |
+| ex07 | [RAID log: risks, assumptions, issues, decisions](exercises/ch02-discovery-and-scoping/ex07-raid-log/README.md) |
+| ex08 | [Scope negotiation with MoSCoW under a deadline](exercises/ch02-discovery-and-scoping/ex08-scope-prioritization/README.md) |
+| ex81 | [Statement of work and delivery plan with critical path](exercises/ch02-discovery-and-scoping/ex81-sow-delivery-plan/README.md) |
 
-### M03 · APIs & integration
+### Chapter 3 · Technical Communication · `ch03-technical-communication/`
 | # | Exercise |
 |---|---|
-| ex16 | [Paginated REST client with rate-limit headers](exercises/m03-apis-integration/ex16-paginated-client/README.md) |
-| ex17 | [Webhook receiver with HMAC and replay protection; version-ordered updates and reconciliation](exercises/m03-apis-integration/ex17-webhook-hmac/README.md) |
-| ex18 | [OAuth2 client-credentials token cache](exercises/m03-apis-integration/ex18-oauth-token-cache/README.md) |
-| ex19 | [CRM to canonical schema mapper](exercises/m03-apis-integration/ex19-schema-mapper/README.md) |
-| ex20 | [Minimal HTTP service with auth and health](exercises/m03-apis-integration/ex20-http-service/README.md) |
-| ex21 | [Proxy-, CA- and allowlist-aware client for customer networks](exercises/m03-apis-integration/ex21-proxy-aware-client/README.md) |
+| ex05 | [Weekly status report generator](exercises/ch03-technical-communication/ex05-status-report/README.md) |
+| ex68 | [Field feedback triage to product brief](exercises/ch03-technical-communication/ex68-feedback-triage/README.md) |
+| ex69 | [Runbook and handoff doc linter](exercises/ch03-technical-communication/ex69-runbook-linter/README.md) |
+| ex82 | [Adoption funnel, change management and pre/post KPI impact](exercises/ch03-technical-communication/ex82-adoption-change/README.md) |
+| ex84 | [Workshop, code-with session and knowledge-transfer readiness](exercises/ch03-technical-communication/ex84-workshop-builder/README.md) |
 
-### M04 · Data & SQL
+### Chapter 4 · Production-Grade Python · `ch04-production-grade-python/`
 | # | Exercise |
 |---|---|
-| ex22 | [SQL analytics on a support-ticket DB](exercises/m04-data-sql/ex22-sql-analytics/README.md) |
-| ex23 | [Incremental ETL with watermarks and upserts](exercises/m04-data-sql/ex23-incremental-etl/README.md) |
-| ex24 | [Data-quality checks framework, data contracts and keyed pseudonymisation](exercises/m04-data-sql/ex24-data-quality/README.md) |
-| ex25 | [Schema drift detection](exercises/m04-data-sql/ex25-schema-drift/README.md) |
-| ex26 | [Bronze/silver/gold mini lakehouse](exercises/m04-data-sql/ex26-medallion-pipeline/README.md) |
+| ex09 | [Typed config and secrets loading](exercises/ch04-production-grade-python/ex09-typed-config/README.md) |
+| ex10 | [Retries, backoff, jitter, idempotency](exercises/ch04-production-grade-python/ex10-retry-backoff/README.md) |
+| ex11 | [Structured logging with correlation IDs](exercises/ch04-production-grade-python/ex11-structured-logging/README.md) |
+| ex12 | [Async fan-out with rate limiting](exercises/ch04-production-grade-python/ex12-async-rate-limit/README.md) |
+| ex13 | [Triage and fix a broken customer script](exercises/ch04-production-grade-python/ex13-debug-customer-script/README.md) |
+| ex14 | [Circuit breaker and bulkhead](exercises/ch04-production-grade-python/ex14-circuit-breaker/README.md) |
+| ex15 | [Idempotent job queue with dead-letter handling and lease extension](exercises/ch04-production-grade-python/ex15-job-queue/README.md) |
 
-### M05 · Full-stack & TypeScript
+### Chapter 5 · Enterprise Integration · `ch05-enterprise-integration/`
 | # | Exercise |
 |---|---|
-| ex27 | [TypeScript: runtime-validated API client](exercises/m05-fullstack-typescript/ex27-ts-typed-client/README.md) |
-| ex28 | [TypeScript: SSE token-stream parser](exercises/m05-fullstack-typescript/ex28-ts-sse-parser/README.md) |
-| ex29 | [TypeScript: chat UI state reducer](exercises/m05-fullstack-typescript/ex29-ts-chat-reducer/README.md) |
-| ex30 | [Demo chat UI served from Python, with a streaming SSE relay](exercises/m05-fullstack-typescript/ex30-demo-web-ui/README.md) |
+| ex16 | [Paginated REST client with rate-limit headers](exercises/ch05-enterprise-integration/ex16-paginated-client/README.md) |
+| ex17 | [Webhook receiver with HMAC and replay protection; version-ordered updates and reconciliation](exercises/ch05-enterprise-integration/ex17-webhook-hmac/README.md) |
+| ex18 | [OAuth2 client-credentials token cache](exercises/ch05-enterprise-integration/ex18-oauth-token-cache/README.md) |
+| ex19 | [CRM to canonical schema mapper](exercises/ch05-enterprise-integration/ex19-schema-mapper/README.md) |
+| ex20 | [Minimal HTTP service with auth and health](exercises/ch05-enterprise-integration/ex20-http-service/README.md) |
+| ex21 | [Proxy-, CA- and allowlist-aware client for customer networks](exercises/ch05-enterprise-integration/ex21-proxy-aware-client/README.md) |
+| ex78 | [Port a customer's Java/Go/C++ request signer to Python](exercises/ch05-enterprise-integration/ex78-polyglot-port/README.md) |
 
-### M06 · LLM applications
+### Chapter 6 · Data Engineering · `ch06-data-engineering/`
 | # | Exercise |
 |---|---|
-| ex31 | [Versioned prompt templates](exercises/m06-llm-apps/ex31-prompt-templates/README.md) |
-| ex32 | [Structured output with validation and repair](exercises/m06-llm-apps/ex32-structured-output/README.md) |
-| ex33 | [Token budgeting and context packing](exercises/m06-llm-apps/ex33-context-packing/README.md) |
-| ex34 | [Cost/latency-aware model router with fallback](exercises/m06-llm-apps/ex34-model-router/README.md) |
-| ex35 | [Response cache, cost accounting and a per-request cost model with prompt caching](exercises/m06-llm-apps/ex35-llm-cache-costs/README.md) |
-| ex36 | [Classical ML baseline vs LLM classifier](exercises/m06-llm-apps/ex36-ml-baseline/README.md) |
+| ex22 | [SQL analytics on a support-ticket DB](exercises/ch06-data-engineering/ex22-sql-analytics/README.md) |
+| ex23 | [Incremental ETL with watermarks and upserts](exercises/ch06-data-engineering/ex23-incremental-etl/README.md) |
+| ex24 | [Data-quality checks framework, data contracts and keyed pseudonymisation](exercises/ch06-data-engineering/ex24-data-quality/README.md) |
+| ex25 | [Schema drift detection](exercises/ch06-data-engineering/ex25-schema-drift/README.md) |
+| ex26 | [Bronze/silver/gold mini lakehouse](exercises/ch06-data-engineering/ex26-medallion-pipeline/README.md) |
+| ex77 | [Spark fundamentals: partitions, shuffles, skew, and a guarded PySpark/Delta job](exercises/ch06-data-engineering/ex77-spark-fundamentals/README.md) |
+| ex80 | [SQLite to Postgres portability and pgvector](exercises/ch06-data-engineering/ex80-postgres-pgvector/README.md) |
+| ex92 | [Ontology modelling: objects, links and governed actions](exercises/ch06-data-engineering/ex92-ontology-modeling/README.md) |
 
-### M07 · Retrieval & RAG
+### Chapter 7 · Full-Stack Engineering · `ch07-full-stack-engineering/`
 | # | Exercise |
 |---|---|
-| ex37 | [Chunking strategies, incremental re-indexing and effective-date filtering](exercises/m07-retrieval-rag/ex37-chunking/README.md) |
-| ex38 | [BM25 from scratch](exercises/m07-retrieval-rag/ex38-bm25/README.md) |
-| ex39 | [Vector + keyword hybrid search with RRF](exercises/m07-retrieval-rag/ex39-hybrid-search/README.md) |
-| ex40 | [RAG answers with citations and abstention](exercises/m07-retrieval-rag/ex40-rag-citations/README.md) |
-| ex41 | [Retrieval metrics: recall@k, MRR, nDCG](exercises/m07-retrieval-rag/ex41-retrieval-eval/README.md) |
+| ex27 | [TypeScript: runtime-validated API client](exercises/ch07-full-stack-engineering/ex27-ts-typed-client/README.md) |
+| ex28 | [TypeScript: SSE token-stream parser](exercises/ch07-full-stack-engineering/ex28-ts-sse-parser/README.md) |
+| ex29 | [TypeScript: chat UI state reducer](exercises/ch07-full-stack-engineering/ex29-ts-chat-reducer/README.md) |
+| ex30 | [Demo chat UI served from Python, with a streaming SSE relay](exercises/ch07-full-stack-engineering/ex30-demo-web-ui/README.md) |
+| ex91 | [React copilot UI component and hook without a build step](exercises/ch07-full-stack-engineering/ex91-react-copilot-ui/README.md) |
 
-### M08 · Agents, tools & MCP
+### Chapter 8 · Prompt Engineering · `ch08-prompt-engineering/`
 | # | Exercise |
 |---|---|
-| ex42 | [Tool-calling agent loop with run budgets, per-tool caps and repeated-call detection](exercises/m08-agents-mcp/ex42-tool-agent-loop/README.md) |
-| ex43 | [Tool input validation and error recovery](exercises/m08-agents-mcp/ex43-tool-validation/README.md) |
-| ex44 | [Build an MCP server](exercises/m08-agents-mcp/ex44-mcp-server/README.md) |
-| ex45 | [MCP client and DB connector](exercises/m08-agents-mcp/ex45-mcp-client-connector/README.md) |
-| ex46 | [Planner/worker agents with human approval](exercises/m08-agents-mcp/ex46-multi-agent-hitl/README.md) |
-| ex47 | [Conversation memory and summarisation](exercises/m08-agents-mcp/ex47-agent-memory/README.md) |
-| ex48 | [Voice agent transcripts: turns, barge-in, latency](exercises/m08-agents-mcp/ex48-voice-transcripts/README.md) |
+| ex95 | [Prompt linter for CI](exercises/ch08-prompt-engineering/ex95-prompt-linter/README.md) |
+| ex96 | [Dynamic few-shot example selection](exercises/ch08-prompt-engineering/ex96-few-shot-selection/README.md) |
+| ex97 | [Prompt hill-climbing with a held-out test set](exercises/ch08-prompt-engineering/ex97-prompt-hill-climb/README.md) |
+| ex98 | [System prompt from a policy spec, with traceability](exercises/ch08-prompt-engineering/ex98-prompt-from-spec/README.md) |
 
-### M09 · Evaluation
+### Chapter 9 · LLM Application Engineering · `ch09-llm-application-engineering/`
 | # | Exercise |
 |---|---|
-| ex49 | [Golden-set eval harness with Wilson intervals, slices, failure taxonomy and leakage checks](exercises/m09-evaluation/ex49-eval-harness/README.md) |
-| ex50 | [LLM-as-judge with calibration](exercises/m09-evaluation/ex50-llm-judge/README.md) |
-| ex51 | [Prompt regression gate for CI](exercises/m09-evaluation/ex51-prompt-regression/README.md) |
-| ex52 | [A/B experiment analysis with bootstrap CIs](exercises/m09-evaluation/ex52-ab-analysis/README.md) |
-| ex99 | [Agent trajectory evals and pass^k reliability](exercises/m09-evaluation/ex99-agent-trajectory-evals/README.md) |
-| ex100 | [Online quality monitoring and drift detection](exercises/m09-evaluation/ex100-online-monitoring-drift/README.md) |
+| ex31 | [Versioned prompt templates](exercises/ch09-llm-application-engineering/ex31-prompt-templates/README.md) |
+| ex32 | [Structured output with validation and repair](exercises/ch09-llm-application-engineering/ex32-structured-output/README.md) |
+| ex33 | [Token budgeting and context packing](exercises/ch09-llm-application-engineering/ex33-context-packing/README.md) |
+| ex34 | [Cost/latency-aware model router with fallback](exercises/ch09-llm-application-engineering/ex34-model-router/README.md) |
+| ex35 | [Response cache, cost accounting and a per-request cost model with prompt caching](exercises/ch09-llm-application-engineering/ex35-llm-cache-costs/README.md) |
+| ex36 | [Classical ML baseline vs LLM classifier](exercises/ch09-llm-application-engineering/ex36-ml-baseline/README.md) |
+| ex86 | [One tool-calling interface over Claude, OpenAI and Gemini formats](exercises/ch09-llm-application-engineering/ex86-multi-provider-adapter/README.md) |
 
-### M10 · Safety, security & compliance
+### Chapter 10 · Retrieval-Augmented Generation (RAG) · `ch10-rag/`
 | # | Exercise |
 |---|---|
-| ex53 | [PII detection and redaction](exercises/m10-safety-security/ex53-pii-redaction/README.md) |
-| ex54 | [Prompt-injection defences for agents](exercises/m10-safety-security/ex54-prompt-injection/README.md) |
-| ex55 | [Output guardrails and groundedness](exercises/m10-safety-security/ex55-output-guardrails/README.md) |
-| ex56 | [RBAC and audit log for multi-tenant AI](exercises/m10-safety-security/ex56-rbac-audit/README.md) |
+| ex37 | [Chunking strategies, incremental re-indexing and effective-date filtering](exercises/ch10-rag/ex37-chunking/README.md) |
+| ex38 | [BM25 from scratch](exercises/ch10-rag/ex38-bm25/README.md) |
+| ex39 | [Vector + keyword hybrid search with RRF](exercises/ch10-rag/ex39-hybrid-search/README.md) |
+| ex40 | [RAG answers with citations and abstention](exercises/ch10-rag/ex40-rag-citations/README.md) |
+| ex41 | [Retrieval metrics: recall@k, MRR, nDCG](exercises/ch10-rag/ex41-retrieval-eval/README.md) |
+| ex88 | [Document AI: layout-aware extraction from OCR output and PDF/vision requests](exercises/ch10-rag/ex88-document-ai/README.md) |
 
-### M11 · Deploy & operate
+### Chapter 11 · AI Agents · `ch11-ai-agents/`
 | # | Exercise |
 |---|---|
-| ex57 | [Production Dockerfile and compose](exercises/m11-deploy-operate/ex57-dockerize/README.md) |
-| ex58 | [Kubernetes manifests with probes and HPA](exercises/m11-deploy-operate/ex58-k8s-manifests/README.md) |
-| ex59 | [CI pipeline as code](exercises/m11-deploy-operate/ex59-ci-pipeline/README.md) |
-| ex60 | [Tracing and metrics for LLM calls](exercises/m11-deploy-operate/ex60-llm-tracing/README.md) |
-| ex61 | [SLOs and error-budget burn alerts](exercises/m11-deploy-operate/ex61-slo-burn-rate/README.md) |
-| ex62 | [Load test and latency profiling](exercises/m11-deploy-operate/ex62-load-test/README.md) |
-| ex63 | [Customer-environment preflight checker](exercises/m11-deploy-operate/ex63-env-preflight/README.md) |
-| ex64 | [Air-gapped deployment bundle with manifest and checksums](exercises/m11-deploy-operate/ex64-airgap-bundle/README.md) |
-| ex65 | [IaC config with least-privilege IAM validator](exercises/m11-deploy-operate/ex65-iac-least-privilege/README.md) |
-| ex66 | [Log forensics: root-cause an incident](exercises/m11-deploy-operate/ex66-log-forensics/README.md) |
+| ex42 | [Tool-calling agent loop with run budgets, per-tool caps and repeated-call detection](exercises/ch11-ai-agents/ex42-tool-agent-loop/README.md) |
+| ex43 | [Tool input validation and error recovery](exercises/ch11-ai-agents/ex43-tool-validation/README.md) |
+| ex44 | [Build an MCP server](exercises/ch11-ai-agents/ex44-mcp-server/README.md) |
+| ex45 | [MCP client and DB connector](exercises/ch11-ai-agents/ex45-mcp-client-connector/README.md) |
+| ex46 | [Planner/worker agents with human approval](exercises/ch11-ai-agents/ex46-multi-agent-hitl/README.md) |
+| ex47 | [Conversation memory and summarisation](exercises/ch11-ai-agents/ex47-agent-memory/README.md) |
+| ex48 | [Voice agent transcripts: turns, barge-in, latency](exercises/ch11-ai-agents/ex48-voice-transcripts/README.md) |
+| ex79 | [LangGraph-style state graph with checkpoints and interrupts](exercises/ch11-ai-agents/ex79-graph-orchestration/README.md) |
+| ex85 | [Claude Agent Skills and subagents: package, route, delegate](exercises/ch11-ai-agents/ex85-agent-skills-subagents/README.md) |
 
-### M12 · Field craft
+### Chapter 12 · LLM Evaluation · `ch12-llm-evaluation/`
 | # | Exercise |
 |---|---|
-| ex67 | [Productise a one-off field script](exercises/m12-field-craft/ex67-productize-field-code/README.md) |
-| ex68 | [Field feedback triage to product brief](exercises/m12-field-craft/ex68-feedback-triage/README.md) |
-| ex69 | [Runbook and handoff doc linter](exercises/m12-field-craft/ex69-runbook-linter/README.md) |
-| ex70 | [Time-boxed POC: invoice extraction](exercises/m12-field-craft/ex70-rapid-poc/README.md) |
-| ex71 | [Fine-tuning dataset preparation](exercises/m12-field-craft/ex71-finetune-dataprep/README.md) |
-| ex72 | [Regulated data: de-identification and retention](exercises/m12-field-craft/ex72-phi-deidentify/README.md) |
-| ex73 | [Generalise three customer variants into a config-driven connector](exercises/m12-field-craft/ex73-connector-framework/README.md) |
-| ex74 | [API reference and quickstart generator](exercises/m12-field-craft/ex74-docs-generator/README.md) |
-| ex75 | [Model risk documentation for a regulated customer](exercises/m12-field-craft/ex75-model-risk-doc/README.md) |
+| ex49 | [Golden-set eval harness with Wilson intervals, slices, failure taxonomy and leakage checks](exercises/ch12-llm-evaluation/ex49-eval-harness/README.md) |
+| ex50 | [LLM-as-judge with calibration](exercises/ch12-llm-evaluation/ex50-llm-judge/README.md) |
+| ex51 | [Prompt regression gate for CI](exercises/ch12-llm-evaluation/ex51-prompt-regression/README.md) |
+| ex52 | [A/B experiment analysis with bootstrap CIs](exercises/ch12-llm-evaluation/ex52-ab-analysis/README.md) |
+| ex99 | [Agent trajectory evals and pass^k reliability](exercises/ch12-llm-evaluation/ex99-agent-trajectory-evals/README.md) |
+| ex100 | [Online quality monitoring and drift detection](exercises/ch12-llm-evaluation/ex100-online-monitoring-drift/README.md) |
 
-### M13 · Enterprise stack
+### Chapter 13 · AI Security and Guardrails · `ch13-ai-security-and-guardrails/`
 | # | Exercise |
 |---|---|
-| ex76 | [One service spec rendered for AWS, GCP and Azure with data residency](exercises/m13-enterprise-stack/ex76-multi-cloud-deploy/README.md) |
-| ex77 | [Spark fundamentals: partitions, shuffles, skew, and a guarded PySpark/Delta job](exercises/m13-enterprise-stack/ex77-spark-fundamentals/README.md) |
-| ex78 | [Port a customer's Java/Go/C++ request signer to Python](exercises/m13-enterprise-stack/ex78-polyglot-port/README.md) |
-| ex79 | [LangGraph-style state graph with checkpoints and interrupts](exercises/m13-enterprise-stack/ex79-graph-orchestration/README.md) |
-| ex80 | [SQLite to Postgres portability and pgvector](exercises/m13-enterprise-stack/ex80-postgres-pgvector/README.md) |
+| ex53 | [PII detection and redaction](exercises/ch13-ai-security-and-guardrails/ex53-pii-redaction/README.md) |
+| ex54 | [Prompt-injection defences for agents](exercises/ch13-ai-security-and-guardrails/ex54-prompt-injection/README.md) |
+| ex55 | [Output guardrails and groundedness](exercises/ch13-ai-security-and-guardrails/ex55-output-guardrails/README.md) |
+| ex56 | [RBAC and audit log for multi-tenant AI](exercises/ch13-ai-security-and-guardrails/ex56-rbac-audit/README.md) |
+| ex83 | [Security and procurement questionnaire responder with regulatory triage](exercises/ch13-ai-security-and-guardrails/ex83-security-questionnaire/README.md) |
+| ex89 | [Permission-aware RAG: OIDC token validation, ACL filtering, on-behalf-of](exercises/ch13-ai-security-and-guardrails/ex89-permission-aware-rag/README.md) |
+| ex93 | [AI red-team harness, MCP tool-poisoning and token-audience checks, and a security assessment report](exercises/ch13-ai-security-and-guardrails/ex93-red-team-harness/README.md) |
 
-### M14 · Field leadership
+### Chapter 14 · LLMOps and SRE · `ch14-llmops-and-sre/`
 | # | Exercise |
 |---|---|
-| ex81 | [Statement of work and delivery plan with critical path](exercises/m14-field-leadership/ex81-sow-delivery-plan/README.md) |
-| ex82 | [Adoption funnel, change management and pre/post KPI impact](exercises/m14-field-leadership/ex82-adoption-change/README.md) |
-| ex83 | [Security and procurement questionnaire responder with regulatory triage](exercises/m14-field-leadership/ex83-security-questionnaire/README.md) |
-| ex84 | [Workshop, code-with session and knowledge-transfer readiness](exercises/m14-field-leadership/ex84-workshop-builder/README.md) |
-| ex85 | [Claude Agent Skills and subagents: package, route, delegate](exercises/m14-field-leadership/ex85-agent-skills-subagents/README.md) |
-| ex86 | [One tool-calling interface over Claude, OpenAI and Gemini formats](exercises/m14-field-leadership/ex86-multi-provider-adapter/README.md) |
-| ex87 | [Review and fix an AI-agent-written pull request; write agent instructions](exercises/m14-field-leadership/ex87-review-ai-code/README.md) |
-| ex88 | [Document AI: layout-aware extraction from OCR output and PDF/vision requests](exercises/m14-field-leadership/ex88-document-ai/README.md) |
-| ex89 | [Permission-aware RAG: OIDC token validation, ACL filtering, on-behalf-of](exercises/m14-field-leadership/ex89-permission-aware-rag/README.md) |
-| ex90 | [Architecture decision records and partner design-review gate](exercises/m14-field-leadership/ex90-adr-design-review/README.md) |
-| ex91 | [React copilot UI component and hook without a build step](exercises/m14-field-leadership/ex91-react-copilot-ui/README.md) |
-| ex92 | [Ontology modelling: objects, links and governed actions](exercises/m14-field-leadership/ex92-ontology-modeling/README.md) |
-| ex93 | [AI red-team harness, MCP tool-poisoning and token-audience checks, and a security assessment report](exercises/m14-field-leadership/ex93-red-team-harness/README.md) |
-| ex94 | [Blameless postmortem and customer incident communications](exercises/m14-field-leadership/ex94-postmortem-comms/README.md) |
+| ex57 | [Production Dockerfile and compose](exercises/ch14-llmops-and-sre/ex57-dockerize/README.md) |
+| ex58 | [Kubernetes manifests with probes and HPA](exercises/ch14-llmops-and-sre/ex58-k8s-manifests/README.md) |
+| ex59 | [CI pipeline as code](exercises/ch14-llmops-and-sre/ex59-ci-pipeline/README.md) |
+| ex60 | [Tracing and metrics for LLM calls](exercises/ch14-llmops-and-sre/ex60-llm-tracing/README.md) |
+| ex61 | [SLOs and error-budget burn alerts](exercises/ch14-llmops-and-sre/ex61-slo-burn-rate/README.md) |
+| ex62 | [Load test and latency profiling](exercises/ch14-llmops-and-sre/ex62-load-test/README.md) |
+| ex63 | [Customer-environment preflight checker](exercises/ch14-llmops-and-sre/ex63-env-preflight/README.md) |
+| ex64 | [Air-gapped deployment bundle with manifest and checksums](exercises/ch14-llmops-and-sre/ex64-airgap-bundle/README.md) |
+| ex65 | [IaC config with least-privilege IAM validator](exercises/ch14-llmops-and-sre/ex65-iac-least-privilege/README.md) |
+| ex66 | [Log forensics: root-cause an incident](exercises/ch14-llmops-and-sre/ex66-log-forensics/README.md) |
+| ex76 | [One service spec rendered for AWS, GCP and Azure with data residency](exercises/ch14-llmops-and-sre/ex76-multi-cloud-deploy/README.md) |
+| ex94 | [Blameless postmortem and customer incident communications](exercises/ch14-llmops-and-sre/ex94-postmortem-comms/README.md) |
 
-### M15 · Prompt engineering
+### Chapter 15 · Field Engineering and Productisation · `ch15-field-engineering-and-productisation/`
 | # | Exercise |
 |---|---|
-| ex95 | [Prompt linter for CI](exercises/m15-prompt-engineering/ex95-prompt-linter/README.md) |
-| ex96 | [Dynamic few-shot example selection](exercises/m15-prompt-engineering/ex96-few-shot-selection/README.md) |
-| ex97 | [Prompt hill-climbing with a held-out test set](exercises/m15-prompt-engineering/ex97-prompt-hill-climb/README.md) |
-| ex98 | [System prompt from a policy spec, with traceability](exercises/m15-prompt-engineering/ex98-prompt-from-spec/README.md) |
+| ex67 | [Productise a one-off field script](exercises/ch15-field-engineering-and-productisation/ex67-productize-field-code/README.md) |
+| ex70 | [Time-boxed POC: invoice extraction](exercises/ch15-field-engineering-and-productisation/ex70-rapid-poc/README.md) |
+| ex71 | [Fine-tuning dataset preparation](exercises/ch15-field-engineering-and-productisation/ex71-finetune-dataprep/README.md) |
+| ex72 | [Regulated data: de-identification and retention](exercises/ch15-field-engineering-and-productisation/ex72-phi-deidentify/README.md) |
+| ex73 | [Generalise three customer variants into a config-driven connector](exercises/ch15-field-engineering-and-productisation/ex73-connector-framework/README.md) |
+| ex74 | [API reference and quickstart generator](exercises/ch15-field-engineering-and-productisation/ex74-docs-generator/README.md) |
+| ex75 | [Model risk documentation for a regulated customer](exercises/ch15-field-engineering-and-productisation/ex75-model-risk-doc/README.md) |
+| ex87 | [Review and fix an AI-agent-written pull request; write agent instructions](exercises/ch15-field-engineering-and-productisation/ex87-review-ai-code/README.md) |
+
+### Chapter 16 · Delivery Leadership · `ch16-delivery-leadership/`
+| # | Exercise |
+|---|---|
+| ex90 | [Architecture decision records and partner design-review gate](exercises/ch16-delivery-leadership/ex90-adr-design-review/README.md) |
 
 ## Capstones
 | # | Engagement |

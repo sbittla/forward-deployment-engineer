@@ -1,0 +1,11 @@
+{
+  "id": "ex15",
+  "chapter": "ch04-production-grade-python",
+  "slug": "job-queue",
+  "title": "Idempotent job queue with dead-letter handling",
+  "requirements": [
+    "R28",
+    "R22"
+  ],
+  "language": "python"
+}

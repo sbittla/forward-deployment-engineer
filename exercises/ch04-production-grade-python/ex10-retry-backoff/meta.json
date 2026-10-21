@@ -1,0 +1,12 @@
+{
+  "id": "ex10",
+  "chapter": "ch04-production-grade-python",
+  "slug": "retry-backoff",
+  "title": "Retries, backoff, jitter, idempotency",
+  "requirements": [
+    "R01",
+    "R22",
+    "R15"
+  ],
+  "language": "python"
+}

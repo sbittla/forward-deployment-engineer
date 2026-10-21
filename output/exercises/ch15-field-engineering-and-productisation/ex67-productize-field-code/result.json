@@ -1,0 +1,32 @@
+{
+  "path": "exercises/ch15-field-engineering-and-productisation/ex67-productize-field-code",
+  "status": "PASS",
+  "problems": [],
+  "tests": {
+    "passed": 4,
+    "failed": 0,
+    "error": 0,
+    "skipped": 0
+  },
+  "declared": 4,
+  "ran": 4,
+  "starter_failing": 3,
+  "cases": [
+    {
+      "test": "py:test_parity_with_legacy",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_other_customer",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_unknown_priority_without_normal_sla_is_config_error",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_no_customer_names_in_library_code",
+      "status": "passed"
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ex51",
+  "chapter": "ch12-llm-evaluation",
+  "slug": "prompt-regression",
+  "title": "Prompt regression gate for CI",
+  "requirements": [
+    "R13",
+    "R07"
+  ],
+  "language": "python"
+}

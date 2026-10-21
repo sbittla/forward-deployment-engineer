@@ -1,0 +1,32 @@
+{
+  "path": "exercises/ch14-llmops-and-sre/ex59-ci-pipeline",
+  "status": "PASS",
+  "problems": [],
+  "tests": {
+    "passed": 4,
+    "failed": 0,
+    "error": 0,
+    "skipped": 0
+  },
+  "declared": 4,
+  "ran": 4,
+  "starter_failing": 4,
+  "cases": [
+    {
+      "test": "py:test_good",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_bad",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_write_scope_and_unpinned",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_your_workflow",
+      "status": "passed"
+    }
+  ]
+}

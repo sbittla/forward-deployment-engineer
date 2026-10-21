@@ -1,0 +1,16 @@
+{
+  "id": "ex77",
+  "chapter": "ch06-data-engineering",
+  "slug": "spark-fundamentals",
+  "title": "Spark fundamentals: partitions, shuffles, skew, and a PySpark/Delta job",
+  "requirements": [
+    "R04",
+    "R31",
+    "R27"
+  ],
+  "language": "python",
+  "tools": [
+    "Spark",
+    "Databricks"
+  ]
+}

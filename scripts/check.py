@@ -3,8 +3,8 @@
 usage:
   python scripts/check.py               # your work (starters); red until you solve them
   python scripts/check.py --solutions   # reference solutions (+ spec lint); must be all green
-  python scripts/check.py --solutions exercises/m07-retrieval-rag   # one module
-  python scripts/check.py --solutions --chapter 10                  # the exercises for one book chapter
+  python scripts/check.py --solutions exercises/ch10-rag   # one chapter folder
+  python scripts/check.py --solutions --chapter 10   # the same, by chapter number
 """
 import os
 import shutil
@@ -30,7 +30,7 @@ def chapter_targets(chapter: int) -> list[str]:
         raise SystemExit(f"chapter {chapter} has no exercises; chapters with exercises: {sorted(CHAPTERS)}")
     dirs = []
     for n in CHAPTERS[chapter]:
-        found = sorted((ROOT / "exercises").glob(f"*/ex{n:02d}-*"))
+        found = sorted((ROOT / "exercises").glob(f"ch{chapter:02d}-*/ex{n:02d}-*"))
         if len(found) != 1:
             raise SystemExit(f"expected one directory for ex{n:02d}, found {len(found)}")
         dirs.append(found[0].relative_to(ROOT).as_posix())

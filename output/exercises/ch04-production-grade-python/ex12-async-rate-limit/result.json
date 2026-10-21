@@ -1,0 +1,36 @@
+{
+  "path": "exercises/ch04-production-grade-python/ex12-async-rate-limit",
+  "status": "PASS",
+  "problems": [],
+  "tests": {
+    "passed": 5,
+    "failed": 0,
+    "error": 0,
+    "skipped": 0
+  },
+  "declared": 5,
+  "ran": 5,
+  "starter_failing": 5,
+  "cases": [
+    {
+      "test": "py:test_order_and_concurrency_bound",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_exceptions_in_slot",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_bucket_limits_rate",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_bucket_starts_full",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_invalid_limits",
+      "status": "passed"
+    }
+  ]
+}

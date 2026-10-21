@@ -3,7 +3,7 @@
 Every capstone is assessed the same way, so a reviewer, an instructor or you can tell whether a submission meets the
 bar. There are two parts, and the order matters: **gates first, then a weighted score.** A failed gate can't be
 offset by a high score anywhere else. This is the same structure as the production-readiness scorecard in Chapter 14
-of the book (Section 14.9).
+of the book (Section 14.7).
 
 ## 1. Gates (all must pass)
 

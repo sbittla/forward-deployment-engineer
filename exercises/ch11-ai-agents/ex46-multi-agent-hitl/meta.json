@@ -1,0 +1,10 @@
+{
+  "id": "ex46",
+  "chapter": "ch11-ai-agents",
+  "slug": "multi-agent-hitl",
+  "title": "Planner/worker agents with human approval",
+  "requirements": [
+    "R11"
+  ],
+  "language": "python"
+}

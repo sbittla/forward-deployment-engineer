@@ -1,0 +1,14 @@
+{
+  "id": "ex91",
+  "chapter": "ch07-full-stack-engineering",
+  "slug": "react-copilot-ui",
+  "title": "React copilot UI component and hook without a build step",
+  "requirements": [
+    "R02",
+    "R21"
+  ],
+  "language": "typescript",
+  "tools": [
+    "React"
+  ]
+}

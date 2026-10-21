@@ -1,0 +1,13 @@
+{
+  "id": "ex57",
+  "chapter": "ch14-llmops-and-sre",
+  "slug": "dockerize",
+  "title": "Production Dockerfile and compose",
+  "requirements": [
+    "R07"
+  ],
+  "language": "python",
+  "tools": [
+    "Docker"
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ex33",
+  "chapter": "ch09-llm-application-engineering",
+  "slug": "context-packing",
+  "title": "Token budgeting and context packing",
+  "requirements": [
+    "R09",
+    "R27"
+  ],
+  "language": "python"
+}

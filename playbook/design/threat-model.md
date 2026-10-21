@@ -8,7 +8,7 @@
 | **Done when** | Every threat has a control and a test, and the security team has reviewed it |
 | **Book** | Chapter 13 |
 
-| # | Threat | Boundary | Likelihood (1–5) | Impact (1–5) | Control | Negative test | Gate (Section 13.12) |
+| # | Threat | Boundary | Likelihood (1–5) | Impact (1–5) | Control | Negative test | Gate (Section 13.6) |
 |---|---|---|---|---|---|---|---|
 | T1 | Prompt injection in retrieved or inbound content | | | | | | |
 | T2 | Data shown to a user without permission | | | | | | |

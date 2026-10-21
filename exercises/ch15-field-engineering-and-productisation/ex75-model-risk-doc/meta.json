@@ -1,0 +1,13 @@
+{
+  "id": "ex75",
+  "chapter": "ch15-field-engineering-and-productisation",
+  "slug": "model-risk-doc",
+  "title": "Model risk documentation for a regulated customer",
+  "requirements": [
+    "R25",
+    "R24",
+    "R14",
+    "R43"
+  ],
+  "language": "python"
+}

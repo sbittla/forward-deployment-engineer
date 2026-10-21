@@ -1,0 +1,40 @@
+{
+  "path": "exercises/ch04-production-grade-python/ex15-job-queue",
+  "status": "PASS",
+  "problems": [],
+  "tests": {
+    "passed": 6,
+    "failed": 0,
+    "error": 0,
+    "skipped": 0
+  },
+  "declared": 6,
+  "ran": 6,
+  "starter_failing": 6,
+  "cases": [
+    {
+      "test": "py:test_idempotent_enqueue_and_fifo",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_lease_expiry_and_stale_ack",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_extend_keeps_lease_alive",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_extend_requires_live_lease",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_backoff_then_dead_letter",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_run_worker",
+      "status": "passed"
+    }
+  ]
+}

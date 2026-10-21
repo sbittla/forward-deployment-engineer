@@ -1,0 +1,11 @@
+{
+  "id": "ex28",
+  "chapter": "ch07-full-stack-engineering",
+  "slug": "ts-sse-parser",
+  "title": "TypeScript: SSE token-stream parser",
+  "requirements": [
+    "R02",
+    "R08"
+  ],
+  "language": "typescript"
+}

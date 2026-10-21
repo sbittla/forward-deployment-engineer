@@ -1,0 +1,10 @@
+{
+  "id": "ex43",
+  "chapter": "ch11-ai-agents",
+  "slug": "tool-validation",
+  "title": "Tool input validation and error recovery",
+  "requirements": [
+    "R11"
+  ],
+  "language": "python"
+}

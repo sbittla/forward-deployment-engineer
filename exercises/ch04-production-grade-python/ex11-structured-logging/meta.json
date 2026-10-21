@@ -1,0 +1,11 @@
+{
+  "id": "ex11",
+  "chapter": "ch04-production-grade-python",
+  "slug": "structured-logging",
+  "title": "Structured logging with correlation IDs",
+  "requirements": [
+    "R01",
+    "R15"
+  ],
+  "language": "python"
+}

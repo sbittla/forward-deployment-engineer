@@ -1,0 +1,13 @@
+$ node --test exercises/ch07-full-stack-engineering/ex29-ts-chat-reducer/reducer.test.ts
+✔ happy path streaming (2.055276ms)
+✔ no double send while pending, no empty send (0.246527ms)
+✔ error then retry (0.294024ms)
+✔ immutability and unknown ids (0.367688ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 323.588205

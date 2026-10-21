@@ -1,0 +1,14 @@
+{
+  "id": "ex95",
+  "chapter": "ch08-prompt-engineering",
+  "slug": "prompt-linter",
+  "title": "Prompt linter for CI",
+  "requirements": [
+    "R09",
+    "R07"
+  ],
+  "language": "python",
+  "tools": [
+    "Prompt engineering"
+  ]
+}

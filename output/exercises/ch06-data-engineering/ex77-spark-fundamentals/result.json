@@ -1,0 +1,40 @@
+{
+  "path": "exercises/ch06-data-engineering/ex77-spark-fundamentals",
+  "status": "PASS",
+  "problems": [],
+  "tests": {
+    "passed": 6,
+    "failed": 0,
+    "error": 0,
+    "skipped": 0
+  },
+  "declared": 6,
+  "ran": 6,
+  "starter_failing": 6,
+  "cases": [
+    {
+      "test": "py:test_parallelize_and_lazy_narrow_ops",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_reduce_by_key_shuffles_by_stable_hash",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_skew_and_salting",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_skew_ratio_values",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_spark_job_static",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_spark_job_guards_overwrite",
+      "status": "passed"
+    }
+  ]
+}

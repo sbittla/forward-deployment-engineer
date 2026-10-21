@@ -1,0 +1,14 @@
+{
+  "id": "ex99",
+  "chapter": "ch12-llm-evaluation",
+  "slug": "agent-trajectory-evals",
+  "title": "Agent trajectory evals and pass^k reliability",
+  "requirements": [
+    "R13",
+    "R11"
+  ],
+  "language": "python",
+  "tools": [
+    "Agent evals"
+  ]
+}

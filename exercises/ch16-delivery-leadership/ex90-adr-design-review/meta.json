@@ -1,0 +1,12 @@
+{
+  "id": "ex90",
+  "chapter": "ch16-delivery-leadership",
+  "slug": "adr-design-review",
+  "title": "Architecture decision records and partner design-review gate",
+  "requirements": [
+    "R40",
+    "R24",
+    "R28"
+  ],
+  "language": "python"
+}

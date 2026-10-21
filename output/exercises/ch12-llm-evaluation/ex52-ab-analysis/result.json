@@ -1,0 +1,40 @@
+{
+  "path": "exercises/ch12-llm-evaluation/ex52-ab-analysis",
+  "status": "PASS",
+  "problems": [],
+  "tests": {
+    "passed": 6,
+    "failed": 0,
+    "error": 0,
+    "skipped": 0
+  },
+  "declared": 6,
+  "ran": 6,
+  "starter_failing": 6,
+  "cases": [
+    {
+      "test": "py:test_lift",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_z_test_known_value",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_bootstrap_deterministic_and_covers",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_sample_size",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_decide",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_empty_groups",
+      "status": "passed"
+    }
+  ]
+}

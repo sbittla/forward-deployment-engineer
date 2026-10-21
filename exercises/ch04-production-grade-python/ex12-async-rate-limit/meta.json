@@ -1,0 +1,12 @@
+{
+  "id": "ex12",
+  "chapter": "ch04-production-grade-python",
+  "slug": "async-rate-limit",
+  "title": "Async fan-out with rate limiting",
+  "requirements": [
+    "R01",
+    "R27",
+    "R28"
+  ],
+  "language": "python"
+}

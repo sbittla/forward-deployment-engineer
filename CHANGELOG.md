@@ -2,7 +2,34 @@
 
 This project follows [semantic versioning](https://semver.org/) for its exercise interfaces. From 1.0.0, a breaking
 change to a README spec or test contract bumps the major version, new exercises or templates bump the minor version,
-and errata fixes are patch releases. Exercise ids and directory names never change within an edition of the book.
+and errata fixes are patch releases. Exercise ids never change within an edition of the book; directory names change
+only in a major release.
+
+## [2.0.0] - 2026-10-20
+The release verified against *The Forward Deployed Engineer*, First Edition, revision 2.0. The repository is now
+organised the way the book is, so a chapter number is enough to find its exercises, solutions and test reports.
+
+### Changed (breaking): one folder per book chapter
+- Exercises moved from the 15 topic modules (`exercises/m01-...` to `exercises/m15-...`) to one folder per book
+  chapter, named after the chapter: `exercises/ch02-discovery-and-scoping/` to `exercises/ch16-delivery-leadership/`
+  (for example `exercises/ch10-rag/ex37-chunking/`). Chapters 1 and 17 have no exercises.
+- `solutions/exercises/` and `output/exercises/` mirror the same chapter folders.
+- Exercise ids (ex01 to ex100), file names, specs and test contracts are unchanged; only the parent folder moved.
+  Update any bookmarks or scripts that used a module path. `git log --follow` keeps each file's history.
+- `meta.json` replaces `"module"` with `"chapter"` (the chapter folder name), and each exercise README's header names
+  its chapter and folder instead of the module. The leftover per-exercise time estimates are removed.
+- `scripts/check.py --chapter N` now looks only in that chapter's folder, and a full `scripts/run_all.py` run fails if
+  any exercise folder would be skipped.
+- README: the exercise index is grouped by chapter folder, and the part names follow the book.
+
+### Changed: book cross-references
+- Playbook templates, `capstones/RUBRIC.md` and Capstone 4's hints cite the book's revision 2.0 section numbers (the
+  book now has 6 or 7 numbered sections per chapter).
+
+### Verified
+- In Docker (Ubuntu 24.04, Python 3.12, Node.js 24, `--gpus all`): 106 of 106 suites as expected, 780 tests passed
+  (763 Python, 17 TypeScript), every declared test ran, every starter fails at least one test; spec and hints linters
+  report 0 problems, and `starters_red.py` reports 0 problems.
 
 ## [1.4.0] - 2026-10-20
 The release verified against *The Forward Deployed Engineer*, First Edition, revision 1.3. The book and the
@@ -111,5 +138,6 @@ First public pre-release, for technical reviewers and beta readers.
   specified and tested (ex36, ex52, ex62, ex66, ex71, ex78, ex82, ex93 and others).
 - Undocumented test dependencies in ex53 (`luhn_ok`) and ex91 (`initialState`).
 
+[2.0.0]: https://github.com/sbittla/forward-deployment-engineer/releases/tag/v2.0.0
 [1.4.0]: https://github.com/sbittla/forward-deployment-engineer/releases/tag/v1.4.0
 [0.9.0]: https://github.com/sbittla/forward-deployment-engineer/releases/tag/v0.9.0

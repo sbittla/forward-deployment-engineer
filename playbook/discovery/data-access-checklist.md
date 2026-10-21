@@ -19,4 +19,4 @@ For each source, also confirm:
 - [ ] How deletions and corrections reach us (soft deletes, change feed, reconciliation).
 - [ ] Retention period for every copy we make (raw, processed, logs, vector chunks).
 - [ ] Whether data may leave the network for a model provider, and in what form (redacted, tokenised).
-- [ ] A data contract or a draft of one (Chapter 6, Section 6.9).
+- [ ] A data contract or a draft of one (Chapter 6, Section 6.6).

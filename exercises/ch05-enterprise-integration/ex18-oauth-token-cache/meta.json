@@ -1,0 +1,12 @@
+{
+  "id": "ex18",
+  "chapter": "ch05-enterprise-integration",
+  "slug": "oauth-token-cache",
+  "title": "OAuth2 client-credentials token cache",
+  "requirements": [
+    "R05",
+    "R17",
+    "R39"
+  ],
+  "language": "python"
+}

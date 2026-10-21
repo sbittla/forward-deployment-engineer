@@ -1,0 +1,28 @@
+{
+  "path": "exercises/ch14-llmops-and-sre/ex60-llm-tracing",
+  "status": "PASS",
+  "problems": [],
+  "tests": {
+    "passed": 3,
+    "failed": 0,
+    "error": 0,
+    "skipped": 0
+  },
+  "declared": 3,
+  "ran": 3,
+  "starter_failing": 3,
+  "cases": [
+    {
+      "test": "py:test_nesting_and_errors",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_traced_llm_and_summary",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_critical_path",
+      "status": "passed"
+    }
+  ]
+}

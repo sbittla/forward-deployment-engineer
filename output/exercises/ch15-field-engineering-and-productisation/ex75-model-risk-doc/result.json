@@ -1,0 +1,32 @@
+{
+  "path": "exercises/ch15-field-engineering-and-productisation/ex75-model-risk-doc",
+  "status": "PASS",
+  "problems": [],
+  "tests": {
+    "passed": 4,
+    "failed": 0,
+    "error": 0,
+    "skipped": 0
+  },
+  "declared": 4,
+  "ran": 4,
+  "starter_failing": 4,
+  "cases": [
+    {
+      "test": "py:test_tiers",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_controls",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_validate",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_render",
+      "status": "passed"
+    }
+  ]
+}

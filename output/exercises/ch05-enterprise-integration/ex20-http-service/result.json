@@ -1,0 +1,60 @@
+{
+  "path": "exercises/ch05-enterprise-integration/ex20-http-service",
+  "status": "PASS",
+  "problems": [],
+  "tests": {
+    "passed": 11,
+    "failed": 0,
+    "error": 0,
+    "skipped": 0
+  },
+  "declared": 7,
+  "ran": 11,
+  "starter_failing": 11,
+  "cases": [
+    {
+      "test": "py:test_health",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_answer_and_request_id_echo",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_auth",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_validation[not json]",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_validation[body1]",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_validation[body2]",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_validation[body3]",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_validation[body4]",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_too_large",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_method_and_path",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_internal_error_does_not_leak",
+      "status": "passed"
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ex53",
+  "chapter": "ch13-ai-security-and-guardrails",
+  "slug": "pii-redaction",
+  "title": "PII detection and redaction",
+  "requirements": [
+    "R14",
+    "R17"
+  ],
+  "language": "python"
+}

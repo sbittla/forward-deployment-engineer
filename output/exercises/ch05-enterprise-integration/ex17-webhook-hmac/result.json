@@ -1,0 +1,56 @@
+{
+  "path": "exercises/ch05-enterprise-integration/ex17-webhook-hmac",
+  "status": "PASS",
+  "problems": [],
+  "tests": {
+    "passed": 10,
+    "failed": 0,
+    "error": 0,
+    "skipped": 0
+  },
+  "declared": 10,
+  "ran": 10,
+  "starter_failing": 10,
+  "cases": [
+    {
+      "test": "py:test_sign_format",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_accept_then_duplicate",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_bad_signature_and_missing",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_stale",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_bad_json",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_dedupe_expires",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_apply_update_rejects_stale_and_duplicate",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_shuffled_and_duplicated_deliveries_converge",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_reconcile_uses_the_same_path",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_receiver_ignores_stale_redelivery",
+      "status": "passed"
+    }
+  ]
+}

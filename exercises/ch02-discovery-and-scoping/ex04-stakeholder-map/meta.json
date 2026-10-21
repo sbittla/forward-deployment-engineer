@@ -1,0 +1,11 @@
+{
+  "id": "ex04",
+  "chapter": "ch02-discovery-and-scoping",
+  "slug": "stakeholder-map",
+  "title": "Stakeholder map, RACI and comms plan",
+  "requirements": [
+    "R19",
+    "R20"
+  ],
+  "language": "python"
+}

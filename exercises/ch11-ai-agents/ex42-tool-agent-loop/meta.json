@@ -1,0 +1,11 @@
+{
+  "id": "ex42",
+  "chapter": "ch11-ai-agents",
+  "slug": "tool-agent-loop",
+  "title": "Tool-calling agent loop",
+  "requirements": [
+    "R11",
+    "R08"
+  ],
+  "language": "python"
+}

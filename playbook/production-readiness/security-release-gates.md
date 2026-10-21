@@ -6,7 +6,7 @@
 | **When** | Before go-live, against the production configuration |
 | **Inputs** | The threat model; red-team suite; access-control tests |
 | **Done when** | Every gate passes, or a permitted waiver is signed by the customer's risk owner with an expiry date |
-| **Book** | Chapter 13, Section 13.12 |
+| **Book** | Chapter 13, Section 13.6 |
 
 | Gate | Negative test run | Result | Evidence (link) | Waiver allowed | Waiver (owner, expiry, compensating control) |
 |---|---|---|---|---|---|

@@ -6,7 +6,7 @@
 | **When** | Before the pilot; re-run at the readout |
 | **Inputs** | Charter metrics, measured baselines, price lists, finance's loaded labour cost |
 | **Done when** | Every line has a status, and the sensitivity table covers every assumed or projected line |
-| **Book** | Chapter 2, Section 2.5 · ex03 |
+| **Book** | Chapter 2, Section 2.4 · ex03 |
 
 | Line | Annual value | Basis | Status (measured, quoted, estimated, assumed, projected) |
 |---|---|---|---|

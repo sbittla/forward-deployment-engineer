@@ -15,7 +15,7 @@ broke. Then work out from the incident. Almost every module here is a production
 | `resilience.py` | ex10 retries, ex14 circuit breaker, ex34 fallback |
 | `observability.py` | ex11 logging, plus Prometheus text format |
 | `service.py` | ex20 service |
-| `slo.py` | ex61 burn rates; the canary listing in Chapter 14 (Section 14.8) |
+| `slo.py` | ex61 burn rates; the canary listing in Chapter 14 (Section 14.6) |
 | `preflight.py` | ex63 checks, ex21 proxy/CA |
 | `incident.py` | ex66 log forensics |
 | `loadtest.py` | ex62 load and Little's Law |

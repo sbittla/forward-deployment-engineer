@@ -1,0 +1,18 @@
+{
+  "id": "ex76",
+  "chapter": "ch14-llmops-and-sre",
+  "slug": "multi-cloud-deploy",
+  "title": "One service spec rendered for AWS, GCP and Azure with data residency",
+  "requirements": [
+    "R06",
+    "R07",
+    "R25",
+    "R36"
+  ],
+  "language": "python",
+  "tools": [
+    "AWS",
+    "GCP",
+    "Azure"
+  ]
+}

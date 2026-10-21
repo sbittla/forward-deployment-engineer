@@ -1,0 +1,16 @@
+{
+  "id": "ex65",
+  "chapter": "ch14-llmops-and-sre",
+  "slug": "iac-least-privilege",
+  "title": "IaC config with least-privilege IAM validator",
+  "requirements": [
+    "R06",
+    "R07",
+    "R17"
+  ],
+  "language": "python",
+  "tools": [
+    "AWS",
+    "Terraform"
+  ]
+}

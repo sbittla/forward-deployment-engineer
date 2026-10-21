@@ -1,0 +1,12 @@
+{
+  "id": "ex74",
+  "chapter": "ch15-field-engineering-and-productisation",
+  "slug": "docs-generator",
+  "title": "API reference and quickstart generator",
+  "requirements": [
+    "R24",
+    "R01",
+    "R35"
+  ],
+  "language": "python"
+}

@@ -1,0 +1,40 @@
+{
+  "path": "exercises/ch09-llm-application-engineering/ex31-prompt-templates",
+  "status": "PASS",
+  "problems": [],
+  "tests": {
+    "passed": 6,
+    "failed": 0,
+    "error": 0,
+    "skipped": 0
+  },
+  "declared": 6,
+  "ran": 6,
+  "starter_failing": 6,
+  "cases": [
+    {
+      "test": "py:test_latest_is_semver",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_render_specific",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_variables",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_missing_and_unexpected",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_immutability",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_diff",
+      "status": "passed"
+    }
+  ]
+}

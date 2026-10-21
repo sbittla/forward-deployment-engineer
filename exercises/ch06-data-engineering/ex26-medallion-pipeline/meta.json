@@ -1,0 +1,11 @@
+{
+  "id": "ex26",
+  "chapter": "ch06-data-engineering",
+  "slug": "medallion-pipeline",
+  "title": "Bronze/silver/gold mini lakehouse",
+  "requirements": [
+    "R04",
+    "R31"
+  ],
+  "language": "python"
+}

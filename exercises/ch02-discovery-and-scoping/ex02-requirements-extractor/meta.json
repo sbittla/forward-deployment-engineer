@@ -1,0 +1,11 @@
+{
+  "id": "ex02",
+  "chapter": "ch02-discovery-and-scoping",
+  "slug": "requirements-extractor",
+  "title": "Discovery interview to user stories",
+  "requirements": [
+    "R18",
+    "R08"
+  ],
+  "language": "python"
+}

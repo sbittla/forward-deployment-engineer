@@ -1,0 +1,48 @@
+{
+  "path": "exercises/ch06-data-engineering/ex24-data-quality",
+  "status": "PASS",
+  "problems": [],
+  "tests": {
+    "passed": 8,
+    "failed": 0,
+    "error": 0,
+    "skipped": 0
+  },
+  "declared": 8,
+  "ran": 8,
+  "starter_failing": 8,
+  "cases": [
+    {
+      "test": "py:test_row_checks",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_warn_only_does_not_block",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_dataset_checks",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_sample_cap",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_markdown",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_pseudonymise_is_keyed_and_stable",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_checks_from_contract",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_contract_rejects_unknown_blocking_check",
+      "status": "passed"
+    }
+  ]
+}

@@ -6,7 +6,7 @@
 | **When** | Readiness review before go-live |
 | **Inputs** | Gate results and the evidence for each dimension |
 | **Done when** | All gates pass; weighted score ≥ 3.0; no dimension below 2 |
-| **Book** | Chapter 14, Section 14.9 · Appendix D |
+| **Book** | Chapter 14, Section 14.7 · Appendix D |
 
 ## Gates (any failure means not ready)
 - [ ] Security release gates

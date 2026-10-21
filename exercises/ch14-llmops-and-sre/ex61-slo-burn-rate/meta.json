@@ -1,0 +1,10 @@
+{
+  "id": "ex61",
+  "chapter": "ch14-llmops-and-sre",
+  "slug": "slo-burn-rate",
+  "title": "SLOs and error-budget burn alerts",
+  "requirements": [
+    "R15"
+  ],
+  "language": "python"
+}

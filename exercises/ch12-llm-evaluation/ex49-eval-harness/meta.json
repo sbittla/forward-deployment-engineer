@@ -1,0 +1,10 @@
+{
+  "id": "ex49",
+  "chapter": "ch12-llm-evaluation",
+  "slug": "eval-harness",
+  "title": "Golden-set eval harness",
+  "requirements": [
+    "R13"
+  ],
+  "language": "python"
+}

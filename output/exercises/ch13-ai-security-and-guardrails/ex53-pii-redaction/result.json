@@ -1,0 +1,80 @@
+{
+  "path": "exercises/ch13-ai-security-and-guardrails/ex53-pii-redaction",
+  "status": "PASS",
+  "problems": [],
+  "tests": {
+    "passed": 16,
+    "failed": 0,
+    "error": 0,
+    "skipped": 0
+  },
+  "declared": 7,
+  "ran": 16,
+  "starter_failing": 16,
+  "cases": [
+    {
+      "test": "py:test_detect_all",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_negatives[SSN 000-12-3456]",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_negatives[SSN 666-12-3456]",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_negatives[SSN 912-12-3456]",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_negatives[SSN 123-00-4567]",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_negatives[card 4111 1111 1111 1112]",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_negatives[ip 300.1.1.1]",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_negatives[order 12345]",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_phone_formats[415-555-0100]",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_phone_formats[415.555.0100]",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_phone_formats[+1 415 555 0100]",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_phone_formats[1-415-555-0100]",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_luhn",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_offsets",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_mask",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_tokens_consistent_and_restore",
+      "status": "passed"
+    }
+  ]
+}

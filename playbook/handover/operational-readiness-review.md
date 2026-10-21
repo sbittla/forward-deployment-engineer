@@ -6,7 +6,7 @@
 | **When** | The last two weeks of the engagement |
 | **Inputs** | Runbooks, dashboards, access list, recovery procedures |
 | **Done when** | Walked through together; every item checked; your access revoked |
-| **Book** | Chapter 14, Section 14.10 |
+| **Book** | Chapter 14, Section 14.7 |
 
 - [ ] Alerts route to the customer's rotation; a game day was run with an injected fault (date).
 - [ ] Runbooks pass the linter and cover deploy, rollback (code, prompt, model), scaling, key rotation and kill switches.

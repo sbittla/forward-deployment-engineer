@@ -1,0 +1,12 @@
+{
+  "id": "ex09",
+  "chapter": "ch04-production-grade-python",
+  "slug": "typed-config",
+  "title": "Typed config and secrets loading",
+  "requirements": [
+    "R01",
+    "R22",
+    "R17"
+  ],
+  "language": "python"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ex56",
+  "chapter": "ch13-ai-security-and-guardrails",
+  "slug": "rbac-audit",
+  "title": "RBAC and audit log for multi-tenant AI",
+  "requirements": [
+    "R17",
+    "R39"
+  ],
+  "language": "python"
+}

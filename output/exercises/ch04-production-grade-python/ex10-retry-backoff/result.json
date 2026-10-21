@@ -1,0 +1,48 @@
+{
+  "path": "exercises/ch04-production-grade-python/ex10-retry-backoff",
+  "status": "PASS",
+  "problems": [],
+  "tests": {
+    "passed": 8,
+    "failed": 0,
+    "error": 0,
+    "skipped": 0
+  },
+  "declared": 8,
+  "ran": 8,
+  "starter_failing": 8,
+  "cases": [
+    {
+      "test": "py:test_retries_then_succeeds_with_exponential_backoff",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_caps_at_max_delay",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_retry_after_wins",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_non_retryable_raises_immediately",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_gives_up",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_jitter_uses_rng",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_idempotency",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_failed_call_not_cached",
+      "status": "passed"
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ex47",
+  "chapter": "ch11-ai-agents",
+  "slug": "agent-memory",
+  "title": "Conversation memory and summarisation",
+  "requirements": [
+    "R11",
+    "R09"
+  ],
+  "language": "python"
+}

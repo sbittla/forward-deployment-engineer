@@ -1,0 +1,36 @@
+{
+  "path": "exercises/ch03-technical-communication/ex82-adoption-change",
+  "status": "PASS",
+  "problems": [],
+  "tests": {
+    "passed": 5,
+    "failed": 0,
+    "error": 0,
+    "skipped": 0
+  },
+  "declared": 5,
+  "ran": 5,
+  "starter_failing": 5,
+  "cases": [
+    {
+      "test": "py:test_funnel",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_retention",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_lagging_and_plan",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_diff_in_diff",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_empty_inputs",
+      "status": "passed"
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "id": "ex70",
+  "chapter": "ch15-field-engineering-and-productisation",
+  "slug": "rapid-poc",
+  "title": "Time-boxed POC: invoice extraction",
+  "requirements": [
+    "R21",
+    "R08",
+    "R38"
+  ],
+  "language": "python"
+}

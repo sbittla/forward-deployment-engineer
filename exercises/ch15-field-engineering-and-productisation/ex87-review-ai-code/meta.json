@@ -1,0 +1,16 @@
+{
+  "id": "ex87",
+  "chapter": "ch15-field-engineering-and-productisation",
+  "slug": "review-ai-code",
+  "title": "Review and fix an AI-agent-written pull request; write agent instructions",
+  "requirements": [
+    "R37",
+    "R29",
+    "R17",
+    "R40"
+  ],
+  "language": "python",
+  "tools": [
+    "AI coding tools"
+  ]
+}

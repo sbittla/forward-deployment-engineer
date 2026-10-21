@@ -1,0 +1,11 @@
+{
+  "id": "ex62",
+  "chapter": "ch14-llmops-and-sre",
+  "slug": "load-test",
+  "title": "Load test and latency profiling",
+  "requirements": [
+    "R27",
+    "R15"
+  ],
+  "language": "python"
+}

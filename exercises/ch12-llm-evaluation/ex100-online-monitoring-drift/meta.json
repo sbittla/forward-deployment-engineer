@@ -1,0 +1,14 @@
+{
+  "id": "ex100",
+  "chapter": "ch12-llm-evaluation",
+  "slug": "online-monitoring-drift",
+  "title": "Online quality monitoring and drift detection",
+  "requirements": [
+    "R13",
+    "R15"
+  ],
+  "language": "python",
+  "tools": [
+    "Monitoring"
+  ]
+}

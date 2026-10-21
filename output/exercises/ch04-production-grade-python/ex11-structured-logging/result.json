@@ -1,0 +1,32 @@
+{
+  "path": "exercises/ch04-production-grade-python/ex11-structured-logging",
+  "status": "PASS",
+  "problems": [],
+  "tests": {
+    "passed": 4,
+    "failed": 0,
+    "error": 0,
+    "skipped": 0
+  },
+  "declared": 4,
+  "ran": 4,
+  "starter_failing": 4,
+  "cases": [
+    {
+      "test": "py:test_json_line_and_correlation",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_generated_and_nested",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_redaction_nested",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_exception_and_no_duplicate_handlers",
+      "status": "passed"
+    }
+  ]
+}

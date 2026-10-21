@@ -1,0 +1,12 @@
+{
+  "id": "ex36",
+  "chapter": "ch09-llm-application-engineering",
+  "slug": "ml-baseline",
+  "title": "Classical ML baseline vs LLM classifier",
+  "requirements": [
+    "R16",
+    "R13",
+    "R27"
+  ],
+  "language": "python"
+}

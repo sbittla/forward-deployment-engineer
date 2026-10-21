@@ -1,0 +1,11 @@
+{
+  "id": "ex69",
+  "chapter": "ch03-technical-communication",
+  "slug": "runbook-linter",
+  "title": "Runbook and handoff doc linter",
+  "requirements": [
+    "R24",
+    "R35"
+  ],
+  "language": "python"
+}

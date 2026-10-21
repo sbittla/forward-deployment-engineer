@@ -1,0 +1,12 @@
+{
+  "id": "ex54",
+  "chapter": "ch13-ai-security-and-guardrails",
+  "slug": "prompt-injection",
+  "title": "Prompt-injection defences for agents",
+  "requirements": [
+    "R14",
+    "R11",
+    "R41"
+  ],
+  "language": "python"
+}

@@ -1,0 +1,36 @@
+{
+  "path": "exercises/ch05-enterprise-integration/ex18-oauth-token-cache",
+  "status": "PASS",
+  "problems": [],
+  "tests": {
+    "passed": 5,
+    "failed": 0,
+    "error": 0,
+    "skipped": 0
+  },
+  "declared": 5,
+  "ran": 5,
+  "starter_failing": 5,
+  "cases": [
+    {
+      "test": "py:test_caches_until_skew",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_single_flight",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_retry_once_on_401",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_401_twice_propagates_and_other_errors",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_invalidate",
+      "status": "passed"
+    }
+  ]
+}

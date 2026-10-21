@@ -1,0 +1,12 @@
+{
+  "id": "ex73",
+  "chapter": "ch15-field-engineering-and-productisation",
+  "slug": "connector-framework",
+  "title": "Generalise three customer variants into a config-driven connector",
+  "requirements": [
+    "R23",
+    "R05",
+    "R28"
+  ],
+  "language": "python"
+}

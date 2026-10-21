@@ -1,0 +1,11 @@
+{
+  "id": "ex34",
+  "chapter": "ch09-llm-application-engineering",
+  "slug": "model-router",
+  "title": "Cost/latency-aware model router with fallback",
+  "requirements": [
+    "R27",
+    "R08"
+  ],
+  "language": "python"
+}

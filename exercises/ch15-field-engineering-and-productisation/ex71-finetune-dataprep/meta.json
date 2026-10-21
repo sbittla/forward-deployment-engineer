@@ -1,0 +1,13 @@
+{
+  "id": "ex71",
+  "chapter": "ch15-field-engineering-and-productisation",
+  "slug": "finetune-dataprep",
+  "title": "Fine-tuning dataset preparation",
+  "requirements": [
+    "R16"
+  ],
+  "language": "python",
+  "tools": [
+    "Fine-tuning"
+  ]
+}

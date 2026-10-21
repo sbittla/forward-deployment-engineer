@@ -1,0 +1,14 @@
+{
+  "id": "ex44",
+  "chapter": "ch11-ai-agents",
+  "slug": "mcp-server",
+  "title": "Build an MCP server",
+  "requirements": [
+    "R12",
+    "R11"
+  ],
+  "language": "python",
+  "tools": [
+    "MCP"
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ex68",
+  "chapter": "ch03-technical-communication",
+  "slug": "feedback-triage",
+  "title": "Field feedback triage to product brief",
+  "requirements": [
+    "R23",
+    "R19"
+  ],
+  "language": "python"
+}

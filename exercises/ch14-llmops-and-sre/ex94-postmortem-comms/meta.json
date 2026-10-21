@@ -1,0 +1,12 @@
+{
+  "id": "ex94",
+  "chapter": "ch14-llmops-and-sre",
+  "slug": "postmortem-comms",
+  "title": "Blameless postmortem and customer incident communications",
+  "requirements": [
+    "R44",
+    "R19",
+    "R15"
+  ],
+  "language": "python"
+}

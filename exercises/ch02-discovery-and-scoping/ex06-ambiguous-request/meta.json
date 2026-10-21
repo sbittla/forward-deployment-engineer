@@ -1,0 +1,12 @@
+{
+  "id": "ex06",
+  "chapter": "ch02-discovery-and-scoping",
+  "slug": "ambiguous-request",
+  "title": "Ambiguous request to clarifying questions and assumptions",
+  "requirements": [
+    "R18",
+    "R20",
+    "R19"
+  ],
+  "language": "python"
+}

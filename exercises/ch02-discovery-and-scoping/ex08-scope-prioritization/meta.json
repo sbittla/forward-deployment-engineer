@@ -1,0 +1,13 @@
+{
+  "id": "ex08",
+  "chapter": "ch02-discovery-and-scoping",
+  "slug": "scope-prioritization",
+  "title": "Scope negotiation with MoSCoW under a deadline",
+  "requirements": [
+    "R20",
+    "R18",
+    "R30",
+    "R33"
+  ],
+  "language": "python"
+}

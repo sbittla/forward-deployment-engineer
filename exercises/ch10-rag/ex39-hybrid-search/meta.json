@@ -1,0 +1,10 @@
+{
+  "id": "ex39",
+  "chapter": "ch10-rag",
+  "slug": "hybrid-search",
+  "title": "Vector + keyword hybrid search with RRF",
+  "requirements": [
+    "R10"
+  ],
+  "language": "python"
+}

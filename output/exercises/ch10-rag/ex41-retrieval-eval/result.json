@@ -1,0 +1,36 @@
+{
+  "path": "exercises/ch10-rag/ex41-retrieval-eval",
+  "status": "PASS",
+  "problems": [],
+  "tests": {
+    "passed": 5,
+    "failed": 0,
+    "error": 0,
+    "skipped": 0
+  },
+  "declared": 5,
+  "ran": 5,
+  "starter_failing": 5,
+  "cases": [
+    {
+      "test": "py:test_recall_precision",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_mrr",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_ndcg",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_evaluate_and_compare",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_no_relevant_documents",
+      "status": "passed"
+    }
+  ]
+}

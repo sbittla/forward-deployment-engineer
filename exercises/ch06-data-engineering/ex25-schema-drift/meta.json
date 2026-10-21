@@ -1,0 +1,11 @@
+{
+  "id": "ex25",
+  "chapter": "ch06-data-engineering",
+  "slug": "schema-drift",
+  "title": "Schema drift detection",
+  "requirements": [
+    "R04",
+    "R03"
+  ],
+  "language": "python"
+}

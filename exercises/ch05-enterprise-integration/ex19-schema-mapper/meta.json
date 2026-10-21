@@ -1,0 +1,11 @@
+{
+  "id": "ex19",
+  "chapter": "ch05-enterprise-integration",
+  "slug": "schema-mapper",
+  "title": "CRM to canonical schema mapper",
+  "requirements": [
+    "R05",
+    "R03"
+  ],
+  "language": "python"
+}

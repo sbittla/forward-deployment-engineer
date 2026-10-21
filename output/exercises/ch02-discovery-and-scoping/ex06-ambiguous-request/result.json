@@ -1,0 +1,40 @@
+{
+  "path": "exercises/ch02-discovery-and-scoping/ex06-ambiguous-request",
+  "status": "PASS",
+  "problems": [],
+  "tests": {
+    "passed": 6,
+    "failed": 0,
+    "error": 0,
+    "skipped": 0
+  },
+  "declared": 6,
+  "ran": 6,
+  "starter_failing": 6,
+  "cases": [
+    {
+      "test": "py:test_vague_terms_in_order",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_missing_dimensions",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_questions_and_assumptions",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_well_specified_request",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_quarter_and_month_count_as_deadline",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_whole_words_only",
+      "status": "passed"
+    }
+  ]
+}

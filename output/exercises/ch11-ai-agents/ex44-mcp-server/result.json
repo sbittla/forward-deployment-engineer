@@ -1,0 +1,64 @@
+{
+  "path": "exercises/ch11-ai-agents/ex44-mcp-server",
+  "status": "PASS",
+  "problems": [],
+  "tests": {
+    "passed": 12,
+    "failed": 0,
+    "error": 0,
+    "skipped": 0
+  },
+  "declared": 11,
+  "ran": 12,
+  "starter_failing": 12,
+  "cases": [
+    {
+      "test": "py:test_discover",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_modern_list_and_call",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_tool_error_is_result",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_unsupported_version",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_missing_meta_without_handshake",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_legacy_client_still_works",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_invalid_requests[msg0--32600]",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_invalid_requests[msg1--32600]",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_unknown_method_and_tool",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_tool_registration_validation",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_serve_stdio",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_demo_server_subprocess",
+      "status": "passed"
+    }
+  ]
+}

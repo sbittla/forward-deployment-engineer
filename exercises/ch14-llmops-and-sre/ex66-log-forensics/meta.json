@@ -1,0 +1,12 @@
+{
+  "id": "ex66",
+  "chapter": "ch14-llmops-and-sre",
+  "slug": "log-forensics",
+  "title": "Log forensics: root-cause an incident",
+  "requirements": [
+    "R29",
+    "R15",
+    "R44"
+  ],
+  "language": "python"
+}

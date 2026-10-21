@@ -1,0 +1,10 @@
+{
+  "id": "ex55",
+  "chapter": "ch13-ai-security-and-guardrails",
+  "slug": "output-guardrails",
+  "title": "Output guardrails and groundedness",
+  "requirements": [
+    "R14"
+  ],
+  "language": "python"
+}

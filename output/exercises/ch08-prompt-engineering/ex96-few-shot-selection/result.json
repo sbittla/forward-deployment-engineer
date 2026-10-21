@@ -1,0 +1,44 @@
+{
+  "path": "exercises/ch08-prompt-engineering/ex96-few-shot-selection",
+  "status": "PASS",
+  "problems": [],
+  "tests": {
+    "passed": 7,
+    "failed": 0,
+    "error": 0,
+    "skipped": 0
+  },
+  "declared": 7,
+  "ran": 7,
+  "starter_failing": 7,
+  "cases": [
+    {
+      "test": "py:test_relevance_order_and_duplicate_suppression",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_lower_lambda_trades_relevance_for_diversity",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_token_budget",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_bad_k",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_label_coverage",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_format_escapes_and_wraps",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_build_messages",
+      "status": "passed"
+    }
+  ]
+}

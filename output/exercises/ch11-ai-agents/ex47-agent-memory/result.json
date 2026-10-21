@@ -1,0 +1,36 @@
+{
+  "path": "exercises/ch11-ai-agents/ex47-agent-memory",
+  "status": "PASS",
+  "problems": [],
+  "tests": {
+    "passed": 5,
+    "failed": 0,
+    "error": 0,
+    "skipped": 0
+  },
+  "declared": 5,
+  "ran": 5,
+  "starter_failing": 5,
+  "cases": [
+    {
+      "test": "py:test_no_summary_under_budget",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_rolls_up_oldest",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_keep_recent_respected",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_pins",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_empty_memory_context",
+      "status": "passed"
+    }
+  ]
+}

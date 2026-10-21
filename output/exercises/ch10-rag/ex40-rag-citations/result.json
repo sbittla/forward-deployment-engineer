@@ -1,0 +1,44 @@
+{
+  "path": "exercises/ch10-rag/ex40-rag-citations",
+  "status": "PASS",
+  "problems": [],
+  "tests": {
+    "passed": 7,
+    "failed": 0,
+    "error": 0,
+    "skipped": 0
+  },
+  "declared": 7,
+  "ran": 7,
+  "starter_failing": 7,
+  "cases": [
+    {
+      "test": "py:test_prompt",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_cited_answer",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_invalid_citation_removed",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_no_citations_not_grounded",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_abstain_low_score_skips_llm",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_model_abstains",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_k_passed",
+      "status": "passed"
+    }
+  ]
+}

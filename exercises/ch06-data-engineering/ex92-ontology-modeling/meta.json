@@ -1,0 +1,12 @@
+{
+  "id": "ex92",
+  "chapter": "ch06-data-engineering",
+  "slug": "ontology-modeling",
+  "title": "Ontology modelling: objects, links and governed actions",
+  "requirements": [
+    "R42",
+    "R03",
+    "R31"
+  ],
+  "language": "python"
+}

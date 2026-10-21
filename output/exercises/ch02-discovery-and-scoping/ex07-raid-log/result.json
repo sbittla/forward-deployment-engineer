@@ -1,0 +1,52 @@
+{
+  "path": "exercises/ch02-discovery-and-scoping/ex07-raid-log",
+  "status": "PASS",
+  "problems": [],
+  "tests": {
+    "passed": 9,
+    "failed": 0,
+    "error": 0,
+    "skipped": 0
+  },
+  "declared": 5,
+  "ran": 9,
+  "starter_failing": 9,
+  "cases": [
+    {
+      "test": "py:test_ids",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_validation[kw0]",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_validation[kw1]",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_validation[kw2]",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_validation[kw3]",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_validation[kw4]",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_top_risks",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_overdue_and_escalations",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_markdown",
+      "status": "passed"
+    }
+  ]
+}

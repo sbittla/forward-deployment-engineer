@@ -1,0 +1,10 @@
+{
+  "id": "ex59",
+  "chapter": "ch14-llmops-and-sre",
+  "slug": "ci-pipeline",
+  "title": "CI pipeline as code",
+  "requirements": [
+    "R07"
+  ],
+  "language": "python"
+}

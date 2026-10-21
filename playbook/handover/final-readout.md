@@ -6,7 +6,7 @@
 | **When** | End of the pilot or engagement |
 | **Inputs** | Measured results, the business case, risks |
 | **Done when** | Leads with a recommendation and a measured number, and ends with a dated decision request |
-| **Book** | Chapter 3, Section 3.7 |
+| **Book** | Chapter 3, Section 3.6 |
 
 1. **Recommendation, in one sentence, with a measured number.**
 2. **Evidence:** how it was measured, on how many people, over what period, and the main assumption.

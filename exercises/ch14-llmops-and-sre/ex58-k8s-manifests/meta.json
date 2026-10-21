@@ -1,0 +1,14 @@
+{
+  "id": "ex58",
+  "chapter": "ch14-llmops-and-sre",
+  "slug": "k8s-manifests",
+  "title": "Kubernetes manifests with probes and HPA",
+  "requirements": [
+    "R07",
+    "R06"
+  ],
+  "language": "python",
+  "tools": [
+    "Kubernetes"
+  ]
+}

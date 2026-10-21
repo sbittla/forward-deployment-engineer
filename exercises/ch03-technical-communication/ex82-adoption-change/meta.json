@@ -1,0 +1,12 @@
+{
+  "id": "ex82",
+  "chapter": "ch03-technical-communication",
+  "slug": "adoption-change",
+  "title": "Adoption funnel, change management and pre/post KPI impact",
+  "requirements": [
+    "R34",
+    "R30",
+    "R13"
+  ],
+  "language": "python"
+}

@@ -1,0 +1,12 @@
+{
+  "id": "ex52",
+  "chapter": "ch12-llm-evaluation",
+  "slug": "ab-analysis",
+  "title": "A/B experiment analysis with bootstrap CIs",
+  "requirements": [
+    "R13",
+    "R30",
+    "R34"
+  ],
+  "language": "python"
+}

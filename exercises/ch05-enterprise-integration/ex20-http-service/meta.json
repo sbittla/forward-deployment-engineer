@@ -1,0 +1,12 @@
+{
+  "id": "ex20",
+  "chapter": "ch05-enterprise-integration",
+  "slug": "http-service",
+  "title": "Minimal HTTP service with auth and health",
+  "requirements": [
+    "R05",
+    "R28",
+    "R22"
+  ],
+  "language": "python"
+}

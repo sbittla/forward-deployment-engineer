@@ -1,0 +1,32 @@
+{
+  "path": "exercises/ch03-technical-communication/ex84-workshop-builder",
+  "status": "PASS",
+  "problems": [],
+  "tests": {
+    "passed": 4,
+    "failed": 0,
+    "error": 0,
+    "skipped": 0
+  },
+  "declared": 4,
+  "ran": 4,
+  "starter_failing": 4,
+  "cases": [
+    {
+      "test": "py:test_agenda",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_agenda_validation",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_lab_steps",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_readiness",
+      "status": "passed"
+    }
+  ]
+}

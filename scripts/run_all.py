@@ -8,7 +8,7 @@ usage:
 
 output/ mirrors the course tree and is rewritten on every full run:
   output/summary.md, summary.json, environment.txt (Python, Node, GPU), lints/<lint>.log
-  output/exercises/<module>/<exercise>/result.json, pytest.log, node.log
+  output/exercises/<chapter>/<exercise>/result.json, pytest.log, node.log
   output/capstones/<capstone>/result.json, pytest.log
 
 A suite is expected to pass only if all of these hold:
@@ -38,7 +38,7 @@ TS_TEST = re.compile(r"""^\s*(?:test|it)\(\s*(["'`])(.+?)\1""", re.M)
 
 def discover(filters: list[str]) -> list[dict]:
     suites = []
-    for d in sorted((ROOT / "exercises").glob("m*/ex*")) + sorted((ROOT / "capstones").glob("c*")):
+    for d in sorted((ROOT / "exercises").glob("ch*/ex*")) + sorted((ROOT / "capstones").glob("c*")):
         rel = d.relative_to(ROOT).as_posix()
         if not d.is_dir() or (filters and not any(f in rel for f in filters)):
             continue
@@ -214,6 +214,12 @@ def main(argv: list[str]) -> int:
     OUT.mkdir(exist_ok=True)
     write_environment()
     suites = discover(args.filters)
+    if not args.filters:  # every exercise must live in a chapter folder, or a full run would silently skip it
+        expected = len(list((ROOT / "exercises").glob("*/ex*/meta.json")))
+        found = sum(s["path"].startswith("exercises/") for s in suites)
+        if found != expected:
+            print(f"found {found} exercise suites but {expected} exercises have a meta.json; check the folder layout")
+            return 1
     start = time.monotonic()
     with ThreadPoolExecutor(max_workers=args.jobs) as pool:
         results = list(pool.map(lambda s: run_suite(s, not args.no_starters), suites))

@@ -1,0 +1,13 @@
+{
+  "id": "ex84",
+  "chapter": "ch03-technical-communication",
+  "slug": "workshop-builder",
+  "title": "Workshop, code-with session and knowledge-transfer readiness",
+  "requirements": [
+    "R35",
+    "R24",
+    "R19",
+    "R34"
+  ],
+  "language": "python"
+}

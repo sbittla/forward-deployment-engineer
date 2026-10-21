@@ -1,0 +1,28 @@
+{
+  "path": "exercises/ch07-full-stack-engineering/ex91-react-copilot-ui",
+  "status": "PASS",
+  "problems": [],
+  "tests": {
+    "passed": 3,
+    "failed": 0,
+    "error": 0,
+    "skipped": 0
+  },
+  "declared": 3,
+  "ran": 3,
+  "starter_failing": 3,
+  "cases": [
+    {
+      "test": "ts:reducer",
+      "status": "passed"
+    },
+    {
+      "test": "ts:hook sends, replies and retries",
+      "status": "passed"
+    },
+    {
+      "test": "ts:panel renders accessible, safe markup",
+      "status": "passed"
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "path": "exercises/ch02-discovery-and-scoping/ex04-stakeholder-map",
+  "status": "PASS",
+  "problems": [],
+  "tests": {
+    "passed": 4,
+    "failed": 0,
+    "error": 0,
+    "skipped": 0
+  },
+  "declared": 4,
+  "ran": 4,
+  "starter_failing": 4,
+  "cases": [
+    {
+      "test": "py:test_quadrants",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_raci_missing_responsible",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_raci_two_accountable_unknown_letter_unknown_ws",
+      "status": "passed"
+    },
+    {
+      "test": "py:test_comms_plan",
+      "status": "passed"
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "id": "ex50",
+  "chapter": "ch12-llm-evaluation",
+  "slug": "llm-judge",
+  "title": "LLM-as-judge with calibration",
+  "requirements": [
+    "R13"
+  ],
+  "language": "python"
+}

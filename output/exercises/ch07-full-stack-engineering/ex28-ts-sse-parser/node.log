@@ -1,0 +1,14 @@
+$ node --test exercises/ch07-full-stack-engineering/ex28-ts-sse-parser/sse.test.ts
+✔ whole stream (2.202877ms)
+✔ arbitrary byte chunking incl. split emoji and CRLF (8.772942ms)
+✔ multi-line data, default event, leading space, no-data events (1.553336ms)
+✔ end flushes final event (0.406105ms)
+✔ error event throws (1.09616ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 5
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 335.932662

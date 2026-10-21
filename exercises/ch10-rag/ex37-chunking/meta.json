@@ -1,0 +1,10 @@
+{
+  "id": "ex37",
+  "chapter": "ch10-rag",
+  "slug": "chunking",
+  "title": "Chunking strategies",
+  "requirements": [
+    "R10"
+  ],
+  "language": "python"
+}

@@ -1,0 +1,17 @@
+{
+  "id": "ex78",
+  "chapter": "ch05-enterprise-integration",
+  "slug": "polyglot-port",
+  "title": "Port a customer's Java/Go/C++ request signer to Python",
+  "requirements": [
+    "R29",
+    "R05",
+    "R17"
+  ],
+  "language": "python",
+  "tools": [
+    "Java",
+    "Go",
+    "C++"
+  ]
+}

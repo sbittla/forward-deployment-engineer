@@ -1,0 +1,10 @@
+{
+  "id": "ex67",
+  "chapter": "ch15-field-engineering-and-productisation",
+  "slug": "productize-field-code",
+  "title": "Productise a one-off field script",
+  "requirements": [
+    "R23"
+  ],
+  "language": "python"
+}

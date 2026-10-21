@@ -1,0 +1,15 @@
+{
+  "id": "ex85",
+  "chapter": "ch11-ai-agents",
+  "slug": "agent-skills-subagents",
+  "title": "Claude Agent Skills and subagents: package, route, delegate",
+  "requirements": [
+    "R36",
+    "R11",
+    "R12"
+  ],
+  "language": "python",
+  "tools": [
+    "Claude Agent Skills"
+  ]
+}
